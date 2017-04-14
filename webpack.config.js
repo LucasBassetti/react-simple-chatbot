@@ -4,16 +4,16 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: path.resolve(__dirname, 'app/js/main'),
+  output: {
+    path: path.resolve(__dirname, 'build/js'),
+    publicPath: '/js/',
+    filename: 'bundle.js',
+  },
   devServer: {
     outputPath: path.join(__dirname, 'build'),
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
-  },
-  output: {
-    path: path.resolve(__dirname, 'build/js'),
-    publicPath: '/js/',
-    filename: 'bundle.js',
   },
   plugins: [
     new CleanWebpackPlugin(['build']),
@@ -25,7 +25,8 @@ module.exports = {
       },
     ]),
   ],
-  devtool: '#eval-source-map',
+  debug: true,
+  devtool: 'sourcemap',
   module: {
     loaders: [
       {

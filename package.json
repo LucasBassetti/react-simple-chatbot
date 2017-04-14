@@ -1,14 +1,14 @@
 {
   "name": "react-simple-chatbot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React Simple Chatbot",
-  "main": "index.js",
+  "main": "dist/react-simple-chatbot.js",
   "scripts": {
     "start": "webpack-dev-server --inline --content-base build/",
     "test": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register",
     "test:watch": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register --watch",
     "test:coverage": "nyc npm test",
-    "build": "webpack"
+    "build": "webpack --config webpack.config.prod.js"
   },
   "nyc": {
     "reporter": [
