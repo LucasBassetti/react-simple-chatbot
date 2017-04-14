@@ -2,7 +2,7 @@
 
 A simple chatbot component
 
-<img src="https://cloud.githubusercontent.com/assets/1014326/25030722/506abd18-209d-11e7-91f2-646f4bdfdeb3.gif" />
+<img src="https://cloud.githubusercontent.com/assets/1014326/25030722/506abd18-209d-11e7-91f2-646f4bdfdeb3.gif" height="400" />
 
 ## Getting Start
 

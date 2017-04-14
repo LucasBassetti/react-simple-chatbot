@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import { TextStep } from '../../../app/js/components/steps/steps';
+import { TextStep } from '../../../lib/steps/steps';
 
 describe('TextStep', () => {
   describe('Bot text', () => {
