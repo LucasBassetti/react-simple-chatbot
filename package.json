@@ -5,6 +5,7 @@
   "main": "dist/react-simple-chatbot.js",
   "scripts": {
     "start": "webpack-dev-server --inline --content-base build/",
+    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "test": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register",
     "test:watch": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register --watch",
     "test:coverage": "nyc npm test",
