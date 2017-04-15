@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './CustomStep.styles';
 
 class CustomStep extends Component {
@@ -36,10 +37,16 @@ class CustomStep extends Component {
 
   render() {
     const { loading } = this.state;
+    const { style } = this.props;
+    const customStyle = Object.assign(
+      {},
+      styles.customStep,
+      style,
+    );
     return (
       <div
         className="custom-step"
-        style={styles.customStep}
+        style={customStyle}
       >
         { loading ? (
           <span style={styles.loading}>Loading ...</span>
@@ -52,6 +59,7 @@ class CustomStep extends Component {
 CustomStep.propTypes = {
   step: PropTypes.object.isRequired,
   steps: PropTypes.object.isRequired,
+  style: PropTypes.object.isRequired,
   previousStep: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
 };

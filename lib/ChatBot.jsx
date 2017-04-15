@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Random from 'random-id';
 import { CustomStep, OptionsStep, TextStep } from './steps/steps';
@@ -268,6 +269,7 @@ class ChatBot extends Component {
 
   renderStep(step, index) {
     const { renderedSteps, previousSteps } = this.state;
+    const { customStyle } = this.props;
     const { options, component } = step;
     const steps = {};
     const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
@@ -289,6 +291,7 @@ class ChatBot extends Component {
           key={index}
           step={step}
           steps={steps}
+          style={customStyle}
           previousStep={previousStep}
           triggerNextStep={this.triggerNextStep}
         />
@@ -371,6 +374,7 @@ ChatBot.propTypes = {
   contentStyle: PropTypes.object,
   footerStyle: PropTypes.object,
   inputStyle: PropTypes.object,
+  customStyle: PropTypes.object,
   botAvatar: PropTypes.string,
   botBubbleColor: PropTypes.string,
   botFontColor: PropTypes.string,
@@ -388,6 +392,7 @@ ChatBot.defaultProps = {
   contentStyle: {},
   footerStyle: {},
   inputStyle: {},
+  customStyle: {},
   botBubbleColor: '#eee',
   botFontColor: '#000',
   userBubbleColor: '#baf5fd',
