@@ -21991,8 +21991,7 @@
 	          border: 0,
 	          boxShadow: '0 0 100px #ddd',
 	          borderRadius: '10px',
-	          width: 'initial',
-	          maxWidth: 300
+	          width: 280
 	        },
 	        botBubbleColor: '#6E48AA',
 	        botFontColor: '#fff',
