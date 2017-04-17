@@ -47537,8 +47537,8 @@
 	    value: function componentDidMount() {
 	      var self = this;
 	      var link = window.location.hash.replace('#', '');
-	      $('.sub-links a[data-href="' + link).parents('div').addClass('selected');
-	      $('.sub-links a[data-href="' + link).addClass('selected-link');
+	      $('.sub-links a[data-href="' + link + '"]').parents('div').addClass('selected');
+	      $('.sub-links a[data-href="' + link + '"]').addClass('selected-link');
 	
 	      var linkDivs = $('.sidebar-links > div');
 	      var links = $('.sidebar-links a');
