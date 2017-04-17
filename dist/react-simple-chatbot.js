@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          this.setState({ currentStep: currentStep, previousStep: previousStep });
 	
-	          if (nextSteps.user && nextSteps.type) {
+	          if (nextSteps.user && !nextSteps.component) {
 	            this.setState({ disabled: false }, function () {
 	              document.querySelector('.chat-input').focus();
 	            });
@@ -286,8 +286,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return { id: id, message: message, value: value };
 	      });
 	
+	      var values = previousSteps.filter(function (step) {
+	        return step.value;
+	      }).map(function (step) {
+	        return step.value;
+	      });
+	
 	      if (this.props.handleEnd) {
-	        this.props.handleEnd({ steps: steps });
+	        this.props.handleEnd({ steps: steps, values: values });
 	      }
 	    }
 	  }, {
@@ -22664,7 +22670,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    paddingTop: 6
 	  },
 	  chatInput: {
-	    width: 'calc(100% - 18px)',
+	    width: 'calc(100% - 16px)',
 	    padding: '12px 8px',
 	    fontSize: 12,
 	    border: 0,

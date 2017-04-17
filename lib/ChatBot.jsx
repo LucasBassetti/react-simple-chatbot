@@ -148,7 +148,7 @@ class ChatBot extends Component {
 
         this.setState({ currentStep, previousStep });
 
-        if (nextSteps.user && nextSteps.type) {
+        if (nextSteps.user && !nextSteps.component) {
           this.setState({ disabled: false }, () => {
             document.querySelector('.chat-input').focus();
           });
@@ -170,8 +170,10 @@ class ChatBot extends Component {
       return { id, message, value };
     });
 
+    const values = previousSteps.filter(step => step.value).map(step => step.value);
+
     if (this.props.handleEnd) {
-      this.props.handleEnd({ steps });
+      this.props.handleEnd({ steps, values });
     }
   }
 

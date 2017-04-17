@@ -41,7 +41,7 @@ const styles = {
     paddingTop: 6,
   },
   chatInput: {
-    width: 'calc(100% - 18px)',
+    width: 'calc(100% - 16px)',
     padding: '12px 8px',
     fontSize: 12,
     border: 0,
