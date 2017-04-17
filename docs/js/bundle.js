@@ -21939,7 +21939,7 @@
 	              className: 'github-button',
 	              href: 'https://github.com/' + github.user + '/' + github.repository,
 	              'data-style': 'mega',
-	              'data-count-href': github.user + '/' + github.repository + '/stargazers',
+	              'data-count-href': '/' + github.user + '/' + github.repository + '/stargazers',
 	              'data-count-api': '/repos/' + github.user + '/' + github.repository + '#stargazers_count',
 	              'data-count-aria-label': '# stargazers on GitHub',
 	              'aria-label': 'Star ' + github.user + '/' + github.repository + ' on GitHub'
@@ -21956,7 +21956,7 @@
 	              className: 'github-button',
 	              href: 'https://github.com/' + github.user + '/' + github.repository + '/fork',
 	              'data-style': 'mega',
-	              'data-count-href': github.user + '/' + github.repository + '/network',
+	              'data-count-href': '/' + github.user + '/' + github.repository + '/network',
 	              'data-count-api': '/repos/' + github.user + '/' + github.repository + '#forks_count',
 	              'data-count-aria-label': '# forks on GitHub',
 	              'aria-label': 'Fork ' + github.user + '/' + github.repository + ' on GitHub'
@@ -47537,8 +47537,8 @@
 	    value: function componentDidMount() {
 	      var self = this;
 	      var link = window.location.hash.replace('#', '');
-	      $('.sub-links a[href="' + link).parents('div').addClass('selected');
-	      $('.sub-links a[href="' + link).addClass('selected-link');
+	      $('.sub-links a[data-href="' + link).parents('div').addClass('selected');
+	      $('.sub-links a[data-href="' + link).addClass('selected-link');
 	
 	      var linkDivs = $('.sidebar-links > div');
 	      var links = $('.sidebar-links a');
@@ -47581,9 +47581,12 @@
 	        { key: link.href },
 	        _react2.default.createElement(
 	          'a',
-	          { onClick: function onClick() {
+	          {
+	            'data-href': link.href,
+	            onClick: function onClick() {
 	              return _this2.props.handleLink(link.href);
-	            } },
+	            }
+	          },
 	          link.title
 	        )
 	      );
