@@ -122,7 +122,7 @@ TextStep.propTypes = {
   isLast: PropTypes.bool.isRequired,
   message: PropTypes.string.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
-  previousValue: PropTypes.string,
+  previousValue: PropTypes.any,
   user: PropTypes.bool,
 };
 
