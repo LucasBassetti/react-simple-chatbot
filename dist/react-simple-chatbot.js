@@ -86,17 +86,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _lodash = __webpack_require__(36);
+	var _propTypes = __webpack_require__(37);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _lodash = __webpack_require__(39);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _randomId = __webpack_require__(38);
+	var _randomId = __webpack_require__(41);
 	
 	var _randomId2 = _interopRequireDefault(_randomId);
 	
-	var _steps = __webpack_require__(39);
+	var _steps = __webpack_require__(42);
 	
-	var _ChatBot = __webpack_require__(46);
+	var _ChatBot = __webpack_require__(49);
 	
 	var _ChatBot2 = _interopRequireDefault(_ChatBot);
 	
@@ -394,6 +398,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _state5 = this.state,
 	          renderedSteps = _state5.renderedSteps,
 	          previousSteps = _state5.previousSteps;
+	      var customStyle = this.props.customStyle;
 	      var options = step.options,
 	          component = step.component;
 	
@@ -418,6 +423,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          key: index,
 	          step: step,
 	          steps: steps,
+	          style: customStyle,
 	          previousStep: previousStep,
 	          triggerNextStep: this.triggerNextStep
 	        });
@@ -501,19 +507,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react.Component);
 	
 	ChatBot.propTypes = {
-	  steps: _react.PropTypes.array.isRequired,
-	  style: _react.PropTypes.object,
-	  contentStyle: _react.PropTypes.object,
-	  footerStyle: _react.PropTypes.object,
-	  inputStyle: _react.PropTypes.object,
-	  botAvatar: _react.PropTypes.string,
-	  botBubbleColor: _react.PropTypes.string,
-	  botFontColor: _react.PropTypes.string,
-	  userAvatar: _react.PropTypes.string,
-	  userBubbleColor: _react.PropTypes.string,
-	  userFontColor: _react.PropTypes.string,
-	  delay: _react.PropTypes.number,
-	  handleEnd: _react.PropTypes.func
+	  steps: _propTypes2.default.array.isRequired,
+	  style: _propTypes2.default.object,
+	  contentStyle: _propTypes2.default.object,
+	  footerStyle: _propTypes2.default.object,
+	  inputStyle: _propTypes2.default.object,
+	  customStyle: _propTypes2.default.object,
+	  botAvatar: _propTypes2.default.string,
+	  botBubbleColor: _propTypes2.default.string,
+	  botFontColor: _propTypes2.default.string,
+	  userAvatar: _propTypes2.default.string,
+	  userBubbleColor: _propTypes2.default.string,
+	  userFontColor: _propTypes2.default.string,
+	  delay: _propTypes2.default.number,
+	  handleEnd: _propTypes2.default.func
 	};
 	
 	ChatBot.defaultProps = {
@@ -523,6 +530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  contentStyle: {},
 	  footerStyle: {},
 	  inputStyle: {},
+	  customStyle: {},
 	  botBubbleColor: '#eee',
 	  botFontColor: '#000',
 	  userBubbleColor: '#baf5fd',
@@ -567,9 +575,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ReactDOMFactories = __webpack_require__(25);
 	var ReactElement = __webpack_require__(10);
 	var ReactPropTypes = __webpack_require__(30);
-	var ReactVersion = __webpack_require__(34);
+	var ReactVersion = __webpack_require__(35);
 	
-	var onlyChild = __webpack_require__(35);
+	var onlyChild = __webpack_require__(36);
 	var warning = __webpack_require__(12);
 	
 	var createElement = ReactElement.createElement;
@@ -4154,6 +4162,33 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	'use strict';
+	
+	// React 15.5 references this module, and assumes PropTypes are still callable in production.
+	// Therefore we re-export development-only version with all the PropTypes checks here.
+	// However if one is migrating to the `prop-types` npm library, they will go through the
+	// `index.js` entry point, and it will branch depending on the environment.
+	var factory = __webpack_require__(32);
+	module.exports = function(isValidElement) {
+	  // It is still allowed in 15.5.
+	  var throwOnDirectAccess = false;
+	  return factory(isValidElement, throwOnDirectAccess);
+	};
+
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2013-present, Facebook, Inc.
 	 * All rights reserved.
@@ -4169,10 +4204,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var invariant = __webpack_require__(9);
 	var warning = __webpack_require__(12);
 	
-	var ReactPropTypesSecret = __webpack_require__(32);
-	var checkPropTypes = __webpack_require__(33);
+	var ReactPropTypesSecret = __webpack_require__(33);
+	var checkPropTypes = __webpack_require__(34);
 	
-	module.exports = function (isValidElement) {
+	module.exports = function(isValidElement, throwOnDirectAccess) {
 	  /* global Symbol */
 	  var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 	  var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
@@ -4247,58 +4282,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  var ANONYMOUS = '<<anonymous>>';
 	
-	  var ReactPropTypes;
+	  // Important!
+	  // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
+	  var ReactPropTypes = {
+	    array: createPrimitiveTypeChecker('array'),
+	    bool: createPrimitiveTypeChecker('boolean'),
+	    func: createPrimitiveTypeChecker('function'),
+	    number: createPrimitiveTypeChecker('number'),
+	    object: createPrimitiveTypeChecker('object'),
+	    string: createPrimitiveTypeChecker('string'),
+	    symbol: createPrimitiveTypeChecker('symbol'),
 	
-	  if (process.env.NODE_ENV !== 'production') {
-	    // Keep in sync with production version below
-	    ReactPropTypes = {
-	      array: createPrimitiveTypeChecker('array'),
-	      bool: createPrimitiveTypeChecker('boolean'),
-	      func: createPrimitiveTypeChecker('function'),
-	      number: createPrimitiveTypeChecker('number'),
-	      object: createPrimitiveTypeChecker('object'),
-	      string: createPrimitiveTypeChecker('string'),
-	      symbol: createPrimitiveTypeChecker('symbol'),
-	
-	      any: createAnyTypeChecker(),
-	      arrayOf: createArrayOfTypeChecker,
-	      element: createElementTypeChecker(),
-	      instanceOf: createInstanceTypeChecker,
-	      node: createNodeChecker(),
-	      objectOf: createObjectOfTypeChecker,
-	      oneOf: createEnumTypeChecker,
-	      oneOfType: createUnionTypeChecker,
-	      shape: createShapeTypeChecker
-	    };
-	  } else {
-	    var productionTypeChecker = function () {
-	      invariant(false, 'React.PropTypes type checking code is stripped in production.');
-	    };
-	    productionTypeChecker.isRequired = productionTypeChecker;
-	    var getProductionTypeChecker = function () {
-	      return productionTypeChecker;
-	    };
-	    // Keep in sync with development version above
-	    ReactPropTypes = {
-	      array: productionTypeChecker,
-	      bool: productionTypeChecker,
-	      func: productionTypeChecker,
-	      number: productionTypeChecker,
-	      object: productionTypeChecker,
-	      string: productionTypeChecker,
-	      symbol: productionTypeChecker,
-	
-	      any: productionTypeChecker,
-	      arrayOf: getProductionTypeChecker,
-	      element: productionTypeChecker,
-	      instanceOf: getProductionTypeChecker,
-	      node: productionTypeChecker,
-	      objectOf: getProductionTypeChecker,
-	      oneOf: getProductionTypeChecker,
-	      oneOfType: getProductionTypeChecker,
-	      shape: getProductionTypeChecker
-	    };
-	  }
+	    any: createAnyTypeChecker(),
+	    arrayOf: createArrayOfTypeChecker,
+	    element: createElementTypeChecker(),
+	    instanceOf: createInstanceTypeChecker,
+	    node: createNodeChecker(),
+	    objectOf: createObjectOfTypeChecker,
+	    oneOf: createEnumTypeChecker,
+	    oneOfType: createUnionTypeChecker,
+	    shape: createShapeTypeChecker
+	  };
 	
 	  /**
 	   * inlined Object.is polyfill to avoid requiring consumers ship their own
@@ -4335,16 +4339,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function createChainableTypeChecker(validate) {
 	    if (process.env.NODE_ENV !== 'production') {
 	      var manualPropTypeCallCache = {};
+	      var manualPropTypeWarningCount = 0;
 	    }
 	    function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
 	      componentName = componentName || ANONYMOUS;
 	      propFullName = propFullName || propName;
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (secret !== ReactPropTypesSecret && typeof console !== 'undefined') {
+	
+	      if (secret !== ReactPropTypesSecret) {
+	        if (throwOnDirectAccess) {
+	          // New behavior only for users of `prop-types` package
+	          invariant(
+	            false,
+	            'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
+	            'Use `PropTypes.checkPropTypes()` to call them. ' +
+	            'Read more at http://fb.me/use-check-prop-types'
+	          );
+	        } else if (process.env.NODE_ENV !== 'production' && typeof console !== 'undefined') {
+	          // Old behavior for people using React.PropTypes
 	          var cacheKey = componentName + ':' + propName;
-	          if (!manualPropTypeCallCache[cacheKey]) {
-	            process.env.NODE_ENV !== 'production' ? warning(false, 'You are manually calling a React.PropTypes validation ' + 'function for the `%s` prop on `%s`. This is deprecated ' + 'and will not work in production with the next major version. ' + 'You may be seeing this warning due to a third-party PropTypes ' + 'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.', propFullName, componentName) : void 0;
+	          if (
+	            !manualPropTypeCallCache[cacheKey] &&
+	            // Avoid spamming the console because they are often not actionable except for lib authors
+	            manualPropTypeWarningCount < 3
+	          ) {
+	            warning(
+	              false,
+	              'You are manually calling a React.PropTypes validation ' +
+	              'function for the `%s` prop on `%s`. This is deprecated ' +
+	              'and will throw in the standalone `prop-types` package. ' +
+	              'You may be seeing this warning due to a third-party PropTypes ' +
+	              'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.',
+	              propFullName,
+	              componentName
+	            );
 	            manualPropTypeCallCache[cacheKey] = true;
+	            manualPropTypeWarningCount++;
 	          }
 	        }
 	      }
@@ -4642,7 +4671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	/**
@@ -4662,7 +4691,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4676,12 +4705,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(9);
-	var warning = __webpack_require__(12);
-	
-	var ReactPropTypesSecret = __webpack_require__(32);
-	
-	var loggedTypeFailures = {};
+	if (process.env.NODE_ENV !== 'production') {
+	  var invariant = __webpack_require__(9);
+	  var warning = __webpack_require__(12);
+	  var ReactPropTypesSecret = __webpack_require__(33);
+	  var loggedTypeFailures = {};
+	}
 	
 	/**
 	 * Assert that the values match with the type specs.
@@ -4710,7 +4739,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } catch (ex) {
 	          error = ex;
 	        }
-	        process.env.NODE_ENV !== 'production' ? warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error) : void 0;
+	        warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
 	        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
 	          // Only monitor this failure once because there tends to be a lot of the
 	          // same error.
@@ -4718,7 +4747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          var stack = getStack ? getStack() : '';
 	
-	          process.env.NODE_ENV !== 'production' ? warning(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '') : void 0;
+	          warning(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
 	        }
 	      }
 	    }
@@ -4730,7 +4759,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	/**
@@ -4748,7 +4777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = '15.5.3';
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4791,7 +4820,104 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 36 */
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	if (process.env.NODE_ENV !== 'production') {
+	  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
+	    Symbol.for &&
+	    Symbol.for('react.element')) ||
+	    0xeac7;
+	
+	  var isValidElement = function(object) {
+	    return typeof object === 'object' &&
+	      object !== null &&
+	      object.$$typeof === REACT_ELEMENT_TYPE;
+	  };
+	
+	  // By explicitly using `prop-types` you are opting into new development behavior.
+	  // http://fb.me/prop-types-in-prod
+	  var throwOnDirectAccess = true;
+	  module.exports = __webpack_require__(32)(isValidElement, throwOnDirectAccess);
+	} else {
+	  // By explicitly using `prop-types` you are opting into new production behavior.
+	  // http://fb.me/prop-types-in-prod
+	  module.exports = __webpack_require__(38)();
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	'use strict';
+	
+	var emptyFunction = __webpack_require__(13);
+	var invariant = __webpack_require__(9);
+	
+	module.exports = function() {
+	  // Important!
+	  // Keep this list in sync with production version in `./factoryWithTypeCheckers.js`.
+	  function shim() {
+	    invariant(
+	      false,
+	      'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
+	      'Use PropTypes.checkPropTypes() to call them. ' +
+	      'Read more at http://fb.me/use-check-prop-types'
+	    );
+	  };
+	  shim.isRequired = shim;
+	  function getShim() {
+	    return shim;
+	  };
+	  var ReactPropTypes = {
+	    array: shim,
+	    bool: shim,
+	    func: shim,
+	    number: shim,
+	    object: shim,
+	    string: shim,
+	    symbol: shim,
+	
+	    any: shim,
+	    arrayOf: getShim,
+	    element: shim,
+	    instanceOf: getShim,
+	    node: shim,
+	    objectOf: getShim,
+	    oneOf: getShim,
+	    oneOfType: getShim,
+	    shape: getShim
+	  };
+	
+	  ReactPropTypes.checkPropTypes = emptyFunction;
+	  ReactPropTypes.PropTypes = ReactPropTypes;
+	
+	  return ReactPropTypes;
+	};
+
+
+/***/ },
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -21879,10 +22005,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}.call(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(37)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(40)(module)))
 
 /***/ },
-/* 37 */
+/* 40 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -21898,7 +22024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 38 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function(){
@@ -21939,7 +22065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ },
-/* 39 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21949,15 +22075,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.TextStep = exports.OptionsStep = exports.CustomStep = undefined;
 	
-	var _CustomStep = __webpack_require__(40);
+	var _CustomStep = __webpack_require__(43);
 	
 	var _CustomStep2 = _interopRequireDefault(_CustomStep);
 	
-	var _OptionsStep = __webpack_require__(42);
+	var _OptionsStep = __webpack_require__(45);
 	
 	var _OptionsStep2 = _interopRequireDefault(_OptionsStep);
 	
-	var _TextStep = __webpack_require__(44);
+	var _TextStep = __webpack_require__(47);
 	
 	var _TextStep2 = _interopRequireDefault(_TextStep);
 	
@@ -21968,7 +22094,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.TextStep = _TextStep2.default;
 
 /***/ },
-/* 40 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21983,7 +22109,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _CustomStep = __webpack_require__(41);
+	var _propTypes = __webpack_require__(37);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _CustomStep = __webpack_require__(44);
 	
 	var _CustomStep2 = _interopRequireDefault(_CustomStep);
 	
@@ -22047,12 +22177,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'render',
 	    value: function render() {
 	      var loading = this.state.loading;
+	      var style = this.props.style;
 	
+	      var customStyle = Object.assign({}, _CustomStep2.default.customStep, style);
 	      return _react2.default.createElement(
 	        'div',
 	        {
 	          className: 'custom-step',
-	          style: _CustomStep2.default.customStep
+	          style: customStyle
 	        },
 	        loading ? _react2.default.createElement(
 	          'span',
@@ -22067,16 +22199,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react.Component);
 	
 	CustomStep.propTypes = {
-	  step: _react.PropTypes.object.isRequired,
-	  steps: _react.PropTypes.object.isRequired,
-	  previousStep: _react.PropTypes.object.isRequired,
-	  triggerNextStep: _react.PropTypes.func.isRequired
+	  step: _propTypes2.default.object.isRequired,
+	  steps: _propTypes2.default.object.isRequired,
+	  style: _propTypes2.default.object.isRequired,
+	  previousStep: _propTypes2.default.object.isRequired,
+	  triggerNextStep: _propTypes2.default.func.isRequired
 	};
 	
 	exports.default = CustomStep;
 
 /***/ },
-/* 41 */
+/* 44 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22101,7 +22234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = styles;
 
 /***/ },
-/* 42 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22116,11 +22249,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _lodash = __webpack_require__(36);
+	var _propTypes = __webpack_require__(37);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _lodash = __webpack_require__(39);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _OptionsStep = __webpack_require__(43);
+	var _OptionsStep = __webpack_require__(46);
 	
 	var _OptionsStep2 = _interopRequireDefault(_OptionsStep);
 	
@@ -22214,16 +22351,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react.Component);
 	
 	OptionsStep.propTypes = {
-	  options: _react.PropTypes.array.isRequired,
-	  bubbleColor: _react.PropTypes.string.isRequired,
-	  fontColor: _react.PropTypes.string.isRequired,
-	  triggerNextStep: _react.PropTypes.func.isRequired
+	  options: _propTypes2.default.array.isRequired,
+	  bubbleColor: _propTypes2.default.string.isRequired,
+	  fontColor: _propTypes2.default.string.isRequired,
+	  triggerNextStep: _propTypes2.default.func.isRequired
 	};
 	
 	exports.default = OptionsStep;
 
 /***/ },
-/* 43 */
+/* 46 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22252,7 +22389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = styles;
 
 /***/ },
-/* 44 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22267,7 +22404,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TextStep = __webpack_require__(45);
+	var _propTypes = __webpack_require__(37);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _TextStep = __webpack_require__(48);
 	
 	var _TextStep2 = _interopRequireDefault(_TextStep);
 	
@@ -22394,16 +22535,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react.Component);
 	
 	TextStep.propTypes = {
-	  avatar: _react.PropTypes.string.isRequired,
-	  bubbleColor: _react.PropTypes.string.isRequired,
-	  delay: _react.PropTypes.number.isRequired,
-	  fontColor: _react.PropTypes.string.isRequired,
-	  isFirst: _react.PropTypes.bool.isRequired,
-	  isLast: _react.PropTypes.bool.isRequired,
-	  message: _react.PropTypes.string.isRequired,
-	  triggerNextStep: _react.PropTypes.func.isRequired,
-	  previousValue: _react.PropTypes.string,
-	  user: _react.PropTypes.bool
+	  avatar: _propTypes2.default.string.isRequired,
+	  bubbleColor: _propTypes2.default.string.isRequired,
+	  delay: _propTypes2.default.number.isRequired,
+	  fontColor: _propTypes2.default.string.isRequired,
+	  isFirst: _propTypes2.default.bool.isRequired,
+	  isLast: _propTypes2.default.bool.isRequired,
+	  message: _propTypes2.default.string.isRequired,
+	  triggerNextStep: _propTypes2.default.func.isRequired,
+	  previousValue: _propTypes2.default.any,
+	  user: _propTypes2.default.bool
 	};
 	
 	TextStep.defaultProps = {
@@ -22414,7 +22555,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = TextStep;
 
 /***/ },
-/* 45 */
+/* 48 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22499,7 +22640,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = styles;
 
 /***/ },
-/* 46 */
+/* 49 */
 /***/ function(module, exports) {
 
 	'use strict';
