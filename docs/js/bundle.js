@@ -21820,8 +21820,6 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(211);
-	
 	var App = function (_Component) {
 	  _inherits(App, _Component);
 	
@@ -47636,7 +47634,9 @@
 	            { className: 'sidebar-header' },
 	            _react2.default.createElement(
 	              'a',
-	              { href: '/', className: 'logo' },
+	              { onClick: function onClick() {
+	                  return _this3.props.handleLink('/');
+	                }, className: 'logo' },
 	              'React Simple Chatbot'
 	            ),
 	            _react2.default.createElement('i', {
