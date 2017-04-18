@@ -60,6 +60,7 @@
 	
 	__webpack_require__(225);
 	__webpack_require__(227);
+	__webpack_require__(229);
 	
 	(0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('root'));
 
@@ -21991,8 +21992,7 @@
 	          background: '#fff',
 	          border: 0,
 	          boxShadow: '0 0 100px #ddd',
-	          borderRadius: '10px',
-	          width: 280
+	          borderRadius: '10px'
 	        },
 	        botBubbleColor: '#6E48AA',
 	        botFontColor: '#fff',
@@ -64951,7 +64951,7 @@
 	      null,
 	      _react2.default.createElement(
 	        'code',
-	        null,
+	        { className: 'bash' },
 	        installationCode
 	      )
 	    ),
@@ -64965,7 +64965,7 @@
 	      null,
 	      _react2.default.createElement(
 	        'code',
-	        null,
+	        { className: 'bash' },
 	        impportCode
 	      )
 	    )
@@ -76224,70 +76224,74 @@
 	      'Properties'
 	    ),
 	    _react2.default.createElement(
-	      'table',
-	      null,
+	      'div',
+	      { className: 'responsive-table' },
 	      _react2.default.createElement(
-	        'thead',
+	        'table',
 	        null,
 	        _react2.default.createElement(
-	          'tr',
+	          'thead',
 	          null,
 	          _react2.default.createElement(
-	            'th',
-	            null,
-	            'Name'
-	          ),
-	          _react2.default.createElement(
-	            'th',
-	            null,
-	            'Type'
-	          ),
-	          _react2.default.createElement(
-	            'th',
-	            null,
-	            'Default'
-	          ),
-	          _react2.default.createElement(
-	            'th',
-	            null,
-	            'Description'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'tbody',
-	        null,
-	        properties.map(function (prop) {
-	          var name = prop.name,
-	              type = prop.type,
-	              defaultValue = prop.defaultValue,
-	              description = prop.description;
-	
-	          return _react2.default.createElement(
 	            'tr',
-	            { key: prop.name },
+	            null,
 	            _react2.default.createElement(
-	              'td',
-	              { className: 'blue-td' },
-	              name
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              { className: 'red-td' },
-	              type
-	            ),
-	            _react2.default.createElement(
-	              'td',
+	              'th',
 	              null,
-	              defaultValue
+	              'Name'
 	            ),
 	            _react2.default.createElement(
-	              'td',
+	              'th',
 	              null,
-	              description
+	              'Type'
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              null,
+	              'Default'
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              null,
+	              'Description'
 	            )
-	          );
-	        })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'tbody',
+	          null,
+	          properties.map(function (prop) {
+	            var name = prop.name,
+	                type = prop.type,
+	                defaultValue = prop.defaultValue,
+	                description = prop.description;
+	
+	            return _react2.default.createElement(
+	              'tr',
+	              { key: prop.name },
+	              _react2.default.createElement(
+	                'td',
+	                { className: 'blue-td' },
+	                name
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { className: 'red-td' },
+	                type
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                defaultValue
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                description
+	              )
+	            );
+	          })
+	        )
 	      )
 	    )
 	  );
@@ -76524,54 +76528,58 @@
 	          section.title
 	        ),
 	        _react2.default.createElement(
-	          'table',
-	          null,
+	          'div',
+	          { className: 'responsive-table' },
 	          _react2.default.createElement(
-	            'thead',
+	            'table',
 	            null,
 	            _react2.default.createElement(
-	              'tr',
+	              'thead',
 	              null,
 	              _react2.default.createElement(
-	                'th',
+	                'tr',
 	                null,
-	                'Name'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Type'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Required'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Description'
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Name'
+	                ),
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Type'
+	                ),
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Required'
+	                ),
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Description'
+	                )
 	              )
+	            ),
+	            _react2.default.createElement(
+	              'tbody',
+	              null,
+	              _lodash2.default.map(section.properties, this.renderProperties)
 	            )
 	          ),
 	          _react2.default.createElement(
-	            'tbody',
-	            null,
-	            _lodash2.default.map(section.properties, this.renderProperties)
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'h4',
-	          { style: { padding: '6px 12px' } },
-	          'Example'
-	        ),
-	        _react2.default.createElement(
-	          'pre',
-	          null,
+	            'h4',
+	            { style: { padding: '6px 12px' } },
+	            'Example'
+	          ),
 	          _react2.default.createElement(
-	            'code',
-	            { className: 'jsx' },
-	            section.example
+	            'pre',
+	            null,
+	            _react2.default.createElement(
+	              'code',
+	              { className: 'jsx' },
+	              section.example
+	            )
 	          )
 	        )
 	      );
@@ -76683,59 +76691,63 @@
 	      'Properties'
 	    ),
 	    _react2.default.createElement(
-	      'table',
-	      null,
+	      'div',
+	      { className: 'responsive-table' },
 	      _react2.default.createElement(
-	        'thead',
+	        'table',
 	        null,
 	        _react2.default.createElement(
-	          'tr',
+	          'thead',
 	          null,
 	          _react2.default.createElement(
-	            'th',
-	            null,
-	            'Name'
-	          ),
-	          _react2.default.createElement(
-	            'th',
-	            null,
-	            'Type'
-	          ),
-	          _react2.default.createElement(
-	            'th',
-	            null,
-	            'Description'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'tbody',
-	        null,
-	        properties.map(function (prop) {
-	          var name = prop.name,
-	              type = prop.type,
-	              description = prop.description;
-	
-	          return _react2.default.createElement(
 	            'tr',
-	            { key: prop.name },
+	            null,
 	            _react2.default.createElement(
-	              'td',
-	              { className: 'blue-td' },
-	              name
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              { className: 'red-td' },
-	              type
-	            ),
-	            _react2.default.createElement(
-	              'td',
+	              'th',
 	              null,
-	              description
+	              'Name'
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              null,
+	              'Type'
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              null,
+	              'Description'
 	            )
-	          );
-	        })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'tbody',
+	          null,
+	          properties.map(function (prop) {
+	            var name = prop.name,
+	                type = prop.type,
+	                description = prop.description;
+	
+	            return _react2.default.createElement(
+	              'tr',
+	              { key: prop.name },
+	              _react2.default.createElement(
+	                'td',
+	                { className: 'blue-td' },
+	                name
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { className: 'red-td' },
+	                type
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                description
+	              )
+	            );
+	          })
+	        )
 	      )
 	    )
 	  );
@@ -76912,8 +76924,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../node_modules/css-loader/index.js!./styles.css", function() {
-				var newContent = require("!!../node_modules/css-loader/index.js!./styles.css");
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./github.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./github.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -76931,7 +76943,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: 'Quicksand', sans-serif;\n  color: #4a4a4a;\n}\n\nh1, h2, h3, h4, h5 {\n  margin: 0;\n}\n\na {\n  text-decoration: none;\n  color: #944eb8;\n  cursor: pointer;\n}\n\na:hover {\n  opacity: .7\n}\n\nul {\n  list-style-type: none;\n  padding: 6px 12px;\n}\n\nli {\n  padding: 6px 0;\n}\n\ntable, thead, tbody, tr, th, td {\n  width: auto;\n  height: auto;\n  margin: 0;\n  padding: 0;\n  border: none;\n  border-collapse: inherit;\n  border-spacing: 0;\n  border-color: inherit;\n  vertical-align: inherit;\n  text-align: left;\n  -webkit-border-horizontal-spacing: 0;\n  -webkit-border-vertical-spacing: 0;\n}\n\ntable {\n  width: 100%;\n  margin: 12px 0;\n}\n\nth {\n  border-top: 1px solid #ddd;\n  background: #f5f5f5;\n}\n\nth, td {\n  padding: 12px;\n  border-bottom: 1px solid #ddd;\n}\n\npre {\n  white-space: pre-wrap;\n\twhite-space: -moz-pre-wrap !important; /* 1999+ Mozilla  */\n\twhite-space: -pre-wrap;\n\twhite-space: -o-pre-wrap;\n\tword-wrap: break-word;\n  background-color: #f5f5f5;\n  border: 1px solid #ddd;\n  border-radius: 5px;\n  padding: 12px;\n  line-height: 24px\n}\n\nobject {\n  display: none;\n}\n", ""]);
+	exports.push([module.id, "/*\n\ngithub.com style (c) Vasily Polovnyov <vast@whiteants.net>\n\n*/\n\n.hljs {\n  display: block;\n  overflow-x: auto;\n  padding: 0.5em;\n  color: #333;\n  background: #f8f8f8;\n}\n\n.hljs-comment,\n.hljs-quote {\n  color: #998;\n  font-style: italic;\n}\n\n.hljs-keyword,\n.hljs-selector-tag,\n.hljs-subst {\n  color: #333;\n  font-weight: bold;\n}\n\n.hljs-number,\n.hljs-literal,\n.hljs-variable,\n.hljs-template-variable,\n.hljs-tag .hljs-attr {\n  color: #008080;\n}\n\n.hljs-string,\n.hljs-doctag {\n  color: #d14;\n}\n\n.hljs-title,\n.hljs-section,\n.hljs-selector-id {\n  color: #900;\n  font-weight: bold;\n}\n\n.hljs-subst {\n  font-weight: normal;\n}\n\n.hljs-type,\n.hljs-class .hljs-title {\n  color: #458;\n  font-weight: bold;\n}\n\n.hljs-tag,\n.hljs-name,\n.hljs-attribute {\n  color: #000080;\n  font-weight: normal;\n}\n\n.hljs-regexp,\n.hljs-link {\n  color: #009926;\n}\n\n.hljs-symbol,\n.hljs-bullet {\n  color: #990073;\n}\n\n.hljs-built_in,\n.hljs-builtin-name {\n  color: #0086b3;\n}\n\n.hljs-meta {\n  color: #999;\n  font-weight: bold;\n}\n\n.hljs-deletion {\n  background: #fdd;\n}\n\n.hljs-addition {\n  background: #dfd;\n}\n\n.hljs-emphasis {\n  font-style: italic;\n}\n\n.hljs-strong {\n  font-weight: bold;\n}\n", ""]);
 	
 	// exports
 
@@ -76952,8 +76964,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./github.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./github.css");
+			module.hot.accept("!!../node_modules/css-loader/index.js!./styles.css", function() {
+				var newContent = require("!!../node_modules/css-loader/index.js!./styles.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -76971,7 +76983,47 @@
 	
 	
 	// module
-	exports.push([module.id, "/*\n\ngithub.com style (c) Vasily Polovnyov <vast@whiteants.net>\n\n*/\n\n.hljs {\n  display: block;\n  overflow-x: auto;\n  padding: 0.5em;\n  color: #333;\n  background: #f8f8f8;\n}\n\n.hljs-comment,\n.hljs-quote {\n  color: #998;\n  font-style: italic;\n}\n\n.hljs-keyword,\n.hljs-selector-tag,\n.hljs-subst {\n  color: #333;\n  font-weight: bold;\n}\n\n.hljs-number,\n.hljs-literal,\n.hljs-variable,\n.hljs-template-variable,\n.hljs-tag .hljs-attr {\n  color: #008080;\n}\n\n.hljs-string,\n.hljs-doctag {\n  color: #d14;\n}\n\n.hljs-title,\n.hljs-section,\n.hljs-selector-id {\n  color: #900;\n  font-weight: bold;\n}\n\n.hljs-subst {\n  font-weight: normal;\n}\n\n.hljs-type,\n.hljs-class .hljs-title {\n  color: #458;\n  font-weight: bold;\n}\n\n.hljs-tag,\n.hljs-name,\n.hljs-attribute {\n  color: #000080;\n  font-weight: normal;\n}\n\n.hljs-regexp,\n.hljs-link {\n  color: #009926;\n}\n\n.hljs-symbol,\n.hljs-bullet {\n  color: #990073;\n}\n\n.hljs-built_in,\n.hljs-builtin-name {\n  color: #0086b3;\n}\n\n.hljs-meta {\n  color: #999;\n  font-weight: bold;\n}\n\n.hljs-deletion {\n  background: #fdd;\n}\n\n.hljs-addition {\n  background: #dfd;\n}\n\n.hljs-emphasis {\n  font-style: italic;\n}\n\n.hljs-strong {\n  font-weight: bold;\n}\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: 'Quicksand', sans-serif;\n  color: #4a4a4a;\n}\n\nh1, h2, h3, h4, h5 {\n  margin: 0;\n}\n\na {\n  text-decoration: none;\n  color: #944eb8;\n  cursor: pointer;\n}\n\na:hover {\n  opacity: .7\n}\n\nul {\n  list-style-type: none;\n  padding: 6px 12px;\n}\n\nli {\n  padding: 6px 0;\n}\n\ntable, thead, tbody, tr, th, td {\n  width: auto;\n  height: auto;\n  margin: 0;\n  padding: 0;\n  border: none;\n  border-collapse: inherit;\n  border-spacing: 0;\n  border-color: inherit;\n  vertical-align: inherit;\n  text-align: left;\n  -webkit-border-horizontal-spacing: 0;\n  -webkit-border-vertical-spacing: 0;\n}\n\ntable {\n  width: 100%;\n  margin: 12px 0;\n}\n\nth {\n  border-top: 1px solid #ddd;\n  background: #f5f5f5;\n}\n\nth, td {\n  padding: 12px;\n  border-bottom: 1px solid #ddd;\n}\n\npre {\n  white-space: pre-wrap;\n  overflow-y: hidden;\n  overflow-x: scroll;\n  background: #f5f5f5;\n  border: 1px solid #ddd;\n  border-radius: 5px;\n}\n\npre::-webkit-scrollbar {\n  display: none;\n}\n\ncode {\n  padding: 12px !important;\n  line-height: 22px;\n  min-width: 500px;\n}\n\nobject {\n  display: none;\n}\n", ""]);
+	
+	// exports
+
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(230);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(194)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../node_modules/css-loader/index.js!./custom.css", function() {
+				var newContent = require("!!../node_modules/css-loader/index.js!./custom.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ }),
+/* 230 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(189)(undefined);
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".simple-chatbot {\n  width: 100% !important;\n  max-width: 400px !important;\n}\n\n.home .simple-chatbot {\n  width: 280px !important;\n}\n\n.responsive-table {\n  overflow-x: scroll;\n}\n\n.responsive-table::-webkit-scrollbar {\n  display: none;\n}\n\n.responsive-table table {\n  min-width: 765px;\n}\n", ""]);
 	
 	// exports
 
