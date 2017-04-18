@@ -43,13 +43,21 @@ class CustomStep extends Component {
       styles.customStep,
       style,
     );
+    const loadingStyle = Object.assign({}, styles.loading);
+    const loading2Style = Object.assign({}, styles.loading, styles.loading2);
+    const loading3Style = Object.assign({}, styles.loading, styles.loading3);
+
     return (
       <div
         className="custom-step"
         style={customStyle}
       >
         { loading ? (
-          <span style={styles.loading}>Loading ...</span>
+          <span>
+            <span style={loadingStyle}>.</span>
+            <span style={loading2Style}>.</span>
+            <span style={loading3Style}>.</span>
+          </span>
         ) : this.renderComponent() }
       </div>
     );

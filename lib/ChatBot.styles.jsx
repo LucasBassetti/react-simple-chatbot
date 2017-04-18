@@ -2,11 +2,13 @@ const createdStyleTag = document.createElement('style');
 createdStyleTag.textContent = `
   @-webkit-keyframes chatbotLoading {
     0% { opacity: .2; }
-    100% { opacity: 1; }
+    20% { opacity: 1; }
+    100% { opacity: .2; }
   }
   @keyframes chatbotLoading {
     0% { opacity: .2; }
-    100% { height: 1; }
+    20% { opacity: 1; }
+    100% { opacity: .2; }
   }
 
   @-webkit-keyframes chatbotScale {
@@ -31,6 +33,7 @@ document.head.appendChild(createdStyleTag);
 
 const styles = {
   chatbot: {
+    background: '#fff',
     border: '1px solid #ddd',
     fontFamily: 'monospace',
     width: 400,

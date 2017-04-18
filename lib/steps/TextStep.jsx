@@ -32,6 +32,10 @@ class TextStep extends Component {
     } = this.props;
     let { message } = this.props;
 
+    const loadingStyle = Object.assign({}, styles.loading);
+    const loading2Style = Object.assign({}, styles.loading, styles.loading2);
+    const loading3Style = Object.assign({}, styles.loading, styles.loading3);
+
     message = message.replace(/{previousValue}/g, previousValue);
 
     let chatTextStepStyle = styles.chatTextStep;
@@ -102,8 +106,10 @@ class TextStep extends Component {
         >
           {
             this.state.loading &&
-            <span style={styles.loading}>
-              ...
+            <span>
+              <span style={loadingStyle}>.</span>
+              <span style={loading2Style}>.</span>
+              <span style={loading3Style}>.</span>
             </span>
           }
           { !this.state.loading && message }
