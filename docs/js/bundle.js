@@ -58,9 +58,9 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(225);
-	__webpack_require__(227);
-	__webpack_require__(229);
+	__webpack_require__(226);
+	__webpack_require__(228);
+	__webpack_require__(230);
 	
 	(0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('root'));
 
@@ -47387,13 +47387,17 @@
 	
 	var _Sidebar2 = _interopRequireDefault(_Sidebar);
 	
+	var _GithubIcon = __webpack_require__(223);
+	
+	var _GithubIcon2 = _interopRequireDefault(_GithubIcon);
+	
 	var _menu = __webpack_require__(201);
 	
 	var _menu2 = _interopRequireDefault(_menu);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(223);
+	__webpack_require__(224);
 	
 	var routes = [];
 	for (var i = 0, len = _menu2.default.length; i < len; i += 1) {
@@ -47409,6 +47413,7 @@
 	    'div',
 	    { className: 'docs' },
 	    _react2.default.createElement(_Sidebar2.default, { handleLink: props.handleLink }),
+	    _react2.default.createElement(_GithubIcon2.default, null),
 	    _react2.default.createElement(
 	      'main',
 	      null,
@@ -47519,7 +47524,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	__webpack_require__(221);
 	
 	var Sidebar = function (_Component) {
@@ -64799,7 +64804,7 @@
 	
 	var _Installation2 = _interopRequireDefault(_Installation);
 	
-	var _HelloWorld = __webpack_require__(203);
+	var _HelloWorld = __webpack_require__(204);
 	
 	var _HelloWorld2 = _interopRequireDefault(_HelloWorld);
 	
@@ -64839,9 +64844,9 @@
 	
 	var _Component6 = _interopRequireDefault(_Component5);
 	
-	var _Github = __webpack_require__(220);
+	var _Contribute = __webpack_require__(220);
 	
-	var _Github2 = _interopRequireDefault(_Github);
+	var _Contribute2 = _interopRequireDefault(_Contribute);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -64910,9 +64915,9 @@
 	  title: 'Others',
 	  icon: 'fa fa-th',
 	  links: [{
-	    href: '/docs/github',
-	    title: 'Github Page',
-	    component: _react2.default.createElement(_Github2.default, null)
+	    href: '/docs/contribute',
+	    title: 'How to Contribute',
+	    component: _react2.default.createElement(_Contribute2.default, null)
 	  }]
 	}];
 	// Others
@@ -64928,71 +64933,11 @@
 	  value: true
 	});
 	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var installationCode = 'npm install react-simple-chatbot --save';
-	var impportCode = 'import ChatBot from \'react-simple-chatbot\';';
-	
-	var Installation = function Installation() {
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'docs-installation' },
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      'Run the following commands in your terminal'
-	    ),
-	    _react2.default.createElement(
-	      'pre',
-	      null,
-	      _react2.default.createElement(
-	        'code',
-	        { className: 'bash' },
-	        installationCode
-	      )
-	    ),
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      'Importing'
-	    ),
-	    _react2.default.createElement(
-	      'pre',
-	      null,
-	      _react2.default.createElement(
-	        'code',
-	        { className: 'bash' },
-	        impportCode
-	      )
-	    )
-	  );
-	};
-	
-	exports.default = Installation;
-
-/***/ }),
-/* 203 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactSimpleChatbot = __webpack_require__(186);
-	
-	var _reactSimpleChatbot2 = _interopRequireDefault(_reactSimpleChatbot);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -65002,20 +64947,21 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var installationCode = 'npm install react-simple-chatbot --save';
+	var impportCode = 'import ChatBot from \'react-simple-chatbot\';';
 	
-	var helloWorldCode = 'import ChatBot from \'react-simple-chatbot\';\n\n<ChatBot\n  steps={[\n    {\n      id: \'hello-world\',\n      message: \'Hello World!\',\n      end: true,\n    },\n  ]}\n/>\n';
+	var $ = __webpack_require__(203);
 	
-	var HelloWorld = function (_Component) {
-	  _inherits(HelloWorld, _Component);
+	var Installation = function (_Component) {
+	  _inherits(Installation, _Component);
 	
-	  function HelloWorld() {
-	    _classCallCheck(this, HelloWorld);
+	  function Installation() {
+	    _classCallCheck(this, Installation);
 	
-	    return _possibleConstructorReturn(this, (HelloWorld.__proto__ || Object.getPrototypeOf(HelloWorld)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Installation.__proto__ || Object.getPrototypeOf(Installation)).apply(this, arguments));
 	  }
 	
-	  _createClass(HelloWorld, [{
+	  _createClass(Installation, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      $('pre code').each(function (i, block) {
@@ -65027,44 +64973,46 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'docs-hello-world' },
+	        { className: 'docs-installation' },
 	        _react2.default.createElement(
 	          'p',
 	          null,
-	          'Check the hello world code'
+	          'Run the following commands in your terminal'
 	        ),
 	        _react2.default.createElement(
 	          'pre',
 	          null,
 	          _react2.default.createElement(
 	            'code',
-	            null,
-	            helloWorldCode
+	            { className: 'bash' },
+	            installationCode
 	          )
 	        ),
 	        _react2.default.createElement(
 	          'p',
 	          null,
-	          'Result'
+	          'Importing'
 	        ),
-	        _react2.default.createElement(_reactSimpleChatbot2.default, {
-	          steps: [{
-	            id: 'hello-world',
-	            message: 'Hello World!',
-	            end: true
-	          }]
-	        })
+	        _react2.default.createElement(
+	          'pre',
+	          null,
+	          _react2.default.createElement(
+	            'code',
+	            { className: 'jsx' },
+	            impportCode
+	          )
+	        )
 	      );
 	    }
 	  }]);
 	
-	  return HelloWorld;
+	  return Installation;
 	}(_react.Component);
 	
-	exports.default = HelloWorld;
+	exports.default = Installation;
 
 /***/ }),
-/* 204 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -75323,6 +75271,95 @@
 
 
 /***/ }),
+/* 204 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactSimpleChatbot = __webpack_require__(186);
+	
+	var _reactSimpleChatbot2 = _interopRequireDefault(_reactSimpleChatbot);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var $ = __webpack_require__(203);
+	
+	var helloWorldCode = 'import ChatBot from \'react-simple-chatbot\';\n\n<ChatBot\n  steps={[\n    {\n      id: \'hello-world\',\n      message: \'Hello World!\',\n      end: true,\n    },\n  ]}\n/>\n';
+	
+	var HelloWorld = function (_Component) {
+	  _inherits(HelloWorld, _Component);
+	
+	  function HelloWorld() {
+	    _classCallCheck(this, HelloWorld);
+	
+	    return _possibleConstructorReturn(this, (HelloWorld.__proto__ || Object.getPrototypeOf(HelloWorld)).apply(this, arguments));
+	  }
+	
+	  _createClass(HelloWorld, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      $('pre code').each(function (i, block) {
+	        hljs.highlightBlock(block);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'docs-hello-world' },
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Check the hello world code'
+	        ),
+	        _react2.default.createElement(
+	          'pre',
+	          null,
+	          _react2.default.createElement(
+	            'code',
+	            null,
+	            helloWorldCode
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Result'
+	        ),
+	        _react2.default.createElement(_reactSimpleChatbot2.default, {
+	          steps: [{
+	            id: 'hello-world',
+	            message: 'Hello World!',
+	            end: true
+	          }]
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return HelloWorld;
+	}(_react.Component);
+	
+	exports.default = HelloWorld;
+
+/***/ }),
 /* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -75350,7 +75387,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	
 	var exampleCode = '<ChatBot\n    steps={[\n      {\n        id: \'1\',\n        message: \'What number I am thinking?\',\n        trigger: \'2\',\n      },\n      {\n        id: \'2\',\n        options: [\n          { value: 1, label: \'Number 1\', trigger: \'4\' },\n          { value: 2, label: \'Number 2\', trigger: \'3\' },\n          { value: 3, label: \'Number 3\', trigger: \'3\' },\n        ],\n      },\n      {\n        id: \'3\',\n        message: \'Wrong answer, try again.\',\n        trigger: \'2\',\n      },\n      {\n        id: \'4\',\n        message: \'Awesome! You are a telepath!\',\n        end: true,\n      },\n    ]}\n  />\n';
 	
@@ -75445,7 +75482,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	
 	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'Please type a number\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      user: true,\n      validator: (value) => {\n        if (isNaN(value)) {\n          return \'value should be a number\';\n        }\n        return true;\n      },\n      trigger: \'1\',\n    },\n  ]}\n/>\n';
 	
@@ -75539,7 +75576,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	
 	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'You can add custom components\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      component: (\n        <div> This is a example component </div>\n      ),\n      end: true,\n    },\n  ]}\n/>\n';
 	
@@ -75635,7 +75672,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	
 	var DBPedia = function (_Component) {
 	  _inherits(DBPedia, _Component);
@@ -75824,7 +75861,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	
 	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'What is your name\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      user: true,\n      trigger: \'3\',\n    },\n    {\n      id: \'3\',\n      message: \'Hi {previousValue}, nice to meet you!\',\n      end: true,\n    },\n  ]}\n/>\n';
 	
@@ -75920,7 +75957,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	
 	var Review = function (_Component) {
 	  _inherits(Review, _Component);
@@ -76367,7 +76404,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(204);
+	var $ = __webpack_require__(203);
 	
 	__webpack_require__(215);
 	
@@ -76811,22 +76848,23 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var Github = function Github() {
+	var Contribute = function Contribute() {
 	  return _react2.default.createElement(
 	    "div",
-	    { className: "docs-github" },
+	    { className: "docs-contribute" },
+	    "Check out the",
 	    _react2.default.createElement(
 	      "a",
 	      {
-	        className: "external-link",
-	        href: "https://github.com/LucasBassetti/react-simple-chatbot"
+	        style: { paddingLeft: 6 },
+	        href: "https://github.com/LucasBassetti/react-simple-chatbot/blob/master/contributing.md"
 	      },
-	      "Github Page"
+	      "contributing guide"
 	    )
 	  );
 	};
 	
-	exports.default = Github;
+	exports.default = Contribute;
 
 /***/ }),
 /* 221 */
@@ -76872,10 +76910,57 @@
 /* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var GithubIcon = function GithubIcon() {
+	  return _react2.default.createElement(
+	    "a",
+	    {
+	      href: "https://github.com/LucasBassetti/react-simple-chatbot"
+	    },
+	    _react2.default.createElement(
+	      "svg",
+	      {
+	        width: "28",
+	        height: "28",
+	        viewBox: "0 0 400 400",
+	        style: {
+	          position: 'absolute',
+	          top: 0,
+	          right: 0,
+	          padding: 16
+	        }
+	      },
+	      _react2.default.createElement(
+	        "g",
+	        null,
+	        _react2.default.createElement("path", {
+	          d: "M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365 c-39.781,0-76.472,9.804-110.063,29.408c-33.596,19.605-60.192,46.204-79.8,79.8C9.803,148.168,0,184.854,0,224.63 c0,47.78,13.94,90.745,41.827,128.906c27.884,38.164,63.906,64.572,108.063,79.227c5.14,0.954,8.945,0.283,11.419-1.996 c2.475-2.282,3.711-5.14,3.711-8.562c0-0.571-0.049-5.708-0.144-15.417c-0.098-9.709-0.144-18.179-0.144-25.406l-6.567,1.136 c-4.187,0.767-9.469,1.092-15.846,1c-6.374-0.089-12.991-0.757-19.842-1.999c-6.854-1.231-13.229-4.086-19.13-8.559 c-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559 c-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-0.951-2.568-2.098-3.711-3.429c-1.142-1.331-1.997-2.663-2.568-3.997 c-0.572-1.335-0.098-2.43,1.427-3.289c1.525-0.859,4.281-1.276,8.28-1.276l5.708,0.853c3.807,0.763,8.516,3.042,14.133,6.851 c5.614,3.806,10.229,8.754,13.846,14.842c4.38,7.806,9.657,13.754,15.846,17.847c6.184,4.093,12.419,6.136,18.699,6.136 c6.28,0,11.704-0.476,16.274-1.423c4.565-0.952,8.848-2.383,12.847-4.285c1.713-12.758,6.377-22.559,13.988-29.41 c-10.848-1.14-20.601-2.857-29.264-5.14c-8.658-2.286-17.605-5.996-26.835-11.14c-9.235-5.137-16.896-11.516-22.985-19.126 c-6.09-7.614-11.088-17.61-14.987-29.979c-3.901-12.374-5.852-26.648-5.852-42.826c0-23.035,7.52-42.637,22.557-58.817 c-7.044-17.318-6.379-36.732,1.997-58.24c5.52-1.715,13.706-0.428,24.554,3.853c10.85,4.283,18.794,7.952,23.84,10.994 c5.046,3.041,9.089,5.618,12.135,7.708c17.705-4.947,35.976-7.421,54.818-7.421s37.117,2.474,54.823,7.421l10.849-6.849 c7.419-4.57,16.18-8.758,26.262-12.565c10.088-3.805,17.802-4.853,23.134-3.138c8.562,21.509,9.325,40.922,2.279,58.24 c15.036,16.18,22.559,35.787,22.559,58.817c0,16.178-1.958,30.497-5.853,42.966c-3.9,12.471-8.941,22.457-15.125,29.979 c-6.191,7.521-13.901,13.85-23.131,18.986c-9.232,5.14-18.182,8.85-26.84,11.136c-8.662,2.286-18.415,4.004-29.263,5.146 c9.894,8.562,14.842,22.077,14.842,40.539v60.237c0,3.422,1.19,6.279,3.572,8.562c2.379,2.279,6.136,2.95,11.276,1.995 c44.163-14.653,80.185-41.062,108.068-79.226c27.88-38.161,41.825-81.126,41.825-128.906 C438.536,184.851,428.728,148.168,409.132,114.573z" })
+	      )
+	    )
+	  );
+	};
+	
+	exports.default = GithubIcon;
+
+/***/ }),
+/* 224 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(224);
+	var content = __webpack_require__(225);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76895,7 +76980,7 @@
 	}
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76909,13 +76994,13 @@
 
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(226);
+	var content = __webpack_require__(227);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76935,7 +77020,7 @@
 	}
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76949,13 +77034,13 @@
 
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(228);
+	var content = __webpack_require__(229);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76975,7 +77060,7 @@
 	}
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76983,19 +77068,19 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: 'Quicksand', sans-serif;\n  color: #4a4a4a;\n}\n\nh1, h2, h3, h4, h5 {\n  margin: 0;\n}\n\na {\n  text-decoration: none;\n  color: #944eb8;\n  cursor: pointer;\n}\n\na:hover {\n  opacity: .7\n}\n\nul {\n  list-style-type: none;\n  padding: 6px 12px;\n}\n\nli {\n  padding: 6px 0;\n}\n\ntable, thead, tbody, tr, th, td {\n  width: auto;\n  height: auto;\n  margin: 0;\n  padding: 0;\n  border: none;\n  border-collapse: inherit;\n  border-spacing: 0;\n  border-color: inherit;\n  vertical-align: inherit;\n  text-align: left;\n  -webkit-border-horizontal-spacing: 0;\n  -webkit-border-vertical-spacing: 0;\n}\n\ntable {\n  width: 100%;\n  margin: 12px 0;\n}\n\nth {\n  border-top: 1px solid #ddd;\n  background: #f5f5f5;\n}\n\nth, td {\n  padding: 12px;\n  border-bottom: 1px solid #ddd;\n}\n\npre {\n  white-space: pre-wrap;\n  overflow-y: hidden;\n  overflow-x: scroll;\n  background: #f5f5f5;\n  border: 1px solid #ddd;\n  border-radius: 5px;\n}\n\npre::-webkit-scrollbar {\n  display: none;\n}\n\ncode {\n  padding: 12px !important;\n  line-height: 22px;\n  min-width: 500px;\n}\n\nobject {\n  display: none;\n}\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: 'Quicksand', sans-serif;\n  color: #4a4a4a;\n}\n\nh1, h2, h3, h4, h5 {\n  margin: 0;\n}\n\na {\n  text-decoration: none;\n  color: #944eb8;\n  cursor: pointer;\n}\n\na:hover {\n  opacity: .7\n}\n\nul {\n  list-style-type: none;\n  padding: 6px 12px;\n}\n\nli {\n  padding: 6px 0;\n}\n\ntable, thead, tbody, tr, th, td {\n  width: auto;\n  height: auto;\n  margin: 0;\n  padding: 0;\n  border: none;\n  border-collapse: inherit;\n  border-spacing: 0;\n  border-color: inherit;\n  vertical-align: inherit;\n  text-align: left;\n  -webkit-border-horizontal-spacing: 0;\n  -webkit-border-vertical-spacing: 0;\n}\n\ntable {\n  width: 100%;\n  margin: 12px 0;\n}\n\nth {\n  border-top: 1px solid #ddd;\n  background: #f5f5f5;\n}\n\nth, td {\n  padding: 12px;\n  border-bottom: 1px solid #ddd;\n}\n\npre {\n  white-space: pre-wrap;\n  overflow-y: hidden;\n  overflow-x: scroll;\n  background: #f5f5f5;\n  border: 1px solid #ddd;\n  border-radius: 5px;\n}\n\npre::-webkit-scrollbar {\n  display: none;\n}\n\ncode {\n  padding: 12px !important;\n  line-height: 22px;\n  min-width: 500px;\n  font-size: 13px !important;\n}\n\nobject {\n  display: none;\n}\n", ""]);
 	
 	// exports
 
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(230);
+	var content = __webpack_require__(231);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -77015,7 +77100,7 @@
 	}
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
