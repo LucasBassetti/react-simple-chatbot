@@ -58,8 +58,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(224);
-	__webpack_require__(226);
+	__webpack_require__(225);
+	__webpack_require__(227);
 	
 	(0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('root'));
 
@@ -47393,7 +47393,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(222);
+	__webpack_require__(223);
 	
 	var routes = [];
 	for (var i = 0, len = _menu2.default.length; i < len; i += 1) {
@@ -47520,7 +47520,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var $ = __webpack_require__(204);
-	__webpack_require__(220);
+	__webpack_require__(221);
 	
 	var Sidebar = function (_Component) {
 	  _inherits(Sidebar, _Component);
@@ -47544,7 +47544,7 @@
 	    value: function componentDidMount() {
 	      var self = this;
 	      var link = window.location.hash.replace('#', '');
-	      $('.sub-links a[data-href="' + link + '"]').parents('div').addClass('selected');
+	      $('.sub-links a[data-href="' + link + '"]').parents('div').first().addClass('selected');
 	      $('.sub-links a[data-href="' + link + '"]').addClass('selected-link');
 	
 	      var linkDivs = $('.sidebar-links > div');
@@ -64823,25 +64823,33 @@
 	
 	var _Example10 = _interopRequireDefault(_Example9);
 	
-	var _Component = __webpack_require__(210);
+	var _Example11 = __webpack_require__(210);
+	
+	var _Example12 = _interopRequireDefault(_Example11);
+	
+	var _Component = __webpack_require__(211);
 	
 	var _Component2 = _interopRequireDefault(_Component);
 	
-	var _Component3 = __webpack_require__(213);
+	var _Component3 = __webpack_require__(214);
 	
 	var _Component4 = _interopRequireDefault(_Component3);
 	
-	var _Component5 = __webpack_require__(216);
+	var _Component5 = __webpack_require__(217);
 	
 	var _Component6 = _interopRequireDefault(_Component5);
 	
-	var _Github = __webpack_require__(219);
+	var _Github = __webpack_require__(220);
 	
 	var _Github2 = _interopRequireDefault(_Github);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	// API Referece
+	
+	// Examples
+	
+	// Intro
 	var menu = [{
 	  title: 'Intro',
 	  icon: 'fa fa-arrow-right',
@@ -64877,6 +64885,10 @@
 	    href: '/docs/wikipedia',
 	    title: 'Wikipédia Search',
 	    component: _react2.default.createElement(_Example8.default, null)
+	  }, {
+	    href: '/docs/form',
+	    title: 'Simple Form',
+	    component: _react2.default.createElement(_Example12.default, null)
 	  }]
 	}, {
 	  title: 'API Reference',
@@ -64904,10 +64916,6 @@
 	  }]
 	}];
 	// Others
-	
-	// Examples
-	
-	// Intro
 	exports.default = menu;
 
 /***/ }),
@@ -75820,16 +75828,16 @@
 	
 	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'What is your name\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      user: true,\n      trigger: \'3\',\n    },\n    {\n      id: \'3\',\n      message: \'Hi {previousValue}, nice to meet you!\',\n      end: true,\n    },\n  ]}\n/>\n';
 	
-	var Example3 = function (_Component) {
-	  _inherits(Example3, _Component);
+	var Example5 = function (_Component) {
+	  _inherits(Example5, _Component);
 	
-	  function Example3() {
-	    _classCallCheck(this, Example3);
+	  function Example5() {
+	    _classCallCheck(this, Example5);
 	
-	    return _possibleConstructorReturn(this, (Example3.__proto__ || Object.getPrototypeOf(Example3)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Example5.__proto__ || Object.getPrototypeOf(Example5)).apply(this, arguments));
 	  }
 	
-	  _createClass(Example3, [{
+	  _createClass(Example5, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      $('pre code').each(function (i, block) {
@@ -75875,13 +75883,229 @@
 	    }
 	  }]);
 	
-	  return Example3;
+	  return Example5;
 	}(_react.Component);
 	
-	exports.default = Example3;
+	exports.default = Example5;
 
 /***/ }),
 /* 210 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(184);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _reactSimpleChatbot = __webpack_require__(186);
+	
+	var _reactSimpleChatbot2 = _interopRequireDefault(_reactSimpleChatbot);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var $ = __webpack_require__(204);
+	
+	var Review = function (_Component) {
+	  _inherits(Review, _Component);
+	
+	  function Review() {
+	    _classCallCheck(this, Review);
+	
+	    return _possibleConstructorReturn(this, (Review.__proto__ || Object.getPrototypeOf(Review)).apply(this, arguments));
+	  }
+	
+	  _createClass(Review, [{
+	    key: 'render',
+	    value: function render() {
+	      var steps = this.props.steps;
+	      var name = steps.name,
+	          gender = steps.gender,
+	          age = steps.age;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { style: { width: '100%' } },
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Summary'
+	        ),
+	        _react2.default.createElement(
+	          'table',
+	          null,
+	          _react2.default.createElement(
+	            'tbody',
+	            null,
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                'Name'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                name.value
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                'Gender'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                gender.value
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                'Age'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                null,
+	                age.value
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Review;
+	}(_react.Component);
+	
+	Review.propTypes = {
+	  steps: _propTypes2.default.object
+	};
+	
+	Review.defaultProps = {
+	  steps: undefined
+	};
+	
+	var exampleCode = 'import React, { Component } from \'react\';\nimport PropTypes from \'prop-types\';\nimport ChatBot from \'react-simple-chatbot\';\n\nclass Review extends Component {\n  render() {\n    const { steps } = this.props;\n    const { name, gender, age } = steps;\n    return (\n      <div style={{ width: \'100%\' }}>\n        <h3>Summary</h3>\n        <table>\n          <tbody>\n            <tr>\n              <td>Name</td>\n              <td>{name.value}</td>\n            </tr>\n            <tr>\n              <td>Gender</td>\n              <td>{gender.value}</td>\n            </tr>\n            <tr>\n              <td>Age</td>\n              <td>{age.value}</td>\n            </tr>\n          </tbody>\n        </table>\n      </div>\n    );\n  }\n}\n\nclass SimpleForm extends Component {\n  render() {\n    return (\n      <ChatBot\n        steps={[\n          {\n            id: \'1\',\n            message: \'What is your name\',\n            trigger: \'name\',\n          },\n          {\n            id: \'name\',\n            user: true,\n            trigger: \'3\',\n          },\n          {\n            id: \'3\',\n            message: \'Hi {previousValue}! What is your gender?\',\n            trigger: \'gender\',\n          },\n          {\n            id: \'gender\',\n            options: [\n              { value: \'male\', label: \'Male\', trigger: \'5\' },\n              { value: \'female\', label: \'Female\', trigger: \'5\' },\n            ],\n          },\n          {\n            id: \'5\',\n            message: \'How old are you?\',\n            trigger: \'age\',\n          },\n          {\n            id: \'age\',\n            user: true,\n            trigger: \'7\',\n            validator: (value) => {\n              if (isNaN(value)) {\n                return \'value must be a number\';\n              } else if (value < 0) {\n                return \'value must be positive\';\n              } else if (value > 120) {\n                return `${value}? Come on!`;\n              }\n\n              return true;\n            },\n          },\n          {\n            id: \'7\',\n            message: \'Great! Check out your summary\',\n            trigger: \'review\',\n          },\n          {\n            id: \'review\',\n            component: <Review />,\n            end: true,\n          },\n        ]}\n      />\n    );\n  }\n}\n\nexport default SimpleForm;\n';
+	
+	var Example6 = function (_Component2) {
+	  _inherits(Example6, _Component2);
+	
+	  function Example6() {
+	    _classCallCheck(this, Example6);
+	
+	    return _possibleConstructorReturn(this, (Example6.__proto__ || Object.getPrototypeOf(Example6)).apply(this, arguments));
+	  }
+	
+	  _createClass(Example6, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      $('pre code').each(function (i, block) {
+	        hljs.highlightBlock(block);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'docs-example-3' },
+	        _react2.default.createElement(_reactSimpleChatbot2.default, {
+	          steps: [{
+	            id: '1',
+	            message: 'What is your name',
+	            trigger: 'name'
+	          }, {
+	            id: 'name',
+	            user: true,
+	            trigger: '3'
+	          }, {
+	            id: '3',
+	            message: 'Hi {previousValue}! What is your gender?',
+	            trigger: 'gender'
+	          }, {
+	            id: 'gender',
+	            options: [{ value: 'male', label: 'Male', trigger: '5' }, { value: 'female', label: 'Female', trigger: '5' }]
+	          }, {
+	            id: '5',
+	            message: 'How old are you?',
+	            trigger: 'age'
+	          }, {
+	            id: 'age',
+	            user: true,
+	            trigger: '7',
+	            validator: function validator(value) {
+	              if (isNaN(value)) {
+	                return 'value must be a number';
+	              } else if (value < 0) {
+	                return 'value must be positive';
+	              } else if (value > 120) {
+	                return value + '? Come on!';
+	              }
+	
+	              return true;
+	            }
+	          }, {
+	            id: '7',
+	            message: 'Great! Check out your summary',
+	            trigger: 'review'
+	          }, {
+	            id: 'review',
+	            component: _react2.default.createElement(Review, null),
+	            end: true
+	          }]
+	        }),
+	        _react2.default.createElement(
+	          'h3',
+	          { style: { marginTop: 20 } },
+	          'Code'
+	        ),
+	        _react2.default.createElement(
+	          'pre',
+	          null,
+	          _react2.default.createElement(
+	            'code',
+	            { className: 'jsx' },
+	            exampleCode
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Example6;
+	}(_react.Component);
+	
+	exports.default = Example6;
+
+/***/ }),
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -75896,7 +76120,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(211);
+	__webpack_require__(212);
 	
 	var properties = [{
 	  name: 'botAvatar',
@@ -76072,13 +76296,13 @@
 	exports.default = Component1;
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(212);
+	var content = __webpack_require__(213);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76098,7 +76322,7 @@
 	}
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76112,7 +76336,7 @@
 
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -76141,7 +76365,7 @@
 	
 	var $ = __webpack_require__(204);
 	
-	__webpack_require__(214);
+	__webpack_require__(215);
 	
 	var textStepCode = '{\n  id: \'1\',\n  message: \'Hello World\',\n  end: true,\n}\n';
 	
@@ -76369,13 +76593,13 @@
 	exports.default = Component2;
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(215);
+	var content = __webpack_require__(216);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76395,7 +76619,7 @@
 	}
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76409,7 +76633,7 @@
 
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -76424,7 +76648,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(217);
+	__webpack_require__(218);
 	
 	var properties = [{
 	  name: 'previousStep',
@@ -76520,13 +76744,13 @@
 	exports.default = Component3;
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(218);
+	var content = __webpack_require__(219);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76546,7 +76770,7 @@
 	}
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76560,7 +76784,7 @@
 
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -76593,13 +76817,13 @@
 	exports.default = Github;
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(221);
+	var content = __webpack_require__(222);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76619,7 +76843,7 @@
 	}
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76627,19 +76851,19 @@
 	
 	
 	// module
-	exports.push([module.id, ".sidebar-container {\n  height: 0;\n}\n\n.sidebar-toggle {\n  background: #fff;\n  cursor: pointer;\n  font-size: 24px;\n  padding: 16px;\n}\n\n.sidebar {\n  height: 100%;\n  position: fixed;\n  width: 250px;\n  left: 0;\n  top: 0;\n  z-index: 99999;\n  background-color: #f6f8fa;\n  border-right: 1px solid #e2e4e6;\n  overflow-y: scroll;\n}\n\n.sidebar .sidebar-header {\n  height: 56px;\n}\n\n.sidebar .sidebar-header .logo {\n  display: inline-block;\n  padding: 16px;\n  color: #4a4a4a;\n}\n\n.sidebar .sidebar-close-button {\n  display: none;\n  cursor: pointer;\n  float: right;\n  font-size: 20px;\n  padding: 16px;\n}\n\n.sidebar-links div > a {\n\tdisplay: block;\n\ttext-decoration: none;\n\tmargin: 0 auto 5px auto;\n\tpadding: 10px 0 10px 5px;\n\ttext-align: left;\n\tcolor:  #4a4a4a;\n\tfont-size: 12px;\n\tfont-weight: bold;\n\tline-height: 2;\n\tborder-left-width: 2px;\n\tborder-left-style: solid;\n}\n\n.sidebar-links div.selected > a {\n\tbackground-color: #e9e9ea;\n\tcolor: #4a4a4a;\n\tline-height: 2.3;\n\tmargin: 0;\n}\n\n.sidebar-links div > a i.fa {\n\tposition: relative;\n\tfont-size: 20px;\n\ttop: 3px;\n\twidth: 40px;\n\ttext-align: center;\n}\n\n.sidebar-links div ul.sub-links {\n\tmax-height: 0;\n\toverflow: hidden;\n\tlist-style: none;\n\tpadding: 0 0 0 30px;\n\tcolor:  #4a4a4a;\n\tfont-size: 12px;\n\tfont-weight: bold;\n\tline-height: 24px;\n\tmargin: 0;\n\ttransition: 0.4s;\n}\n\n.sidebar-links div.selected ul.sub-links {\n\tmax-height: 300px;\n\tpadding: 12px 0 12px 30px;\n}\n\n.sidebar-links div .sub-links a {\n\ttext-decoration: none;\n\tcolor: #4a4a4a;\n\tdisplay: block;\n\ttext-align: left;\n}\n\n.sidebar-links div .sub-links a.selected-link {\n  color: #944eb8;\n}\n\n/* Link Colors */\n\n.sidebar-links div.link-blue > a {\n\tborder-color: #487db2;\n}\n\n.sidebar-links div.link-blue > a i.fa {\n\tcolor: #487db2;\n}\n\n.sidebar-links div.link-red > a {\n\tborder-color: #da4545;\n}\n\n.sidebar-links div.link-red > a i.fa {\n\tcolor: #da4545;\n}\n\n.sidebar-links div.link-yellow > a {\n\tborder-color: #d0d237;\n}\n\n.sidebar-links div.link-yellow > a i.fa {\n\tcolor: #d0d237;\n}\n\n.sidebar-links div.link-green > a {\n\tborder-color: #86be2e;\n}\n\n.sidebar-links div.link-green > a i.fa {\n\tcolor: #86be2e;\n}\n\n@media screen and (max-width: 765px) {\n  .sidebar-container {\n    height: 56px;\n  }\n\n  .sidebar {\n    width: 100%;\n    transform: translateX(-100%);\n    transition: transform .3s ease;\n  }\n\n  .sidebar.opened {\n    transform: translateX(0);\n  }\n\n  .sidebar .sidebar-close-button {\n    display: block;\n  }\n}\n", ""]);
+	exports.push([module.id, ".sidebar-container {\n  height: 0;\n}\n\n.sidebar-toggle {\n  background: #fff;\n  cursor: pointer;\n  font-size: 24px;\n  padding: 16px;\n}\n\n.sidebar {\n  height: 100%;\n  position: fixed;\n  width: 250px;\n  left: 0;\n  top: 0;\n  z-index: 99999;\n  background-color: #f6f8fa;\n  border-right: 1px solid #e2e4e6;\n  overflow-y: scroll;\n}\n\n.sidebar .sidebar-header {\n  height: 56px;\n}\n\n.sidebar .sidebar-header .logo {\n  display: inline-block;\n  padding: 16px;\n  color: #4a4a4a;\n}\n\n.sidebar .sidebar-close-button {\n  display: none;\n  cursor: pointer;\n  float: right;\n  font-size: 20px;\n  padding: 16px;\n}\n\n.sidebar-links div > a {\n\tdisplay: block;\n\ttext-decoration: none;\n\tmargin: 0 auto 5px auto;\n\tpadding: 10px 0 10px 5px;\n\ttext-align: left;\n\tcolor:  #4a4a4a;\n\tfont-size: 14px;\n\tfont-weight: bold;\n\tline-height: 2;\n}\n\n.sidebar-links div.selected > a {\n\tbackground-color: #e9e9ea;\n\tcolor: #4a4a4a;\n\tline-height: 2.3;\n\tmargin: 0;\n}\n\n.sidebar-links div > a i.fa {\n\tposition: relative;\n\tfont-size: 20px;\n\ttop: 3px;\n\twidth: 40px;\n\ttext-align: center;\n}\n\n.sidebar-links div ul.sub-links {\n\tmax-height: 0;\n\toverflow: hidden;\n\tlist-style: none;\n\tpadding: 0 0 0 30px;\n\tcolor:  #4a4a4a;\n\tfont-size: 14px;\n\tfont-weight: bold;\n\tline-height: 24px;\n\tmargin: 0;\n\ttransition: 0.4s;\n}\n\n.sidebar-links div.selected ul.sub-links {\n\tmax-height: 300px;\n\tpadding: 12px 0 12px 30px;\n}\n\n.sidebar-links div .sub-links a {\n\ttext-decoration: none;\n\tcolor: #4a4a4a;\n\tdisplay: block;\n\ttext-align: left;\n}\n\n.sidebar-links div .sub-links a.selected-link {\n  color: #944eb8;\n}\n\n/* Link Colors */\n\n.sidebar-links div.link-blue > a {\n\tborder-color: #487db2;\n}\n\n.sidebar-links div.link-blue > a i.fa {\n\tcolor: #487db2;\n}\n\n.sidebar-links div.link-red > a {\n\tborder-color: #da4545;\n}\n\n.sidebar-links div.link-red > a i.fa {\n\tcolor: #da4545;\n}\n\n.sidebar-links div.link-yellow > a {\n\tborder-color: #d0d237;\n}\n\n.sidebar-links div.link-yellow > a i.fa {\n\tcolor: #d0d237;\n}\n\n.sidebar-links div.link-green > a {\n\tborder-color: #86be2e;\n}\n\n.sidebar-links div.link-green > a i.fa {\n\tcolor: #86be2e;\n}\n\n@media screen and (max-width: 765px) {\n  .sidebar-container {\n    height: 56px;\n  }\n\n  .sidebar {\n    width: 100%;\n    transform: translateX(-100%);\n    transition: transform .3s ease;\n  }\n\n  .sidebar.opened {\n    transform: translateX(0);\n  }\n\n  .sidebar .sidebar-close-button {\n    display: block;\n  }\n}\n", ""]);
 	
 	// exports
 
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(223);
+	var content = __webpack_require__(224);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76659,7 +76883,7 @@
 	}
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76673,13 +76897,13 @@
 
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(225);
+	var content = __webpack_require__(226);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76699,7 +76923,7 @@
 	}
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -76713,13 +76937,13 @@
 
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(227);
+	var content = __webpack_require__(228);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -76739,7 +76963,7 @@
 	}
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
