@@ -3,7 +3,7 @@
     "airbnb"
   ],
   "globals": {
-    "document": true,
+    document: true,
   },
   "rules": {
     "no-use-before-define": ["off"],

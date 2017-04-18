@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import { CustomStep } from '../../../lib/steps/steps';
+import { CustomStep } from '../../lib/steps/steps';
 
 const Example = () => (
   <div className="example">
