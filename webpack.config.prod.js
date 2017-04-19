@@ -1,4 +1,4 @@
-const webpack = require("webpack");
+const webpack = require('webpack');
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -11,9 +11,6 @@ module.exports = {
     library: 'ReactSimpleChatbot',
     libraryTarget: 'umd',
   },
-  devServer: {
-    outputPath: path.join(__dirname, 'build'),
-  },
   resolve: {
     extensions: ['', '.js', '.jsx'],
   },
@@ -24,8 +21,6 @@ module.exports = {
       compress: false,
     }),
   ],
-  debug: true,
-  devtool: 'sourcemap',
   module: {
     loaders: [
       {

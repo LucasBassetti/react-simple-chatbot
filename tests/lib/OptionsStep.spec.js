@@ -6,13 +6,15 @@ import { OptionsStep } from '../../lib/steps/steps';
 
 describe('OptionsStep', () => {
   const settings = {
-    id: '1',
-    options: [
-      { value: 'op1', label: 'Option 1', target: '2' },
-      { value: 'op2', label: 'Option 2', target: '3' },
-    ],
-    bubbleColor: '#eee',
-    fontColor: '#000',
+    step: {
+      id: '1',
+      options: [
+        { value: 'op1', label: 'Option 1', target: '2' },
+        { value: 'op2', label: 'Option 2', target: '3' },
+      ],
+      bubbleColor: '#eee',
+      fontColor: '#000',
+    },
     triggerNextStep: () => {},
   };
 

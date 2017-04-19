@@ -16,7 +16,7 @@ class OptionsStep extends Component {
   }
 
   renderOption(option) {
-    const { bubbleColor, fontColor } = this.props;
+    const { bubbleColor, fontColor } = this.props.step;
     const { value, label } = option;
 
     const optionElementStyle = Object.assign(
@@ -46,7 +46,7 @@ class OptionsStep extends Component {
   }
 
   render() {
-    const { options } = this.props;
+    const { options } = this.props.step;
 
     return (
       <div className="chat-options-step">
@@ -62,9 +62,7 @@ class OptionsStep extends Component {
 }
 
 OptionsStep.propTypes = {
-  options: PropTypes.array.isRequired,
-  bubbleColor: PropTypes.string.isRequired,
-  fontColor: PropTypes.string.isRequired,
+  step: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
 };
 

@@ -7,7 +7,10 @@
     Audio: true,
   },
   "rules": {
+    "no-console": ["off"],
     "no-use-before-define": ["off"],
+    "no-restricted-syntax": ["off"],
+    "no-param-reassign": ["off"],
     "class-methods-use-this": ["off"],
     "jsx-a11y/no-static-element-interactions": ["off"],
     "react/jsx-boolean-value": ["off"],

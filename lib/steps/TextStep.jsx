@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './TextStep.styles';
 
-const notification = require('../assets/notification.mp3');
-
 class TextStep extends Component {
   constructor(props) {
     super(props);
@@ -11,38 +9,59 @@ class TextStep extends Component {
     this.state = {
       loading: true,
     };
+
+    this.renderMessage = this.renderMessage.bind(this);
   }
 
   componentDidMount() {
-    const { audio, delay } = this.props;
+    const { step } = this.props;
+    const { component, delay, waitUser } = step;
+    const isComponentWatingUser = component && waitUser;
     setTimeout(() => {
       this.setState({ loading: false }, () => {
-        if (audio) {
-          const audioPlayer = new Audio(notification);
-          audioPlayer.play();
+        if (!isComponentWatingUser) {
+          this.props.triggerNextStep();
         }
-        this.props.triggerNextStep();
       });
     }, delay);
   }
 
+  renderMessage() {
+    const { previousValue, step } = this.props;
+    const { component } = step;
+    let { message } = step;
+
+    if (component) {
+      const { steps, previousStep, triggerNextStep } = this.props;
+      return React.cloneElement(component, {
+        step,
+        steps,
+        previousStep,
+        triggerNextStep,
+      });
+    }
+
+    message = message.replace(/{previousValue}/g, previousValue);
+
+    return message;
+  }
+
   render() {
     const {
-      avatar,
-      user,
-      bubbleColor,
-      fontColor,
+      step,
       isFirst,
       isLast,
-      previousValue,
     } = this.props;
-    let { message } = this.props;
+    const {
+      avatar,
+      bubbleColor,
+      fontColor,
+      user,
+    } = step;
 
     const loadingStyle = Object.assign({}, styles.loading);
     const loading2Style = Object.assign({}, styles.loading, styles.loading2);
     const loading3Style = Object.assign({}, styles.loading, styles.loading3);
-
-    message = message.replace(/{previousValue}/g, previousValue);
 
     let chatTextStepStyle = styles.chatTextStep;
     let chatImageStyle = styles.chatImage;
@@ -118,7 +137,7 @@ class TextStep extends Component {
               <span style={loading3Style}>.</span>
             </span>
           }
-          { !this.state.loading && message }
+          { !this.state.loading && this.renderMessage() }
         </div>
       </div>
     );
@@ -126,22 +145,19 @@ class TextStep extends Component {
 }
 
 TextStep.propTypes = {
-  avatar: PropTypes.string.isRequired,
-  audio: PropTypes.bool.isRequired,
-  bubbleColor: PropTypes.string.isRequired,
-  delay: PropTypes.number.isRequired,
-  fontColor: PropTypes.string.isRequired,
   isFirst: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
-  message: PropTypes.string.isRequired,
+  step: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
+  previousStep: PropTypes.object,
   previousValue: PropTypes.any,
-  user: PropTypes.bool,
+  steps: PropTypes.object,
 };
 
 TextStep.defaultProps = {
+  previousStep: {},
+  steps: {},
   previousValue: '',
-  user: false,
 };
 
 export default TextStep;

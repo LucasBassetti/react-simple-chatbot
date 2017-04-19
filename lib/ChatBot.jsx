@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Random from 'random-id';
 import { CustomStep, OptionsStep, TextStep } from './steps/steps';
+import schema from './schemas/schema';
 import styles from './ChatBot.styles';
 
 class ChatBot extends Component {
@@ -58,7 +59,7 @@ class ChatBot extends Component {
 
       steps[step.id] = Object.assign(
         {},
-        step,
+        schema.parse(step),
         defaulBotSettings,
       );
     }
@@ -109,49 +110,47 @@ class ChatBot extends Component {
 
     if (isEnd) {
       this.handleEnd();
-    } else {
+    } else if (currentStep.options) {
+      const option = currentStep.options.filter(o => o.value === value)[0];
+      delete currentStep.options;
+
+      currentStep = Object.assign(
+        {},
+        currentStep,
+        option,
+        defaulUserSettings,
+        {
+          user: true,
+          trigger: option.trigger,
+          message: option.label,
+        },
+      );
+
+      renderedSteps.pop();
+      previousSteps.pop();
+      renderedSteps.push(currentStep);
+      previousSteps.push(currentStep);
+
+      this.setState({
+        currentStep,
+        renderedSteps,
+        previousSteps,
+      });
+    } else if (currentStep.trigger) {
       const isReplace = currentStep.replace && !currentStep.option;
 
       if (isReplace) {
         renderedSteps.pop();
       }
 
-      if (currentStep.options) {
-        const option = currentStep.options.filter(o => o.value === value)[0];
-        delete currentStep.options;
+      const nextSteps = Object.assign({}, steps[currentStep.trigger]);
+      nextSteps.key = Random(24);
 
-        currentStep = Object.assign(
-          {},
-          currentStep,
-          option,
-          defaulUserSettings,
-          {
-            user: true,
-            trigger: option.trigger,
-            message: option.label,
-          },
-        );
+      previousStep = currentStep;
+      currentStep = nextSteps;
 
-        renderedSteps.pop();
-        previousSteps.pop();
-        renderedSteps.push(currentStep);
-        previousSteps.push(currentStep);
-
-        this.setState({
-          currentStep,
-          renderedSteps,
-          previousSteps,
-        });
-      } else if (currentStep.trigger) {
-        const nextSteps = Object.assign({}, steps[currentStep.trigger]);
-        nextSteps.key = Random(24);
-
-        previousStep = currentStep;
-        currentStep = nextSteps;
-
-        this.setState({ currentStep, previousStep });
-
-        if (nextSteps.user && !nextSteps.component) {
+      this.setState({ renderedSteps, currentStep, previousStep }, () => {
+        if (nextSteps.user) {
           this.setState({ disabled: false }, () => {
             const chatInput = document.querySelector('.chat-input');
             if (chatInput) {
@@ -164,7 +163,7 @@ class ChatBot extends Component {
 
           this.setState({ renderedSteps, previousSteps });
         }
-      }
+      });
     }
   }
 
@@ -183,28 +182,42 @@ class ChatBot extends Component {
     }
   }
 
-  checkLastPosition(step) {
+  isLastPosition(step) {
     const { renderedSteps } = this.state;
     const length = renderedSteps.length;
     const stepIndex = renderedSteps.map(s => s.key).indexOf(step.key);
 
-    if (length <= 1 || (stepIndex + 1) === length || !renderedSteps[stepIndex + 1].message) {
+    if (length <= 1 || (stepIndex + 1) === length) {
       return true;
     }
 
-    const isLast = step.user !== renderedSteps[stepIndex + 1].user;
+    const nextStep = renderedSteps[stepIndex + 1];
+    const hasMessage = nextStep.message || nextStep.asMessage;
+
+    if (!hasMessage) {
+      return true;
+    }
+
+    const isLast = step.user !== nextStep.user;
     return isLast;
   }
 
-  checkFirstPosition(step) {
+  isFirstPosition(step) {
     const { renderedSteps } = this.state;
     const stepIndex = renderedSteps.map(s => s.key).indexOf(step.key);
 
-    if (stepIndex === 0 || !renderedSteps[stepIndex - 1].message) {
+    if (stepIndex === 0) {
       return true;
     }
 
-    const isFirst = step.user !== renderedSteps[stepIndex - 1].user;
+    const lastStep = renderedSteps[stepIndex - 1];
+    const hasMessage = lastStep.message || lastStep.asMessage;
+
+    if (!hasMessage) {
+      return true;
+    }
+
+    const isFirst = step.user !== lastStep.user;
     return isFirst;
   }
 
@@ -280,8 +293,8 @@ class ChatBot extends Component {
 
   renderStep(step, index) {
     const { renderedSteps, previousSteps } = this.state;
-    const { delay, audio, customStyle } = this.props;
-    const { options, component } = step;
+    const { customStyle } = this.props;
+    const { options, component, asMessage } = step;
     const steps = {};
     const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
     const previousStep = stepIndex > 0 ? renderedSteps[stepIndex - 1] : {};
@@ -296,11 +309,10 @@ class ChatBot extends Component {
       };
     }
 
-    if (component) {
+    if (component && !asMessage) {
       return (
         <CustomStep
           key={index}
-          delay={delay}
           step={step}
           steps={steps}
           style={customStyle}
@@ -314,7 +326,7 @@ class ChatBot extends Component {
       return (
         <OptionsStep
           key={index}
-          {...step}
+          step={step}
           triggerNextStep={this.triggerNextStep}
         />
       );
@@ -323,12 +335,12 @@ class ChatBot extends Component {
     return (
       <TextStep
         key={index}
-        {...step}
-        audio={audio}
+        step={step}
+        steps={steps}
         previousValue={previousStep.value}
         triggerNextStep={this.triggerNextStep}
-        isFirst={this.checkFirstPosition(step)}
-        isLast={this.checkLastPosition(step)}
+        isFirst={this.isFirstPosition(step)}
+        isLast={this.isLastPosition(step)}
       />
     );
   }
@@ -383,7 +395,6 @@ class ChatBot extends Component {
 
 ChatBot.propTypes = {
   steps: PropTypes.array.isRequired,
-  audio: PropTypes.bool,
   style: PropTypes.object,
   contentStyle: PropTypes.object,
   footerStyle: PropTypes.object,
@@ -401,7 +412,6 @@ ChatBot.propTypes = {
 
 ChatBot.defaultProps = {
   handleEnd: undefined,
-  audio: true,
   delay: 1000,
   style: {},
   contentStyle: {},

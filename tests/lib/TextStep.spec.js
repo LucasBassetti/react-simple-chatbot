@@ -7,13 +7,15 @@ import { TextStep } from '../../lib/steps/steps';
 describe('TextStep', () => {
   describe('Bot text', () => {
     const settings = {
-      id: '1',
-      audio: false,
-      message: 'Hello',
-      delay: 1000,
-      bubbleColor: '#eee',
-      fontColor: '#000',
-      avatar: '',
+      step: {
+        id: '1',
+        audio: false,
+        message: 'Hello',
+        delay: 1000,
+        bubbleColor: '#eee',
+        fontColor: '#000',
+        avatar: '',
+      },
       isFirst: true,
       isLast: true,
       triggerNextStep: () => {},
@@ -45,13 +47,15 @@ describe('TextStep', () => {
 
   describe('User text', () => {
     const settings = {
-      id: '1',
-      message: 'Hello',
-      delay: 1000,
-      user: true,
-      bubbleColor: '#eee',
-      fontColor: '#000',
-      avatar: '',
+      step: {
+        id: '1',
+        message: 'Hello',
+        delay: 1000,
+        user: true,
+        bubbleColor: '#eee',
+        fontColor: '#000',
+        avatar: '',
+      },
       isFirst: false,
       isLast: true,
       triggerNextStep: () => {},
