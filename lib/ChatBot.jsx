@@ -79,7 +79,10 @@ class ChatBot extends Component {
 
   componentDidMount() {
     const chatbotMain = document.querySelector('.simple-chatbot-main');
-    chatbotMain.addEventListener('DOMNodeInserted', onNodeInserted, false);
+
+    if (chatbotMain) {
+      chatbotMain.addEventListener('DOMNodeInserted', onNodeInserted, false);
+    }
 
     function onNodeInserted() {
       chatbotMain.scrollTop = chatbotMain.scrollHeight;
@@ -150,7 +153,10 @@ class ChatBot extends Component {
 
         if (nextSteps.user && !nextSteps.component) {
           this.setState({ disabled: false }, () => {
-            document.querySelector('.chat-input').focus();
+            const chatInput = document.querySelector('.chat-input');
+            if (chatInput) {
+              chatInput.focus();
+            }
           });
         } else {
           renderedSteps.push(nextSteps);
@@ -258,7 +264,10 @@ class ChatBot extends Component {
             inputInvalid: false,
             disabled: false,
           }, () => {
-            document.querySelector('.chat-input').focus();
+            const chatInput = document.querySelector('.chat-input');
+            if (chatInput) {
+              chatInput.focus();
+            }
           });
         }, 2000);
       });
@@ -271,7 +280,7 @@ class ChatBot extends Component {
 
   renderStep(step, index) {
     const { renderedSteps, previousSteps } = this.state;
-    const { customStyle } = this.props;
+    const { delay, audio, customStyle } = this.props;
     const { options, component } = step;
     const steps = {};
     const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
@@ -291,6 +300,7 @@ class ChatBot extends Component {
       return (
         <CustomStep
           key={index}
+          delay={delay}
           step={step}
           steps={steps}
           style={customStyle}
@@ -314,6 +324,7 @@ class ChatBot extends Component {
       <TextStep
         key={index}
         {...step}
+        audio={audio}
         previousValue={previousStep.value}
         triggerNextStep={this.triggerNextStep}
         isFirst={this.checkFirstPosition(step)}
@@ -372,6 +383,7 @@ class ChatBot extends Component {
 
 ChatBot.propTypes = {
   steps: PropTypes.array.isRequired,
+  audio: PropTypes.bool,
   style: PropTypes.object,
   contentStyle: PropTypes.object,
   footerStyle: PropTypes.object,
@@ -389,6 +401,7 @@ ChatBot.propTypes = {
 
 ChatBot.defaultProps = {
   handleEnd: undefined,
+  audio: true,
   delay: 1000,
   style: {},
   contentStyle: {},

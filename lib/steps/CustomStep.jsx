@@ -14,14 +14,14 @@ class CustomStep extends Component {
   }
 
   componentDidMount() {
-    const { step } = this.props;
+    const { delay, step } = this.props;
     setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!step.user) {
           this.props.triggerNextStep(step);
         }
       });
-    }, 500);
+    }, delay);
   }
 
   renderComponent() {
@@ -65,6 +65,7 @@ class CustomStep extends Component {
 }
 
 CustomStep.propTypes = {
+  delay: PropTypes.number.isRequired,
   step: PropTypes.object.isRequired,
   steps: PropTypes.object.isRequired,
   style: PropTypes.object.isRequired,

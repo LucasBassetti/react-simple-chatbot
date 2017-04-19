@@ -1,13 +1,13 @@
 {
   "name": "react-simple-chatbot",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
   "scripts": {
     "start": "webpack-dev-server --inline --content-base build/",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "test": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register",
-    "test:watch": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register --watch",
+    "test": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --compilers js:./tests/helpers/compiler.js --require babel-register",
+    "test:watch": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --compilers js:./tests/helpers/compiler.js --require babel-register --watch",
     "test:coverage": "nyc npm test",
     "build": "webpack --config webpack.config.prod.js"
   },
@@ -53,10 +53,12 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
+    "file-loader": "^0.11.1",
     "jsdom": "^9.12.0",
     "mocha": "^3.2.0",
     "nyc": "^10.2.0",
     "react-addons-test-utils": "^15.5.0",
+    "sinon": "^2.1.0",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1",
     "write-file-webpack-plugin": "^4.0.0"

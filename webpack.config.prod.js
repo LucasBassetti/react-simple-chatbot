@@ -1,6 +1,6 @@
+const webpack = require("webpack");
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: path.resolve(__dirname, 'lib/index'),
@@ -19,13 +19,10 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
-    // new CopyWebpackPlugin([
-    //   {
-    //     context: path.resolve(__dirname, 'app/static'),
-    //     from: '**/*',
-    //     to: path.resolve(__dirname, 'build'),
-    //   },
-    // ]),
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+      compress: false,
+    }),
   ],
   debug: true,
   devtool: 'sourcemap',
@@ -35,6 +32,10 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         loaders: ['babel'],
+      },
+      {
+        test: /\.mp3$/,
+        loader: 'file-loader',
       },
     ],
   },

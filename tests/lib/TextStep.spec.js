@@ -8,6 +8,7 @@ describe('TextStep', () => {
   describe('Bot text', () => {
     const settings = {
       id: '1',
+      audio: false,
       message: 'Hello',
       delay: 1000,
       bubbleColor: '#eee',

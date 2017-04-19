@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './TextStep.styles';
 
+const notification = require('../assets/notification.mp3');
+
 class TextStep extends Component {
   constructor(props) {
     super(props);
@@ -12,9 +14,13 @@ class TextStep extends Component {
   }
 
   componentDidMount() {
-    const { delay } = this.props;
+    const { audio, delay } = this.props;
     setTimeout(() => {
       this.setState({ loading: false }, () => {
+        if (audio) {
+          const audioPlayer = new Audio(notification);
+          audioPlayer.play();
+        }
         this.props.triggerNextStep();
       });
     }, delay);
@@ -121,6 +127,7 @@ class TextStep extends Component {
 
 TextStep.propTypes = {
   avatar: PropTypes.string.isRequired,
+  audio: PropTypes.bool.isRequired,
   bubbleColor: PropTypes.string.isRequired,
   delay: PropTypes.number.isRequired,
   fontColor: PropTypes.string.isRequired,

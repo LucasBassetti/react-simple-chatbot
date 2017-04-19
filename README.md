@@ -16,6 +16,8 @@ npm install react-simple-chatbot --save
 
 ## Usage
 
+There are several examples on the [website](http://lucasbassetti.com.br/react-simple-chatbot). Here is the first one to get you started:
+
 ``` javascript
 import ChatBot from 'react-simple-chatbot';
 

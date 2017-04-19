@@ -4,6 +4,7 @@
   ],
   "globals": {
     document: true,
+    Audio: true,
   },
   "rules": {
     "no-use-before-define": ["off"],
