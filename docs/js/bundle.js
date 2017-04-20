@@ -53209,7 +53209,7 @@
 	
 	var $ = __webpack_require__(203);
 	
-	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'What is your name\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      user: true,\n      trigger: \'3\',\n    },\n    {\n      id: \'3\',\n      message: \'Hi {previousValue}, nice to meet you!\',\n      end: true,\n    },\n  ]}\n/>\n';
+	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'What is your name?\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      user: true,\n      trigger: \'3\',\n    },\n    {\n      id: \'3\',\n      message: \'Hi {previousValue}, nice to meet you!\',\n      end: true,\n    },\n  ]}\n/>\n';
 	
 	var Example5 = function (_Component) {
 	  _inherits(Example5, _Component);
@@ -53236,7 +53236,7 @@
 	        _react2.default.createElement(_reactSimpleChatbot2.default, {
 	          steps: [{
 	            id: '1',
-	            message: 'What is your name',
+	            message: 'What is your name?',
 	            trigger: '2'
 	          }, {
 	            id: '2',
@@ -53395,7 +53395,7 @@
 	  steps: undefined
 	};
 	
-	var exampleCode = 'import React, { Component } from \'react\';\nimport PropTypes from \'prop-types\';\nimport ChatBot from \'react-simple-chatbot\';\n\nclass Review extends Component {\n  render() {\n    const { steps } = this.props;\n    const { name, gender, age } = steps;\n    return (\n      <div style={{ width: \'100%\' }}>\n        <h3>Summary</h3>\n        <table>\n          <tbody>\n            <tr>\n              <td>Name</td>\n              <td>{name.value}</td>\n            </tr>\n            <tr>\n              <td>Gender</td>\n              <td>{gender.value}</td>\n            </tr>\n            <tr>\n              <td>Age</td>\n              <td>{age.value}</td>\n            </tr>\n          </tbody>\n        </table>\n      </div>\n    );\n  }\n}\n\nclass SimpleForm extends Component {\n  render() {\n    return (\n      <ChatBot\n        steps={[\n          {\n            id: \'1\',\n            message: \'What is your name\',\n            trigger: \'name\',\n          },\n          {\n            id: \'name\',\n            user: true,\n            trigger: \'3\',\n          },\n          {\n            id: \'3\',\n            message: \'Hi {previousValue}! What is your gender?\',\n            trigger: \'gender\',\n          },\n          {\n            id: \'gender\',\n            options: [\n              { value: \'male\', label: \'Male\', trigger: \'5\' },\n              { value: \'female\', label: \'Female\', trigger: \'5\' },\n            ],\n          },\n          {\n            id: \'5\',\n            message: \'How old are you?\',\n            trigger: \'age\',\n          },\n          {\n            id: \'age\',\n            user: true,\n            trigger: \'7\',\n            validator: (value) => {\n              if (isNaN(value)) {\n                return \'value must be a number\';\n              } else if (value < 0) {\n                return \'value must be positive\';\n              } else if (value > 120) {\n                return `${value}? Come on!`;\n              }\n\n              return true;\n            },\n          },\n          {\n            id: \'7\',\n            message: \'Great! Check out your summary\',\n            trigger: \'review\',\n          },\n          {\n            id: \'review\',\n            component: <Review />,\n            asMessage: true,\n            end: true,\n          },\n        ]}\n      />\n    );\n  }\n}\n\nexport default SimpleForm;\n';
+	var exampleCode = 'import React, { Component } from \'react\';\nimport PropTypes from \'prop-types\';\nimport ChatBot from \'react-simple-chatbot\';\n\nclass Review extends Component {\n  render() {\n    const { steps } = this.props;\n    const { name, gender, age } = steps;\n    return (\n      <div style={{ width: \'100%\' }}>\n        <h3>Summary</h3>\n        <table>\n          <tbody>\n            <tr>\n              <td>Name</td>\n              <td>{name.value}</td>\n            </tr>\n            <tr>\n              <td>Gender</td>\n              <td>{gender.value}</td>\n            </tr>\n            <tr>\n              <td>Age</td>\n              <td>{age.value}</td>\n            </tr>\n          </tbody>\n        </table>\n      </div>\n    );\n  }\n}\n\nclass SimpleForm extends Component {\n  render() {\n    return (\n      <ChatBot\n        steps={[\n          {\n            id: \'1\',\n            message: \'What is your name?\',\n            trigger: \'name\',\n          },\n          {\n            id: \'name\',\n            user: true,\n            trigger: \'3\',\n          },\n          {\n            id: \'3\',\n            message: \'Hi {previousValue}! What is your gender?\',\n            trigger: \'gender\',\n          },\n          {\n            id: \'gender\',\n            options: [\n              { value: \'male\', label: \'Male\', trigger: \'5\' },\n              { value: \'female\', label: \'Female\', trigger: \'5\' },\n            ],\n          },\n          {\n            id: \'5\',\n            message: \'How old are you?\',\n            trigger: \'age\',\n          },\n          {\n            id: \'age\',\n            user: true,\n            trigger: \'7\',\n            validator: (value) => {\n              if (isNaN(value)) {\n                return \'value must be a number\';\n              } else if (value < 0) {\n                return \'value must be positive\';\n              } else if (value > 120) {\n                return `${value}? Come on!`;\n              }\n\n              return true;\n            },\n          },\n          {\n            id: \'7\',\n            message: \'Great! Check out your summary\',\n            trigger: \'review\',\n          },\n          {\n            id: \'review\',\n            component: <Review />,\n            asMessage: true,\n            end: true,\n          },\n        ]}\n      />\n    );\n  }\n}\n\nexport default SimpleForm;\n';
 	
 	var Example6 = function (_Component2) {
 	  _inherits(Example6, _Component2);
@@ -53422,7 +53422,7 @@
 	        _react2.default.createElement(_reactSimpleChatbot2.default, {
 	          steps: [{
 	            id: '1',
-	            message: 'What is your name',
+	            message: 'What is your name?',
 	            trigger: 'name'
 	          }, {
 	            id: 'name',
