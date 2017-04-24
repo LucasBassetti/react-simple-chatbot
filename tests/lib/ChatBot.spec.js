@@ -59,7 +59,7 @@ describe('ChatBot', () => {
 
     setTimeout(() => {
       done();
-    }, 100);
+    }, 500);
   });
 
   it('should render', () => {
