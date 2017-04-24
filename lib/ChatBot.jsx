@@ -4,7 +4,10 @@ import _ from 'lodash';
 import Random from 'random-id';
 import { CustomStep, OptionsStep, TextStep } from './steps/steps';
 import schema from './schemas/schema';
-import styles from './ChatBot.styles';
+import ChatBotContainer from './ChatBotContainer';
+import Content from './Content';
+import Footer from './Footer';
+import Input from './Input';
 
 class ChatBot extends Component {
   constructor(props) {
@@ -152,7 +155,7 @@ class ChatBot extends Component {
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
         if (nextSteps.user) {
           this.setState({ disabled: false }, () => {
-            const chatInput = document.querySelector('.chat-input');
+            const chatInput = document.querySelector('.rsc-input');
             if (chatInput) {
               chatInput.focus();
             }
@@ -277,7 +280,7 @@ class ChatBot extends Component {
             inputInvalid: false,
             disabled: false,
           }, () => {
-            const chatInput = document.querySelector('.chat-input');
+            const chatInput = document.querySelector('.rsc-input');
             if (chatInput) {
               chatInput.focus();
             }
@@ -349,46 +352,34 @@ class ChatBot extends Component {
     const { disabled, inputValue, inputInvalid, renderedSteps } = this.state;
     const { style, contentStyle, footerStyle, inputStyle } = this.props;
 
-    const chatbotStyle = Object.assign({}, styles.chatbot, style);
-    const chatbotMainStyle = Object.assign({}, styles.chatbotMain, contentStyle);
-    const chatInputDisabledStyle = disabled ? styles.chatInputDisabled : {};
-    const chatInputInvalidStyle = inputInvalid ? styles.chatInputInvalid : {};
-    const chatInputStyle = Object.assign(
-      {},
-      styles.chatInput,
-      chatInputDisabledStyle,
-      chatInputInvalidStyle,
-      inputStyle,
-    );
-
     return (
-      <div
-        className="simple-chatbot"
-        style={chatbotStyle}
+      <ChatBotContainer
+        className="rsc"
+        style={style}
       >
-        <div
-          className="simple-chatbot-main"
-          style={chatbotMainStyle}
+        <Content
+          className="rsc-content"
+          style={contentStyle}
         >
           {_.map(renderedSteps, this.renderStep)}
-        </div>
-        <div
-          className="simple-chatbot-footer"
+        </Content>
+        <Footer
+          className="rsc-footer"
           style={footerStyle}
         >
-          <input
+          <Input
             type="textarea"
-            id="chatInput"
-            style={chatInputStyle}
-            className="chat-input"
+            style={inputStyle}
+            className="rsc-input"
             placeholder="Type the message ..."
             onKeyPress={this.handleKeyPress}
             onChange={this.onValueChange}
             value={inputValue}
+            invalid={inputInvalid}
             disabled={disabled}
           />
-        </div>
-      </div>
+        </Footer>
+      </ChatBotContainer>
     );
   }
 }

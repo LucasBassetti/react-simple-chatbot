@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styles from './CustomStep.styles';
+import Loading from './Loading';
+import CustomStepContainer from './CustomStepContainer';
 
 class CustomStep extends Component {
   constructor(props) {
@@ -38,28 +39,20 @@ class CustomStep extends Component {
   render() {
     const { loading } = this.state;
     const { style } = this.props;
-    const customStyle = Object.assign(
-      {},
-      styles.customStep,
-      style,
-    );
-    const loadingStyle = Object.assign({}, styles.loading);
-    const loading2Style = Object.assign({}, styles.loading, styles.loading2);
-    const loading3Style = Object.assign({}, styles.loading, styles.loading3);
 
     return (
-      <div
-        className="custom-step"
-        style={customStyle}
+      <CustomStepContainer
+        className="rsc-cs"
+        style={style}
       >
         { loading ? (
-          <span>
-            <span style={loadingStyle}>.</span>
-            <span style={loading2Style}>.</span>
-            <span style={loading3Style}>.</span>
+          <span className="rsc-cs-loading">
+            <Loading delay="0s">.</Loading>
+            <Loading delay=".2s">.</Loading>
+            <Loading delay=".4s">.</Loading>
           </span>
         ) : this.renderComponent() }
-      </div>
+      </CustomStepContainer>
     );
   }
 }

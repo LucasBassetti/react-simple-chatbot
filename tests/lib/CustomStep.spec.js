@@ -1,8 +1,9 @@
 import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { CustomStep } from '../../lib/steps/steps';
+import CustomStepContainer from '../../lib/steps/custom/CustomStepContainer';
 
 const Example = () => (
   <div className="example">
@@ -28,15 +29,12 @@ describe('CustomStep', () => {
     triggerNextStep: () => {},
   };
 
-  const wrapper = shallow(<CustomStep {...settings} />);
+  const wrapper = mount(<CustomStep {...settings} />);
   wrapper.setState({ loading: false });
 
   it('should render', () => {
-    expect(wrapper.hasClass('custom-step')).to.be.equal(true);
-  });
-
-  it('should render without border', () => {
-    expect(wrapper.find('.custom-step').prop('style').border).to.be.equal(0);
+    expect(wrapper.hasClass('rsc-cs')).to.be.equal(true);
+    expect(wrapper.find(CustomStepContainer)).to.have.length(1);
   });
 
   it('should render with Example component', () => {

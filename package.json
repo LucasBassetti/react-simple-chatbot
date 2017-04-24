@@ -1,6 +1,6 @@
 {
   "name": "react-simple-chatbot",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
   "scripts": {
@@ -69,6 +69,7 @@
     "prop-types": "^15.5.8",
     "random-id": "0.0.2",
     "react": "^15.0.1",
-    "react-dom": "^15.0.1"
+    "react-dom": "^15.0.1",
+    "styled-components": "^1.4.5"
   }
 }

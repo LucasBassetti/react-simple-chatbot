@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import styles from './OptionsStep.styles';
+import Option from './Option';
+import OptionElement from './OptionElement';
+import Options from './Options';
+import OptionsStepContainer from './OptionsStepContainer';
 
 class OptionsStep extends Component {
   constructor(props) {
@@ -19,29 +22,20 @@ class OptionsStep extends Component {
     const { bubbleColor, fontColor } = this.props.step;
     const { value, label } = option;
 
-    const optionElementStyle = Object.assign(
-      {},
-      styles.optionElement,
-      {
-        background: bubbleColor,
-        color: fontColor,
-      },
-    );
-
     return (
-      <li
+      <Option
         key={value}
-        className="option hover-element"
-        style={styles.option}
+        className="rsc-os-option"
       >
-        <a
-          className="option-element"
-          style={optionElementStyle}
+        <OptionElement
+          className="rsc-os-option-element"
+          bubbleColor={bubbleColor}
+          fontColor={fontColor}
           onClick={() => this.onOptionClick({ value })}
         >
           {label}
-        </a>
-      </li>
+        </OptionElement>
+      </Option>
     );
   }
 
@@ -49,14 +43,11 @@ class OptionsStep extends Component {
     const { options } = this.props.step;
 
     return (
-      <div className="chat-options-step">
-        <ul
-          className="options"
-          style={styles.options}
-        >
+      <OptionsStepContainer className="rsc-os">
+        <Options className="rsc-os-options">
           {_.map(options, this.renderOption)}
-        </ul>
-      </div>
+        </Options>
+      </OptionsStepContainer>
     );
   }
 }

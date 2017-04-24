@@ -1,8 +1,10 @@
 import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { TextStep } from '../../lib/steps/steps';
+import Bubble from '../../lib/steps/text/Bubble';
+import Image from '../../lib/steps/text/Image';
 
 describe('TextStep', () => {
   describe('Bot text', () => {
@@ -21,27 +23,27 @@ describe('TextStep', () => {
       triggerNextStep: () => {},
     };
 
-    const wrapper = shallow(<TextStep {...settings} />);
+    const wrapper = mount(<TextStep {...settings} />);
     wrapper.setState({ loading: false });
 
     it('should render', () => {
-      expect(wrapper.hasClass('chat-text-step')).to.be.equal(true);
+      expect(wrapper.hasClass('rsc-ts')).to.be.equal(true);
     });
 
     it('should render bubble with background color equal \'#eee\'', () => {
-      expect(wrapper.find('.chat-content').prop('style').background).to.be.equal('#eee');
+      expect(wrapper.props().step.bubbleColor).to.be.equal('#eee');
     });
 
     it('should render bubble with font color equal \'#000\'', () => {
-      expect(wrapper.find('.chat-content').prop('style').color).to.be.equal('#000');
+      expect(wrapper.props().step.fontColor).to.be.equal('#000');
     });
 
     it('should render image', () => {
-      expect(wrapper.find('.image').exists()).to.be.equal(true);
+      expect(wrapper.find(Image).exists()).to.be.equal(true);
     });
 
     it('should render bubble with message equal \'Hello\'', () => {
-      expect(wrapper.find('.chat-content').text()).to.be.equal('Hello');
+      expect(wrapper.find(Bubble).text()).to.be.equal('Hello');
     });
   });
 
@@ -61,23 +63,18 @@ describe('TextStep', () => {
       triggerNextStep: () => {},
     };
 
-    const wrapper = shallow(<TextStep {...settings} />);
+    const wrapper = mount(<TextStep {...settings} />);
     wrapper.setState({ loading: false });
 
-    it('should render bubble in right (flex order equal 1)', () => {
-      expect(wrapper.find('.chat-image').prop('style').order).to.be.equal(1);
-    });
-
     it('should render bubble without image (not first)', () => {
-      expect(wrapper.find('.image').exists()).to.be.equal(false);
+      expect(wrapper.find(Image).exists()).to.be.equal(false);
     });
 
     it('should render a middle bubble', () => {
-      const tsWrapper = shallow(<TextStep {...settings} isFirst={false} isLast={false} />);
+      const tsWrapper = mount(<TextStep {...settings} isFirst={false} isLast={false} />);
       tsWrapper.setState({ loading: false });
 
       expect(tsWrapper.find('.image').exists()).to.be.equal(false);
-      expect(tsWrapper.find('.chat-content').prop('style').borderRadius).to.be.equal('18px 0 0 18px');
     });
   });
 });

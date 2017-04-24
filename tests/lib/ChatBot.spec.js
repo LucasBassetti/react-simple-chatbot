@@ -55,7 +55,7 @@ describe('ChatBot', () => {
 
   before((done) => {
     wrapper.setState({ inputValue: 'test' });
-    wrapper.find('.chat-input').simulate('keyPress', { key: 'Enter' });
+    wrapper.find('.rsc-input').simulate('keyPress', { key: 'Enter' });
 
     setTimeout(() => {
       done();
@@ -63,7 +63,7 @@ describe('ChatBot', () => {
   });
 
   it('should render', () => {
-    expect(wrapper.hasClass('simple-chatbot')).to.be.equal(true);
+    expect(wrapper.hasClass('rsc')).to.be.equal(true);
   });
 
   it('should render a custom step', () => {
@@ -75,7 +75,7 @@ describe('ChatBot', () => {
   });
 
   it('should render 3 texts steps', () => {
-    wrapper.find('.option-element').first().simulate('click');
+    wrapper.find('.rsc-os-option-element').first().simulate('click');
     expect(wrapper.find(TextStep)).to.have.length(3);
   });
 });
