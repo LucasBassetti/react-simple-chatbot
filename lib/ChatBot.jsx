@@ -82,7 +82,7 @@ class ChatBot extends Component {
   }
 
   componentDidMount() {
-    const chatbotMain = document.querySelector('.simple-chatbot-main');
+    const chatbotMain = document.querySelector('.rsc-content');
 
     if (chatbotMain) {
       chatbotMain.addEventListener('DOMNodeInserted', onNodeInserted, false);
