@@ -42,6 +42,10 @@ ReactDOM.render(
 );
 ```
 
+## How to Contribute
+
+Please check the [contributing guide](https://github.com/LucasBassetti/react-simple-chatbot/blob/master/contributing.md)
+
 ## License
 
 MIT · [Lucas Bassetti](http://lucasbassetti.com.br)
