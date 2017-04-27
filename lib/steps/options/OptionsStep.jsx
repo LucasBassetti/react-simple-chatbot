@@ -7,6 +7,7 @@ import Options from './Options';
 import OptionsStepContainer from './OptionsStepContainer';
 
 class OptionsStep extends Component {
+  /* istanbul ignore next */
   constructor(props) {
     super(props);
 
@@ -19,6 +20,7 @@ class OptionsStep extends Component {
   }
 
   renderOption(option) {
+    const { bubbleStyle } = this.props;
     const { bubbleColor, fontColor } = this.props.step;
     const { value, label } = option;
 
@@ -29,6 +31,7 @@ class OptionsStep extends Component {
       >
         <OptionElement
           className="rsc-os-option-element"
+          style={bubbleStyle}
           bubbleColor={bubbleColor}
           fontColor={fontColor}
           onClick={() => this.onOptionClick({ value })}
@@ -55,6 +58,7 @@ class OptionsStep extends Component {
 OptionsStep.propTypes = {
   step: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
+  bubbleStyle: PropTypes.object.isRequired,
 };
 
 export default OptionsStep;

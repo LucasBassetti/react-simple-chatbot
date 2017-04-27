@@ -10,6 +10,7 @@ import Footer from './Footer';
 import Input from './Input';
 
 class ChatBot extends Component {
+  /* istanbul ignore next */
   constructor(props) {
     super(props);
 
@@ -84,10 +85,12 @@ class ChatBot extends Component {
   componentDidMount() {
     const chatbotMain = document.querySelector('.rsc-content');
 
+    /* istanbul ignore next */
     if (chatbotMain) {
       chatbotMain.addEventListener('DOMNodeInserted', onNodeInserted, false);
     }
 
+    /* istanbul ignore next */
     function onNodeInserted() {
       chatbotMain.scrollTop = chatbotMain.scrollHeight;
     }
@@ -156,6 +159,7 @@ class ChatBot extends Component {
         if (nextSteps.user) {
           this.setState({ disabled: false }, () => {
             const chatInput = document.querySelector('.rsc-input');
+            /* istanbul ignore next */
             if (chatInput) {
               chatInput.focus();
             }
@@ -281,6 +285,7 @@ class ChatBot extends Component {
             disabled: false,
           }, () => {
             const chatInput = document.querySelector('.rsc-input');
+            /* istanbul ignore next */
             if (chatInput) {
               chatInput.focus();
             }
@@ -296,7 +301,7 @@ class ChatBot extends Component {
 
   renderStep(step, index) {
     const { renderedSteps, previousSteps } = this.state;
-    const { customStyle } = this.props;
+    const { avatarStyle, bubbleStyle, customStyle } = this.props;
     const { options, component, asMessage } = step;
     const steps = {};
     const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
@@ -331,6 +336,7 @@ class ChatBot extends Component {
           key={index}
           step={step}
           triggerNextStep={this.triggerNextStep}
+          bubbleStyle={bubbleStyle}
         />
       );
     }
@@ -342,6 +348,8 @@ class ChatBot extends Component {
         steps={steps}
         previousValue={previousStep.value}
         triggerNextStep={this.triggerNextStep}
+        avatarStyle={avatarStyle}
+        bubbleStyle={bubbleStyle}
         isFirst={this.isFirstPosition(step)}
         isLast={this.isLastPosition(step)}
       />
@@ -350,11 +358,11 @@ class ChatBot extends Component {
 
   render() {
     const { disabled, inputValue, inputInvalid, renderedSteps } = this.state;
-    const { style, contentStyle, footerStyle, inputStyle } = this.props;
+    const { style, contentStyle, footerStyle, inputStyle, className } = this.props;
 
     return (
       <ChatBotContainer
-        className="rsc"
+        className={`rsc ${className}`}
         style={style}
       >
         <Content
@@ -390,7 +398,10 @@ ChatBot.propTypes = {
   contentStyle: PropTypes.object,
   footerStyle: PropTypes.object,
   inputStyle: PropTypes.object,
+  avatarStyle: PropTypes.object,
+  bubbleStyle: PropTypes.object,
   customStyle: PropTypes.object,
+  className: PropTypes.string,
   botAvatar: PropTypes.string,
   botBubbleColor: PropTypes.string,
   botFontColor: PropTypes.string,
@@ -408,7 +419,10 @@ ChatBot.defaultProps = {
   contentStyle: {},
   footerStyle: {},
   inputStyle: {},
+  avatarStyle: {},
+  bubbleStyle: {},
   customStyle: {},
+  className: '',
   botBubbleColor: '#eee',
   botFontColor: '#000',
   userBubbleColor: '#baf5fd',

@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { loading } from '../../common/animations';
 
-const Loading = styled.span`
+const LoadingStep = styled.span`
   animation: ${loading} 1.4s infinite both;
   animation-delay: ${props => props.delay};
 `;
 
-export default Loading;
+export default LoadingStep;

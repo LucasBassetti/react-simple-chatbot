@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Loading from './Loading';
+import Loading from '../common/Loading';
 import CustomStepContainer from './CustomStepContainer';
 
 class CustomStep extends Component {
+  /* istanbul ignore next */
   constructor(props) {
     super(props);
 
@@ -46,11 +47,7 @@ class CustomStep extends Component {
         style={style}
       >
         { loading ? (
-          <span className="rsc-cs-loading">
-            <Loading delay="0s">.</Loading>
-            <Loading delay=".2s">.</Loading>
-            <Loading delay=".4s">.</Loading>
-          </span>
+          <Loading />
         ) : this.renderComponent() }
       </CustomStepContainer>
     );

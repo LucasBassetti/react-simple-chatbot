@@ -12,6 +12,7 @@ const CustomComponent = () => (
 describe('ChatBot', () => {
   const wrapper = mount(
     <ChatBot
+      className="classname-test"
       delay={0}
       audio={false}
       handleEnd={() => {}}
@@ -34,18 +35,24 @@ describe('ChatBot', () => {
         {
           id: '3',
           component: <CustomComponent />,
-          replace: true,
+          asMessage: true,
           trigger: '4',
         },
         {
           id: '4',
-          options: [
-            { value: 'op1', label: 'Option 1', trigger: '5' },
-            { value: 'op2', label: 'Option 2', trigger: '5' },
-          ],
+          component: <CustomComponent />,
+          replace: true,
+          trigger: '5',
         },
         {
           id: '5',
+          options: [
+            { value: 'op1', label: 'Option 1', trigger: '6' },
+            { value: 'op2', label: 'Option 2', trigger: '6' },
+          ],
+        },
+        {
+          id: '6',
           message: 'Bye!',
           end: true,
         },
@@ -66,6 +73,10 @@ describe('ChatBot', () => {
     expect(wrapper.hasClass('rsc')).to.be.equal(true);
   });
 
+  it('should render with class \'classname-test\'', () => {
+    expect(wrapper.hasClass('classname-test')).to.be.equal(true);
+  });
+
   it('should render a custom step', () => {
     expect(wrapper.find(CustomStep)).to.have.length(1);
   });
@@ -76,6 +87,6 @@ describe('ChatBot', () => {
 
   it('should render 3 texts steps', () => {
     wrapper.find('.rsc-os-option-element').first().simulate('click');
-    expect(wrapper.find(TextStep)).to.have.length(3);
+    expect(wrapper.find(TextStep)).to.have.length(4);
   });
 });

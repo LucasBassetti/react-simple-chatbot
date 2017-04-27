@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import Bubble from './Bubble';
 import Image from './Image';
 import ImageContainer from './ImageContainer';
-import Loading from './Loading';
+import Loading from '../common/Loading';
 import TextStepContainer from './TextStepContainer';
 
 class TextStep extends Component {
+  /* istanbul ignore next */
   constructor(props) {
     super(props);
 
@@ -55,6 +56,8 @@ class TextStep extends Component {
       step,
       isFirst,
       isLast,
+      avatarStyle,
+      bubbleStyle,
     } = this.props;
     const {
       avatar,
@@ -76,6 +79,7 @@ class TextStep extends Component {
             isFirst &&
             <Image
               className="rsc-ts-image"
+              style={avatarStyle}
               user={user}
               src={avatar}
               alt="avatar"
@@ -84,6 +88,7 @@ class TextStep extends Component {
         </ImageContainer>
         <Bubble
           className="rsc-ts-bubble"
+          style={bubbleStyle}
           user={user}
           bubbleColor={bubbleColor}
           fontColor={fontColor}
@@ -92,11 +97,7 @@ class TextStep extends Component {
         >
           {
             this.state.loading &&
-            <span className="rsc-ts-loading">
-              <Loading delay="0s">.</Loading>
-              <Loading delay=".2s">.</Loading>
-              <Loading delay=".4s">.</Loading>
-            </span>
+            <Loading />
           }
           { !this.state.loading && this.renderMessage() }
         </Bubble>
@@ -110,6 +111,8 @@ TextStep.propTypes = {
   isLast: PropTypes.bool.isRequired,
   step: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
+  avatarStyle: PropTypes.object.isRequired,
+  bubbleStyle: PropTypes.object.isRequired,
   previousStep: PropTypes.object,
   previousValue: PropTypes.any,
   steps: PropTypes.object,

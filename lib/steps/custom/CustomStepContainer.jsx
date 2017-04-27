@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const ChatStepContainer = styled.span`
+const ChatStepContainer = styled.div`
   border: 1px solid #ddd;
   border-radius: 5px;
   display: flex;

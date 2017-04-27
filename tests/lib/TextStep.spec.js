@@ -6,6 +6,10 @@ import { TextStep } from '../../lib/steps/steps';
 import Bubble from '../../lib/steps/text/Bubble';
 import Image from '../../lib/steps/text/Image';
 
+const CustomComponent = () => (
+  <div />
+);
+
 describe('TextStep', () => {
   describe('Bot text', () => {
     const settings = {
@@ -20,6 +24,8 @@ describe('TextStep', () => {
       },
       isFirst: true,
       isLast: true,
+      avatarStyle: {},
+      bubbleStyle: {},
       triggerNextStep: () => {},
     };
 
@@ -45,6 +51,20 @@ describe('TextStep', () => {
     it('should render bubble with message equal \'Hello\'', () => {
       expect(wrapper.find(Bubble).text()).to.be.equal('Hello');
     });
+
+    it('should render a first bubble (but not last)', () => {
+      const tsWrapper = mount(<TextStep {...settings} isFirst={true} isLast={false} />);
+      tsWrapper.setState({ loading: false });
+
+      expect(tsWrapper.find(Image).exists()).to.be.equal(true);
+    });
+
+    it('should render a middle bubble', () => {
+      const tsWrapper = mount(<TextStep {...settings} isFirst={false} isLast={false} />);
+      tsWrapper.setState({ loading: false });
+
+      expect(tsWrapper.find(Image).exists()).to.be.equal(false);
+    });
   });
 
   describe('User text', () => {
@@ -60,6 +80,8 @@ describe('TextStep', () => {
       },
       isFirst: false,
       isLast: true,
+      avatarStyle: {},
+      bubbleStyle: {},
       triggerNextStep: () => {},
     };
 
@@ -70,11 +92,40 @@ describe('TextStep', () => {
       expect(wrapper.find(Image).exists()).to.be.equal(false);
     });
 
+    it('should render a first bubble', () => {
+      const tsWrapper = mount(<TextStep {...settings} isFirst={true} isLast={false} />);
+      tsWrapper.setState({ loading: false });
+
+      expect(tsWrapper.find(Image).exists()).to.be.equal(true);
+    });
+
     it('should render a middle bubble', () => {
       const tsWrapper = mount(<TextStep {...settings} isFirst={false} isLast={false} />);
       tsWrapper.setState({ loading: false });
 
-      expect(tsWrapper.find('.image').exists()).to.be.equal(false);
+      expect(tsWrapper.find(Image).exists()).to.be.equal(false);
+    });
+  });
+
+  describe('Component text', () => {
+    const settings = {
+      step: {
+        id: '1',
+        component: <CustomComponent />,
+        waitUser: true,
+      },
+      isFirst: false,
+      isLast: true,
+      avatarStyle: {},
+      bubbleStyle: {},
+      triggerNextStep: () => {},
+    };
+
+    const wrapper = mount(<TextStep {...settings} />);
+    wrapper.setState({ loading: false });
+
+    it('should render bubble with component', () => {
+      expect(wrapper.find(CustomComponent).exists()).to.be.equal(true);
     });
   });
 });
