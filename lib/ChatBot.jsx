@@ -100,7 +100,7 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   }
 
-  triggerNextStep(value) {
+  triggerNextStep(data) {
     const {
       renderedSteps,
       previousSteps,
@@ -110,14 +110,17 @@ class ChatBot extends Component {
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
 
-    if (value) {
-      currentStep.value = value;
+    if (data && data.value) {
+      currentStep.value = data.value;
+    }
+    if (data && data.trigger) {
+      currentStep.trigger = data.trigger;
     }
 
     if (isEnd) {
       this.handleEnd();
     } else if (currentStep.options) {
-      const option = currentStep.options.filter(o => o.value === value)[0];
+      const option = currentStep.options.filter(o => o.value === data.value)[0];
       delete currentStep.options;
 
       currentStep = Object.assign(
@@ -177,15 +180,22 @@ class ChatBot extends Component {
   handleEnd() {
     const { previousSteps } = this.state;
 
-    const steps = previousSteps.map((step) => {
+    const renderedSteps = previousSteps.map((step) => {
       const { id, message, value } = step;
       return { id, message, value };
     });
 
+    const steps = [];
+
+    for (let i = 0, len = previousSteps.length; i < len; i += 1) {
+      const { id, message, value } = previousSteps[i];
+      steps[id] = { id, message, value };
+    }
+
     const values = previousSteps.filter(step => step.value).map(step => step.value);
 
     if (this.props.handleEnd) {
-      this.props.handleEnd({ steps, values });
+      this.props.handleEnd({ renderedSteps, steps, values });
     }
   }
 

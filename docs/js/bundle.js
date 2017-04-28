@@ -58,9 +58,9 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(227);
-	__webpack_require__(229);
-	__webpack_require__(231);
+	__webpack_require__(228);
+	__webpack_require__(230);
+	__webpack_require__(232);
 	
 	(0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('root'));
 
@@ -24735,7 +24735,7 @@
 	
 	var _Sidebar2 = _interopRequireDefault(_Sidebar);
 	
-	var _GithubIcon = __webpack_require__(224);
+	var _GithubIcon = __webpack_require__(225);
 	
 	var _GithubIcon2 = _interopRequireDefault(_GithubIcon);
 	
@@ -24745,7 +24745,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(225);
+	__webpack_require__(226);
 	
 	var routes = [];
 	for (var i = 0, len = _menu2.default.length; i < len; i += 1) {
@@ -24873,7 +24873,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var $ = __webpack_require__(203);
-	__webpack_require__(222);
+	__webpack_require__(223);
 	
 	var Sidebar = function (_Component) {
 	  _inherits(Sidebar, _Component);
@@ -42184,25 +42184,33 @@
 	
 	var _Example14 = _interopRequireDefault(_Example13);
 	
-	var _Component = __webpack_require__(212);
+	var _Example15 = __webpack_require__(212);
+	
+	var _Example16 = _interopRequireDefault(_Example15);
+	
+	var _Component = __webpack_require__(213);
 	
 	var _Component2 = _interopRequireDefault(_Component);
 	
-	var _Component3 = __webpack_require__(215);
+	var _Component3 = __webpack_require__(216);
 	
 	var _Component4 = _interopRequireDefault(_Component3);
 	
-	var _Component5 = __webpack_require__(218);
+	var _Component5 = __webpack_require__(219);
 	
 	var _Component6 = _interopRequireDefault(_Component5);
 	
-	var _Contribute = __webpack_require__(221);
+	var _Contribute = __webpack_require__(222);
 	
 	var _Contribute2 = _interopRequireDefault(_Contribute);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	// API Referece
+	
+	// Examples
+	
+	// Intro
 	var menu = [{
 	  title: 'Intro',
 	  icon: 'fa fa-arrow-right',
@@ -42246,6 +42254,10 @@
 	    href: '/docs/end-callback',
 	    title: 'End Callback',
 	    component: _react2.default.createElement(_Example14.default, null)
+	  }, {
+	    href: '/docs/bmi',
+	    title: 'BMI',
+	    component: _react2.default.createElement(_Example16.default, null)
 	  }]
 	}, {
 	  title: 'API Reference',
@@ -42273,10 +42285,6 @@
 	  }]
 	}];
 	// Others
-	
-	// Examples
-	
-	// Intro
 	exports.default = menu;
 
 /***/ }),
@@ -53626,13 +53634,180 @@
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(184);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _reactSimpleChatbot = __webpack_require__(186);
+	
+	var _reactSimpleChatbot2 = _interopRequireDefault(_reactSimpleChatbot);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var $ = __webpack_require__(203);
+	
+	var exampleCode = 'import React, { Component } from \'react\';\nimport PropTypes from \'prop-types\';\nimport ChatBot from \'react-simple-chatbot\';\n\nconst BMI = (props) => {\n  const { steps } = props;\n  const height = steps.height.value;\n  const weight = steps.weight.value;\n  const bmi = Number(((weight / (height * height)) * 10000).toFixed(1));\n  let result = \'Underweight\';\n\n  if (bmi >= 18.5 && bmi < 25) {\n    result = \'Normal weight\';\n  } else if (bmi >= 25 && bmi < 30) {\n    result = \'Overweight\';\n  } else if (bmi >= 30) {\n    result = \'Obesity\';\n  }\n\n  return (\n    <div className="test">\n      Your BMI is {bmi} ({result})\n    </div>\n  );\n};\n\nBMI.propTypes = {\n  steps: PropTypes.object,\n};\n\nBMI.defaultProps = {\n  steps: undefined,\n};\n\nclass BMIExample extends Component {\n  render() {\n    function validator(value) {\n      if (isNaN(value)) {\n        return \'value should be a number\';\n      } else if (value < 0) {\n        return \'value should be positive\';\n      }\n\n      return true;\n    }\n\n    return (\n      <ChatBot\n        steps={[\n          {\n            id: \'1\',\n            message: \'Welcome to react chatbot!\',\n            trigger: \'2\',\n          },\n          {\n            id: \'2\',\n            message: \'Let\\\'s calculate your BMI (Body Mass Index)\',\n            trigger: \'3\',\n          },\n          {\n            id: \'3\',\n            message: \'Please type your height (cm)\',\n            trigger: \'height\',\n          },\n          {\n            id: \'height\',\n            user: true,\n            type: true,\n            trigger: \'4\',\n            validator,\n          },\n          {\n            id: \'4\',\n            message: \'Please type your weight (kg)\',\n            trigger: \'weight\',\n          },\n          {\n            id: \'weight\',\n            user: true,\n            trigger: \'5\',\n            validator,\n          },\n          {\n            id: \'5\',\n            message: \'Thanks! Check out your BMI\',\n            trigger: \'6\',\n          },\n          {\n            id: \'6\',\n            component: <BMI />,\n            end: true,\n          },\n        ]}\n      />\n    );\n  }\n}\n\nexport default BMIExample;\n';
+	
+	var BMI = function BMI(props) {
+	  var steps = props.steps;
+	
+	  var height = steps.height.value;
+	  var weight = steps.weight.value;
+	  var bmi = Number((weight / (height * height) * 10000).toFixed(1));
+	  var result = 'Underweight';
+	
+	  if (bmi >= 18.5 && bmi < 25) {
+	    result = 'Normal weight';
+	  } else if (bmi >= 25 && bmi < 30) {
+	    result = 'Overweight';
+	  } else if (bmi >= 30) {
+	    result = 'Obesity';
+	  }
+	
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'test' },
+	    'Your BMI is ',
+	    bmi,
+	    ' (',
+	    result,
+	    ')'
+	  );
+	};
+	
+	BMI.propTypes = {
+	  steps: _propTypes2.default.object
+	};
+	
+	BMI.defaultProps = {
+	  steps: undefined
+	};
+	
+	var Example8 = function (_Component) {
+	  _inherits(Example8, _Component);
+	
+	  function Example8() {
+	    _classCallCheck(this, Example8);
+	
+	    return _possibleConstructorReturn(this, (Example8.__proto__ || Object.getPrototypeOf(Example8)).apply(this, arguments));
+	  }
+	
+	  _createClass(Example8, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      $('pre code').each(function (i, block) {
+	        hljs.highlightBlock(block);
+	      });
+	
+	      this.handleEnd = this.handleEnd.bind(this);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      function validator(value) {
+	        if (isNaN(value)) {
+	          return 'value should be a number';
+	        } else if (value < 0) {
+	          return 'value should be positive';
+	        }
+	
+	        return true;
+	      }
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'docs-example-1' },
+	        _react2.default.createElement(_reactSimpleChatbot2.default, {
+	          handleEnd: this.handleEnd,
+	          steps: [{
+	            id: '1',
+	            message: 'Welcome to react chatbot!',
+	            trigger: '2'
+	          }, {
+	            id: '2',
+	            message: 'Let\'s calculate your BMI (Body Mass Index)',
+	            trigger: '3'
+	          }, {
+	            id: '3',
+	            message: 'Please type your height (cm)',
+	            trigger: 'height'
+	          }, {
+	            id: 'height',
+	            user: true,
+	            type: true,
+	            trigger: '4',
+	            validator: validator
+	          }, {
+	            id: '4',
+	            message: 'Please type your weight (kg)',
+	            trigger: 'weight'
+	          }, {
+	            id: 'weight',
+	            user: true,
+	            trigger: '5',
+	            validator: validator
+	          }, {
+	            id: '5',
+	            message: 'Thanks! Check out your BMI',
+	            trigger: '6'
+	          }, {
+	            id: '6',
+	            component: _react2.default.createElement(BMI, null),
+	            end: true
+	          }]
+	        }),
+	        _react2.default.createElement(
+	          'h3',
+	          { style: { marginTop: 20 } },
+	          'Code'
+	        ),
+	        _react2.default.createElement(
+	          'pre',
+	          null,
+	          _react2.default.createElement(
+	            'code',
+	            { className: 'jsx' },
+	            exampleCode
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Example8;
+	}(_react.Component);
+	
+	exports.default = Example8;
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(213);
+	__webpack_require__(214);
 	
 	var properties = [{
 	  name: 'avatarStyle',
@@ -53827,13 +54002,13 @@
 	exports.default = Component1;
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(214);
+	var content = __webpack_require__(215);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -53853,7 +54028,7 @@
 	}
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -53867,7 +54042,7 @@
 
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53896,7 +54071,7 @@
 	
 	var $ = __webpack_require__(203);
 	
-	__webpack_require__(216);
+	__webpack_require__(217);
 	
 	var textStepCode = '{\n  id: \'1\',\n  message: \'Hello World\',\n  end: true,\n}\n';
 	
@@ -54164,13 +54339,13 @@
 	exports.default = Component2;
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(217);
+	var content = __webpack_require__(218);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -54190,7 +54365,7 @@
 	}
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -54204,7 +54379,7 @@
 
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54219,7 +54394,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(219);
+	__webpack_require__(220);
 	
 	var properties = [{
 	  name: 'previousStep',
@@ -54234,9 +54409,9 @@
 	  type: 'PropTypes.object',
 	  description: 'All steps rendered'
 	}, {
-	  name: 'triggerNextStep(value)',
+	  name: 'triggerNextStep({ value, trigger })',
 	  type: 'PropTypes.func',
-	  description: 'Callback function to trigger next step when user attribute is true. Optionally you can pass a value to be setted in the step'
+	  description: 'Callback function to trigger next step when user attribute is true. Optionally you can pass a object with value to be setted in the step and the next step to be triggered'
 	}];
 	
 	var Component3 = function Component3() {
@@ -54319,13 +54494,13 @@
 	exports.default = Component3;
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(220);
+	var content = __webpack_require__(221);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -54345,7 +54520,7 @@
 	}
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -54359,7 +54534,7 @@
 
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -54393,13 +54568,13 @@
 	exports.default = Contribute;
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(223);
+	var content = __webpack_require__(224);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -54419,7 +54594,7 @@
 	}
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -54433,7 +54608,7 @@
 
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -54480,13 +54655,13 @@
 	exports.default = GithubIcon;
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(226);
+	var content = __webpack_require__(227);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -54506,7 +54681,7 @@
 	}
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -54520,13 +54695,13 @@
 
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(228);
+	var content = __webpack_require__(229);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -54546,7 +54721,7 @@
 	}
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -54560,13 +54735,13 @@
 
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(230);
+	var content = __webpack_require__(231);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -54586,7 +54761,7 @@
 	}
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);
@@ -54600,13 +54775,13 @@
 
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(232);
+	var content = __webpack_require__(233);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(194)(content, {});
@@ -54626,7 +54801,7 @@
 	}
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)(undefined);

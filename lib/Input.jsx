@@ -8,7 +8,7 @@ const Input = styled.input`
   border-top: ${props => props.invalid ? '1px solid #E53935' : '1px solid #ddd'};
   color: ${props => props.invalid ? '#E53935' : ''};
   font-size: 12px;
-  opacity: ${props => props.disabled ? '.5' : '1'}
+  opacity: ${props => props.disabled && !props.invalid ? '.5' : '1'}
   padding: 12px 8px;
   width: calc(100% - 16px);
 `;

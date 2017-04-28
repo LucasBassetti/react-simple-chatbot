@@ -16,7 +16,7 @@ class OptionsStep extends Component {
   }
 
   onOptionClick({ value }) {
-    this.props.triggerNextStep(value);
+    this.props.triggerNextStep({ value });
   }
 
   renderOption(option) {
