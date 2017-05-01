@@ -16,10 +16,10 @@ class CustomStep extends Component {
   }
 
   componentDidMount() {
-    const { delay, waitUser } = this.props.step;
+    const { delay, waitAction } = this.props.step;
     setTimeout(() => {
       this.setState({ loading: false }, () => {
-        if (!waitUser) {
+        if (!waitAction) {
           this.props.triggerNextStep();
         }
       });

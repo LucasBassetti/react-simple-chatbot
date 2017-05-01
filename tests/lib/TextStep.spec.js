@@ -112,7 +112,7 @@ describe('TextStep', () => {
       step: {
         id: '1',
         component: <CustomComponent />,
-        waitUser: true,
+        waitAction: true,
       },
       isFirst: false,
       isLast: true,

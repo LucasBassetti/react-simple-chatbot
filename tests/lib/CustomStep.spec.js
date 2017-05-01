@@ -50,7 +50,7 @@ describe('CustomStep', () => {
       step1: {
         id: '1',
         component: <Example />,
-        waitUser: true,
+        waitAction: true,
       },
     };
     const step = steps.step1;

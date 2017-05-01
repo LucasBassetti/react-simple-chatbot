@@ -4,7 +4,7 @@
   <img src="https://codecov.io/gh/LucasBassetti/react-simple-chatbot/branch/master/graph/badge.svg" alt="Codecov" />
 </a>
 
-A simple chatbot component
+A simple chatbot component to create conversation chats
 
 <img src="https://cloud.githubusercontent.com/assets/1014326/25510626/ff12048e-2b97-11e7-8a41-489fa5165167.gif" height="400" />
 

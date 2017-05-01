@@ -4,6 +4,8 @@
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
   "scripts": {
+    "lint": "./node_modules/.bin/eslint lib/*.jsx",
+    "prepush": "npm run lint && npm run test:coverage",
     "start": "webpack-dev-server --inline --content-base build/",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "test": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --compilers js:./tests/helpers/compiler.js --require babel-register",
@@ -12,16 +14,12 @@
     "build": "webpack --config webpack.config.prod.js"
   },
   "nyc": {
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "tests/**"
-    ],
-    "extension": [
-      ".jsx"
-    ]
+    "function": 80,
+    "lines": 80,
+    "check-coverage": true,
+    "reporter": ["text", "html"],
+    "exclude": ["tests/**"],
+    "extension": [".jsx"]
   },
   "repository": {
     "type": "git",

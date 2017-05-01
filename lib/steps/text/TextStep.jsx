@@ -20,8 +20,8 @@ class TextStep extends Component {
 
   componentDidMount() {
     const { step } = this.props;
-    const { component, delay, waitUser } = step;
-    const isComponentWatingUser = component && waitUser;
+    const { component, delay, waitAction } = step;
+    const isComponentWatingUser = component && waitAction;
     setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!isComponentWatingUser) {
