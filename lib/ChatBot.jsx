@@ -156,7 +156,16 @@ class ChatBot extends Component {
       let nextStep = Object.assign({}, steps[currentStep.trigger]);
 
       if (nextStep.update) {
-        nextStep = Object.assign({}, steps[nextStep.update], { trigger: nextStep.trigger });
+        const updateStep = nextStep;
+        nextStep = Object.assign({}, steps[updateStep.update]);
+
+        if (nextStep.options) {
+          for (let i = 0, len = nextStep.options.length; i < len; i += 1) {
+            nextStep.options[i].trigger = updateStep.trigger;
+          }
+        } else {
+          nextStep.trigger = updateStep.trigger;
+        }
       }
 
       nextStep.key = Random(24);
