@@ -13,7 +13,9 @@ describe('ChatBot', () => {
   const wrapper = mount(
     <ChatBot
       className="classname-test"
-      delay={0}
+      botDelay={0}
+      userDelay={0}
+      customDelay={0}
       audio={false}
       handleEnd={() => {}}
       steps={[

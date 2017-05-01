@@ -23,6 +23,7 @@ describe('CustomStep', () => {
     const settings = {
       step,
       steps,
+      delay: 0,
       style: { border: 0 },
       previousStep: step,
       triggerNextStep: () => {},
@@ -57,6 +58,7 @@ describe('CustomStep', () => {
     const settings = {
       step,
       steps,
+      delay: 0,
       previousStep: step,
       style: {},
       triggerNextStep: () => {},
