@@ -50,4 +50,11 @@ describe('schema', () => {
       schema.parse(step);
     }).to.not.throw();
   });
+
+  it('should not throw error to a update step', () => {
+    const step = { id: '1', update: '2', trigger: '3' };
+    expect(() => {
+      schema.parse(step);
+    }).to.not.throw();
+  });
 });

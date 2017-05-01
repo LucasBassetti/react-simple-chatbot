@@ -153,14 +153,19 @@ class ChatBot extends Component {
         renderedSteps.pop();
       }
 
-      const nextSteps = Object.assign({}, steps[currentStep.trigger]);
-      nextSteps.key = Random(24);
+      let nextStep = Object.assign({}, steps[currentStep.trigger]);
+
+      if (nextStep.update) {
+        nextStep = Object.assign({}, steps[nextStep.update], { trigger: nextStep.trigger });
+      }
+
+      nextStep.key = Random(24);
 
       previousStep = currentStep;
-      currentStep = nextSteps;
+      currentStep = nextStep;
 
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
-        if (nextSteps.user) {
+        if (nextStep.user) {
           this.setState({ disabled: false }, () => {
             const chatInput = document.querySelector('.rsc-input');
             /* istanbul ignore next */
@@ -169,8 +174,8 @@ class ChatBot extends Component {
             }
           });
         } else {
-          renderedSteps.push(nextSteps);
-          previousSteps.push(nextSteps);
+          renderedSteps.push(nextStep);
+          previousSteps.push(nextStep);
 
           this.setState({ renderedSteps, previousSteps });
         }
