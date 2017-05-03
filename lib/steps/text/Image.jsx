@@ -6,6 +6,7 @@ const Image = styled.img`
   border: 1px solid #ddd;
   border-radius: ${props => props.user ? '50% 50% 50% 0' : '50% 50% 0 50%'};
   height: 40px;
+  min-width: 40px;
   padding: 2px;
   transform: scale(0);
   transform-origin: ${props => props.user ? 'bottom left' : 'bottom right'};

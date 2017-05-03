@@ -61,11 +61,12 @@ class ChatBot extends Component {
 
     for (let i = 0, len = this.props.steps.length; i < len; i += 1) {
       const step = this.props.steps[i];
+      const settings = step.user ? defaulUserSettings : defaulBotSettings;
 
       steps[step.id] = Object.assign(
         {},
+        settings,
         schema.parse(step),
-        defaulBotSettings,
       );
     }
 
@@ -126,9 +127,9 @@ class ChatBot extends Component {
 
       currentStep = Object.assign(
         {},
-        currentStep,
         option,
         defaulUserSettings,
+        currentStep,
         {
           user: true,
           trigger: option.trigger,
@@ -273,8 +274,8 @@ class ChatBot extends Component {
 
         currentStep = Object.assign(
           {},
-          currentStep,
           defaulUserSettings,
+          currentStep,
           step,
         );
 
