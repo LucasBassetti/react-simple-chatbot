@@ -21913,6 +21913,7 @@
 	      docsLink = home.docsLink,
 	      github = home.github;
 	
+	  var githubUrl = 'https://ghbtns.com/github-btn.html?user=' + github.user + '&repo=' + github.repository;
 	  return _react2.default.createElement(
 	    'div',
 	    { className: 'home' },
@@ -21932,40 +21933,20 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'buttons' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'button' },
-	          _react2.default.createElement(
-	            'a',
-	            {
-	              className: 'github-button',
-	              href: 'https://github.com/' + github.user + '/' + github.repository,
-	              'data-style': 'mega',
-	              'data-count-href': '/' + github.user + '/' + github.repository + '/stargazers',
-	              'data-count-api': '/repos/' + github.user + '/' + github.repository + '#stargazers_count',
-	              'data-count-aria-label': '# stargazers on GitHub',
-	              'aria-label': 'Star ' + github.user + '/' + github.repository + ' on GitHub'
-	            },
-	            'Star'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'button' },
-	          _react2.default.createElement(
-	            'a',
-	            {
-	              className: 'github-button',
-	              href: 'https://github.com/' + github.user + '/' + github.repository + '/fork',
-	              'data-style': 'mega',
-	              'data-count-href': '/' + github.user + '/' + github.repository + '/network',
-	              'data-count-api': '/repos/' + github.user + '/' + github.repository + '#forks_count',
-	              'data-count-aria-label': '# forks on GitHub',
-	              'aria-label': 'Fork ' + github.user + '/' + github.repository + ' on GitHub'
-	            },
-	            'Fork'
-	          )
-	        )
+	        _react2.default.createElement('iframe', {
+	          src: githubUrl + '&type=star&count=true&size=large',
+	          frameBorder: '0',
+	          scrolling: '0',
+	          width: '160px',
+	          height: '30px'
+	        }),
+	        _react2.default.createElement('iframe', {
+	          src: githubUrl + '&type=fork&count=true&size=large',
+	          frameBorder: '0',
+	          scrolling: '0',
+	          width: '158px',
+	          height: '30px'
+	        })
 	      ),
 	      _react2.default.createElement(
 	        'p',
