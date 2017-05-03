@@ -21847,8 +21847,9 @@
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      this.setState({ link: window.location.hash.replace('#', '') });
-	      _reactGa2.default.pageview(window.location.hash.replace('#', ''));
+	      var link = window.location.hash.replace('#', '');
+	      this.setState({ link: link });
+	      _reactGa2.default.pageview(link || '/');
 	    }
 	  }, {
 	    key: 'handleLink',
