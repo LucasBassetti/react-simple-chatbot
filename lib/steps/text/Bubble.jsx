@@ -13,6 +13,7 @@ const Bubble = styled.div`
     }
     return props.user ? '18px 18px 0 18px' : '18px 18px 18px 0';
   }};
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
   color: ${props => props.fontColor};
   display: inline-block;
   font-size: 14px;
@@ -25,6 +26,7 @@ const Bubble = styled.div`
 
     return '0 0 10px 0';
   }};
+  overflow: hidden;
   position: relative;
   padding: 12px;
   transform: scale(0);

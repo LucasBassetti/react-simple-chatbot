@@ -4,13 +4,17 @@ import { invalidInput } from './common/animations';
 const Input = styled.input`
   animation: ${props => props.invalid ? `${invalidInput} .2s ease` : ''};
   border: ${props => props.invalid ? '1px solid #E53935' : '0'};
-  border-radius: 2px;
-  border-top: ${props => props.invalid ? '1px solid #E53935' : '1px solid #ddd'};
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-top: ${props => props.invalid ? '1px solid #E53935' : '1px solid #eee'};
+  box-shadow: none;
   color: ${props => props.invalid ? '#E53935' : ''};
-  font-size: 12px;
-  opacity: ${props => props.disabled && !props.invalid ? '.5' : '1'}
-  padding: 12px 8px;
-  width: calc(100% - 16px);
+  font-size: 14px;
+  opacity: ${props => props.disabled && !props.invalid ? '.5' : '1'};
+  outline: none;
+  padding: 16px 10px;
+  width: calc(100% - 22px);
+  -webkit-appearance: none;
 `;
 
 export default Input;
