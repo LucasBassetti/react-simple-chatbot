@@ -415,8 +415,13 @@ class ChatBot extends Component {
           headerBgColor={headerBgColor}
           headerFontColor={headerFontColor}
         >
-          <HeaderTitle>{headerTitle}</HeaderTitle>
-          <HeaderIcon onClick={() => this.setState({ opened: false })}>
+          <HeaderTitle className="rsc-header-title">
+            {headerTitle}
+          </HeaderTitle>
+          <HeaderIcon
+            className="rsc-header-close-button"
+            onClick={() => this.setState({ opened: false })}
+          >
             <CloseIcon />
           </HeaderIcon>
         </Header>
@@ -428,7 +433,9 @@ class ChatBot extends Component {
           headerBgColor={headerBgColor}
           headerFontColor={headerFontColor}
         >
-          <HeaderTitle>{headerTitle}</HeaderTitle>
+          <HeaderTitle className="rsc-header-title">
+            {headerTitle}
+          </HeaderTitle>
         </Header>
       );
     }
