@@ -427,39 +427,26 @@ class ChatBot extends Component {
       className,
     } = this.props;
 
-    let header;
-
-    if (floating) {
-      header = headerComponent || (
-        <Header
-          className="rsc-header"
-          headerBgColor={headerBgColor}
-          headerFontColor={headerFontColor}
-        >
-          <HeaderTitle className="rsc-header-title">
-            {headerTitle}
-          </HeaderTitle>
+    const header = headerComponent || (
+      <Header
+        className="rsc-header"
+        headerBgColor={headerBgColor}
+        headerFontColor={headerFontColor}
+      >
+        <HeaderTitle className="rsc-header-title">
+          {headerTitle}
+        </HeaderTitle>
+        {
+          floating &&
           <HeaderIcon
             className="rsc-header-close-button"
             onClick={() => this.setState({ opened: false })}
           >
             <CloseIcon />
           </HeaderIcon>
-        </Header>
-      );
-    } else {
-      header = headerComponent || (
-        <Header
-          className="rsc-header"
-          headerBgColor={headerBgColor}
-          headerFontColor={headerFontColor}
-        >
-          <HeaderTitle className="rsc-header-title">
-            {headerTitle}
-          </HeaderTitle>
-        </Header>
-      );
-    }
+        }
+      </Header>
+    );
 
     return (
       <div className={`rsc ${className}`}>
