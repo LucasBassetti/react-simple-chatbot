@@ -21,8 +21,8 @@ class ChatBot extends Component {
     super(props);
 
     this.state = {
-      contentClass: Random(6),
-      inputClass: Random(6),
+      contentClass: Random(12),
+      inputClass: Random(12),
       renderedSteps: [],
       previousSteps: [],
       currentStep: {},
@@ -133,7 +133,7 @@ class ChatBot extends Component {
 
     if (isEnd) {
       this.handleEnd();
-    } else if (currentStep.options) {
+    } else if (currentStep.options && data) {
       const option = currentStep.options.filter(o => o.value === data.value)[0];
       delete currentStep.options;
 
