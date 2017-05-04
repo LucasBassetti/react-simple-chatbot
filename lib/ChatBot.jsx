@@ -95,11 +95,12 @@ class ChatBot extends Component {
 
   componentDidMount() {
     const { contentClass } = this.state;
-    const chatbotContent = document.querySelector(`.${contentClass}`);
-
-    /* istanbul ignore next */
-    if (chatbotContent) {
+    let chatbotContent;
+    try {
+      chatbotContent = document.querySelector(`.${contentClass}`);
       chatbotContent.addEventListener('DOMNodeInserted', onNodeInserted, false);
+    } catch (err) {
+      // console.log(err);
     }
 
     /* istanbul ignore next */
@@ -188,10 +189,14 @@ class ChatBot extends Component {
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
         if (nextStep.user) {
           this.setState({ disabled: false }, () => {
-            const chatInput = document.querySelector(`.${inputClass}`);
-            /* istanbul ignore next */
-            if (chatInput) {
-              chatInput.focus();
+            let chatInput;
+            try {
+              chatInput = document.querySelector(`.${inputClass}`);
+              if (chatInput) {
+                chatInput.focus();
+              }
+            } catch (err) {
+              // console.log(err);
             }
           });
         } else {
@@ -321,10 +326,14 @@ class ChatBot extends Component {
             inputInvalid: false,
             disabled: false,
           }, () => {
-            const chatInput = document.querySelector(`.${inputClass}`);
-            /* istanbul ignore next */
-            if (chatInput) {
-              chatInput.focus();
+            let chatInput;
+            try {
+              chatInput = document.querySelector(`.${inputClass}`);
+              if (chatInput) {
+                chatInput.focus();
+              }
+            } catch (err) {
+              // console.log(err);
             }
           });
         }, 2000);
