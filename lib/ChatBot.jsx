@@ -21,6 +21,8 @@ class ChatBot extends Component {
     super(props);
 
     this.state = {
+      contentClass: Random(6),
+      inputClass: Random(6),
       renderedSteps: [],
       previousSteps: [],
       currentStep: {},
@@ -92,16 +94,17 @@ class ChatBot extends Component {
   }
 
   componentDidMount() {
-    const chatbotMain = document.querySelector('.rsc-content');
+    const { contentClass } = this.state;
+    const chatbotContent = document.querySelector(`.${contentClass}`);
 
     /* istanbul ignore next */
-    if (chatbotMain) {
-      chatbotMain.addEventListener('DOMNodeInserted', onNodeInserted, false);
+    if (chatbotContent) {
+      chatbotContent.addEventListener('DOMNodeInserted', onNodeInserted, false);
     }
 
     /* istanbul ignore next */
     function onNodeInserted() {
-      chatbotMain.scrollTop = chatbotMain.scrollHeight;
+      chatbotContent.scrollTop = chatbotContent.scrollHeight;
     }
   }
 
@@ -111,6 +114,7 @@ class ChatBot extends Component {
 
   triggerNextStep(data) {
     const {
+      inputClass,
       renderedSteps,
       previousSteps,
       steps,
@@ -184,7 +188,7 @@ class ChatBot extends Component {
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
         if (nextStep.user) {
           this.setState({ disabled: false }, () => {
-            const chatInput = document.querySelector('.rsc-input');
+            const chatInput = document.querySelector(`.${inputClass}`);
             /* istanbul ignore next */
             if (chatInput) {
               chatInput.focus();
@@ -301,7 +305,7 @@ class ChatBot extends Component {
   }
 
   checkInvalidInput() {
-    const { currentStep, inputValue } = this.state;
+    const { inputClass, currentStep, inputValue } = this.state;
     const result = currentStep.validator(inputValue);
     const value = inputValue;
 
@@ -317,7 +321,7 @@ class ChatBot extends Component {
             inputInvalid: false,
             disabled: false,
           }, () => {
-            const chatInput = document.querySelector('.rsc-input');
+            const chatInput = document.querySelector(`.${inputClass}`);
             /* istanbul ignore next */
             if (chatInput) {
               chatInput.focus();
@@ -391,7 +395,15 @@ class ChatBot extends Component {
   }
 
   render() {
-    const { opened, disabled, inputValue, inputInvalid, renderedSteps } = this.state;
+    const {
+      contentClass,
+      inputClass,
+      opened,
+      disabled,
+      inputValue,
+      inputInvalid,
+      renderedSteps,
+    } = this.state;
     const {
       headerComponent,
       headerBgColor,
@@ -462,7 +474,7 @@ class ChatBot extends Component {
         >
           {showHeader && header}
           <Content
-            className="rsc-content"
+            className={`rsc-content ${contentClass}`}
             floating={floating}
             style={contentStyle}
           >
@@ -475,7 +487,7 @@ class ChatBot extends Component {
             <Input
               type="textarea"
               style={inputStyle}
-              className="rsc-input"
+              className={`rsc-input ${inputClass}`}
               placeholder="Type the message ..."
               onKeyPress={this.handleKeyPress}
               onChange={this.onValueChange}
