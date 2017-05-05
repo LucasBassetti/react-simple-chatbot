@@ -24,6 +24,7 @@ describe('TextStep', () => {
       },
       isFirst: true,
       isLast: true,
+      hideBotAvatar: false,
       avatarStyle: {},
       bubbleStyle: {},
       triggerNextStep: () => {},
@@ -59,6 +60,15 @@ describe('TextStep', () => {
       expect(tsWrapper.find(Image).exists()).to.be.equal(true);
     });
 
+    it('should render a without avatar', () => {
+      const tsWrapper = mount(
+        <TextStep {...settings} isFirst={false} hideBotAvatar={true} />,
+      );
+      tsWrapper.setState({ loading: false });
+
+      expect(tsWrapper.find(Image).exists()).to.be.equal(false);
+    });
+
     it('should render a middle bubble', () => {
       const tsWrapper = mount(<TextStep {...settings} isFirst={false} isLast={false} />);
       tsWrapper.setState({ loading: false });
@@ -80,6 +90,7 @@ describe('TextStep', () => {
       },
       isFirst: false,
       isLast: true,
+      showUserAvatar: true,
       avatarStyle: {},
       bubbleStyle: {},
       triggerNextStep: () => {},
@@ -88,15 +99,26 @@ describe('TextStep', () => {
     const wrapper = mount(<TextStep {...settings} />);
     wrapper.setState({ loading: false });
 
-    it('should render bubble without image (not first)', () => {
+    it('should render bubble without avatar (not first)', () => {
       expect(wrapper.find(Image).exists()).to.be.equal(false);
     });
 
     it('should render a first bubble', () => {
-      const tsWrapper = mount(<TextStep {...settings} isFirst={true} isLast={false} />);
+      const tsWrapper = mount(
+        <TextStep {...settings} isFirst={true} isLast={false} />,
+      );
       tsWrapper.setState({ loading: false });
 
       expect(tsWrapper.find(Image).exists()).to.be.equal(true);
+    });
+
+    it('should render a without avatar', () => {
+      const tsWrapper = mount(
+        <TextStep {...settings} showUserAvatar={false} />,
+      );
+      tsWrapper.setState({ loading: false });
+
+      expect(tsWrapper.find(Image).exists()).to.be.equal(false);
     });
 
     it('should render a middle bubble', () => {
@@ -116,6 +138,7 @@ describe('TextStep', () => {
       },
       isFirst: false,
       isLast: true,
+      hideBotAvatar: false,
       avatarStyle: {},
       bubbleStyle: {},
       triggerNextStep: () => {},

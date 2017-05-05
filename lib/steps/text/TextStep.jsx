@@ -58,6 +58,8 @@ class TextStep extends Component {
       isLast,
       avatarStyle,
       bubbleStyle,
+      hideBotAvatar,
+      hideUserAvatar,
     } = this.props;
     const {
       avatar,
@@ -65,6 +67,8 @@ class TextStep extends Component {
       fontColor,
       user,
     } = step;
+
+    const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
 
     return (
       <TextStepContainer
@@ -76,10 +80,11 @@ class TextStep extends Component {
           user={user}
         >
           {
-            isFirst &&
+            isFirst && showAvatar &&
             <Image
               className="rsc-ts-image"
               style={avatarStyle}
+              showAvatar={showAvatar}
               user={user}
               src={avatar}
               alt="avatar"
@@ -92,6 +97,7 @@ class TextStep extends Component {
           user={user}
           bubbleColor={bubbleColor}
           fontColor={fontColor}
+          showAvatar={showAvatar}
           isFirst={isFirst}
           isLast={isLast}
         >
@@ -113,6 +119,8 @@ TextStep.propTypes = {
   triggerNextStep: PropTypes.func.isRequired,
   avatarStyle: PropTypes.object.isRequired,
   bubbleStyle: PropTypes.object.isRequired,
+  hideBotAvatar: PropTypes.bool.isRequired,
+  hideUserAvatar: PropTypes.bool.isRequired,
   previousStep: PropTypes.object,
   previousValue: PropTypes.any,
   steps: PropTypes.object,

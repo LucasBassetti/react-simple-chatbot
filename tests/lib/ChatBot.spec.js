@@ -31,6 +31,11 @@ describe('ChatBot', () => {
           {
             id: 'user',
             user: true,
+            trigger: 'update',
+          },
+          {
+            id: 'update',
+            update: 'user',
             trigger: '2',
           },
           {
@@ -71,6 +76,11 @@ describe('ChatBot', () => {
       wrapper.find('.rsc-input').simulate('keyPress', { key: 'Enter' });
 
       setTimeout(() => {
+        wrapper.setState({ inputValue: 'test' });
+        wrapper.find('.rsc-input').simulate('keyPress', { key: 'Enter' });
+      }, 100);
+
+      setTimeout(() => {
         done();
       }, 500);
     });
@@ -95,16 +105,16 @@ describe('ChatBot', () => {
       expect(wrapper.find(OptionsStep)).to.have.length(1);
     });
 
-    it('should render 3 texts steps', () => {
+    it('should render 5 texts steps', () => {
       wrapper.find('.rsc-os-option-element').first().simulate('click');
-      expect(wrapper.find(TextStep)).to.have.length(4);
+      expect(wrapper.find(TextStep)).to.have.length(5);
     });
   });
 
   describe('No Header', () => {
     const wrapper = mount(
       <ChatBot
-        showHeader={false}
+        hideHeader={true}
         botDelay={0}
         userDelay={0}
         customDelay={0}

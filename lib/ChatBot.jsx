@@ -21,8 +21,6 @@ class ChatBot extends Component {
     super(props);
 
     this.state = {
-      contentClass: Random(12),
-      inputClass: Random(12),
       renderedSteps: [],
       previousSteps: [],
       currentStep: {},
@@ -94,19 +92,26 @@ class ChatBot extends Component {
   }
 
   componentDidMount() {
-    const { contentClass } = this.state;
-    let chatbotContent;
-    try {
-      chatbotContent = document.querySelector(`.${contentClass}`);
-      chatbotContent.addEventListener('DOMNodeInserted', onNodeInserted, false);
-    } catch (err) {
-      // console.log(err);
-    }
+    const chatbotContent = document.querySelector('.rsc-content');
 
     /* istanbul ignore next */
-    function onNodeInserted() {
-      chatbotContent.scrollTop = chatbotContent.scrollHeight;
+    if (chatbotContent) {
+      chatbotContent.addEventListener('DOMNodeInserted', this.onNodeInserted);
     }
+  }
+
+  componentWillUnmount() {
+    const chatbotContent = document.querySelector('.rsc-content');
+
+    /* istanbul ignore next */
+    if (chatbotContent) {
+      chatbotContent.removeEventListener('DOMNodeInserted', this.onNodeInserted);
+    }
+  }
+
+  /* istanbul ignore next */
+  onNodeInserted(event) {
+    event.currentTarget.scrollTop = event.currentTarget.scrollHeight;
   }
 
   onValueChange(event) {
@@ -115,7 +120,6 @@ class ChatBot extends Component {
 
   triggerNextStep(data) {
     const {
-      inputClass,
       renderedSteps,
       previousSteps,
       steps,
@@ -189,14 +193,10 @@ class ChatBot extends Component {
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
         if (nextStep.user) {
           this.setState({ disabled: false }, () => {
-            let chatInput;
-            try {
-              chatInput = document.querySelector(`.${inputClass}`);
-              if (chatInput) {
-                chatInput.focus();
-              }
-            } catch (err) {
-              // console.log(err);
+            const chatInput = document.querySelector('.rsc-input');
+            /* istanbul ignore next */
+            if (chatInput) {
+              chatInput.focus();
             }
           });
         } else {
@@ -310,7 +310,7 @@ class ChatBot extends Component {
   }
 
   checkInvalidInput() {
-    const { inputClass, currentStep, inputValue } = this.state;
+    const { currentStep, inputValue } = this.state;
     const result = currentStep.validator(inputValue);
     const value = inputValue;
 
@@ -326,14 +326,10 @@ class ChatBot extends Component {
             inputInvalid: false,
             disabled: false,
           }, () => {
-            let chatInput;
-            try {
-              chatInput = document.querySelector(`.${inputClass}`);
-              if (chatInput) {
-                chatInput.focus();
-              }
-            } catch (err) {
-              // console.log(err);
+            const chatInput = document.querySelector('.rsc-input');
+            /* istanbul ignore next */
+            if (chatInput) {
+              chatInput.focus();
             }
           });
         }, 2000);
@@ -347,7 +343,14 @@ class ChatBot extends Component {
 
   renderStep(step, index) {
     const { renderedSteps, previousSteps } = this.state;
-    const { avatarStyle, bubbleStyle, customStyle, customDelay } = this.props;
+    const {
+      avatarStyle,
+      bubbleStyle,
+      customStyle,
+      customDelay,
+      hideBotAvatar,
+      hideUserAvatar,
+    } = this.props;
     const { options, component, asMessage } = step;
     const steps = {};
     const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
@@ -397,6 +400,8 @@ class ChatBot extends Component {
         triggerNextStep={this.triggerNextStep}
         avatarStyle={avatarStyle}
         bubbleStyle={bubbleStyle}
+        hideBotAvatar={hideBotAvatar}
+        hideUserAvatar={hideUserAvatar}
         isFirst={this.isFirstPosition(step)}
         isLast={this.isLastPosition(step)}
       />
@@ -405,8 +410,6 @@ class ChatBot extends Component {
 
   render() {
     const {
-      contentClass,
-      inputClass,
       opened,
       disabled,
       inputValue,
@@ -419,7 +422,7 @@ class ChatBot extends Component {
       headerFontColor,
       headerTitle,
       floating,
-      showHeader,
+      hideHeader,
       style,
       contentStyle,
       footerStyle,
@@ -468,9 +471,10 @@ class ChatBot extends Component {
           opened={opened}
           style={style}
         >
-          {showHeader && header}
+          {!hideHeader && header}
           <Content
-            className={`rsc-content ${contentClass}`}
+            className="rsc-content"
+            ref={(content) => { this.rscContent = content; }}
             floating={floating}
             style={contentStyle}
           >
@@ -483,7 +487,8 @@ class ChatBot extends Component {
             <Input
               type="textarea"
               style={inputStyle}
-              className={`rsc-input ${inputClass}`}
+              className="rsc-input"
+              ref={(input) => { this.rscInput = input; }}
               placeholder="Type the message ..."
               onKeyPress={this.handleKeyPress}
               onChange={this.onValueChange}
@@ -504,7 +509,9 @@ ChatBot.propTypes = {
   headerBgColor: PropTypes.string,
   headerFontColor: PropTypes.string,
   headerTitle: PropTypes.string,
-  showHeader: PropTypes.bool,
+  hideHeader: PropTypes.bool,
+  hideBotAvatar: PropTypes.bool,
+  hideUserAvatar: PropTypes.bool,
   floating: PropTypes.bool,
   style: PropTypes.object,
   contentStyle: PropTypes.object,
@@ -532,7 +539,9 @@ ChatBot.defaultProps = {
   headerBgColor: '#6e48aa',
   headerFontColor: '#fff',
   headerTitle: 'Chat',
-  showHeader: true,
+  hideHeader: false,
+  hideBotAvatar: false,
+  hideUserAvatar: false,
   floating: false,
   style: {},
   contentStyle: {},
