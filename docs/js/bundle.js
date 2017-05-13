@@ -58,9 +58,9 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(240);
 	__webpack_require__(242);
 	__webpack_require__(244);
+	__webpack_require__(246);
 	
 	(0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('root'));
 
@@ -21814,7 +21814,7 @@
 	
 	var _Home2 = _interopRequireDefault(_Home);
 	
-	var _Docs = __webpack_require__(207);
+	var _Docs = __webpack_require__(209);
 	
 	var _Docs2 = _interopRequireDefault(_Docs);
 	
@@ -23427,6 +23427,8 @@
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -23439,9 +23441,23 @@
 	
 	var _reactSimpleChatbot2 = _interopRequireDefault(_reactSimpleChatbot);
 	
+	var _TwitterButton = __webpack_require__(198);
+	
+	var _TwitterButton2 = _interopRequireDefault(_TwitterButton);
+	
+	var _FacebookButton = __webpack_require__(199);
+	
+	var _FacebookButton2 = _interopRequireDefault(_FacebookButton);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(198);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	__webpack_require__(200);
 	
 	var home = {
 	  title: 'React Simple Chatbot',
@@ -23453,137 +23469,128 @@
 	  }
 	};
 	
-	var Home = function Home(props) {
-	  var title = home.title,
-	      description = home.description,
-	      docsLink = home.docsLink,
-	      github = home.github;
+	var Home = function (_Component) {
+	  _inherits(Home, _Component);
 	
-	  var githubUrl = 'https://ghbtns.com/github-btn.html?user=' + github.user + '&repo=' + github.repository;
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'home' },
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'column' },
-	      _react2.default.createElement(
-	        'h1',
-	        { className: 'title' },
-	        title
-	      ),
-	      _react2.default.createElement(
-	        'p',
-	        { className: 'description' },
-	        description
-	      ),
-	      _react2.default.createElement(
+	  function Home() {
+	    _classCallCheck(this, Home);
+	
+	    return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
+	  }
+	
+	  _createClass(Home, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      var title = home.title,
+	          description = home.description,
+	          docsLink = home.docsLink,
+	          github = home.github;
+	
+	      var githubUrl = 'https://ghbtns.com/github-btn.html?user=' + github.user + '&repo=' + github.repository;
+	      return _react2.default.createElement(
 	        'div',
-	        { className: 'social-buttons' },
+	        { className: 'home' },
 	        _react2.default.createElement(
 	          'div',
-	          {
-	            className: 'fb-share-button',
-	            'data-href': 'https://lucasbassetti.com.br/react-simple-chatbot/',
-	            'data-layout': 'button',
-	            'data-size': 'large',
-	            'data-mobile-iframe': 'true'
-	          },
+	          { className: 'column' },
 	          _react2.default.createElement(
-	            'a',
-	            {
-	              className: 'fb-xfbml-parse-ignore',
-	              target: '_blank',
-	              href: 'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flucasbassetti.com.br%2Freact-simple-chatbot%2F&src=sdkpreparse'
-	            },
-	            'Compartilhar'
+	            'h1',
+	            { className: 'title' },
+	            title
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'description' },
+	            description
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'social-buttons' },
+	            _react2.default.createElement(_FacebookButton2.default, { dataSize: 'large' }),
+	            _react2.default.createElement(_TwitterButton2.default, { dataSize: 'large' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'buttons' },
+	            _react2.default.createElement('iframe', {
+	              src: githubUrl + '&type=star&count=true&size=large',
+	              frameBorder: '0',
+	              scrolling: '0',
+	              width: '160px',
+	              height: '30px'
+	            }),
+	            _react2.default.createElement('iframe', {
+	              src: githubUrl + '&type=fork&count=true&size=large',
+	              frameBorder: '0',
+	              scrolling: '0',
+	              width: '158px',
+	              height: '30px'
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'documentation' },
+	            _react2.default.createElement(
+	              'a',
+	              {
+	                className: 'docs-button',
+	                onClick: function onClick() {
+	                  return _this2.props.handleLink(docsLink);
+	                }
+	              },
+	              _react2.default.createElement('i', { className: 'fa fa-book' }),
+	              'Documentation'
+	            )
 	          )
 	        ),
 	        _react2.default.createElement(
-	          'a',
-	          {
-	            href: 'https://twitter.com/share',
-	            className: 'twitter-share-button',
-	            'data-text': 'Simple chatbot / conversational-ui React component',
-	            'data-size': 'large',
-	            'data-url': 'https://lucasbassetti.com.br/react-simple-chatbot',
-	            'data-hashtags': 'react'
-	          },
-	          'Tweet'
+	          'div',
+	          { className: 'column' },
+	          _react2.default.createElement(_reactSimpleChatbot2.default, {
+	            style: {
+	              // boxShadow: '0 0 100px #ddd',
+	              width: '280px'
+	            },
+	            hideHeader: true,
+	            botBubbleColor: '#6E48AA',
+	            botFontColor: '#fff',
+	            userBubbleColor: '#9D50BB',
+	            userFontColor: '#fff',
+	            contentStyle: { overflow: 'hidden' },
+	            footerStyle: { display: 'none' },
+	            steps: [{
+	              id: '1',
+	              message: 'Welcome to chatbot!',
+	              trigger: '2'
+	            }, {
+	              id: '2',
+	              message: 'Check out the documentation!',
+	              trigger: '3'
+	            }, {
+	              id: '3',
+	              options: [{ value: 'got-it', label: 'Got it!', trigger: '4' }]
+	            }, {
+	              id: '4',
+	              message: 'Great!',
+	              trigger: '5'
+	            }, {
+	              id: '5',
+	              message: 'I hope you enjoy it! :)',
+	              end: true
+	            }]
+	          })
 	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'buttons' },
-	        _react2.default.createElement('iframe', {
-	          src: githubUrl + '&type=star&count=true&size=large',
-	          frameBorder: '0',
-	          scrolling: '0',
-	          width: '160px',
-	          height: '30px'
-	        }),
-	        _react2.default.createElement('iframe', {
-	          src: githubUrl + '&type=fork&count=true&size=large',
-	          frameBorder: '0',
-	          scrolling: '0',
-	          width: '158px',
-	          height: '30px'
-	        })
-	      ),
-	      _react2.default.createElement(
-	        'p',
-	        { className: 'documentation' },
-	        _react2.default.createElement(
-	          'a',
-	          {
-	            className: 'docs-button',
-	            onClick: function onClick() {
-	              return props.handleLink(docsLink);
-	            }
-	          },
-	          _react2.default.createElement('i', { className: 'fa fa-book' }),
-	          'Documentation'
-	        )
-	      )
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'column' },
-	      _react2.default.createElement(_reactSimpleChatbot2.default, {
-	        style: {
-	          // boxShadow: '0 0 100px #ddd',
-	          width: '280px'
-	        },
-	        hideHeader: true,
-	        botBubbleColor: '#6E48AA',
-	        botFontColor: '#fff',
-	        userBubbleColor: '#9D50BB',
-	        userFontColor: '#fff',
-	        contentStyle: { overflow: 'hidden' },
-	        footerStyle: { display: 'none' },
-	        steps: [{
-	          id: '1',
-	          message: 'Welcome to chatbot!',
-	          trigger: '2'
-	        }, {
-	          id: '2',
-	          message: 'Check out the documentation!',
-	          trigger: '3'
-	        }, {
-	          id: '3',
-	          options: [{ value: 'got-it', label: 'Got it!', trigger: '4' }]
-	        }, {
-	          id: '4',
-	          message: 'Great!',
-	          trigger: '5'
-	        }, {
-	          id: '5',
-	          message: 'I hope you enjoy it! :)',
-	          end: true
-	        }]
-	      })
-	    )
-	  );
-	};
+	      );
+	    }
+	  }]);
+	
+	  return Home;
+	}(_react.Component);
 	
 	Home.propTypes = {
 	  handleLink: _propTypes2.default.func.isRequired
@@ -23646,13 +23653,155 @@
 /* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(194);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TwitterButton = function (_Component) {
+	  _inherits(TwitterButton, _Component);
+	
+	  function TwitterButton() {
+	    _classCallCheck(this, TwitterButton);
+	
+	    return _possibleConstructorReturn(this, (TwitterButton.__proto__ || Object.getPrototypeOf(TwitterButton)).apply(this, arguments));
+	  }
+	
+	  _createClass(TwitterButton, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      window.twttr.widgets.load();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'a',
+	        {
+	          href: 'https://twitter.com/share',
+	          className: 'twitter-share-button',
+	          'data-text': 'Simple chatbot / conversational-ui React component',
+	          'data-size': this.props.dataSize,
+	          'data-url': 'https://lucasbassetti.com.br/react-simple-chatbot',
+	          'data-hashtags': 'react'
+	        },
+	        'Tweet'
+	      );
+	    }
+	  }]);
+	
+	  return TwitterButton;
+	}(_react.Component);
+	
+	TwitterButton.propTypes = {
+	  dataSize: _propTypes2.default.string.isRequired
+	};
+	
+	exports.default = TwitterButton;
+
+/***/ }),
+/* 199 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(194);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var FacebookButton = function (_Component) {
+	  _inherits(FacebookButton, _Component);
+	
+	  function FacebookButton() {
+	    _classCallCheck(this, FacebookButton);
+	
+	    return _possibleConstructorReturn(this, (FacebookButton.__proto__ || Object.getPrototypeOf(FacebookButton)).apply(this, arguments));
+	  }
+	
+	  _createClass(FacebookButton, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      // window.facebook.ready();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var dataSize = this.props.dataSize;
+	
+	      var isSmall = dataSize === 'small';
+	      var width = isSmall ? 107 : 129;
+	      var height = isSmall ? 20 : 28;
+	
+	      return _react2.default.createElement('iframe', {
+	        className: 'fb-share-button',
+	        src: 'https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Flucasbassetti.com.br%2Freact-simple-chatbot&layout=button_count&size=' + dataSize + '&mobile_iframe=true&appId=902012053186141&width=' + width + '&height=' + height,
+	        width: width,
+	        height: height,
+	        style: { border: 'none', overflow: 'hidden' },
+	        scrolling: 'no',
+	        frameBorder: '0',
+	        allowTransparency: 'true'
+	      });
+	    }
+	  }]);
+	
+	  return FacebookButton;
+	}(_react.Component);
+	
+	FacebookButton.propTypes = {
+	  dataSize: _propTypes2.default.string.isRequired
+	};
+	
+	exports.default = FacebookButton;
+
+/***/ }),
+/* 200 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(199);
+	var content = __webpack_require__(201);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23669,10 +23818,10 @@
 	}
 
 /***/ }),
-/* 199 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
@@ -23683,7 +23832,7 @@
 
 
 /***/ }),
-/* 200 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -23762,10 +23911,10 @@
 	  return '/*# ' + data + ' */';
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(201).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(203).Buffer))
 
 /***/ }),
-/* 201 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -23778,9 +23927,9 @@
 	
 	'use strict'
 	
-	var base64 = __webpack_require__(202)
-	var ieee754 = __webpack_require__(203)
-	var isArray = __webpack_require__(204)
+	var base64 = __webpack_require__(204)
+	var ieee754 = __webpack_require__(205)
+	var isArray = __webpack_require__(206)
 	
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -25561,7 +25710,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 202 */
+/* 204 */
 /***/ (function(module, exports) {
 
 	'use strict'
@@ -25681,7 +25830,7 @@
 
 
 /***/ }),
-/* 203 */
+/* 205 */
 /***/ (function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -25771,7 +25920,7 @@
 
 
 /***/ }),
-/* 204 */
+/* 206 */
 /***/ (function(module, exports) {
 
 	var toString = {}.toString;
@@ -25782,7 +25931,7 @@
 
 
 /***/ }),
-/* 205 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*
@@ -25819,7 +25968,7 @@
 		singletonElement = null,
 		singletonCounter = 0,
 		styleElementsInsertedAtTop = [],
-		fixUrls = __webpack_require__(206);
+		fixUrls = __webpack_require__(208);
 	
 	module.exports = function(list, options) {
 		if(true) {
@@ -26078,7 +26227,7 @@
 
 
 /***/ }),
-/* 206 */
+/* 208 */
 /***/ (function(module, exports) {
 
 	
@@ -26173,7 +26322,7 @@
 
 
 /***/ }),
-/* 207 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26190,29 +26339,37 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _Tutorial = __webpack_require__(208);
+	var _Tutorial = __webpack_require__(210);
 	
 	var _Tutorial2 = _interopRequireDefault(_Tutorial);
 	
-	var _Header = __webpack_require__(209);
+	var _Header = __webpack_require__(211);
 	
 	var _Header2 = _interopRequireDefault(_Header);
 	
-	var _Sidebar = __webpack_require__(210);
+	var _Sidebar = __webpack_require__(212);
 	
 	var _Sidebar2 = _interopRequireDefault(_Sidebar);
 	
-	var _GithubIcon = __webpack_require__(237);
+	var _GithubIcon = __webpack_require__(239);
 	
 	var _GithubIcon2 = _interopRequireDefault(_GithubIcon);
 	
-	var _menu = __webpack_require__(213);
+	var _menu = __webpack_require__(215);
 	
 	var _menu2 = _interopRequireDefault(_menu);
 	
+	var _TwitterButton = __webpack_require__(198);
+	
+	var _TwitterButton2 = _interopRequireDefault(_TwitterButton);
+	
+	var _FacebookButton = __webpack_require__(199);
+	
+	var _FacebookButton2 = _interopRequireDefault(_FacebookButton);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(238);
+	__webpack_require__(240);
 	
 	var routes = [];
 	for (var i = 0, len = _menu2.default.length; i < len; i += 1) {
@@ -26231,35 +26388,8 @@
 	    _react2.default.createElement(
 	      'div',
 	      { className: 'social-buttons' },
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: 'fb-share-button',
-	          'data-href': 'https://lucasbassetti.com.br/react-simple-chatbot/',
-	          'data-layout': 'button',
-	          'data-mobile-iframe': 'true'
-	        },
-	        _react2.default.createElement(
-	          'a',
-	          {
-	            className: 'fb-xfbml-parse-ignore',
-	            target: '_blank',
-	            href: 'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flucasbassetti.com.br%2Freact-simple-chatbot%2F&src=sdkpreparse'
-	          },
-	          'Compartilhar'
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'a',
-	        {
-	          href: 'https://twitter.com/share',
-	          className: 'twitter-share-button',
-	          'data-text': 'Simple chatbot / conversational-ui React component',
-	          'data-url': 'https://lucasbassetti.com.br/react-simple-chatbot',
-	          'data-hashtags': 'react'
-	        },
-	        'Tweet'
-	      )
+	      _react2.default.createElement(_FacebookButton2.default, { dataSize: 'small' }),
+	      _react2.default.createElement(_TwitterButton2.default, { dataSize: 'small' })
 	    ),
 	    _react2.default.createElement(_GithubIcon2.default, null),
 	    _react2.default.createElement(
@@ -26290,7 +26420,7 @@
 	exports.default = Docs;
 
 /***/ }),
-/* 208 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26486,7 +26616,7 @@
 	exports.default = Tutorial;
 
 /***/ }),
-/* 209 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26534,7 +26664,7 @@
 	exports.default = Header;
 
 /***/ }),
-/* 210 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26553,11 +26683,11 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _lodash = __webpack_require__(211);
+	var _lodash = __webpack_require__(213);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _menu = __webpack_require__(213);
+	var _menu = __webpack_require__(215);
 	
 	var _menu2 = _interopRequireDefault(_menu);
 	
@@ -26569,8 +26699,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
-	__webpack_require__(235);
+	var $ = __webpack_require__(217);
+	__webpack_require__(237);
 	
 	var Sidebar = function (_Component) {
 	  _inherits(Sidebar, _Component);
@@ -26725,7 +26855,7 @@
 	exports.default = Sidebar;
 
 /***/ }),
-/* 211 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -43813,10 +43943,10 @@
 	  }
 	}.call(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(212)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(214)(module)))
 
 /***/ }),
-/* 212 */
+/* 214 */
 /***/ (function(module, exports) {
 
 	module.exports = function(module) {
@@ -43832,7 +43962,7 @@
 
 
 /***/ }),
-/* 213 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43845,59 +43975,59 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Installation = __webpack_require__(214);
+	var _Installation = __webpack_require__(216);
 	
 	var _Installation2 = _interopRequireDefault(_Installation);
 	
-	var _HelloWorld = __webpack_require__(216);
+	var _HelloWorld = __webpack_require__(218);
 	
 	var _HelloWorld2 = _interopRequireDefault(_HelloWorld);
 	
-	var _Example = __webpack_require__(217);
+	var _Example = __webpack_require__(219);
 	
 	var _Example2 = _interopRequireDefault(_Example);
 	
-	var _Example3 = __webpack_require__(218);
+	var _Example3 = __webpack_require__(220);
 	
 	var _Example4 = _interopRequireDefault(_Example3);
 	
-	var _Example5 = __webpack_require__(219);
+	var _Example5 = __webpack_require__(221);
 	
 	var _Example6 = _interopRequireDefault(_Example5);
 	
-	var _Example7 = __webpack_require__(220);
+	var _Example7 = __webpack_require__(222);
 	
 	var _Example8 = _interopRequireDefault(_Example7);
 	
-	var _Example9 = __webpack_require__(221);
+	var _Example9 = __webpack_require__(223);
 	
 	var _Example10 = _interopRequireDefault(_Example9);
 	
-	var _Example11 = __webpack_require__(222);
+	var _Example11 = __webpack_require__(224);
 	
 	var _Example12 = _interopRequireDefault(_Example11);
 	
-	var _Example13 = __webpack_require__(223);
+	var _Example13 = __webpack_require__(225);
 	
 	var _Example14 = _interopRequireDefault(_Example13);
 	
-	var _Example15 = __webpack_require__(224);
+	var _Example15 = __webpack_require__(226);
 	
 	var _Example16 = _interopRequireDefault(_Example15);
 	
-	var _Component = __webpack_require__(225);
+	var _Component = __webpack_require__(227);
 	
 	var _Component2 = _interopRequireDefault(_Component);
 	
-	var _Component3 = __webpack_require__(228);
+	var _Component3 = __webpack_require__(230);
 	
 	var _Component4 = _interopRequireDefault(_Component3);
 	
-	var _Component5 = __webpack_require__(231);
+	var _Component5 = __webpack_require__(233);
 	
 	var _Component6 = _interopRequireDefault(_Component5);
 	
-	var _Contribute = __webpack_require__(234);
+	var _Contribute = __webpack_require__(236);
 	
 	var _Contribute2 = _interopRequireDefault(_Contribute);
 	
@@ -43985,7 +44115,7 @@
 	exports.default = menu;
 
 /***/ }),
-/* 214 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44011,7 +44141,7 @@
 	var installationCode = 'npm install react-simple-chatbot --save';
 	var impportCode = 'import ChatBot from \'react-simple-chatbot\';';
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var Installation = function (_Component) {
 	  _inherits(Installation, _Component);
@@ -44073,7 +44203,7 @@
 	exports.default = Installation;
 
 /***/ }),
-/* 215 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -54332,7 +54462,7 @@
 
 
 /***/ }),
-/* 216 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54359,7 +54489,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var helloWorldCode = 'import ChatBot from \'react-simple-chatbot\';\n\n<ChatBot\n  steps={[\n    {\n      id: \'hello-world\',\n      message: \'Hello World!\',\n      end: true,\n    },\n  ]}\n/>\n';
 	
@@ -54421,7 +54551,7 @@
 	exports.default = HelloWorld;
 
 /***/ }),
-/* 217 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54448,7 +54578,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var exampleCode = '<ChatBot\n    steps={[\n      {\n        id: \'1\',\n        message: \'What number I am thinking?\',\n        trigger: \'2\',\n      },\n      {\n        id: \'2\',\n        options: [\n          { value: 1, label: \'Number 1\', trigger: \'4\' },\n          { value: 2, label: \'Number 2\', trigger: \'3\' },\n          { value: 3, label: \'Number 3\', trigger: \'3\' },\n        ],\n      },\n      {\n        id: \'3\',\n        message: \'Wrong answer, try again.\',\n        trigger: \'2\',\n      },\n      {\n        id: \'4\',\n        message: \'Awesome! You are a telepath!\',\n        end: true,\n      },\n    ]}\n  />\n';
 	
@@ -54517,7 +54647,7 @@
 	exports.default = Example1;
 
 /***/ }),
-/* 218 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54544,7 +54674,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'Please type a number\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      user: true,\n      validator: (value) => {\n        if (isNaN(value)) {\n          return \'value should be a number\';\n        }\n        return true;\n      },\n      trigger: \'1\',\n    },\n  ]}\n/>\n';
 	
@@ -54612,7 +54742,7 @@
 	exports.default = Example2;
 
 /***/ }),
-/* 219 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54639,7 +54769,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'You can add custom components\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      component: (\n        <div> This is a example component </div>\n      ),\n      end: true,\n    },\n  ]}\n/>\n';
 	
@@ -54705,7 +54835,7 @@
 	exports.default = Example3;
 
 /***/ }),
-/* 220 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54736,7 +54866,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var DBPedia = function (_Component) {
 	  _inherits(DBPedia, _Component);
@@ -54911,7 +55041,7 @@
 	exports.default = Example4;
 
 /***/ }),
-/* 221 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54938,7 +55068,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var exampleCode = '<ChatBot\n  steps={[\n    {\n      id: \'1\',\n      message: \'What is your name?\',\n      trigger: \'2\',\n    },\n    {\n      id: \'2\',\n      user: true,\n      trigger: \'3\',\n    },\n    {\n      id: \'3\',\n      message: \'Hi {previousValue}, nice to meet you!\',\n      end: true,\n    },\n  ]}\n/>\n';
 	
@@ -55004,7 +55134,7 @@
 	exports.default = Example5;
 
 /***/ }),
-/* 222 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55035,7 +55165,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var exampleCode = 'import React, { Component } from \'react\';\nimport PropTypes from \'prop-types\';\nimport ChatBot from \'react-simple-chatbot\';\n\nclass Review extends Component {\n  constructor(props) {\n    super(props);\n\n    this.state = {\n      name: \'\',\n      gender: \'\',\n      age: \'\',\n    };\n  }\n\n  componentWillMount() {\n    const { steps } = this.props;\n    const { name, gender, age } = steps;\n\n    this.setState({ name, gender, age });\n  }\n\n  render() {\n    const { name, gender, age } = this.state;\n    return (\n      <div style={{ width: \'100%\' }}>\n        <h3>Summary</h3>\n        <table>\n          <tbody>\n            <tr>\n              <td>Name</td>\n              <td>{name.value}</td>\n            </tr>\n            <tr>\n              <td>Gender</td>\n              <td>{gender.value}</td>\n            </tr>\n            <tr>\n              <td>Age</td>\n              <td>{age.value}</td>\n            </tr>\n          </tbody>\n        </table>\n      </div>\n    );\n  }\n}\n\nReview.propTypes = {\n  steps: PropTypes.object,\n};\n\nReview.defaultProps = {\n  steps: undefined,\n};\n\nclass SimpleForm extends Component {\n  render() {\n    return (\n      <ChatBot\n        steps={[\n          {\n            id: \'1\',\n            message: \'What is your name?\',\n            trigger: \'name\',\n          },\n          {\n            id: \'name\',\n            user: true,\n            trigger: \'3\',\n          },\n          {\n            id: \'3\',\n            message: \'Hi {previousValue}! What is your gender?\',\n            trigger: \'gender\',\n          },\n          {\n            id: \'gender\',\n            options: [\n              { value: \'male\', label: \'Male\', trigger: \'5\' },\n              { value: \'female\', label: \'Female\', trigger: \'5\' },\n            ],\n          },\n          {\n            id: \'5\',\n            message: \'How old are you?\',\n            trigger: \'age\',\n          },\n          {\n            id: \'age\',\n            user: true,\n            trigger: \'7\',\n            validator: (value) => {\n              if (isNaN(value)) {\n                return \'value must be a number\';\n              } else if (value < 0) {\n                return \'value must be positive\';\n              } else if (value > 120) {\n                return `${value}? Come on!`;\n              }\n\n              return true;\n            },\n          },\n          {\n            id: \'7\',\n            message: \'Great! Check out your summary\',\n            trigger: \'review\',\n          },\n          {\n            id: \'review\',\n            component: <Review />,\n            asMessage: true,\n            trigger: \'update\',\n          },\n          {\n            id: \'update\',\n            message: \'Would you like to update some field?\',\n            trigger: \'update-question\',\n          },\n          {\n            id: \'update-question\',\n            options: [\n              { value: \'yes\', label: \'Yes\', trigger: \'update-yes\' },\n              { value: \'no\', label: \'No\', trigger: \'end-message\' },\n            ],\n          },\n          {\n            id: \'update-yes\',\n            message: \'What field would you like to update?\',\n            trigger: \'update-fields\',\n          },\n          {\n            id: \'update-fields\',\n            options: [\n              { value: \'name\', label: \'Name\', trigger: \'update-name\' },\n              { value: \'gender\', label: \'Gender\', trigger: \'update-gender\' },\n              { value: \'age\', label: \'Age\', trigger: \'update-age\' },\n            ],\n          },\n          {\n            id: \'update-name\',\n            update: \'name\',\n            trigger: \'7\',\n          },\n          {\n            id: \'update-gender\',\n            update: \'gender\',\n            trigger: \'7\',\n          },\n          {\n            id: \'update-age\',\n            update: \'age\',\n            trigger: \'7\',\n          },\n          {\n            id: \'end-message\',\n            message: \'Thanks! Your data was submitted successfully!\',\n            end: true,\n          },\n        ]}\n      />\n    );\n  }\n}\n\nexport default SimpleForm;\n';
 	
@@ -55270,7 +55400,7 @@
 	exports.default = Example6;
 
 /***/ }),
-/* 223 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55297,7 +55427,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var exampleCode = 'class EndCallback extends Component {\n  componentDidMount() {\n    this.handleEnd = this.handleEnd.bind(this);\n  }\n\n  handleEnd({ steps, values }) {\n    // console.log(steps);\n    // console.log(values);\n    alert(`Chat handleEnd callback! Number: ${values[0]}`);\n  }\n\n  render() {\n    return (\n      <div className="docs-example-1">\n        <ChatBot\n          handleEnd={this.handleEnd}\n          steps={[\n            {\n              id: \'1\',\n              message: \'Pick a number\',\n              trigger: \'2\',\n            },\n            {\n              id: \'2\',\n              options: [\n                { value: \'1\', label: \'1\', trigger: \'3\' },\n                { value: \'2\', label: \'2\', trigger: \'3\' },\n                { value: \'3\', label: \'3\', trigger: \'3\' },\n                { value: \'4\', label: \'4\', trigger: \'3\' },\n                { value: \'5\', label: \'5\', trigger: \'3\' },\n              ],\n            },\n            {\n              id: \'3\',\n              message: \'A callback message was called!\',\n              end: true,\n            },\n          ]}\n        />\n      </div>\n    );\n  }\n}\n\nexport default EndCallback;\n';
 	
@@ -55377,7 +55507,7 @@
 	exports.default = Example1;
 
 /***/ }),
-/* 224 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55408,7 +55538,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
 	var exampleCode = 'import React, { Component } from \'react\';\nimport PropTypes from \'prop-types\';\nimport ChatBot from \'react-simple-chatbot\';\n\nconst BMI = (props) => {\n  const { steps } = props;\n  const height = steps.height.value;\n  const weight = steps.weight.value;\n  const bmi = Number(((weight / (height * height)) * 10000).toFixed(1));\n  let result = \'Underweight\';\n\n  if (bmi >= 18.5 && bmi < 25) {\n    result = \'Normal weight\';\n  } else if (bmi >= 25 && bmi < 30) {\n    result = \'Overweight\';\n  } else if (bmi >= 30) {\n    result = \'Obesity\';\n  }\n\n  return (\n    <div className="test">\n      Your BMI is {bmi} ({result})\n    </div>\n  );\n};\n\nBMI.propTypes = {\n  steps: PropTypes.object,\n};\n\nBMI.defaultProps = {\n  steps: undefined,\n};\n\nclass BMIExample extends Component {\n  render() {\n    function validator(value) {\n      if (isNaN(value)) {\n        return \'value should be a number\';\n      } else if (value < 0) {\n        return \'value should be positive\';\n      }\n\n      return true;\n    }\n\n    return (\n      <ChatBot\n        steps={[\n          {\n            id: \'1\',\n            message: \'Welcome to react chatbot!\',\n            trigger: \'2\',\n          },\n          {\n            id: \'2\',\n            message: \'Let\\\'s calculate your BMI (Body Mass Index)\',\n            trigger: \'3\',\n          },\n          {\n            id: \'3\',\n            message: \'Please type your height (cm)\',\n            trigger: \'height\',\n          },\n          {\n            id: \'height\',\n            user: true,\n            trigger: \'4\',\n            validator,\n          },\n          {\n            id: \'4\',\n            message: \'Please type your weight (kg)\',\n            trigger: \'weight\',\n          },\n          {\n            id: \'weight\',\n            user: true,\n            trigger: \'5\',\n            validator,\n          },\n          {\n            id: \'5\',\n            message: \'Thanks! Check out your BMI\',\n            trigger: \'6\',\n          },\n          {\n            id: \'6\',\n            component: <BMI />,\n            end: true,\n          },\n        ]}\n      />\n    );\n  }\n}\n\nexport default BMIExample;\n';
 	
@@ -55541,7 +55671,7 @@
 	exports.default = Example8;
 
 /***/ }),
-/* 225 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55556,7 +55686,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(226);
+	__webpack_require__(228);
 	
 	var properties = [{
 	  name: 'avatarStyle',
@@ -55837,16 +55967,16 @@
 	exports.default = Component1;
 
 /***/ }),
-/* 226 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(227);
+	var content = __webpack_require__(229);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -55863,10 +55993,10 @@
 	}
 
 /***/ }),
-/* 227 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
@@ -55877,7 +56007,7 @@
 
 
 /***/ }),
-/* 228 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55892,7 +56022,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _lodash = __webpack_require__(211);
+	var _lodash = __webpack_require__(213);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -55904,9 +56034,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var $ = __webpack_require__(215);
+	var $ = __webpack_require__(217);
 	
-	__webpack_require__(229);
+	__webpack_require__(231);
 	
 	var textStepCode = '{\n  id: \'1\',\n  message: \'Hello World\',\n  end: true,\n}\n';
 	
@@ -56200,16 +56330,16 @@
 	exports.default = Component2;
 
 /***/ }),
-/* 229 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(230);
+	var content = __webpack_require__(232);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -56226,10 +56356,10 @@
 	}
 
 /***/ }),
-/* 230 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
@@ -56240,7 +56370,7 @@
 
 
 /***/ }),
-/* 231 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56255,7 +56385,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(232);
+	__webpack_require__(234);
 	
 	var properties = [{
 	  name: 'previousStep',
@@ -56355,16 +56485,16 @@
 	exports.default = Component3;
 
 /***/ }),
-/* 232 */
+/* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(233);
+	var content = __webpack_require__(235);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -56381,10 +56511,10 @@
 	}
 
 /***/ }),
-/* 233 */
+/* 235 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
@@ -56395,7 +56525,7 @@
 
 
 /***/ }),
-/* 234 */
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -56429,16 +56559,16 @@
 	exports.default = Contribute;
 
 /***/ }),
-/* 235 */
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(236);
+	var content = __webpack_require__(238);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -56455,10 +56585,10 @@
 	}
 
 /***/ }),
-/* 236 */
+/* 238 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
@@ -56469,7 +56599,7 @@
 
 
 /***/ }),
-/* 237 */
+/* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -56516,16 +56646,16 @@
 	exports.default = GithubIcon;
 
 /***/ }),
-/* 238 */
+/* 240 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(239);
+	var content = __webpack_require__(241);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -56542,30 +56672,30 @@
 	}
 
 /***/ }),
-/* 239 */
+/* 241 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
 	// module
-	exports.push([module.id, ".docs .social-buttons {\n  position: absolute;\n  top: 6px;\n  right: 40px;\n  padding: 16px;\n  display: flex;\n  display: -webkit-flex;\n}\n\nmain {\n  margin-left: 250px;\n  padding: 24px;\n}\n\n@media screen and (max-width: 765px) {\n  main {\n    margin: 0;\n    padding: 24px;\n  }\n}\n", ""]);
+	exports.push([module.id, ".docs .social-buttons {\n  position: absolute;\n  top: 6px;\n  right: 40px;\n  padding: 16px;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.docs .fb-share-button {\n  margin-right: 6px;\n}\n\nmain {\n  margin-left: 250px;\n  padding: 24px;\n}\n\n@media screen and (max-width: 765px) {\n  main {\n    margin: 0;\n    padding: 24px;\n  }\n}\n", ""]);
 	
 	// exports
 
 
 /***/ }),
-/* 240 */
+/* 242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(241);
+	var content = __webpack_require__(243);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -56582,10 +56712,10 @@
 	}
 
 /***/ }),
-/* 241 */
+/* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
@@ -56596,16 +56726,16 @@
 
 
 /***/ }),
-/* 242 */
+/* 244 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(243);
+	var content = __webpack_require__(245);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -56622,10 +56752,10 @@
 	}
 
 /***/ }),
-/* 243 */
+/* 245 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
@@ -56636,16 +56766,16 @@
 
 
 /***/ }),
-/* 244 */
+/* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(245);
+	var content = __webpack_require__(247);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(205)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -56662,10 +56792,10 @@
 	}
 
 /***/ }),
-/* 245 */
+/* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(200)(undefined);
+	exports = module.exports = __webpack_require__(202)(undefined);
 	// imports
 	
 	
