@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { describe, it, before } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
@@ -7,6 +7,7 @@ import ChatBotContainer from '../../lib/ChatBotContainer';
 import FloatButton from '../../lib/FloatButton';
 import CloseIcon from '../../lib/CloseIcon';
 import Header from '../../lib/Header';
+import HeaderIcon from '../../lib/HeaderIcon';
 import { TextStep, OptionsStep, CustomStep } from '../../lib/steps/steps';
 
 const CustomComponent = () => (
@@ -134,6 +135,30 @@ describe('ChatBot', () => {
     });
   });
 
+  describe('Custom Header', () => {
+    const wrapper = mount(
+      <ChatBot
+        headerComponent={<div className="header-component" />}
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        handleEnd={() => {}}
+        steps={[
+          {
+            id: '1',
+            message: 'Hello World',
+            end: true,
+          },
+        ]}
+      />,
+    );
+
+    it('should be rendered with a custom header', () => {
+      expect(wrapper.find('.header-component')).to.have.length(1);
+      expect(wrapper.find(Header)).to.have.length(0);
+    });
+  });
+
   describe('Floating', () => {
     const wrapper = mount(
       <ChatBot
@@ -168,27 +193,66 @@ describe('ChatBot', () => {
     });
   });
 
-  describe('Custom Header', () => {
-    const wrapper = mount(
-      <ChatBot
-        headerComponent={<div className="header-component" />}
-        botDelay={0}
-        userDelay={0}
-        customDelay={0}
-        handleEnd={() => {}}
-        steps={[
-          {
-            id: '1',
-            message: 'Hello World',
-            end: true,
-          },
-        ]}
-      />,
-    );
+  describe('Floating - Custom Opened', () => {
+    class FloatingExample extends Component {
+      constructor(props) {
+        super(props);
 
-    it('should be rendered with a custom header', () => {
-      expect(wrapper.find('.header-component')).to.have.length(1);
-      expect(wrapper.find(Header)).to.have.length(0);
+        this.state = {
+          opened: true,
+        };
+
+        this.toggleFloating = this.toggleFloating.bind(this);
+      }
+
+      toggleFloating({ opened }) {
+        this.setState({ opened });
+      }
+
+      render() {
+        const { opened } = this.state;
+        return (
+          <ChatBot
+            floating={true}
+            opened={opened}
+            toggleFloating={this.toggleFloating}
+            botDelay={0}
+            userDelay={0}
+            customDelay={0}
+            handleEnd={() => {}}
+            steps={[
+              {
+                id: '1',
+                message: 'Hello World',
+                end: true,
+              },
+            ]}
+          />
+        );
+      }
+    }
+
+    const wrapper = mount(<FloatingExample />);
+
+    it('should be rendered with floating header', () => {
+      expect(wrapper.find(Header)).to.have.length(1);
+      expect(wrapper.find(CloseIcon)).to.have.length(1);
+    });
+
+    it('should be rendered with a opened equal true', () => {
+      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+    });
+
+    it('should close the chat when click on close button', () => {
+      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+      wrapper.find(HeaderIcon).simulate('click');
+      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
+    });
+
+    it('should opened the chat when click on floating button', () => {
+      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
+      wrapper.find(FloatButton).simulate('click');
+      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
     });
   });
 });
