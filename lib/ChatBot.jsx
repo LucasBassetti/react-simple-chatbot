@@ -498,7 +498,6 @@ class ChatBot extends Component {
           {!hideHeader && header}
           <Content
             className="rsc-content"
-            ref={(content) => { this.rscContent = content; }}
             floating={floating}
             style={contentStyle}
           >
@@ -512,7 +511,6 @@ class ChatBot extends Component {
               type="textarea"
               style={inputStyle}
               className="rsc-input"
-              ref={(input) => { this.rscInput = input; }}
               placeholder="Type the message ..."
               onKeyPress={this.handleKeyPress}
               onChange={this.onValueChange}
