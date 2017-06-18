@@ -7,12 +7,12 @@
     "lint": "./node_modules/.bin/eslint lib/*.jsx",
     "prepublish": "npm run build",
     "prepush": "npm run lint && npm run test:coverage",
-    "start": "webpack-dev-server --inline --content-base build/",
+    "start": "./node_modules/.bin/webpack-dev-server --inline --content-base build/",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "test": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --require babel-register",
     "test:watch": "npm test -- --watch",
     "test:coverage": "nyc npm test",
-    "build": "webpack --config webpack.config.prod.js"
+    "build": "./node_modules/.bin/webpack --config webpack.config.prod.js -p"
   },
   "files": [
     "dist"
@@ -62,7 +62,6 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
-    "file-loader": "^0.11.1",
     "husky": "^0.13.3",
     "jsdom": "^9.12.0",
     "mocha": "^3.2.0",

@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -16,10 +15,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      compress: false,
-    }),
   ],
   module: {
     loaders: [
@@ -27,10 +22,6 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         loaders: ['babel'],
-      },
-      {
-        test: /\.mp3$/,
-        loader: 'file-loader',
       },
     ],
   },
