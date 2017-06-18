@@ -3,7 +3,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'app/js/main'),
+  entry: path.resolve(__dirname, 'src/js/main'),
   output: {
     path: path.resolve(__dirname, 'build/js'),
     publicPath: '/js/',
@@ -19,7 +19,7 @@ module.exports = {
     new CleanWebpackPlugin(['build']),
     new CopyWebpackPlugin([
       {
-        context: path.resolve(__dirname, 'app/static'),
+        context: path.resolve(__dirname, 'src/static'),
         from: '**/*',
         to: path.resolve(__dirname, 'build'),
       },
