@@ -124,7 +124,9 @@ describe('TextStep', () => {
     });
 
     it('should render a middle bubble', () => {
-      const tsWrapper = mount(<TextStep {...settings} isFirst={false} isLast={false} />);
+      const tsWrapper = mount(
+        <TextStep {...settings} isFirst={false} isLast={false} hideUserAvatar={true} />,
+      );
       tsWrapper.setState({ loading: false });
 
       expect(tsWrapper.find(Image).exists()).to.be.equal(false);

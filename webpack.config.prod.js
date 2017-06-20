@@ -11,17 +11,17 @@ module.exports = {
     libraryTarget: 'umd',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: ['babel'],
+        use: ['babel-loader'],
       },
     ],
   },

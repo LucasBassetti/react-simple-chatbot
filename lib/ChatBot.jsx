@@ -1,6 +1,6 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import Random from 'random-id';
 import { CustomStep, OptionsStep, TextStep } from './steps/steps';
 import schema from './schemas/schema';

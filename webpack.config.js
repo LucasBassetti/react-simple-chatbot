@@ -1,38 +1,26 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src/js/main'),
+  entry: path.resolve(__dirname, 'src/main.jsx'),
   output: {
-    path: path.resolve(__dirname, 'build/js'),
-    publicPath: '/js/',
+    path: path.resolve(__dirname, 'src'),
+    publicPath: '/',
     filename: 'bundle.js',
   },
   devServer: {
-    outputPath: path.join(__dirname, 'build'),
+    contentBase: path.join(__dirname, 'src'),
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   },
-  plugins: [
-    new CleanWebpackPlugin(['build']),
-    new CopyWebpackPlugin([
-      {
-        context: path.resolve(__dirname, 'src/static'),
-        from: '**/*',
-        to: path.resolve(__dirname, 'build'),
-      },
-    ]),
-  ],
-  debug: true,
-  devtool: '#eval-source-map',
+  plugins: [],
+  devtool: 'source-map',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: ['babel'],
+        use: ['babel-loader'],
       },
     ],
   },

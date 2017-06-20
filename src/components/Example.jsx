@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatBot from '../../../lib/index';
+import ChatBot from '../../lib/index';
 
 const Example = () => (
   <ChatBot
