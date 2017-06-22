@@ -42,6 +42,10 @@ ReactDOM.render(
 );
 ```
 
+## Build with `react-simple-chatbot`
+
+1. [Seth Loh Website](https://github.com/lackdaz/lackdaz.github.io) - Personal website of Seth Loh ([demo](https://www.sethloh.com))
+
 ## How to Contribute
 
 Please check the [contributing guide](https://github.com/LucasBassetti/react-simple-chatbot/blob/master/contributing.md)
