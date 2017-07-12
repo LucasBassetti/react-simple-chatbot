@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { scale } from '../../common/animations';
+import defaultTheme from '../../theme';
 
 const Bubble = styled.div`
   animation: ${scale} .3s ease forwards;
@@ -43,12 +44,7 @@ const Bubble = styled.div`
 `;
 
 Bubble.defaultProps = {
-  theme: {
-    botBubbleColor: '#6E48AA',
-    botFontColor: '#fff',
-    userBubbleColor: '#fff',
-    userFontColor: '#4a4a4a',
-  },
+  theme: defaultTheme,
 };
 
 export default Bubble;

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import defaultTheme from '../../theme';
 
 const OptionElement = styled.a`
   background: ${props => props.user
@@ -16,12 +17,7 @@ const OptionElement = styled.a`
 `;
 
 OptionElement.defaultProps = {
-  theme: {
-    botBubbleColor: '#6E48AA',
-    botFontColor: '#fff',
-    userBubbleColor: '#fff',
-    userFontColor: '#4a4a4a',
-  },
+  theme: defaultTheme,
 };
 
 export default OptionElement;

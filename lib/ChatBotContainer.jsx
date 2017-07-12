@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import defaultTheme from './theme';
 
 const ChatBotContainer = styled.div`
   background: ${({ theme }) => theme.background};
@@ -25,10 +26,7 @@ const ChatBotContainer = styled.div`
 `;
 
 ChatBotContainer.defaultProps = {
-  theme: {
-    background: '#f5f8fb',
-    fontFamily: 'monospace',
-  },
+  theme: defaultTheme,
 };
 
 export default ChatBotContainer;

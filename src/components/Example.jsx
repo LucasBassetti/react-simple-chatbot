@@ -2,7 +2,7 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import ChatBot from '../../lib/index';
 
-const darkTheme = {
+const otherFontTheme = {
   background: '#f5f8fb',
   fontFamily: 'Helvetica Neue',
   headerBgColor: '#6e48aa',
@@ -25,7 +25,7 @@ const Example = () =>
   <ChatBot steps={steps} />;
 
 const ThemedExample = () => (
-  <ThemeProvider theme={darkTheme}>
+  <ThemeProvider theme={otherFontTheme}>
     <Example />
   </ThemeProvider>
 );

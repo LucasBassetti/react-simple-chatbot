@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import defaultTheme from './theme';
 
 const Header = styled.div`
   align-items: center;
@@ -12,10 +13,7 @@ const Header = styled.div`
 `;
 
 Header.defaultProps = {
-  theme: {
-    headerBgColor: '#6e48aa',
-    headerFontColor: '#fff',
-  },
+  theme: defaultTheme,
 };
 
 export default Header;
