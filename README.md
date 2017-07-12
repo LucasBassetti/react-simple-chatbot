@@ -202,7 +202,7 @@ Example:
 When you declare a custom step, you need indicate a custom React Component to be rendered in the chat. This custom component will receive the following properties.
 
 | Name | Type | Description |
-|---|---|---|---|
+|---|---|---|
 | `previousStep` | `PropTypes.object` | Previous step rendered |
 | `step` | `PropTypes.object` | Current step rendered |
 | `steps` | `PropTypes.object` | All steps rendered |
