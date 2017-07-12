@@ -442,8 +442,6 @@ class ChatBot extends Component {
     } = this.state;
     const {
       headerComponent,
-      headerBgColor,
-      headerFontColor,
       headerTitle,
       floating,
       hideHeader,
@@ -457,8 +455,6 @@ class ChatBot extends Component {
     const header = headerComponent || (
       <Header
         className="rsc-header"
-        headerBgColor={headerBgColor}
-        headerFontColor={headerFontColor}
       >
         <HeaderTitle className="rsc-header-title">
           {headerTitle}
@@ -481,8 +477,6 @@ class ChatBot extends Component {
           floating &&
           <FloatButton
             className="rsc-float-button"
-            headerBgColor={headerBgColor}
-            headerFontColor={headerFontColor}
             opened={opened}
             onClick={() => this.openChatBot({ opened: true })}
           >
@@ -528,8 +522,6 @@ class ChatBot extends Component {
 ChatBot.propTypes = {
   steps: PropTypes.array.isRequired,
   headerComponent: PropTypes.element,
-  headerBgColor: PropTypes.string,
-  headerFontColor: PropTypes.string,
   headerTitle: PropTypes.string,
   hideHeader: PropTypes.bool,
   hideBotAvatar: PropTypes.bool,
@@ -560,8 +552,6 @@ ChatBot.propTypes = {
 ChatBot.defaultProps = {
   handleEnd: undefined,
   headerComponent: undefined,
-  headerBgColor: '#6e48aa',
-  headerFontColor: '#fff',
   headerTitle: 'Chat',
   hideHeader: false,
   hideBotAvatar: false,

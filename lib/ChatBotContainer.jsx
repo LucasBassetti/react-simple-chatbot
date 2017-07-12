@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 const ChatBotContainer = styled.div`
-  background: ${props => (props.theme && props.theme.background) || '#f5f8fb'};
+  background: ${({ theme }) => theme.background};
   border-radius: 10px;
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
-  font-family: ${props => (props.theme && props.theme.fontFamily) || 'monospace'};
+  font-family: ${({ theme }) => theme.fontFamily};
   overflow: hidden;
   position: ${props => props.floating ? 'fixed' : 'relative'};
   bottom: ${props => props.floating ? '32px' : 'initial'};
@@ -23,5 +23,12 @@ const ChatBotContainer = styled.div`
     width: 100%;
   }
 `;
+
+ChatBotContainer.defaultProps = {
+  theme: {
+    background: '#f5f8fb',
+    fontFamily: 'monospace',
+  },
+};
 
 export default ChatBotContainer;

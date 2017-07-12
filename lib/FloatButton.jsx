@@ -3,12 +3,12 @@ import styled from 'styled-components';
 const FloatButton = styled.a`
   align-items: center;
   cursor: pointer;
-  background: ${props => props.headerBgColor};
+  background: ${({ theme }) => theme.headerBgColor};
   bottom: 32px;
   border-radius: 100%;
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
   display: flex;
-  fill: ${props => props.headerFontColor};
+  fill: ${({ theme }) => theme.headerFontColor};
   height: 56px;
   justify-content: center;
   position: fixed;
@@ -18,5 +18,12 @@ const FloatButton = styled.a`
   width: 56px;
   z-index: 999;
 `;
+
+FloatButton.defaultProps = {
+  theme: {
+    headerBgColor: '#6e48aa',
+    headerFontColor: '#fff',
+  },
+};
 
 export default FloatButton;
