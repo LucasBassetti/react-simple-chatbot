@@ -1,24 +1,29 @@
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
 import ChatBot from '../../lib/index';
 
-import { ThemeProvider } from 'styled-components';
-
 const darkTheme = {
-  background: '#000',
+  background: '#f5f8fb',
   fontFamily: 'Helvetica Neue',
+  headerBgColor: '#6e48aa',
+  headerFontColor: '#fff',
 };
 
-const Example = () =>
-  <ThemeProvider theme={darkTheme}>
-    <ChatBot
-      steps={[
-        {
-          id: '1',
-          message: 'Hello World',
-          end: true,
-        },
-      ]}
-    />
-  </ThemeProvider>;
+const steps = [
+  {
+    id: '1',
+    message: 'Hello World',
+    end: true,
+  },
+];
 
-export default Example;
+const Example = () =>
+  <ChatBot steps={steps} />;
+
+const ThemedExample = () => (
+  <ThemeProvider theme={darkTheme}>
+    <Example />
+  </ThemeProvider>
+);
+
+export default ThemedExample;
