@@ -72,6 +72,12 @@ const sections = [
         description: 'The id of next step to be triggered',
       },
       {
+        name: 'avatar',
+        type: 'String',
+        required: 'false',
+        description: 'the avatar to be showed just in this step. Note: this step must be a step that avatar appears',
+      },
+      {
         name: 'end',
         type: 'Boolean',
         required: 'false',
@@ -100,12 +106,6 @@ const sections = [
         type: 'String | Number',
         required: 'false',
         description: 'The id of next step to be triggered',
-      },
-      {
-        name: 'avatar',
-        type: 'String',
-        required: 'false',
-        description: 'the avatar to be showed just in this step. Note: this step must be a step that avatar appears',
       },
       {
         name: 'validator',
