@@ -1,0 +1,154 @@
+.sidebar-container {
+  height: 0;
+}
+
+.sidebar-toggle {
+  background: #fff;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 16px;
+}
+
+.sidebar {
+  height: 100%;
+  position: fixed;
+  width: 250px;
+  left: 0;
+  top: 0;
+  z-index: 99999;
+  background-color: #f6f8fa;
+  border-right: 1px solid #e2e4e6;
+  overflow-y: scroll;
+}
+
+.sidebar::-webkit-scrollbar { 
+  display: none;
+}
+
+.sidebar .sidebar-header {
+  height: 56px;
+}
+
+.sidebar .sidebar-header .logo {
+  display: inline-block;
+  padding: 16px;
+  color: #4a4a4a;
+}
+
+.sidebar .sidebar-close-button {
+  display: none;
+  cursor: pointer;
+  float: right;
+  font-size: 20px;
+  padding: 16px;
+}
+
+.sidebar-links div > a {
+	display: block;
+	text-decoration: none;
+	margin: 0 auto 5px auto;
+	padding: 10px 0 10px 5px;
+	text-align: left;
+	color:  #4a4a4a;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 2;
+}
+
+.sidebar-links div.selected > a {
+	background-color: #e9e9ea;
+	color: #4a4a4a;
+	line-height: 2.3;
+	margin: 0;
+}
+
+.sidebar-links div > a i.fa {
+	position: relative;
+	font-size: 20px;
+	top: 3px;
+	width: 40px;
+	text-align: center;
+}
+
+.sidebar-links div ul.sub-links {
+	max-height: 0;
+	overflow: hidden;
+	list-style: none;
+	padding: 0 0 0 30px;
+	color:  #4a4a4a;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 24px;
+	margin: 0;
+	transition: 0.4s;
+}
+
+.sidebar-links div.selected ul.sub-links {
+	max-height: 300px;
+	padding: 12px 0 12px 30px;
+}
+
+.sidebar-links div .sub-links a {
+	text-decoration: none;
+	color: #4a4a4a;
+	display: block;
+	text-align: left;
+}
+
+.sidebar-links div .sub-links a.selected-link {
+  color: #944eb8;
+}
+
+/* Link Colors */
+
+.sidebar-links div.link-blue > a {
+	border-color: #487db2;
+}
+
+.sidebar-links div.link-blue > a i.fa {
+	color: #487db2;
+}
+
+.sidebar-links div.link-red > a {
+	border-color: #da4545;
+}
+
+.sidebar-links div.link-red > a i.fa {
+	color: #da4545;
+}
+
+.sidebar-links div.link-yellow > a {
+	border-color: #d0d237;
+}
+
+.sidebar-links div.link-yellow > a i.fa {
+	color: #d0d237;
+}
+
+.sidebar-links div.link-green > a {
+	border-color: #86be2e;
+}
+
+.sidebar-links div.link-green > a i.fa {
+	color: #86be2e;
+}
+
+@media screen and (max-width: 765px) {
+  .sidebar-container {
+    height: 56px;
+  }
+
+  .sidebar {
+    width: 100%;
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+  }
+
+  .sidebar.opened {
+    transform: translateX(0);
+  }
+
+  .sidebar .sidebar-close-button {
+    display: block;
+  }
+}

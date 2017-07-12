@@ -1,0 +1,20 @@
+/*.rsc {
+  width: 100% !important;
+  max-width: 400px !important;
+}
+
+.home .rsc {
+  width: 280px !important;
+}*/
+
+.responsive-table {
+  overflow-x: scroll;
+}
+
+.responsive-table::-webkit-scrollbar {
+  display: none;
+}
+
+.responsive-table table {
+  min-width: 765px;
+}

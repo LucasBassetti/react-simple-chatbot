@@ -1,32 +1,53 @@
 const path = require('path');
+const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const precss = require('precss');
+const autoprefixer = require('autoprefixer');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'lib/index'),
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'react-simple-chatbot.js',
-    publicPath: 'dist/',
-    library: 'ReactSimpleChatbot',
-    libraryTarget: 'umd',
+  entry: path.resolve(__dirname, 'app/index'),
+  devServer: {
+    historyApiFallback: true,
+    outputPath: path.join(__dirname, 'docs'),
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['', '.js', '.jsx'],
+  },
+  output: {
+    path: path.resolve(__dirname, 'docs/js'),
+    publicPath: '/js/',
+    filename: 'bundle.js',
   },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
-    new UglifyJsPlugin({
-      comments: false,
+    new CleanWebpackPlugin(['docs']),
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+      compress: false,
     }),
+    new CopyWebpackPlugin([
+      {
+        context: path.resolve(__dirname, 'app/static'),
+        from: '**/*',
+        to: path.resolve(__dirname, 'docs'),
+      },
+    ]),
   ],
   module: {
-    rules: [
+    loaders: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        use: ['babel-loader'],
+        loaders: ['babel'],
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
       },
     ],
   },
+  postcss: () => [
+    precss,
+    autoprefixer,
+  ],
 };

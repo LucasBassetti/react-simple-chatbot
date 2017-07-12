@@ -1,0 +1,81 @@
+.home {
+  background: #9D50BB;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #6E48AA, #9D50BB);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #6E48AA, #9D50BB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-around;
+  -webkit-justify-content: space-around;
+  align-items: center;
+  -webkit-align-items: space-around;
+  padding: 0 12px;
+}
+
+.home .column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.home .title {
+  font-size: 2.4rem;
+  text-align: center;
+}
+
+.home .description {
+  font-size: 1.4rem;
+  margin: 0;
+  text-align: center;
+}
+
+.home .social-buttons {
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.home .fb-share-button {
+  margin-right: 12px;
+}
+
+.home .buttons {
+  margin: 24px 0 24px 32px;
+  text-align: center;
+}
+
+.home .button {
+  display: inline-block;
+  padding: 6px;
+}
+
+.home .docs-button {
+  border: 2px solid #fff;
+  border-radius: 30px;
+  color: #fff;
+  padding: 12px 32px;
+  transition: all .3s linear;
+}
+
+.home .docs-button:hover {
+  background: #fff;
+  color: #000;
+  opacity: 1;
+}
+
+.home .docs-button i {
+  padding-right: 12px;
+}
+
+@media screen and (max-width: 765px) {
+  .home {
+    flex-direction: column;
+    -webkit-flex-direction: column;
+  }
+
+  .column {
+    margin: 50px 0;
+  }
+}

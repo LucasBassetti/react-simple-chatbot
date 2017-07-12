@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Quicksand', sans-serif;
+  color: #4a4a4a;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #944eb8;
+  cursor: pointer;
+}
+
+a:hover {
+  opacity: .7
+}
+
+ul {
+  list-style-type: none;
+  padding: 6px 12px;
+}
+
+li {
+  padding: 6px 0;
+}
+
+table, thead, tbody, tr, th, td {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-collapse: inherit;
+  border-spacing: 0;
+  border-color: inherit;
+  vertical-align: inherit;
+  text-align: left;
+  -webkit-border-horizontal-spacing: 0;
+  -webkit-border-vertical-spacing: 0;
+}
+
+table {
+  width: 100%;
+  margin: 12px 0;
+}
+
+th {
+  border-top: 1px solid #ddd;
+  background: #f5f5f5;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+pre {
+  white-space: pre-wrap;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+pre::-webkit-scrollbar {
+  display: none;
+}
+
+code {
+  padding: 12px !important;
+  line-height: 22px;
+  min-width: 500px;
+  font-size: 13px !important;
+}
+
+object {
+  display: none;
+}
+
+@media screen and (max-width: 568px) {
+  code {
+    font-size: 8px !important;
+  }
+}

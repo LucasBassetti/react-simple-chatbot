@@ -1,0 +1,24 @@
+.docs .social-buttons {
+  position: absolute;
+  top: 6px;
+  right: 40px;
+  padding: 16px;
+  display: flex;
+  display: -webkit-flex;
+}
+
+.docs .fb-share-button {
+  margin-right: 6px;
+}
+
+main {
+  margin-left: 250px;
+  padding: 24px;
+}
+
+@media screen and (max-width: 765px) {
+  main {
+    margin: 0;
+    padding: 24px;
+  }
+}

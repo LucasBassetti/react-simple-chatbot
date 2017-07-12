@@ -1,27 +1,15 @@
 {
-  "name": "react-simple-chatbot",
-  "version": "0.1.11",
-  "description": "React Simple Chatbot",
-  "main": "dist/react-simple-chatbot.js",
+  "name": "react-spa-boilerplate",
+  "version": "0.0.1",
+  "description": "React SPA Boilerplate for open source projects.",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint lib/*.jsx",
-    "prepublish": "npm run build",
-    "prepush": "npm run lint && npm run test:coverage",
-    "start": "./node_modules/.bin/webpack-dev-server --inline --content-base build/",
-    "dev": "npm start -- --config webpack.config.dev.js",
-    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "test": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --require babel-register",
-    "test:watch": "npm test -- --watch",
+    "start": "webpack-dev-server --inline --content-base build/",
+    "test": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register",
+    "test:watch": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register --watch",
     "test:coverage": "nyc npm test",
-    "build": "./node_modules/.bin/webpack --config webpack.config.prod.js -p"
+    "build": "webpack --config webpack.config.prod.js"
   },
-  "files": [
-    "dist"
-  ],
   "nyc": {
-    "function": 80,
-    "lines": 80,
-    "check-coverage": true,
     "reporter": [
       "text",
       "html"
@@ -35,51 +23,54 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LucasBassetti/react-simple-chatbot"
+    "url": "https://github.com/LucasBassetti/react-spa-boilerplate"
   },
   "keywords": [
     "react",
-    "chat",
-    "chatbot",
-    "conversational-ui"
+    "webpack",
+    "airbnb",
+    "eslint",
+    "boilerplate",
+    "starter",
+    "open source"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/LucasBassetti/react-simple-chatbot/issues"
+    "url": "https://github.com/LucasBassetti/react-spa-boilerplate/issues"
   },
-  "homepage": "https://github.com/LucasBassetti/react-simple-chatbot#readme",
+  "homepage": "https://github.com/LucasBassetti/react-spa-boilerplate#readme",
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.1.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "chai": "^4.0.2",
-    "clean-webpack-plugin": "^0.1.16",
-    "enzyme": "^2.8.2",
+    "autoprefixer": "^7.0.1",
+    "babel-core": "^6.7.7",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "6.24.0",
+    "babel-preset-react": "^6.11.1",
+    "chai": "^3.5.0",
+    "clean-webpack-plugin": "^0.1.8",
+    "copy-webpack-plugin": "^2.1.1",
+    "css-loader": "^0.28.0",
+    "enzyme": "^2.8.0",
     "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.0.1",
+    "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^5.0.1",
-    "eslint-plugin-react": "^7.0.1",
-    "husky": "^0.13.3",
-    "jsdom": "^9.12.0",
-    "mocha": "^3.4.2",
-    "nyc": "^11.0.2",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "mocha": "^3.2.0",
+    "nyc": "^10.2.0",
+    "precss": "^1.4.0",
     "react-addons-test-utils": "^15.5.0",
-    "sinon": "^2.3.5",
-    "uglifyjs-webpack-plugin": "^0.4.6",
-    "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.5.0"
+    "style-loader": "^0.16.1",
+    "webpack": "^1.13.0",
+    "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "circular-json": "^0.3.1",
+    "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.8",
-    "random-id": "0.0.2",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "styled-components": "^2.1.0"
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-ga": "^2.2.0",
+    "react-simple-chatbot": "git+https://github.com/LucasBassetti/react-simple-chatbot.git"
   }
 }
