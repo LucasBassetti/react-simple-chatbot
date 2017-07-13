@@ -13,27 +13,10 @@ const otherFontTheme = {
   userFontColor: '#4a4a4a',
 };
 
-const Test = () =>
-  <div>Hello</div>;
-
 const steps = [
   {
     id: '1',
     message: 'Hello World',
-    delay: 1000,
-    trigger: '2',
-  },
-  {
-    id: '2',
-    options: [
-      { value: 'a', label: 'aaa', trigger: '3' },
-    ],
-  },
-  {
-    id: '3',
-    component: <Test />,
-    // asMessage: true,
-    // delay: 0,
     end: true,
   },
 ];
