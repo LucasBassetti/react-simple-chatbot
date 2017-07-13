@@ -30,8 +30,8 @@ class ChatBot extends Component {
       opened: props.opened || !props.floating,
       inputValue: '',
       inputInvalid: false,
-      defaulBotSettings: {},
-      defaulUserSettings: {},
+      defaultBotSettings: {},
+      defaultUserSettings: {},
     };
 
     this.renderStep = this.renderStep.bind(this);
@@ -41,21 +41,32 @@ class ChatBot extends Component {
   }
 
   componentWillMount() {
-    const { botDelay, botAvatar, userDelay, userAvatar } = this.props;
+    const { botDelay, botAvatar, customDelay, userDelay, userAvatar } = this.props;
     const steps = {};
 
-    const defaulBotSettings = {
+    const defaultBotSettings = {
       delay: botDelay,
       avatar: botAvatar,
     };
-    const defaulUserSettings = {
+    const defaultUserSettings = {
       delay: userDelay,
       avatar: userAvatar,
+    };
+    const defaultCustomSettings = {
+      delay: customDelay,
     };
 
     for (let i = 0, len = this.props.steps.length; i < len; i += 1) {
       const step = this.props.steps[i];
-      const settings = step.user ? defaulUserSettings : defaulBotSettings;
+      let settings = {};
+
+      if (step.user || step.asMessage) {
+        settings = defaultUserSettings;
+      } else if (step.message) {
+        settings = defaultBotSettings;
+      } else if (step.component) {
+        settings = defaultCustomSettings;
+      }
 
       steps[step.id] = Object.assign(
         {},
@@ -69,8 +80,8 @@ class ChatBot extends Component {
     const previousSteps = [steps[currentStep.id]];
 
     this.setState({
-      defaulBotSettings,
-      defaulUserSettings,
+      defaultBotSettings,
+      defaultUserSettings,
       steps,
       currentStep,
       renderedSteps,
@@ -118,7 +129,7 @@ class ChatBot extends Component {
       renderedSteps,
       previousSteps,
       steps,
-      defaulUserSettings,
+      defaultUserSettings,
     } = this.state;
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
@@ -140,7 +151,7 @@ class ChatBot extends Component {
         {},
         currentStep,
         option,
-        defaulUserSettings,
+        defaultUserSettings,
         {
           user: true,
           trigger: option.trigger,
@@ -271,7 +282,7 @@ class ChatBot extends Component {
         renderedSteps,
         previousSteps,
         inputValue,
-        defaulUserSettings,
+        defaultUserSettings,
       } = this.state;
       let { currentStep } = this.state;
 
@@ -285,7 +296,7 @@ class ChatBot extends Component {
 
         currentStep = Object.assign(
           {},
-          defaulUserSettings,
+          defaultUserSettings,
           currentStep,
           step,
         );
@@ -358,7 +369,6 @@ class ChatBot extends Component {
       avatarStyle,
       bubbleStyle,
       customStyle,
-      customDelay,
       hideBotAvatar,
       hideUserAvatar,
     } = this.props;
@@ -381,7 +391,6 @@ class ChatBot extends Component {
       return (
         <CustomStep
           key={index}
-          delay={customDelay}
           step={step}
           steps={steps}
           style={customStyle}

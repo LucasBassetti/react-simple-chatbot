@@ -16,8 +16,9 @@ class CustomStep extends Component {
   }
 
   componentDidMount() {
-    const { delay } = this.props;
-    const { waitAction } = this.props.step;
+    const { step } = this.props;
+    const { delay, waitAction } = step;
+
     setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!waitAction) {
@@ -47,16 +48,17 @@ class CustomStep extends Component {
         className="rsc-cs"
         style={style}
       >
-        { loading ? (
-          <Loading />
-        ) : this.renderComponent() }
+        {
+          loading ? (
+            <Loading />
+          ) : this.renderComponent()
+        }
       </CustomStepContainer>
     );
   }
 }
 
 CustomStep.propTypes = {
-  delay: PropTypes.number.isRequired,
   step: PropTypes.object.isRequired,
   steps: PropTypes.object.isRequired,
   style: PropTypes.object.isRequired,
