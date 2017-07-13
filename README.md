@@ -50,6 +50,14 @@ ReactDOM.render(
 
 Please check the [contributing guide](https://github.com/LucasBassetti/react-simple-chatbot/blob/master/contributing.md)
 
+## Authors
+
+| ![Lucas Bassetti](https://avatars3.githubusercontent.com/u/1014326?v=3&s=150)|
+|:---------------------:|
+|  [Lucas Bassetti](https://github.com/LucasBassetti/)   |
+
+See also the list of [contributors](https://github.com/LucasBassetti/react-simple-chatbot/contributors) who participated in this project.
+
 ## License
 
 MIT · [Lucas Bassetti](http://lucasbassetti.com.br)
