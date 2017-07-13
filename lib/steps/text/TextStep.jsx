@@ -63,8 +63,6 @@ class TextStep extends Component {
     } = this.props;
     const {
       avatar,
-      bubbleColor,
-      fontColor,
       user,
     } = step;
 
@@ -95,8 +93,6 @@ class TextStep extends Component {
           className="rsc-ts-bubble"
           style={bubbleStyle}
           user={user}
-          bubbleColor={bubbleColor}
-          fontColor={fontColor}
           showAvatar={showAvatar}
           isFirst={isFirst}
           isLast={isLast}

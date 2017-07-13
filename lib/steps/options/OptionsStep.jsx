@@ -21,7 +21,7 @@ class OptionsStep extends Component {
 
   renderOption(option) {
     const { bubbleStyle } = this.props;
-    const { bubbleColor, fontColor } = this.props.step;
+    const { user } = this.props.step;
     const { value, label } = option;
 
     return (
@@ -32,8 +32,7 @@ class OptionsStep extends Component {
         <OptionElement
           className="rsc-os-option-element"
           style={bubbleStyle}
-          bubbleColor={bubbleColor}
-          fontColor={fontColor}
+          user={user}
           onClick={() => this.onOptionClick({ value })}
         >
           {label}

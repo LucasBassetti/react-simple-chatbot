@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { scale } from '../../common/animations';
+import defaultTheme from '../../theme';
 
 const Bubble = styled.div`
   animation: ${scale} .3s ease forwards;
-  background: ${props => props.bubbleColor};
+  background: ${props => (props.user ? props.theme.userBubbleColor : props.theme.botBubbleColor)};
   border-radius: ${(props) => {
     const { isFirst, isLast, user } = props;
     if (!isFirst && !isLast) {
@@ -14,7 +15,7 @@ const Bubble = styled.div`
     return props.user ? '18px 18px 0 18px' : '18px 18px 18px 0';
   }};
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
-  color: ${props => props.fontColor};
+  color: ${props => (props.user ? props.theme.userFontColor : props.theme.botFontColor)};
   display: inline-block;
   font-size: 14px;
   max-width: 50%;
@@ -41,5 +42,9 @@ const Bubble = styled.div`
     return user ? 'top right' : 'top left';
   }};
 `;
+
+Bubble.defaultProps = {
+  theme: defaultTheme,
+};
 
 export default Bubble;
