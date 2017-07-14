@@ -221,7 +221,7 @@ const ExampleDBPedia = () => (
 export default ExampleDBPedia;
 `;
 
-class Example4 extends Component {
+class WikipediaSearch extends Component {
   componentDidMount() {
     $('pre code').each((i, block) => {
       hljs.highlightBlock(block);
@@ -263,4 +263,4 @@ class Example4 extends Component {
   }
 }
 
-export default Example4;
+export default WikipediaSearch;

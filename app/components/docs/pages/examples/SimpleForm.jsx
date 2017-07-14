@@ -227,7 +227,7 @@ Review.defaultProps = {
   steps: undefined,
 };
 
-class Example6 extends Component {
+class SimpleForm extends Component {
   componentDidMount() {
     $('pre code').each((i, block) => {
       hljs.highlightBlock(block);
@@ -352,4 +352,4 @@ class Example6 extends Component {
   }
 }
 
-export default Example6;
+export default SimpleForm;

@@ -1,22 +1,35 @@
 import React from 'react';
 // Intro
-import Installation from './pages/intro/Installation';
-import HelloWorld from './pages/intro/HelloWorld';
+import {
+  HelloWorld,
+  Installation,
+  Themes,
+} from './pages/intro';
+
 // Examples
-import Example1 from './pages/examples/Example1';
-import Example2 from './pages/examples/Example2';
-import Example3 from './pages/examples/Example3';
-import Example4 from './pages/examples/Example4';
-import Example5 from './pages/examples/Example5';
-import Example6 from './pages/examples/Example6';
-import Example7 from './pages/examples/Example7';
-import Example8 from './pages/examples/Example8';
+import {
+  BMI,
+  CustomComponent,
+  EndCallback,
+  Options,
+  PreviousValue,
+  SimpleForm,
+  Validator,
+  WikipediaSearch,
+} from './pages/examples';
+
 // API Referece
-import Component1 from './pages/reference/Component1';
-import Component2 from './pages/reference/Component2';
-import Component3 from './pages/reference/Component3';
+import {
+  ChatBotAPI,
+  CustomComponentAPI,
+  Steps,
+} from './pages/reference';
+
 // Others
-import Contribute from './pages/others/Contribute';
+import {
+  Contribute,
+  Releases,
+} from './pages/others';
 
 const menu = [
   {
@@ -33,6 +46,11 @@ const menu = [
         title: 'Hello World',
         component: <HelloWorld />,
       },
+      {
+        href: '/docs/themes',
+        title: 'Themes',
+        component: <Themes />,
+      },
     ],
   },
   {
@@ -42,42 +60,42 @@ const menu = [
       {
         href: '/docs/previous-value',
         title: 'Previous Value',
-        component: <Example5 />,
+        component: <PreviousValue />,
       },
       {
         href: '/docs/options',
         title: 'Options',
-        component: <Example1 />,
+        component: <Options />,
       },
       {
         href: '/docs/validator',
         title: 'Validator',
-        component: <Example2 />,
+        component: <Validator />,
       },
       {
         href: '/docs/custom',
-        title: 'Custom Step',
-        component: <Example3 />,
+        title: 'Custom Component',
+        component: <CustomComponent />,
       },
       {
         href: '/docs/wikipedia',
         title: 'Wikipédia Search',
-        component: <Example4 />,
+        component: <WikipediaSearch />,
       },
       {
         href: '/docs/form',
         title: 'Simple Form',
-        component: <Example6 />,
+        component: <SimpleForm />,
       },
       {
         href: '/docs/end-callback',
         title: 'End Callback',
-        component: <Example7 />,
+        component: <EndCallback />,
       },
       {
         href: '/docs/bmi',
         title: 'BMI',
-        component: <Example8 />,
+        component: <BMI />,
       },
     ],
   },
@@ -88,17 +106,17 @@ const menu = [
       {
         href: '/docs/chatbot',
         title: 'ChatBot',
-        component: <Component1 />,
+        component: <ChatBotAPI />,
       },
       {
         href: '/docs/steps',
         title: 'Steps (JSON)',
-        component: <Component2 />,
+        component: <Steps />,
       },
       {
         href: '/docs/custom-component',
         title: 'Custom Component',
-        component: <Component3 />,
+        component: <CustomComponentAPI />,
       },
     ],
   },
@@ -110,6 +128,11 @@ const menu = [
         href: '/docs/contribute',
         title: 'How to Contribute',
         component: <Contribute />,
+      },
+      {
+        href: '/docs/releases',
+        title: 'Releases',
+        component: <Releases />,
       },
     ],
   },

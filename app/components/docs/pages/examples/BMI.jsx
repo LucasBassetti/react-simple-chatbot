@@ -135,7 +135,7 @@ BMI.defaultProps = {
   steps: undefined,
 };
 
-class Example8 extends Component {
+class BMIExample extends Component {
   componentDidMount() {
     $('pre code').each((i, block) => {
       hljs.highlightBlock(block);
@@ -213,4 +213,4 @@ class Example8 extends Component {
   }
 }
 
-export default Example8;
+export default BMIExample;

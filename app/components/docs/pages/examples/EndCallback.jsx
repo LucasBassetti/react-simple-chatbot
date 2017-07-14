@@ -51,7 +51,7 @@ const exampleCode =
 export default EndCallback;
 `;
 
-class Example1 extends Component {
+class EndCallback extends Component {
   componentDidMount() {
     $('pre code').each((i, block) => {
       hljs.highlightBlock(block);
@@ -108,4 +108,4 @@ class Example1 extends Component {
   }
 }
 
-export default Example1;
+export default EndCallback;

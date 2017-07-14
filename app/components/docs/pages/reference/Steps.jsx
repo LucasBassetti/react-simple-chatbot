@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const $ = require('jquery');
 
-require('./Component2.css');
+require('./Steps.css');
 
 const textStepCode =
 `{
@@ -76,6 +76,12 @@ const sections = [
         type: 'String',
         required: 'false',
         description: 'the avatar to be showed just in this step. Note: this step must be a step that avatar appears',
+      },
+      {
+        name: 'delay',
+        type: 'Number',
+        required: 'false',
+        description: 'set the delay time to message be shown',
       },
       {
         name: 'end',
@@ -186,6 +192,12 @@ const sections = [
         description: 'The id of next step to be triggered',
       },
       {
+        name: 'delay',
+        type: 'Number',
+        required: 'false',
+        description: 'set the delay time to message be shown',
+      },
+      {
         name: 'end',
         type: 'Boolean',
         required: 'false',
@@ -219,7 +231,7 @@ const sections = [
   },
 ];
 
-class Component2 extends Component {
+class Steps extends Component {
   constructor(props) {
     super(props);
 
@@ -286,4 +298,4 @@ class Component2 extends Component {
   }
 }
 
-export default Component2;
+export default Steps;

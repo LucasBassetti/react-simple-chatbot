@@ -26,7 +26,7 @@ const exampleCode =
 />
 `;
 
-class Example2 extends Component {
+class Validator extends Component {
   componentDidMount() {
     $('pre code').each((i, block) => {
       hljs.highlightBlock(block);
@@ -68,4 +68,4 @@ class Example2 extends Component {
   }
 }
 
-export default Example2;
+export default Validator;

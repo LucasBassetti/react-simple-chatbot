@@ -21,7 +21,7 @@
   overflow-y: scroll;
 }
 
-.sidebar::-webkit-scrollbar { 
+.sidebar::-webkit-scrollbar {
   display: none;
 }
 
@@ -31,8 +31,13 @@
 
 .sidebar .sidebar-header .logo {
   display: inline-block;
-  padding: 16px;
+  padding: 12px 16px 0 16px;
   color: #4a4a4a;
+}
+
+.sidebar .sidebar-header .npm-release {
+  display: block;
+  padding: 0 0 16px 16px;
 }
 
 .sidebar .sidebar-close-button {
@@ -146,6 +151,7 @@
 
   .sidebar.opened {
     transform: translateX(0);
+    z-index: 9999;
   }
 
   .sidebar .sidebar-close-button {

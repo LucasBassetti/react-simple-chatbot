@@ -1,6 +1,6 @@
 import React from 'react';
 
-require('./Component1.css');
+require('./ChatBotAPI.css');
 
 const properties = [
   {
@@ -16,22 +16,10 @@ const properties = [
     description: 'Bot image source',
   },
   {
-    name: 'botBubbleColor',
-    type: 'PropTypes.string',
-    defaultValue: <code>#6e48aa</code>,
-    description: 'Color of bot bubble color',
-  },
-  {
     name: 'botDelay',
     type: 'PropTypes.number',
     defaultValue: <code>1000</code>,
     description: 'The delay time of bot messages',
-  },
-  {
-    name: 'botFontColor',
-    type: 'PropTypes.string',
-    defaultValue: <code>#fff</code>,
-    description: 'Color of bot font color',
   },
   {
     name: 'bubbleStyle',
@@ -82,22 +70,10 @@ const properties = [
     description: 'The callback function when chat ends',
   },
   {
-    name: 'headerBgColor',
-    type: 'PropTypes.string',
-    defaultValue: <code>#6e48aa</code>,
-    description: 'Backgroud color of header element',
-  },
-  {
     name: 'headerComponent',
     type: 'PropTypes.element',
     defaultValue: '',
     description: 'Override the default header element',
-  },
-  {
-    name: 'headerFontColor',
-    type: 'PropTypes.string',
-    defaultValue: <code>#fff</code>,
-    description: 'Font color of header element',
   },
   {
     name: 'headerTitle',
@@ -160,26 +136,14 @@ const properties = [
     description: 'User image source',
   },
   {
-    name: 'userBubbleColor',
-    type: 'PropTypes.string',
-    defaultValue: <code>#fff</code>,
-    description: 'Color of user bubble color',
-  },
-  {
     name: 'userDelay',
     type: 'PropTypes.number',
     defaultValue: <code>1000</code>,
     description: 'The delay time of user messages',
   },
-  {
-    name: 'userFontColor',
-    type: 'PropTypes.string',
-    defaultValue: <code>#4a4a4a</code>,
-    description: 'Color of user font color',
-  },
 ];
 
-const Component1 = () => (
+const ChatBotAPI = () => (
   <div className="docs-component-1">
     <h2 style={{ marginTop: 32 }}>Properties</h2>
     <div className="responsive-table">
@@ -212,4 +176,4 @@ const Component1 = () => (
   </div>
 );
 
-export default Component1;
+export default ChatBotAPI;

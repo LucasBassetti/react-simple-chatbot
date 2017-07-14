@@ -8,21 +8,24 @@ const exampleCode =
   steps={[
     {
       id: '1',
-      message: 'You can add custom components',
+      message: 'What is your name?',
       trigger: '2',
     },
     {
       id: '2',
-      component: (
-        <div> This is a example component </div>
-      ),
+      user: true,
+      trigger: '3',
+    },
+    {
+      id: '3',
+      message: 'Hi {previousValue}, nice to meet you!',
       end: true,
     },
   ]}
 />
 `;
 
-class Example3 extends Component {
+class PreviousValue extends Component {
   componentDidMount() {
     $('pre code').each((i, block) => {
       hljs.highlightBlock(block);
@@ -33,18 +36,21 @@ class Example3 extends Component {
     return (
       <div className="docs-example-3">
         <ChatBot
-          headerTitle="Custom Component"
+          headerTitle="Previous Value"
           steps={[
             {
               id: '1',
-              message: 'You can add custom components',
+              message: 'What is your name?',
               trigger: '2',
             },
             {
               id: '2',
-              component: (
-                <div> This is a example component </div>
-              ),
+              user: true,
+              trigger: '3',
+            },
+            {
+              id: '3',
+              message: 'Hi {previousValue}, nice to meet you!',
               end: true,
             },
           ]}
@@ -60,4 +66,4 @@ class Example3 extends Component {
   }
 }
 
-export default Example3;
+export default PreviousValue;

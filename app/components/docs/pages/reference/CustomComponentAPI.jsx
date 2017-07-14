@@ -1,6 +1,6 @@
 import React from 'react';
 
-require('./Component3.css');
+require('./CustomComponentAPI.css');
 
 const properties = [
   {
@@ -25,7 +25,7 @@ const properties = [
   },
 ];
 
-const Component3 = () => (
+const CustomComponentAPI = () => (
   <div className="docs-component-3">
     <p>
       When you declare a custom step, you need indicate a custom React Component to be
@@ -60,4 +60,4 @@ const Component3 = () => (
   </div>
 );
 
-export default Component3;
+export default CustomComponentAPI;

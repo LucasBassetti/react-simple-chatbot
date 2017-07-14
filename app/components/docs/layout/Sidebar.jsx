@@ -92,11 +92,22 @@ class Sidebar extends Component {
         />
         <div className={`sidebar ${opened ? 'opened' : ''}`}>
           <div className="sidebar-header">
-            <a onClick={() => this.props.handleLink('/')} className="logo">React Simple Chatbot</a>
+            <a onClick={() => this.props.handleLink('/')} className="logo">
+              React Simple Chatbot
+            </a>
             <i
               className="sidebar-close-button fa fa-close"
               onClick={() => this.toggleSidebar()}
             />
+            <a
+              href="https://badge.fury.io/js/react-simple-chatbot"
+              className="npm-release"
+            >
+              <img
+                src="https://camo.githubusercontent.com/fa9a3062cddf9bacb54d8f070d43c3bb01e76875/68747470733a2f2f62616467652e667572792e696f2f6a732f72656163742d73696d706c652d63686174626f742e737667" alt="npm version" data-canonical-src="https://badge.fury.io/js/react-simple-chatbot.svg"
+                style={{ maxWidth: '100%' }}
+              />
+            </a>
           </div>
 
           <div className="sidebar-links">

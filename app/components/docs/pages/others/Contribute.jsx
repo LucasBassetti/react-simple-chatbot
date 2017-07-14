@@ -8,7 +8,7 @@ const Contribute = () => (
       href="https://github.com/LucasBassetti/react-simple-chatbot/blob/master/contributing.md"
     >
       contributing guide
-    </a>
+    </a>.
   </div>
 );
 

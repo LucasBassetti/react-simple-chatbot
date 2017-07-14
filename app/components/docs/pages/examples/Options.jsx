@@ -33,7 +33,7 @@ const exampleCode =
   />
 `;
 
-class Example1 extends Component {
+class Options extends Component {
   componentDidMount() {
     $('pre code').each((i, block) => {
       hljs.highlightBlock(block);
@@ -82,4 +82,4 @@ class Example1 extends Component {
   }
 }
 
-export default Example1;
+export default Options;
