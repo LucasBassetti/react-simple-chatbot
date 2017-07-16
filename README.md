@@ -97,9 +97,9 @@ ReactDOM.render(
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| `id` | `String | Number` | `true` | The step id. Required for any step |
+| `id` | `String / Number` | `true` | The step id. Required for any step |
 | `message` | `String` | `true` | The text message |
-| `trigger` | `String | Number` | `false` | The id of next step to be triggered |
+| `trigger` | `String / Number` | `false` | The id of next step to be triggered |
 | `avatar` | `String` | `false` | the avatar to be showed just in this step. Note: this step must be a step that avatar appears |
 | `end` | `Boolean` | `false` | if true indicate that this step is the last |
 
@@ -117,10 +117,10 @@ Example:
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| `id` | `String | Number` | `true` | The step id. Required for any step |
+| `id` | `String / Number` | `true` | The step id. Required for any step |
 | `user` | `Boolean` | `true` | if true indicate that you waiting a user type action |
-| `trigger` | `String | Number` | `false` | The id of next step to be triggered |
-| `validator` | `String | Number` | `false` | if user attribute is true you can pass a validator function to validate the text typed by the user |
+| `trigger` | `String / Number` | `false` | The id of next step to be triggered |
+| `validator` | `String / Number` | `false` | if user attribute is true you can pass a validator function to validate the text typed by the user |
 | `end` | `Boolean` | `false` | if true indicate that this step is the last |
 
 Example:
@@ -137,7 +137,7 @@ Example:
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| `id` | `String | Number` | `true` | The step id. Required for any step |
+| `id` | `String / Number` | `true` | The step id. Required for any step |
 | `options` | `Array` | `true` | Array of options with { label, value, trigger } properties |
 | `end` | `Boolean` | `false` | if true indicate that this step is the last |
 
@@ -158,12 +158,12 @@ Example:
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| `id` | `String | Number` | `true` | The step id. Required for any step |
+| `id` | `String / Number` | `true` | The step id. Required for any step |
 | `component` | `Component` | `true` | Custom React Component |
 | `replace` | `Boolean` | `false` | if true indicate that component will be replaced by the next step |
 | `waitAction` | `Boolean` | `false` | if true indicate that you waiting some action. You must use the triggerNextStep prop in your component to execute the action |
 | `asMessage` | `Boolean` | `false` | f true indicate that the component will be displayed as a text step
-| `trigger` | `String | Number` | `false` | The id of next step to be triggered |
+| `trigger` | `String / Number` | `false` | The id of next step to be triggered |
 | `end` | `Boolean` | `false` | if true indicate that this step is the last |
 
 Example:
@@ -180,9 +180,9 @@ Example:
 
 | Name | Type | Required | Description |
 |---|---|---|---|
-| `id` | `String | Number` | `true` | The step id. Required for any step |
-| `update` | `String | Number` | `true` | The id of next step to be updated |
-| `trigger` | `String | Number` | `false` | The id of next step to be triggered |
+| `id` | `String / Number` | `true` | The step id. Required for any step |
+| `update` | `String / Number` | `true` | The id of next step to be updated |
+| `trigger` | `String / Number` | `false` | The id of next step to be triggered |
 
 Example:
 
