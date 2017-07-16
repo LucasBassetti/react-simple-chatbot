@@ -64,7 +64,7 @@ const properties = [
     description: 'The style object to use to override the footer element',
   },
   {
-    name: 'handleEnd({ steps, value })',
+    name: 'handleEnd({ renderedSteps, steps, values })',
     type: 'PropTypes.func',
     defaultValue: '',
     description: 'The callback function when chat ends',
