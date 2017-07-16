@@ -73,7 +73,7 @@ ReactDOM.render(
 | `customStyle` | `PropTypes.object	` | | The style object to use to override the custom step element |
 | `floating` | `PropTypes.bool`  | `false` | Render chatbot with a floating button |
 | `footerStyle` | `PropTypes.object`  | | The style object to use to override the footer element |
-| `handleEnd({ steps, value })` | `PropTypes.func`  | | The callback function when chat ends |
+| `handleEnd({ renderedSteps, steps, values })` | `PropTypes.func`  | | The callback function when chat ends |
 | `headerBgColor` | `PropTypes.string`  | `#6e48aa` | Backgroud color of header element |
 | `headerComponent` | `PropTypes.element`  | | Override the default header element |
 | `headerFontColor` | `PropTypes.string`  | `#fff` | Font color of header element |
