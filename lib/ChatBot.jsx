@@ -446,6 +446,7 @@ class ChatBot extends Component {
       footerStyle,
       inputStyle,
       className,
+      placeholder,
     } = this.props;
 
     const header = headerComponent || (
@@ -501,7 +502,7 @@ class ChatBot extends Component {
               type="textarea"
               style={inputStyle}
               className="rsc-input"
-              placeholder="Type the message ..."
+              placeholder={placeholder}
               onKeyPress={this.handleKeyPress}
               onChange={this.onValueChange}
               value={inputValue}
@@ -539,9 +540,11 @@ ChatBot.propTypes = {
   userAvatar: PropTypes.string,
   userDelay: PropTypes.number,
   handleEnd: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 
 ChatBot.defaultProps = {
+  placeholder: 'Type the message ...',
   handleEnd: undefined,
   headerComponent: undefined,
   headerTitle: 'Chat',
