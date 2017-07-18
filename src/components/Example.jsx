@@ -21,12 +21,9 @@ const steps = [
   },
 ];
 
-const Example = () =>
-  <ChatBot steps={steps} />;
-
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
-    <Example />
+    <ChatBot steps={steps} />
   </ThemeProvider>
 );
 

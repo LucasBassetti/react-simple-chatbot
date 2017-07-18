@@ -60,9 +60,9 @@ class ChatBot extends Component {
       const step = this.props.steps[i];
       let settings = {};
 
-      if (step.user || step.asMessage) {
+      if (step.user) {
         settings = defaultUserSettings;
-      } else if (step.message) {
+      } else if (step.message || step.asMessage) {
         settings = defaultBotSettings;
       } else if (step.component) {
         settings = defaultCustomSettings;
