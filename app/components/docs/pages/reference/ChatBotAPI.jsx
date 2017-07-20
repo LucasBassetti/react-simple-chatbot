@@ -94,6 +94,12 @@ const properties = [
     description: 'If true the header will be hidden',
   },
   {
+    name: 'hideSubmitButton',
+    type: 'PropTypes.bool',
+    defaultValue: <code>false</code>,
+    description: 'If true the submit button will be hidden',
+  },
+  {
     name: 'hideUserAvatar',
     type: 'PropTypes.bool',
     defaultValue: <code>false</code>,
@@ -122,6 +128,12 @@ const properties = [
     type: 'PropTypes.object',
     defaultValue: '',
     description: 'The style object to use to override the root element',
+  },
+  {
+    name: 'submitButtonStyle',
+    type: 'PropTypes.object',
+    defaultValue: '',
+    description: 'The style object to use to override the submit button element',
   },
   {
     name: 'toggleFloating',
