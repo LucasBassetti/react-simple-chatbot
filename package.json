@@ -78,7 +78,9 @@
     "prop-types": "^15.5.8",
     "random-id": "0.0.2",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "styled-components": "^2.1.1"
+    "react-dom": "^15.5.4"
+  },
+  "peerDependencies": {
+    "styled-components": "^2.x"
   }
 }

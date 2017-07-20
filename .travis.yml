@@ -1,6 +1,5 @@
 language: node_js
-
 node_js:
-  - 7
-  - 6
-  - 5
+  - 8
+before_install:
+  - "npm install styled-components"
