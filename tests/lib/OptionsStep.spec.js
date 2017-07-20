@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import { OptionsStep } from '../../lib/steps/steps';
+import { OptionsStep } from '../../lib/steps';
 import OptionElement from '../../lib/steps/options/OptionElement';
 
 describe('OptionsStep', () => {

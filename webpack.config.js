@@ -9,6 +9,8 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, 'src'),
+    host: '0.0.0.0',
+    disableHostCheck: true,
   },
   resolve: {
     extensions: ['.js', '.jsx'],

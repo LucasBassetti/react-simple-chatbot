@@ -57,4 +57,49 @@ describe('schema', () => {
       schema.parse(step);
     }).to.not.throw();
   });
+
+  it('should throw error of inexistent step id', () => {
+    const steps = {
+      1: {
+        id: '1',
+        message: 'Test',
+        trigger: '2',
+      },
+    };
+    expect(() => {
+      schema.checkInvalidIds(steps);
+    }).to.throw();
+  });
+
+  it('should throw error of inexistent step id in option', () => {
+    const steps = {
+      1: {
+        id: '1',
+        options: [
+          { label: 'test', value: 'test', trigger: '2' },
+        ],
+      },
+    };
+    expect(() => {
+      schema.checkInvalidIds(steps);
+    }).to.throw();
+  });
+
+  it('should not throw error of inexistent step id', () => {
+    const steps = {
+      1: {
+        id: '1',
+        message: 'Test',
+        trigger: '2',
+      },
+      2: {
+        id: '2',
+        message: 'End',
+        end: true,
+      },
+    };
+    expect(() => {
+      schema.checkInvalidIds(steps);
+    }).to.not.throw();
+  });
 });

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { describe, it, before } from 'mocha';
+import { describe, it, before, after } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import ChatBot from '../../lib/ChatBot';
 import ChatBotContainer from '../../lib/ChatBotContainer';
 import FloatButton from '../../lib/FloatButton';
-import CloseIcon from '../../lib/CloseIcon';
 import Header from '../../lib/Header';
 import HeaderIcon from '../../lib/HeaderIcon';
-import { TextStep, OptionsStep, CustomStep } from '../../lib/steps/steps';
+import { CloseIcon } from '../../lib/icons';
+import { TextStep, OptionsStep, CustomStep } from '../../lib/steps';
 
 const CustomComponent = () => (
   <div />
@@ -84,6 +84,10 @@ describe('ChatBot', () => {
       setTimeout(() => {
         done();
       }, 500);
+    });
+
+    after(() => {
+      wrapper.unmount();
     });
 
     it('should render', () => {

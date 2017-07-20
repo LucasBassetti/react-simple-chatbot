@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import { CustomStep } from '../../lib/steps/steps';
+import { CustomStep } from '../../lib/steps';
 import CustomStepContainer from '../../lib/steps/custom/CustomStepContainer';
 
 const Example = () => (

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Random from 'random-id';
-import { CustomStep, OptionsStep, TextStep } from './steps/steps';
+import { CustomStep, OptionsStep, TextStep } from './steps';
 import schema from './schemas/schema';
 import ChatBotContainer from './ChatBotContainer';
 import Content from './Content';
@@ -10,10 +10,14 @@ import Header from './Header';
 import HeaderTitle from './HeaderTitle';
 import HeaderIcon from './HeaderIcon';
 import FloatButton from './FloatButton';
-import ChatIcon from './ChatIcon';
-import CloseIcon from './CloseIcon';
 import Footer from './Footer';
 import Input from './Input';
+import SubmitButton from './SubmitButton';
+import {
+  ChatIcon,
+  CloseIcon,
+  SubmitIcon,
+} from './icons';
 
 class ChatBot extends Component {
   /* istanbul ignore next */
@@ -30,7 +34,6 @@ class ChatBot extends Component {
       opened: props.opened || !props.floating,
       inputValue: '',
       inputInvalid: false,
-      defaultBotSettings: {},
       defaultUserSettings: {},
     };
 
@@ -38,23 +41,22 @@ class ChatBot extends Component {
     this.triggerNextStep = this.triggerNextStep.bind(this);
     this.onValueChange = this.onValueChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleSubmitButton = this.handleSubmitButton.bind(this);
   }
 
   componentWillMount() {
-    const { botDelay, botAvatar, customDelay, userDelay, userAvatar } = this.props;
+    const {
+      botDelay,
+      botAvatar,
+      customDelay,
+      userAvatar,
+      userDelay,
+    } = this.props;
     const steps = {};
 
-    const defaultBotSettings = {
-      delay: botDelay,
-      avatar: botAvatar,
-    };
-    const defaultUserSettings = {
-      delay: userDelay,
-      avatar: userAvatar,
-    };
-    const defaultCustomSettings = {
-      delay: customDelay,
-    };
+    const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
+    const defaultUserSettings = { delay: userDelay, avatar: userAvatar };
+    const defaultCustomSettings = { delay: customDelay };
 
     for (let i = 0, len = this.props.steps.length; i < len; i += 1) {
       const step = this.props.steps[i];
@@ -75,27 +77,23 @@ class ChatBot extends Component {
       );
     }
 
+    schema.checkInvalidIds(steps);
+
     const currentStep = this.props.steps[0];
     const renderedSteps = [steps[currentStep.id]];
     const previousSteps = [steps[currentStep.id]];
 
     this.setState({
-      defaultBotSettings,
-      defaultUserSettings,
-      steps,
       currentStep,
-      renderedSteps,
+      defaultUserSettings,
       previousSteps,
+      renderedSteps,
+      steps,
     });
   }
 
   componentDidMount() {
-    const chatbotContent = document.querySelector('.rsc-content');
-
-    /* istanbul ignore next */
-    if (chatbotContent) {
-      chatbotContent.addEventListener('DOMNodeInserted', this.onNodeInserted);
-    }
+    this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -107,15 +105,9 @@ class ChatBot extends Component {
   }
 
   componentWillUnmount() {
-    const chatbotContent = document.querySelector('.rsc-content');
-
-    /* istanbul ignore next */
-    if (chatbotContent) {
-      chatbotContent.removeEventListener('DOMNodeInserted', this.onNodeInserted);
-    }
+    this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted);
   }
 
-  /* istanbul ignore next */
   onNodeInserted(event) {
     event.currentTarget.scrollTop = event.currentTarget.scrollHeight;
   }
@@ -126,10 +118,10 @@ class ChatBot extends Component {
 
   triggerNextStep(data) {
     const {
-      renderedSteps,
-      previousSteps,
-      steps,
       defaultUserSettings,
+      previousSteps,
+      renderedSteps,
+      steps,
     } = this.state;
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
@@ -199,11 +191,7 @@ class ChatBot extends Component {
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
         if (nextStep.user) {
           this.setState({ disabled: false }, () => {
-            const chatInput = document.querySelector('.rsc-input');
-            /* istanbul ignore next */
-            if (chatInput) {
-              chatInput.focus();
-            }
+            this.input.focus();
           });
         } else {
           renderedSteps.push(nextStep);
@@ -278,40 +266,48 @@ class ChatBot extends Component {
 
   handleKeyPress(event) {
     if (event.key === 'Enter') {
-      const {
+      this.submitUserMessage();
+    }
+  }
+
+  handleSubmitButton() {
+    this.submitUserMessage();
+  }
+
+  submitUserMessage() {
+    const {
+      defaultUserSettings,
+      inputValue,
+      previousSteps,
+      renderedSteps,
+    } = this.state;
+    let { currentStep } = this.state;
+
+    const isInvalid = currentStep.validator && this.checkInvalidInput();
+
+    if (!isInvalid) {
+      const step = {
+        message: inputValue,
+        value: inputValue,
+      };
+
+      currentStep = Object.assign(
+        {},
+        defaultUserSettings,
+        currentStep,
+        step,
+      );
+
+      renderedSteps.push(currentStep);
+      previousSteps.push(currentStep);
+
+      this.setState({
+        currentStep,
         renderedSteps,
         previousSteps,
-        inputValue,
-        defaultUserSettings,
-      } = this.state;
-      let { currentStep } = this.state;
-
-      const isInvalid = currentStep.validator && this.checkInvalidInput();
-
-      if (!isInvalid) {
-        const step = {
-          message: inputValue,
-          value: inputValue,
-        };
-
-        currentStep = Object.assign(
-          {},
-          defaultUserSettings,
-          currentStep,
-          step,
-        );
-
-        renderedSteps.push(currentStep);
-        previousSteps.push(currentStep);
-
-        this.setState({
-          currentStep,
-          renderedSteps,
-          previousSteps,
-          disabled: true,
-          inputValue: '',
-        });
-      }
+        disabled: true,
+        inputValue: '',
+      });
     }
   }
 
@@ -332,11 +328,7 @@ class ChatBot extends Component {
             inputInvalid: false,
             disabled: false,
           }, () => {
-            const chatInput = document.querySelector('.rsc-input');
-            /* istanbul ignore next */
-            if (chatInput) {
-              chatInput.focus();
-            }
+            this.input.focus();
           });
         }, 2000);
       });
@@ -430,23 +422,25 @@ class ChatBot extends Component {
 
   render() {
     const {
-      opened,
       disabled,
-      inputValue,
       inputInvalid,
+      inputValue,
+      opened,
       renderedSteps,
     } = this.state;
     const {
+      className,
+      contentStyle,
+      floating,
+      footerStyle,
       headerComponent,
       headerTitle,
-      floating,
       hideHeader,
-      style,
-      contentStyle,
-      footerStyle,
+      hideSubmitButton,
       inputStyle,
-      className,
       placeholder,
+      style,
+      submitButtonStyle,
     } = this.props;
 
     const header = headerComponent || (
@@ -489,6 +483,7 @@ class ChatBot extends Component {
           {!hideHeader && header}
           <Content
             className="rsc-content"
+            innerRef={contentRef => this.content = contentRef}
             floating={floating}
             style={contentStyle}
           >
@@ -501,14 +496,29 @@ class ChatBot extends Component {
             <Input
               type="textarea"
               style={inputStyle}
+              innerRef={inputRef => this.input = inputRef}
               className="rsc-input"
-              placeholder={placeholder}
+              placeholder={inputInvalid ? '' : placeholder}
               onKeyPress={this.handleKeyPress}
               onChange={this.onValueChange}
               value={inputValue}
+              floating={floating}
               invalid={inputInvalid}
               disabled={disabled}
+              hasButton={!hideSubmitButton}
             />
+            {
+              !hideSubmitButton &&
+              <SubmitButton
+                className="rsc-submit-button"
+                style={submitButtonStyle}
+                onClick={this.handleSubmitButton}
+                invalid={inputInvalid}
+                disabled={disabled}
+              >
+                <SubmitIcon />
+              </SubmitButton>
+            }
           </Footer>
         </ChatBotContainer>
       </div>
@@ -518,52 +528,56 @@ class ChatBot extends Component {
 
 ChatBot.propTypes = {
   steps: PropTypes.array.isRequired,
-  headerComponent: PropTypes.element,
-  headerTitle: PropTypes.string,
-  hideHeader: PropTypes.bool,
-  hideBotAvatar: PropTypes.bool,
-  hideUserAvatar: PropTypes.bool,
-  floating: PropTypes.bool,
-  opened: PropTypes.bool,
-  toggleFloating: PropTypes.func,
-  style: PropTypes.object,
-  contentStyle: PropTypes.object,
-  footerStyle: PropTypes.object,
-  inputStyle: PropTypes.object,
   avatarStyle: PropTypes.object,
-  bubbleStyle: PropTypes.object,
-  customStyle: PropTypes.object,
-  customDelay: PropTypes.number,
-  className: PropTypes.string,
   botAvatar: PropTypes.string,
   botDelay: PropTypes.number,
+  bubbleStyle: PropTypes.object,
+  className: PropTypes.string,
+  contentStyle: PropTypes.object,
+  customDelay: PropTypes.number,
+  customStyle: PropTypes.object,
+  floating: PropTypes.bool,
+  footerStyle: PropTypes.object,
+  handleEnd: PropTypes.func,
+  headerComponent: PropTypes.element,
+  headerTitle: PropTypes.string,
+  hideBotAvatar: PropTypes.bool,
+  hideHeader: PropTypes.bool,
+  hideSubmitButton: PropTypes.bool,
+  hideUserAvatar: PropTypes.bool,
+  inputStyle: PropTypes.object,
+  opened: PropTypes.bool,
+  toggleFloating: PropTypes.func,
+  placeholder: PropTypes.string,
+  style: PropTypes.object,
+  submitButtonStyle: PropTypes.object,
   userAvatar: PropTypes.string,
   userDelay: PropTypes.number,
-  handleEnd: PropTypes.func,
-  placeholder: PropTypes.string,
 };
 
 ChatBot.defaultProps = {
-  placeholder: 'Type the message ...',
+  avatarStyle: {},
+  botDelay: 1000,
+  bubbleStyle: {},
+  className: '',
+  contentStyle: {},
+  customStyle: {},
+  customDelay: 1000,
+  floating: false,
+  footerStyle: {},
   handleEnd: undefined,
   headerComponent: undefined,
   headerTitle: 'Chat',
-  hideHeader: false,
   hideBotAvatar: false,
+  hideHeader: false,
+  hideSubmitButton: false,
   hideUserAvatar: false,
-  floating: false,
-  opened: undefined,
-  toggleFloating: undefined,
-  style: {},
-  contentStyle: {},
-  footerStyle: {},
   inputStyle: {},
-  avatarStyle: {},
-  bubbleStyle: {},
-  customStyle: {},
-  customDelay: 1000,
-  className: '',
-  botDelay: 1000,
+  opened: undefined,
+  placeholder: 'Type the message ...',
+  style: {},
+  submitButtonStyle: {},
+  toggleFloating: undefined,
   userDelay: 1000,
   botAvatar: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDUxMiA1MTIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIHN0eWxlPSJmaWxsOiM5M0M3RUY7IiBkPSJNMzAyLjU0NSw2OS44MThjMC0yNS43MDctMjAuODQtNDYuNTQ1LTQ2LjU0NS00Ni41NDVzLTQ2LjU0NSwyMC44MzgtNDYuNTQ1LDQ2LjU0NQ0KCWMwLDE3LjIyNSw5LjM2NSwzMi4yNTQsMjMuMjczLDQwLjMwNHY4My44MThoNDYuNTQ1di04My44MThDMjkzLjE4MSwxMDIuMDczLDMwMi41NDUsODcuMDQzLDMwMi41NDUsNjkuODE4eiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6IzVBOEJCMDsiIGQ9Ik0yNTYsMjMuMjczdjE3MC42NjdoMjMuMjczdi04My44MThjMTMuOTA4LTguMDQ5LDIzLjI3My0yMy4wNzcsMjMuMjczLTQwLjMwNA0KCUMzMDIuNTQ1LDQ0LjExMSwyODEuNzA1LDIzLjI3MywyNTYsMjMuMjczeiIvPg0KPHJlY3QgeT0iMjQwLjQ4NSIgc3R5bGU9ImZpbGw6IzkzQzdFRjsiIHdpZHRoPSIyNDguMjQyIiBoZWlnaHQ9IjEyNC4xMjEiLz4NCjxyZWN0IHg9IjI2My43NTgiIHk9IjI0MC40ODUiIHN0eWxlPSJmaWxsOiM1QThCQjA7IiB3aWR0aD0iMjQ4LjI0MiIgaGVpZ2h0PSIxMjQuMTIxIi8+DQo8cmVjdCB4PSIxODYuMTgyIiB5PSIzNjQuNjA2IiBzdHlsZT0iZmlsbDojOTNDN0VGOyIgd2lkdGg9IjEzOS42MzYiIGhlaWdodD0iMTI0LjEyMSIvPg0KPHJlY3QgeD0iMjU2IiB5PSIzNjQuNjA2IiBzdHlsZT0iZmlsbDojNUE4QkIwOyIgd2lkdGg9IjY5LjgxOCIgaGVpZ2h0PSIxMjQuMTIxIi8+DQo8cmVjdCB4PSI0Ni41NDUiIHk9IjE2Mi45MDkiIHN0eWxlPSJmaWxsOiNDQ0U5Rjk7IiB3aWR0aD0iNDE4LjkwOSIgaGVpZ2h0PSIyNzkuMjczIi8+DQo8cmVjdCB4PSIyNTYiIHk9IjE2Mi45MDkiIHN0eWxlPSJmaWxsOiM5M0M3RUY7IiB3aWR0aD0iMjA5LjQ1NSIgaGVpZ2h0PSIyNzkuMjczIi8+DQo8cGF0aCBzdHlsZT0iZmlsbDojM0M1RDc2OyIgZD0iTTE5My45MzksMjcxLjUxNWMwLDE3LjEzOC0xMy44OTQsMzEuMDMtMzEuMDMsMzEuMDNsMCwwYy0xNy4xMzYsMC0zMS4wMy0xMy44OTItMzEuMDMtMzEuMDNsMCwwDQoJYzAtMTcuMTM4LDEzLjg5NC0zMS4wMywzMS4wMy0zMS4wM2wwLDBDMTgwLjA0NiwyNDAuNDg1LDE5My45MzksMjU0LjM3NywxOTMuOTM5LDI3MS41MTVMMTkzLjkzOSwyNzEuNTE1eiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6IzFFMkUzQjsiIGQ9Ik0zODAuMTIxLDI3MS41MTVjMCwxNy4xMzgtMTMuODk0LDMxLjAzLTMxLjAzLDMxLjAzbDAsMGMtMTcuMTM3LDAtMzEuMDMtMTMuODkyLTMxLjAzLTMxLjAzbDAsMA0KCWMwLTE3LjEzOCwxMy44OTQtMzEuMDMsMzEuMDMtMzEuMDNsMCwwQzM2Ni4yMjcsMjQwLjQ4NSwzODAuMTIxLDI1NC4zNzcsMzgwLjEyMSwyNzEuNTE1TDM4MC4xMjEsMjcxLjUxNXoiLz4NCjxwYXRoIHN0eWxlPSJmaWxsOiMzQzVENzY7IiBkPSJNMTg2LjE4MiwzNDkuMDkxYzAsMzguNTU4LDMxLjI1OCw2OS44MTgsNjkuODE4LDY5LjgxOGwwLDBjMzguNTU4LDAsNjkuODE4LTMxLjI2LDY5LjgxOC02OS44MTgNCglIMTg2LjE4MnoiLz4NCjxwYXRoIHN0eWxlPSJmaWxsOiMxRTJFM0I7IiBkPSJNMjU2LDM0OS4wOTFjMCwzOC41NTgsMCw0Ni41NDUsMCw2OS44MThsMCwwYzM4LjU1OCwwLDY5LjgxOC0zMS4yNiw2OS44MTgtNjkuODE4SDI1NnoiLz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K',
   userAvatar: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgLTIwOC41IDIxIDEwMCAxMDAiIGlkPSJMYXllcl8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9Ii0yMDguNSAyMSAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PGc+PGNpcmNsZSBjeD0iLTE1OC41IiBjeT0iNzEiIGZpbGw9IiNGNUVFRTUiIGlkPSJNYXNrIiByPSI1MCIvPjxnPjxkZWZzPjxjaXJjbGUgY3g9Ii0xNTguNSIgY3k9IjcxIiBpZD0iTWFza18yXyIgcj0iNTAiLz48L2RlZnM+PGNsaXBQYXRoIGlkPSJNYXNrXzRfIj48dXNlIG92ZXJmbG93PSJ2aXNpYmxlIiB4bGluazpocmVmPSIjTWFza18yXyIvPjwvY2xpcFBhdGg+PHBhdGggY2xpcC1wYXRoPSJ1cmwoI01hc2tfNF8pIiBkPSJNLTEwOC41LDEyMXYtMTRjMCwwLTIxLjItNC45LTI4LTYuN2MtMi41LTAuNy03LTMuMy03LTEyICAgICBjMC0xLjcsMC02LjMsMC02LjNoLTE1aC0xNWMwLDAsMCw0LjYsMCw2LjNjMCw4LjctNC41LDExLjMtNywxMmMtNi44LDEuOS0yOC4xLDcuMy0yOC4xLDYuN3YxNGg1MC4xSC0xMDguNXoiIGZpbGw9IiNFNkMxOUMiIGlkPSJNYXNrXzNfIi8+PGcgY2xpcC1wYXRoPSJ1cmwoI01hc2tfNF8pIj48ZGVmcz48cGF0aCBkPSJNLTEwOC41LDEyMXYtMTRjMCwwLTIxLjItNC45LTI4LTYuN2MtMi41LTAuNy03LTMuMy03LTEyYzAtMS43LDAtNi4zLDAtNi4zaC0xNWgtMTVjMCwwLDAsNC42LDAsNi4zICAgICAgIGMwLDguNy00LjUsMTEuMy03LDEyYy02LjgsMS45LTI4LjEsNy4zLTI4LjEsNi43djE0aDUwLjFILTEwOC41eiIgaWQ9Ik1hc2tfMV8iLz48L2RlZnM+PGNsaXBQYXRoIGlkPSJNYXNrXzVfIj48dXNlIG92ZXJmbG93PSJ2aXNpYmxlIiB4bGluazpocmVmPSIjTWFza18xXyIvPjwvY2xpcFBhdGg+PHBhdGggY2xpcC1wYXRoPSJ1cmwoI01hc2tfNV8pIiBkPSJNLTE1OC41LDEwMC4xYzEyLjcsMCwyMy0xOC42LDIzLTM0LjQgICAgICBjMC0xNi4yLTEwLjMtMjQuNy0yMy0yNC43cy0yMyw4LjUtMjMsMjQuN0MtMTgxLjUsODEuNS0xNzEuMiwxMDAuMS0xNTguNSwxMDAuMXoiIGZpbGw9IiNENEIwOEMiIGlkPSJoZWFkLXNoYWRvdyIvPjwvZz48L2c+PHBhdGggZD0iTS0xNTguNSw5NmMxMi43LDAsMjMtMTYuMywyMy0zMWMwLTE1LjEtMTAuMy0yMy0yMy0yM3MtMjMsNy45LTIzLDIzICAgIEMtMTgxLjUsNzkuNy0xNzEuMiw5Ni0xNTguNSw5NnoiIGZpbGw9IiNGMkNFQTUiIGlkPSJoZWFkIi8+PC9nPjwvc3ZnPg==',
