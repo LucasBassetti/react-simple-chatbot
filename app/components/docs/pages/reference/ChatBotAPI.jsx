@@ -118,6 +118,12 @@ const properties = [
     description: 'Override the default opened state. This prop can just be used if floating is true. You must use the callback prop toggleFloating to update the opened prop',
   },
   {
+    name: 'placeholder',
+    type: 'PropTypes.string',
+    defaultValue: <code>Type the message ...</code>,
+    description: 'Chatbot input placeholder',
+  },
+  {
     name: 'steps',
     type: 'PropTypes.array',
     defaultValue: '',
