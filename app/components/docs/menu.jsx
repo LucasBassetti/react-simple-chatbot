@@ -28,6 +28,7 @@ import {
 // Others
 import {
   Contribute,
+  Donate,
   Releases,
 } from './pages/others';
 
@@ -128,6 +129,11 @@ const menu = [
         href: '/docs/contribute',
         title: 'How to Contribute',
         component: <Contribute />,
+      },
+      {
+        href: '/docs/donate',
+        title: 'Donate',
+        component: <Donate />,
       },
       {
         href: '/docs/releases',
