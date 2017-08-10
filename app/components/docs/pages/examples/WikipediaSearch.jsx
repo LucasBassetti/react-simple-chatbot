@@ -21,14 +21,14 @@ class DBPedia extends Component {
     const self = this;
     const { steps } = this.props;
     const search = steps.search.value;
-    const endpoint = encodeURI('https://dbpedia.org');
-    const query = encodeURI(`
+    const endpoint = encodeURIComponent('http://dbpedia.org').replace(/%20/g, '+');
+    const query = encodeURIComponent(`
       select * where {
       ?x rdfs:label "${search}"@en .
       ?x rdfs:comment ?comment .
       FILTER (lang(?comment) = 'en')
       } LIMIT 100
-    `);
+    `).replace(/%20/g, '+');
 
     const queryUrl = `https://dbpedia.org/sparql/?default-graph-uri=${endpoint}&query=${query}&format=json`;
 
