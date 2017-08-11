@@ -366,8 +366,7 @@ class ChatBot extends Component {
     } = this.props;
     const { options, component, asMessage } = step;
     const steps = {};
-    const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
-    const previousStep = stepIndex > 0 ? renderedSteps[stepIndex - 1] : {};
+    const previousStep = index > 0 ? renderedSteps[index - 1] : {};
 
     for (let i = 0, len = previousSteps.length; i < len; i += 1) {
       const ps = previousSteps[i];
