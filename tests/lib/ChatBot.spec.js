@@ -168,6 +168,7 @@ describe('ChatBot', () => {
       <ChatBot
         floating={true}
         botDelay={0}
+        cache={true}
         userDelay={0}
         customDelay={0}
         handleEnd={() => {}}
@@ -257,6 +258,11 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
       wrapper.find(FloatButton).simulate('click');
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+    });
+
+    it('should cache the step', () => {
+      const data = JSON.parse(localStorage.getItem('rsc_cache'));
+      expect(data.renderedSteps.length).to.be.equal(1);
     });
   });
 });

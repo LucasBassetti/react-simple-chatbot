@@ -21,7 +21,7 @@ class CustomStep extends Component {
 
     setTimeout(() => {
       this.setState({ loading: false }, () => {
-        if (!waitAction) {
+        if (!waitAction && !step.rendered) {
           this.props.triggerNextStep();
         }
       });

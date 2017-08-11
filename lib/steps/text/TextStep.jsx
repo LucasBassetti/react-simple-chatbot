@@ -24,7 +24,7 @@ class TextStep extends Component {
     const isComponentWatingUser = component && waitAction;
     setTimeout(() => {
       this.setState({ loading: false }, () => {
-        if (!isComponentWatingUser) {
+        if (!isComponentWatingUser && !step.rendered) {
           this.props.triggerNextStep();
         }
       });

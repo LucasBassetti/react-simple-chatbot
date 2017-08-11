@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Random from 'random-id';
 import { CustomStep, OptionsStep, TextStep } from './steps';
 import schema from './schemas/schema';
+import * as storage from './storage';
 import ChatBotContainer from './ChatBotContainer';
 import Content from './Content';
 import Header from './Header';
@@ -79,13 +80,26 @@ class ChatBot extends Component {
 
     schema.checkInvalidIds(steps);
 
-    const currentStep = this.props.steps[0];
-    const renderedSteps = [steps[currentStep.id]];
-    const previousSteps = [steps[currentStep.id]];
+    const {
+      currentStep,
+      previousStep,
+      previousSteps,
+      renderedSteps,
+    } = storage.getData({
+      cache: this.props.cache,
+      firstStep: this.props.steps[0],
+      steps,
+    }, () => {
+      // focus input if last step cached is a user step
+      this.setState({ disabled: false }, () => {
+        this.input.focus();
+      });
+    });
 
     this.setState({
       currentStep,
       defaultUserSettings,
+      previousStep,
       previousSteps,
       renderedSteps,
       steps,
@@ -139,6 +153,7 @@ class ChatBot extends Component {
       const option = currentStep.options.filter(o => o.value === data.value)[0];
       delete currentStep.options;
 
+      // replace choose option for user message
       currentStep = Object.assign(
         {},
         currentStep,
@@ -162,9 +177,7 @@ class ChatBot extends Component {
         previousSteps,
       });
     } else if (currentStep.trigger) {
-      const isReplace = currentStep.replace && !currentStep.option;
-
-      if (isReplace) {
+      if (currentStep.replace) {
         renderedSteps.pop();
       }
 
@@ -201,26 +214,37 @@ class ChatBot extends Component {
         }
       });
     }
+
+    if (this.props.cache) {
+      setTimeout(() => {
+        storage.setData({
+          currentStep,
+          previousStep,
+          previousSteps,
+          renderedSteps,
+        });
+      }, 300);
+    }
   }
 
   handleEnd() {
-    const { previousSteps } = this.state;
-
-    const renderedSteps = previousSteps.map((step) => {
-      const { id, message, value } = step;
-      return { id, message, value };
-    });
-
-    const steps = [];
-
-    for (let i = 0, len = previousSteps.length; i < len; i += 1) {
-      const { id, message, value } = previousSteps[i];
-      steps[id] = { id, message, value };
-    }
-
-    const values = previousSteps.filter(step => step.value).map(step => step.value);
-
     if (this.props.handleEnd) {
+      const { previousSteps } = this.state;
+
+      const renderedSteps = previousSteps.map((step) => {
+        const { id, message, value } = step;
+        return { id, message, value };
+      });
+
+      const steps = [];
+
+      for (let i = 0, len = previousSteps.length; i < len; i += 1) {
+        const { id, message, value } = previousSteps[i];
+        steps[id] = { id, message, value };
+      }
+
+      const values = previousSteps.filter(step => step.value).map(step => step.value);
+
       this.props.handleEnd({ renderedSteps, steps, values });
     }
   }
@@ -339,15 +363,7 @@ class ChatBot extends Component {
     return false;
   }
 
-  closeChatBot({ opened }) {
-    if (this.props.toggleFloating) {
-      this.props.toggleFloating({ opened });
-    } else {
-      this.setState({ opened });
-    }
-  }
-
-  openChatBot({ opened }) {
+  toggleChatBot(opened) {
     if (this.props.toggleFloating) {
       this.props.toggleFloating({ opened });
     } else {
@@ -453,7 +469,7 @@ class ChatBot extends Component {
           floating &&
           <HeaderIcon
             className="rsc-header-close-button"
-            onClick={() => this.closeChatBot({ opened: false })}
+            onClick={() => this.toggleChatBot(false)}
           >
             <CloseIcon />
           </HeaderIcon>
@@ -468,7 +484,7 @@ class ChatBot extends Component {
           <FloatButton
             className="rsc-float-button"
             opened={opened}
-            onClick={() => this.openChatBot({ opened: true })}
+            onClick={() => this.toggleChatBot(true)}
           >
             <ChatIcon />
           </FloatButton>
@@ -526,11 +542,11 @@ class ChatBot extends Component {
 }
 
 ChatBot.propTypes = {
-  steps: PropTypes.array.isRequired,
   avatarStyle: PropTypes.object,
   botAvatar: PropTypes.string,
   botDelay: PropTypes.number,
   bubbleStyle: PropTypes.object,
+  cache: PropTypes.bool,
   className: PropTypes.string,
   contentStyle: PropTypes.object,
   customDelay: PropTypes.number,
@@ -548,6 +564,7 @@ ChatBot.propTypes = {
   opened: PropTypes.bool,
   toggleFloating: PropTypes.func,
   placeholder: PropTypes.string,
+  steps: PropTypes.array.isRequired,
   style: PropTypes.object,
   submitButtonStyle: PropTypes.object,
   userAvatar: PropTypes.string,
@@ -558,6 +575,7 @@ ChatBot.defaultProps = {
   avatarStyle: {},
   botDelay: 1000,
   bubbleStyle: {},
+  cache: false,
   className: '',
   contentStyle: {},
   customStyle: {},

@@ -3,8 +3,9 @@
     "airbnb"
   ],
   "globals": {
-    document: true,
     Audio: true,
+    document: true,
+    localStorage: true,
   },
   "rules": {
     "no-console": ["off"],
