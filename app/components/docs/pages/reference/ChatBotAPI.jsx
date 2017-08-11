@@ -28,6 +28,12 @@ const properties = [
     description: 'The style object to use to override the bubble element',
   },
   {
+    name: 'cache',
+    type: 'PropTypes.bool',
+    defaultValue: <code>false</code>,
+    description: 'Rendered steps will be cached in localStorage. The cache will be clean automatically when you get the final step. Also, you can do it manually using localStorage.removeItem(\'rsc_cache\')',
+  },
+  {
     name: 'className',
     type: 'PropTypes.string',
     defaultValue: '',
