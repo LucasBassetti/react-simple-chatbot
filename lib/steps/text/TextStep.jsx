@@ -46,6 +46,8 @@ class TextStep extends Component {
       });
     }
 
+    // Account for message being a callback which returns a string
+    message = (typeof message === 'function') ? message() : message;
     message = message.replace(/{previousValue}/g, previousValue);
 
     return message;
