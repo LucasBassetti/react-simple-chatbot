@@ -32,12 +32,17 @@ class TextStep extends Component {
   }
 
   renderMessage() {
-    const { previousValue, step } = this.props;
+    const {
+      previousValue,
+      step,
+      steps,
+      previousStep,
+      triggerNextStep,
+    } = this.props;
     const { component } = step;
     let { message } = step;
 
     if (component) {
-      const { steps, previousStep, triggerNextStep } = this.props;
       return React.cloneElement(component, {
         step,
         steps,
@@ -47,8 +52,9 @@ class TextStep extends Component {
     }
 
     // Account for message being a callback which returns a string
-    message = (typeof message === 'function') ? message() : message;
-    message = message.replace(/{previousValue}/g, previousValue);
+    message = (typeof message === 'function') ?
+      message({ previousValue, steps }) :
+      message.replace(/{previousValue}/g, previousValue);
 
     return message;
   }

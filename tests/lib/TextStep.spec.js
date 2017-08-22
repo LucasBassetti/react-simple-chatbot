@@ -133,6 +133,38 @@ describe('TextStep', () => {
     });
   });
 
+  describe('Function text', () => {
+    const settings = {
+      step: {
+        id: '1',
+        message: () => 'Hello',
+        delay: 1000,
+        user: true,
+        bubbleColor: '#eee',
+        fontColor: '#000',
+        avatar: '',
+      },
+      isFirst: false,
+      isLast: true,
+      hideBotAvatar: false,
+      hideUserAvatar: false,
+      avatarStyle: {},
+      bubbleStyle: {},
+      triggerNextStep: () => {},
+    };
+
+    const wrapper = mount(<TextStep {...settings} />);
+    wrapper.setState({ loading: false });
+
+    it('should render bubble without avatar (not first)', () => {
+      expect(wrapper.find(Image).exists()).to.be.equal(false);
+    });
+
+    it('should render the message "Hello"', () => {
+      expect(wrapper.find(Bubble).text()).to.be.equal('Hello');
+    });
+  });
+
   describe('Component text', () => {
     const settings = {
       step: {

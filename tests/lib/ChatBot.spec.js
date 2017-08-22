@@ -176,6 +176,11 @@ describe('ChatBot', () => {
           {
             id: '1',
             message: 'Hello World',
+            trigger: '2',
+          },
+          {
+            id: '2',
+            message: 'Bye',
             end: true,
           },
         ]}
@@ -195,6 +200,11 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
       wrapper.find(FloatButton).simulate('click');
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+    });
+
+    it('should cache the steps', () => {
+      const data = JSON.parse(localStorage.getItem('rsc_cache'));
+      expect(data.renderedSteps.length).to.be.equal(2);
     });
   });
 
@@ -258,11 +268,6 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
       wrapper.find(FloatButton).simulate('click');
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
-    });
-
-    it('should cache the step', () => {
-      const data = JSON.parse(localStorage.getItem('rsc_cache'));
-      expect(data.renderedSteps.length).to.be.equal(1);
     });
   });
 });
