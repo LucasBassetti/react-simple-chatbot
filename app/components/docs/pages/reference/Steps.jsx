@@ -9,6 +9,11 @@ const textStepCode =
 `{
   id: '1',
   message: 'Hello World',
+  trigger: '2',
+},
+{
+  id: '2',
+  message: ({ previousValue, steps }) => 'Hello',
   end: true,
 }
 `;
@@ -61,9 +66,9 @@ const sections = [
       },
       {
         name: 'message',
-        type: 'String',
+        type: 'String | Function',
         required: 'true',
-        description: 'The text message',
+        description: 'The text message. If function, it will receive ({ previousValue, steps }) params',
       },
       {
         name: 'trigger',
