@@ -42,6 +42,12 @@ ReactDOM.render(
 );
 ```
 
+## React Simple Chatbot on midia
+
+1. [webdesignerdepot](https://www.webdesignerdepot.com/2017/08/whats-new-for-designers-august-2017/)
+2. [blogduwebdesign](http://www.blogduwebdesign.com/webdesign/ressources-web-du-lundi-aout-164/2507)
+3. [codrops](https://tympanus.net/codrops/collective/collective-335/)
+
 ## Build with `react-simple-chatbot`
 
 1. [Seth Loh Website](https://github.com/lackdaz/lackdaz.github.io) - Personal website of Seth Loh ([demo](https://www.sethloh.com))

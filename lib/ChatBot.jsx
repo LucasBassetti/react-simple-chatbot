@@ -49,6 +49,8 @@ class ChatBot extends Component {
     const {
       botDelay,
       botAvatar,
+      cache,
+      cacheName,
       customDelay,
       userAvatar,
       userDelay,
@@ -86,7 +88,8 @@ class ChatBot extends Component {
       previousSteps,
       renderedSteps,
     } = storage.getData({
-      cache: this.props.cache,
+      cacheName,
+      cache,
       firstStep: this.props.steps[0],
       steps,
     }, () => {
@@ -215,9 +218,10 @@ class ChatBot extends Component {
       });
     }
 
-    if (this.props.cache) {
+    const { cache, cacheName } = this.props;
+    if (cache) {
       setTimeout(() => {
-        storage.setData({
+        storage.setData(cacheName, {
           currentStep,
           previousStep,
           previousSteps,
@@ -547,6 +551,7 @@ ChatBot.propTypes = {
   botDelay: PropTypes.number,
   bubbleStyle: PropTypes.object,
   cache: PropTypes.bool,
+  cacheName: PropTypes.string,
   className: PropTypes.string,
   contentStyle: PropTypes.object,
   customDelay: PropTypes.number,
@@ -576,6 +581,7 @@ ChatBot.defaultProps = {
   botDelay: 1000,
   bubbleStyle: {},
   cache: false,
+  cacheName: 'rsc_cache',
   className: '',
   contentStyle: {},
   customStyle: {},
