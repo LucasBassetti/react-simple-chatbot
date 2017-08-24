@@ -14,6 +14,11 @@ const textStepCode =
 {
   id: '2',
   message: ({ previousValue, steps }) => 'Hello',
+  trigger: ({ value, steps }) => '3',
+},
+{
+  id: '3',
+  message: 'Bye',
   end: true,
 }
 `;
@@ -72,7 +77,7 @@ const sections = [
       },
       {
         name: 'trigger',
-        type: 'String | Number',
+        type: 'String | Number | Function',
         required: 'false',
         description: 'The id of next step to be triggered',
       },
@@ -114,7 +119,7 @@ const sections = [
       },
       {
         name: 'trigger',
-        type: 'String | Number',
+        type: 'String | Number | Function',
         required: 'false',
         description: 'The id of next step to be triggered',
       },
@@ -192,7 +197,7 @@ const sections = [
       },
       {
         name: 'trigger',
-        type: 'String | Number',
+        type: 'String | Number | Function',
         required: 'false',
         description: 'The id of next step to be triggered',
       },
@@ -228,7 +233,7 @@ const sections = [
       },
       {
         name: 'trigger',
-        type: 'String | Number',
+        type: 'String | Number | Function',
         required: 'true',
         description: 'The id of next step to be triggered after update',
       },

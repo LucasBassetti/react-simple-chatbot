@@ -34,6 +34,12 @@ const properties = [
     description: 'Rendered steps will be cached in localStorage. The cache will be clean automatically when you get the final step. Also, you can do it manually using localStorage.removeItem(\'rsc_cache\')',
   },
   {
+    name: 'cacheName',
+    type: 'PropTypes.string',
+    defaultValue: <code>rsc_cache</code>,
+    description: 'Cache name to be used in localStorage',
+  },
+  {
     name: 'className',
     type: 'PropTypes.string',
     defaultValue: '',
