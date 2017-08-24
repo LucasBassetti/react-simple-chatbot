@@ -39,6 +39,8 @@ class ChatBot extends Component {
     };
 
     this.renderStep = this.renderStep.bind(this);
+    this.getTriggeredStep = this.getTriggeredStep.bind(this);
+    this.generateRenderedStepsById = this.generateRenderedStepsById.bind(this);
     this.triggerNextStep = this.triggerNextStep.bind(this);
     this.onValueChange = this.onValueChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -82,6 +84,14 @@ class ChatBot extends Component {
 
     schema.checkInvalidIds(steps);
 
+    const firstStep = this.props.steps[0];
+
+    if (firstStep.message) {
+      const message = firstStep.message;
+      firstStep.message = typeof message === 'function' ? message() : message;
+      steps[firstStep.id].message = firstStep.message;
+    }
+
     const {
       currentStep,
       previousStep,
@@ -90,7 +100,7 @@ class ChatBot extends Component {
     } = storage.getData({
       cacheName,
       cache,
-      firstStep: this.props.steps[0],
+      firstStep,
       steps,
     }, () => {
       // focus input if last step cached is a user step
@@ -133,6 +143,31 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   }
 
+  getTriggeredStep(trigger, value) {
+    const steps = this.generateRenderedStepsById();
+    return (typeof trigger === 'function') ? trigger({ value, steps }) : trigger;
+  }
+
+  getStepMessage(message) {
+    const { previousSteps } = this.state;
+    const lastStepIndex = previousSteps.length > 0 ? previousSteps.length - 1 : 0;
+    const steps = this.generateRenderedStepsById();
+    const previousValue = previousSteps[lastStepIndex].value;
+    return (typeof message === 'function') ? message({ previousValue, steps }) : message;
+  }
+
+  generateRenderedStepsById() {
+    const { previousSteps } = this.state;
+    const steps = {};
+
+    for (let i = 0, len = previousSteps.length; i < len; i += 1) {
+      const { id, message, value } = previousSteps[i];
+      steps[id] = { id, message, value };
+    }
+
+    return steps;
+  }
+
   triggerNextStep(data) {
     const {
       defaultUserSettings,
@@ -147,13 +182,14 @@ class ChatBot extends Component {
       currentStep.value = data.value;
     }
     if (data && data.trigger) {
-      currentStep.trigger = data.trigger;
+      currentStep.trigger = this.getTriggeredStep(data.trigger, data.value);
     }
 
     if (isEnd) {
       this.handleEnd();
     } else if (currentStep.options && data) {
       const option = currentStep.options.filter(o => o.value === data.value)[0];
+      const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
       delete currentStep.options;
 
       // replace choose option for user message
@@ -164,8 +200,8 @@ class ChatBot extends Component {
         defaultUserSettings,
         {
           user: true,
-          trigger: option.trigger,
           message: option.label,
+          trigger,
         },
       );
 
@@ -184,9 +220,12 @@ class ChatBot extends Component {
         renderedSteps.pop();
       }
 
-      let nextStep = Object.assign({}, steps[currentStep.trigger]);
+      const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);
+      let nextStep = Object.assign({}, steps[trigger]);
 
-      if (nextStep.update) {
+      if (nextStep.message) {
+        nextStep.message = this.getStepMessage(nextStep.message);
+      } else if (nextStep.update) {
         const updateStep = nextStep;
         nextStep = Object.assign({}, steps[updateStep.update]);
 
@@ -376,7 +415,7 @@ class ChatBot extends Component {
   }
 
   renderStep(step, index) {
-    const { renderedSteps, previousSteps } = this.state;
+    const { renderedSteps } = this.state;
     const {
       avatarStyle,
       bubbleStyle,
@@ -385,18 +424,8 @@ class ChatBot extends Component {
       hideUserAvatar,
     } = this.props;
     const { options, component, asMessage } = step;
-    const steps = {};
+    const steps = this.generateRenderedStepsById();
     const previousStep = index > 0 ? renderedSteps[index - 1] : {};
-
-    for (let i = 0, len = previousSteps.length; i < len; i += 1) {
-      const ps = previousSteps[i];
-
-      steps[ps.id] = {
-        id: ps.id,
-        message: ps.message,
-        value: ps.value,
-      };
-    }
 
     if (component && !asMessage) {
       return (

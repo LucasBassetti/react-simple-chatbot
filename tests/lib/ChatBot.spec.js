@@ -37,7 +37,7 @@ describe('ChatBot', () => {
           {
             id: 'update',
             update: 'user',
-            trigger: '2',
+            trigger: () => '2',
           },
           {
             id: '2',
@@ -59,7 +59,7 @@ describe('ChatBot', () => {
           {
             id: '5',
             options: [
-              { value: 'op1', label: 'Option 1', trigger: '6' },
+              { value: 'op1', label: 'Option 1', trigger: () => '6' },
               { value: 'op2', label: 'Option 2', trigger: '6' },
             ],
           },
@@ -180,7 +180,7 @@ describe('ChatBot', () => {
           },
           {
             id: '2',
-            message: 'Bye',
+            message: () => 'Bye',
             end: true,
           },
         ]}

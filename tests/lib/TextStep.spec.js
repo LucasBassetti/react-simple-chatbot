@@ -137,7 +137,7 @@ describe('TextStep', () => {
     const settings = {
       step: {
         id: '1',
-        message: () => 'Hello',
+        message: 'Hello',
         delay: 1000,
         user: true,
         bubbleColor: '#eee',

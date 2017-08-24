@@ -8,6 +8,7 @@
     localStorage: true,
   },
   "rules": {
+    "guard-for-in": ["off"],
     "no-console": ["off"],
     "no-use-before-define": ["off"],
     "no-restricted-syntax": ["off"],
