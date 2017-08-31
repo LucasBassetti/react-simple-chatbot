@@ -29,6 +29,7 @@ import {
 import {
   Contribute,
   Donate,
+  ReactNative,
   Releases,
 } from './pages/others';
 
@@ -134,6 +135,11 @@ const menu = [
         href: '/docs/donate',
         title: 'Donate',
         component: <Donate />,
+      },
+      {
+        href: '/docs/react-native',
+        title: 'React Native',
+        component: <ReactNative />,
       },
       {
         href: '/docs/releases',
