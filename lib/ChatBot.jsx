@@ -489,6 +489,7 @@ class ChatBot extends Component {
       placeholder,
       style,
       submitButtonStyle,
+      chatBoxWidth
     } = this.props;
 
     const header = headerComponent || (
@@ -527,6 +528,7 @@ class ChatBot extends Component {
           floating={floating}
           opened={opened}
           style={style}
+          chatBoxWidth={chatBoxWidth}
         >
           {!hideHeader && header}
           <Content
@@ -586,6 +588,7 @@ ChatBot.propTypes = {
   customDelay: PropTypes.number,
   customStyle: PropTypes.object,
   floating: PropTypes.bool,
+  chatBoxWidth: PropTypes.string,
   footerStyle: PropTypes.object,
   handleEnd: PropTypes.func,
   headerComponent: PropTypes.element,
@@ -616,6 +619,7 @@ ChatBot.defaultProps = {
   customStyle: {},
   customDelay: 1000,
   floating: false,
+  chatBoxWidth:"350px",
   footerStyle: {},
   handleEnd: undefined,
   headerComponent: undefined,
