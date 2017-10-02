@@ -10,6 +10,7 @@ const Header = styled.div`
   height: 56px;
   justify-content: space-between;
   padding: 0 10px;
+  font-size:${({ theme }) => theme.headerFontSize};
 `;
 
 Header.defaultProps = {
