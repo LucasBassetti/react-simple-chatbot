@@ -13,6 +13,7 @@ const theme = {
   fontFamily: 'Helvetica Neue',
   headerBgColor: '#6e48aa',
   headerFontColor: '#fff',
+  headerFontSize: '15px',
   botBubbleColor: '#6E48AA',
   botFontColor: '#fff',
   userBubbleColor: '#fff',
