@@ -35,7 +35,7 @@ describe('TextStep', () => {
     wrapper.setState({ loading: false });
 
     it('should render', () => {
-      expect(wrapper.hasClass('rsc-ts')).to.be.equal(true);
+      expect(wrapper.find(TextStep).length).to.be.equal(1);
     });
 
     it('should render bubble with background color equal \'#eee\'', () => {

@@ -2,4 +2,4 @@ language: node_js
 node_js:
   - 8
 before_install:
-  - "npm install styled-components"
+  - "npm install react react-dom styled-components"

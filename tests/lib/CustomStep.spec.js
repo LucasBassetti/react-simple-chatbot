@@ -33,7 +33,6 @@ describe('CustomStep', () => {
     wrapper.setState({ loading: false });
 
     it('should render', () => {
-      expect(wrapper.hasClass('rsc-cs')).to.be.equal(true);
       expect(wrapper.find(CustomStepContainer)).to.have.length(1);
     });
 
@@ -68,7 +67,6 @@ describe('CustomStep', () => {
     wrapper.setState({ loading: false });
 
     it('should render', () => {
-      expect(wrapper.hasClass('rsc-cs')).to.be.equal(true);
       expect(wrapper.find(CustomStepContainer)).to.have.length(1);
     });
 
