@@ -46,8 +46,6 @@ class ChatBot extends Component {
     this.onRecognitionEnd = this.onRecognitionEnd.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmitButton = this.handleSubmitButton.bind(this);
-
-    this.recognition = new Recognition(this.onRecognitionChange, this.onRecognitionEnd);
   }
 
   componentWillMount() {
@@ -117,6 +115,12 @@ class ChatBot extends Component {
   }
 
   componentDidMount() {
+    const { recognitionLang } = this.props;
+    this.recognition = new Recognition(
+      this.onRecognitionChange,
+      this.onRecognitionEnd,
+      recognitionLang,
+    );
     this.recognition.setup();
     this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
   }
@@ -594,6 +598,7 @@ ChatBot.propTypes = {
   userAvatar: PropTypes.string,
   userDelay: PropTypes.number,
   width: PropTypes.string,
+  recognitionLang: PropTypes.string,
 };
 
 ChatBot.defaultProps = {
@@ -619,6 +624,7 @@ ChatBot.defaultProps = {
   opened: undefined,
   placeholder: 'Type the message ...',
   speakingPlaceholder: 'Listening ...',
+  recognitionLang: 'en',
   style: {},
   submitButtonStyle: {},
   toggleFloating: undefined,
