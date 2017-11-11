@@ -33,8 +33,11 @@ class ChatBot extends Component {
       inputValue: '',
       inputInvalid: false,
       speaking: false,
+      recognitionSupported: Recognition.isSupported(),
       defaultUserSettings: {},
     };
+
+    this.recognition = new Recognition(this.onRecognitionChange, this.onRecognitionEnd);
 
     this.renderStep = this.renderStep.bind(this);
     this.getTriggeredStep = this.getTriggeredStep.bind(this);
@@ -45,8 +48,6 @@ class ChatBot extends Component {
     this.onRecognitionEnd = this.onRecognitionEnd.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmitButton = this.handleSubmitButton.bind(this);
-
-    this.recognition = new Recognition(this.onRecognitionChange, this.onRecognitionEnd);
   }
 
   componentWillMount() {
@@ -333,8 +334,8 @@ class ChatBot extends Component {
   }
 
   handleSubmitButton() {
-    const { inputValue, speaking } = this.state;
-    if (_.isEmpty(inputValue)) {
+    const { inputValue, speaking, recognitionSupported } = this.state;
+    if (_.isEmpty(inputValue) && recognitionSupported) {
       this.recognition.speak();
       this.setState({ speaking: !speaking });
       return;
@@ -460,7 +461,15 @@ class ChatBot extends Component {
   }
 
   render() {
-    const { disabled, inputInvalid, inputValue, opened, renderedSteps, speaking } = this.state;
+    const {
+      disabled,
+      inputInvalid,
+      inputValue,
+      opened,
+      renderedSteps,
+      speaking,
+      recognitionSupported,
+    } = this.state;
     const {
       className,
       contentStyle,
@@ -487,6 +496,8 @@ class ChatBot extends Component {
         )}
       </Header>
     );
+
+    const icon = _.isEmpty(inputValue) && recognitionSupported ? <MicIcon /> : <SubmitIcon />;
 
     return (
       <div className={`rsc ${className}`}>
@@ -539,7 +550,7 @@ class ChatBot extends Component {
                 disabled={disabled}
                 speaking={speaking}
               >
-                {_.isEmpty(inputValue) ? <MicIcon /> : <SubmitIcon />}
+                {icon}
               </SubmitButton>
             )}
           </Footer>
