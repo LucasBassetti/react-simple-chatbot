@@ -1,5 +1,5 @@
 import { keyframes } from 'styled-components';
-import { rgba } from './rgba';
+import rgba from './rgba';
 
 const loading = keyframes`
   0% { opacity: .2; }
