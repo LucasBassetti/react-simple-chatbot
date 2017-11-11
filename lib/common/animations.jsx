@@ -15,10 +15,4 @@ const invalidInput = keyframes`
   100% { transform: rotate(1deg); }
 `;
 
-const speaking = keyframes`
-0% { box-shadow: 0 0 0 0 rgba(204,169,44, 0.4); }
-70% { box-shadow: 0 0 0 10px rgba(204,169,44, 0); }
-100% { box-shadow: 0 0 0 0 rgba(204,169,44, 0); }
-`;
-
-export { loading, scale, invalidInput, speaking };
+export { loading, scale, invalidInput };

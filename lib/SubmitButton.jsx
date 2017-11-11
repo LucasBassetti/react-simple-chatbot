@@ -1,14 +1,21 @@
-import styled from 'styled-components';
-import { speaking } from './common/animations';
+import styled, { keyframes } from 'styled-components';
+import { rgba } from './common/rgba';
+import defaultTheme from './theme';
 
 const fillFunc = (props) => {
-  const { speaking, invalid } = props;
+  const { speaking, invalid, theme } = props;
 
   if (speaking) {
-    return 'blue';
+    return theme.headerBgColor;
   }
   return invalid ? '#E53935' : '#4a4a4a';
 };
+
+const pulse = color => keyframes`
+  0% { box-shadow: 0 0 0 0 ${rgba(color, 0.4)}; }
+  70% { box-shadow: 0 0 0 10px ${rgba(color, 0)}; }
+  100% { box-shadow: 0 0 0 0 ${rgba(color, 0)}; }
+`;
 
 const SubmitButton = styled.button`
   background-color: transparent;
@@ -23,17 +30,22 @@ const SubmitButton = styled.button`
   position: absolute;
   right: 0;
   top: 0;
-  &:before{
+  &:before {
     content: '';
     position: absolute;
     width: 23px;
     height: 23px;
     border-radius: 50%;
-    animation: ${props => props.speaking ? `${speaking} 2s ease infinite` : ''};
+    animation: ${({ theme, speaking }) =>
+      speaking ? `${pulse(theme.headerBgColor)} 2s ease infinite` : ''};
   }
   &:not(:disabled):hover {
     opacity: 0.7;
   }
 `;
+
+SubmitButton.defaultProps = {
+  theme: defaultTheme,
+};
 
 export default SubmitButton;
