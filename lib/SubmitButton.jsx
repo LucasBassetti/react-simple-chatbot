@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { speaking } from './common/animations';
 
 const fillFunc = (props) => {
   const { speaking, invalid } = props;
@@ -22,7 +23,14 @@ const SubmitButton = styled.button`
   position: absolute;
   right: 0;
   top: 0;
-
+  &:before{
+    content: '';
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    animation: ${props => props.speaking ? `${speaking} 2s ease infinite` : ''};
+  }
   &:not(:disabled):hover {
     opacity: 0.7;
   }
