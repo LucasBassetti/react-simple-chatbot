@@ -33,7 +33,7 @@ class ChatBot extends Component {
       inputValue: '',
       inputInvalid: false,
       speaking: false,
-      recognitionSupported: Recognition.isSupported(),
+      recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
       defaultUserSettings: {},
     };
 
@@ -116,13 +116,16 @@ class ChatBot extends Component {
   }
 
   componentDidMount() {
+    const { recognitionEnable } = this.state;
     const { recognitionLang } = this.props;
-    this.recognition = new Recognition(
-      this.onRecognitionChange,
-      this.onRecognitionEnd,
-      this.onRecognitionStop,
-      recognitionLang,
-    );
+    if (recognitionEnable) {
+      this.recognition = new Recognition(
+        this.onRecognitionChange,
+        this.onRecognitionEnd,
+        this.onRecognitionStop,
+        recognitionLang,
+      );
+    }
     this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
   }
 
@@ -343,8 +346,8 @@ class ChatBot extends Component {
   }
 
   handleSubmitButton() {
-    const { inputValue, speaking, recognitionSupported } = this.state;
-    if ((_.isEmpty(inputValue) || speaking) && recognitionSupported) {
+    const { inputValue, speaking, recognitionEnable } = this.state;
+    if ((_.isEmpty(inputValue) || speaking) && recognitionEnable) {
       this.recognition.speak();
       if (!speaking) {
         this.setState({ speaking: true });
@@ -479,7 +482,7 @@ class ChatBot extends Component {
       opened,
       renderedSteps,
       speaking,
-      recognitionSupported,
+      recognitionEnable,
     } = this.state;
     const {
       className,
@@ -492,7 +495,7 @@ class ChatBot extends Component {
       hideSubmitButton,
       inputStyle,
       placeholder,
-      speakingPlaceholder,
+      recognitionPlaceholder,
       style,
       submitButtonStyle,
       width,
@@ -510,9 +513,9 @@ class ChatBot extends Component {
     );
 
     const icon =
-      (_.isEmpty(inputValue) || speaking) && recognitionSupported ? <MicIcon /> : <SubmitIcon />;
+      (_.isEmpty(inputValue) || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
 
-    const inputPlaceholder = speaking ? speakingPlaceholder : placeholder;
+    const inputPlaceholder = speaking ? recognitionPlaceholder : placeholder;
 
     return (
       <div className={`rsc ${className}`}>
@@ -599,7 +602,7 @@ ChatBot.propTypes = {
   opened: PropTypes.bool,
   toggleFloating: PropTypes.func,
   placeholder: PropTypes.string,
-  speakingPlaceholder: PropTypes.string,
+  recognitionPlaceholder: PropTypes.string,
   steps: PropTypes.array.isRequired,
   style: PropTypes.object,
   submitButtonStyle: PropTypes.object,
@@ -607,6 +610,7 @@ ChatBot.propTypes = {
   userDelay: PropTypes.number,
   width: PropTypes.string,
   recognitionLang: PropTypes.string,
+  recognitionEnable: PropTypes.bool,
 };
 
 ChatBot.defaultProps = {
@@ -631,8 +635,9 @@ ChatBot.defaultProps = {
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
-  speakingPlaceholder: 'Listening ...',
+  recognitionPlaceholder: 'Listening ...',
   recognitionLang: 'en',
+  recognitionEnable: false,
   style: {},
   submitButtonStyle: {},
   toggleFloating: undefined,

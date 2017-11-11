@@ -34,7 +34,7 @@ const steps = [
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
-    <ChatBot steps={steps} />
+    <ChatBot steps={steps} recognitionEnable />
   </ThemeProvider>
 );
 
