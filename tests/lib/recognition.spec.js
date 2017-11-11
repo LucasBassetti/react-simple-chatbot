@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import Recognition from '../../lib/recognition';
 import newSpeechRecognition from '../helpers/corti';
 
-describe.only('Recognition', () => {
+describe('Recognition', () => {
   describe('Recognition is not supported', () => {
     it('should not be supported', () => {
       expect(Recognition.isSupported()).to.be.equal(false);
