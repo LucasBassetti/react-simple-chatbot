@@ -44,6 +44,7 @@ class ChatBot extends Component {
     this.onValueChange = this.onValueChange.bind(this);
     this.onRecognitionChange = this.onRecognitionChange.bind(this);
     this.onRecognitionEnd = this.onRecognitionEnd.bind(this);
+    this.onRecognitionStop = this.onRecognitionStop.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmitButton = this.handleSubmitButton.bind(this);
   }
@@ -119,6 +120,7 @@ class ChatBot extends Component {
     this.recognition = new Recognition(
       this.onRecognitionChange,
       this.onRecognitionEnd,
+      this.onRecognitionStop,
       recognitionLang,
     );
     this.recognition.setup();
@@ -148,6 +150,10 @@ class ChatBot extends Component {
   onRecognitionEnd() {
     this.setState({ speaking: false });
     this.handleSubmitButton();
+  }
+
+  onRecognitionStop() {
+    this.setState({ speaking: false });
   }
 
   onValueChange(event) {
@@ -339,9 +345,11 @@ class ChatBot extends Component {
 
   handleSubmitButton() {
     const { inputValue, speaking, recognitionSupported } = this.state;
-    if (_.isEmpty(inputValue) && recognitionSupported) {
+    if ((_.isEmpty(inputValue) || speaking) && recognitionSupported) {
       this.recognition.speak();
-      this.setState({ speaking: !speaking });
+      if (!speaking) {
+        this.setState({ speaking: true });
+      }
       return;
     }
     this.submitUserMessage();
