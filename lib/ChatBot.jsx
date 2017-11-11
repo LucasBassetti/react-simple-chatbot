@@ -37,8 +37,6 @@ class ChatBot extends Component {
       defaultUserSettings: {},
     };
 
-    this.recognition = new Recognition(this.onRecognitionChange, this.onRecognitionEnd);
-
     this.renderStep = this.renderStep.bind(this);
     this.getTriggeredStep = this.getTriggeredStep.bind(this);
     this.generateRenderedStepsById = this.generateRenderedStepsById.bind(this);
@@ -48,6 +46,8 @@ class ChatBot extends Component {
     this.onRecognitionEnd = this.onRecognitionEnd.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmitButton = this.handleSubmitButton.bind(this);
+
+    this.recognition = new Recognition(this.onRecognitionChange, this.onRecognitionEnd);
   }
 
   componentWillMount() {
@@ -481,6 +481,7 @@ class ChatBot extends Component {
       hideSubmitButton,
       inputStyle,
       placeholder,
+      speakingPlaceholder,
       style,
       submitButtonStyle,
       width,
@@ -498,6 +499,8 @@ class ChatBot extends Component {
     );
 
     const icon = _.isEmpty(inputValue) && recognitionSupported ? <MicIcon /> : <SubmitIcon />;
+
+    const inputPlaceholder = speaking ? speakingPlaceholder : placeholder;
 
     return (
       <div className={`rsc ${className}`}>
@@ -532,7 +535,7 @@ class ChatBot extends Component {
               style={inputStyle}
               innerRef={inputRef => (this.input = inputRef)}
               className="rsc-input"
-              placeholder={inputInvalid ? '' : placeholder}
+              placeholder={inputInvalid ? '' : inputPlaceholder}
               onKeyPress={this.handleKeyPress}
               onChange={this.onValueChange}
               value={inputValue}
@@ -584,6 +587,7 @@ ChatBot.propTypes = {
   opened: PropTypes.bool,
   toggleFloating: PropTypes.func,
   placeholder: PropTypes.string,
+  speakingPlaceholder: PropTypes.string,
   steps: PropTypes.array.isRequired,
   style: PropTypes.object,
   submitButtonStyle: PropTypes.object,
@@ -614,6 +618,7 @@ ChatBot.defaultProps = {
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
+  speakingPlaceholder: 'Listening ...',
   style: {},
   submitButtonStyle: {},
   toggleFloating: undefined,
