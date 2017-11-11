@@ -1,11 +1,10 @@
 {
-  "extends": [
-    "airbnb"
-  ],
+  "extends": ["airbnb"],
   "globals": {
-    Audio: true,
-    document: true,
-    localStorage: true,
+    "window": true,
+    "Audio": true,
+    "document": true,
+    "localStorage": true
   },
   "rules": {
     "guard-for-in": ["off"],
@@ -22,6 +21,6 @@
     "react/jsx-boolean-value": ["off"],
     "react/react-in-jsx-scope": ["off"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/forbid-prop-types": ["off"],
+    "react/forbid-prop-types": ["off"]
   }
 }
