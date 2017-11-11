@@ -18,6 +18,7 @@ import {
   ChatIcon,
   CloseIcon,
   SubmitIcon,
+  MicIcon,
 } from './icons';
 
 class ChatBot extends Component {
@@ -566,7 +567,7 @@ class ChatBot extends Component {
                 invalid={inputInvalid}
                 disabled={disabled}
               >
-                <SubmitIcon />
+                {_.isEmpty(inputValue) ? <MicIcon /> : <SubmitIcon />}
               </SubmitButton>
             }
           </Footer>
