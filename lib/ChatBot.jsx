@@ -122,7 +122,7 @@ class ChatBot extends Component {
       this.onRecognitionEnd,
       this.onRecognitionStop,
       recognitionLang,
-    ).setup();
+    );
     this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
   }
 
