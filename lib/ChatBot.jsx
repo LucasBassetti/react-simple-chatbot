@@ -509,7 +509,8 @@ class ChatBot extends Component {
       </Header>
     );
 
-    const icon = _.isEmpty(inputValue) && recognitionSupported ? <MicIcon /> : <SubmitIcon />;
+    const icon =
+      (_.isEmpty(inputValue) || speaking) && recognitionSupported ? <MicIcon /> : <SubmitIcon />;
 
     const inputPlaceholder = speaking ? speakingPlaceholder : placeholder;
 
