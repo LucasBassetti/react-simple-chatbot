@@ -1,6 +1,6 @@
-import styled, { keyframes } from 'styled-components';
-import { rgba } from './common/rgba';
+import styled from 'styled-components';
 import defaultTheme from './theme';
+import { pulse } from './common/animations';
 
 const fillFunc = (props) => {
   const { speaking, invalid, theme } = props;
@@ -10,12 +10,6 @@ const fillFunc = (props) => {
   }
   return invalid ? '#E53935' : '#4a4a4a';
 };
-
-const pulse = color => keyframes`
-  0% { box-shadow: 0 0 0 0 ${rgba(color, 0.4)}; }
-  70% { box-shadow: 0 0 0 10px ${rgba(color, 0)}; }
-  100% { box-shadow: 0 0 0 0 ${rgba(color, 0)}; }
-`;
 
 const SubmitButton = styled.button`
   background-color: transparent;

@@ -1,4 +1,5 @@
 import { keyframes } from 'styled-components';
+import { rgba } from './rgba';
 
 const loading = keyframes`
   0% { opacity: .2; }
@@ -15,4 +16,10 @@ const invalidInput = keyframes`
   100% { transform: rotate(1deg); }
 `;
 
-export { loading, scale, invalidInput };
+const pulse = color => keyframes`
+  0% { box-shadow: 0 0 0 0 ${rgba(color, 0.4)}; }
+  70% { box-shadow: 0 0 0 10px ${rgba(color, 0)}; }
+  100% { box-shadow: 0 0 0 0 ${rgba(color, 0)}; }
+`;
+
+export { loading, scale, invalidInput, pulse };
