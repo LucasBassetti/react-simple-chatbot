@@ -1,3 +1,4 @@
+/* eslint-disable */
 //! Corti - Replaces the browser's SpeechRecognition with a fake object.
 //! version : 0.2.1
 //! author  : Tal Ater @TalAter

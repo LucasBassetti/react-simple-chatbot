@@ -5,7 +5,6 @@ import Random from 'random-id';
 import { CustomStep, OptionsStep, TextStep } from './steps';
 import schema from './schemas/schema';
 import * as storage from './storage';
-import Recognition from './recognition';
 import ChatBotContainer from './ChatBotContainer';
 import Content from './Content';
 import Header from './Header';
@@ -15,6 +14,7 @@ import FloatButton from './FloatButton';
 import Footer from './Footer';
 import Input from './Input';
 import SubmitButton from './SubmitButton';
+import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 
 class ChatBot extends Component {
@@ -602,15 +602,15 @@ ChatBot.propTypes = {
   opened: PropTypes.bool,
   toggleFloating: PropTypes.func,
   placeholder: PropTypes.string,
+  recognitionEnable: PropTypes.bool,
+  recognitionLang: PropTypes.string,
+  recognitionPlaceholder: PropTypes.string,
   steps: PropTypes.array.isRequired,
   style: PropTypes.object,
   submitButtonStyle: PropTypes.object,
   userAvatar: PropTypes.string,
   userDelay: PropTypes.number,
   width: PropTypes.string,
-  recognitionLang: PropTypes.string,
-  recognitionEnable: PropTypes.bool,
-  recognitionPlaceholder: PropTypes.string,
 };
 
 ChatBot.defaultProps = {
@@ -635,8 +635,8 @@ ChatBot.defaultProps = {
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
-  recognitionLang: 'en',
   recognitionEnable: false,
+  recognitionLang: 'en',
   recognitionPlaceholder: 'Listening ...',
   style: {},
   submitButtonStyle: {},

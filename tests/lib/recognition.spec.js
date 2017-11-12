@@ -1,4 +1,4 @@
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import Recognition from '../../lib/recognition';

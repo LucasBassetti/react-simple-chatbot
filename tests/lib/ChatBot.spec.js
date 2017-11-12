@@ -8,7 +8,7 @@ import FloatButton from '../../lib/FloatButton';
 import Header from '../../lib/Header';
 import HeaderIcon from '../../lib/HeaderIcon';
 import { CloseIcon } from '../../lib/icons';
-import { TextStep, OptionsStep, CustomStep } from '../../lib/steps';
+// import { TextStep, OptionsStep, CustomStep } from '../../lib/steps';
 
 const CustomComponent = () => (
   <div />
