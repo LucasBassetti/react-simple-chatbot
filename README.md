@@ -42,7 +42,7 @@ ReactDOM.render(
 );
 ```
 
-## React Simple Chatbot on midia
+## React Simple Chatbot on media
 
 1. [webdesignerdepot](https://www.webdesignerdepot.com/2017/08/whats-new-for-designers-august-2017/)
 2. [blogduwebdesign](http://www.blogduwebdesign.com/webdesign/ressources-web-du-lundi-aout-164/2507)
