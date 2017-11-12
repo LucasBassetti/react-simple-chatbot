@@ -15,6 +15,7 @@ import {
   PreviousValue,
   SimpleForm,
   Validator,
+  SpeechRecognition,
   WikipediaSearch,
 } from './pages/examples';
 
@@ -50,7 +51,7 @@ const menu = [
       },
       {
         href: '/docs/themes',
-        title: 'Themes',
+        title: 'Theming',
         component: <Themes />,
       },
     ],
@@ -63,6 +64,11 @@ const menu = [
         href: '/docs/previous-value',
         title: 'Previous Value',
         component: <PreviousValue />,
+      },
+      {
+        href: '/docs/speech-recognition',
+        title: 'Speech Recognition',
+        component: <SpeechRecognition />,
       },
       {
         href: '/docs/options',

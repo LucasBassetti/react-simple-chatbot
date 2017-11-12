@@ -132,8 +132,26 @@ const properties = [
   {
     name: 'placeholder',
     type: 'PropTypes.string',
-    defaultValue: <code>Type the message ...</code>,
+    defaultValue: <code>Type the message</code>,
     description: 'Chatbot input placeholder',
+  },
+  {
+    name: 'recognitionEnable',
+    type: 'PropTypes.bool',
+    defaultValue: <code>false</code>,
+    description: 'If true, enable speech recognition for user step',
+  },
+  {
+    name: 'recognitionLang',
+    type: 'PropTypes.string',
+    defaultValue: <code>en</code>,
+    description: 'Chatbot speech recognition language',
+  },
+  {
+    name: 'recognitionPlaceholder',
+    type: 'PropTypes.string',
+    defaultValue: <code>Listening</code>,
+    description: 'Chatbot speech recognition placeholder',
   },
   {
     name: 'steps',

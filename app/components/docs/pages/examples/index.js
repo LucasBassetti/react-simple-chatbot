@@ -5,6 +5,7 @@ import Options from './Options';
 import PreviousValue from './PreviousValue';
 import SimpleForm from './SimpleForm';
 import Validator from './Validator';
+import SpeechRecognition from './SpeechRecognition';
 import WikipediaSearch from './WikipediaSearch';
 
 export {
@@ -15,5 +16,6 @@ export {
   PreviousValue,
   SimpleForm,
   Validator,
+  SpeechRecognition,
   WikipediaSearch,
 };

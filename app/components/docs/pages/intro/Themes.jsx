@@ -11,10 +11,10 @@ import ChatBot from '../../lib/index';
 const theme = {
   background: '#f5f8fb',
   fontFamily: 'Helvetica Neue',
-  headerBgColor: '#6e48aa',
+  headerBgColor: '#EF6C00',
   headerFontColor: '#fff',
   headerFontSize: '15px',
-  botBubbleColor: '#6E48AA',
+  botBubbleColor: '#EF6C00',
   botFontColor: '#fff',
   userBubbleColor: '#fff',
   userFontColor: '#4a4a4a',
@@ -52,6 +52,7 @@ class Themes extends Component {
       fontFamily: 'Helvetica Neue',
       headerBgColor: '#EF6C00',
       headerFontColor: '#fff',
+      headerFontSize: '15px',
       botBubbleColor: '#EF6C00',
       botFontColor: '#fff',
       userBubbleColor: '#fff',
@@ -67,17 +68,17 @@ class Themes extends Component {
     ];
 
     return (
-      <ThemeProvider theme={theme}>
-        <div className="docs-theme">
-          <p>Personalize your chatbot defining a theme for it.</p>
+      <div className="docs-theme">
+        <p>Personalize your chatbot defining a theme for it.</p>
+        <ThemeProvider theme={theme}>
           <ChatBot steps={steps} />
-          <pre>
-            <code className="bash">
-              { themeCode }
-            </code>
-          </pre>
-        </div>
-      </ThemeProvider>
+        </ThemeProvider>
+        <pre>
+          <code className="bash">
+            { themeCode }
+          </code>
+        </pre>
+      </div>
     );
   }
 }

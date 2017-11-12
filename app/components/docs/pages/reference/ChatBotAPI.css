@@ -5,3 +5,7 @@
 .docs-component-1 .red-td {
   color: indianred;
 }
+
+.docs-component-1 table td:nth-child(3) code {
+  padding: 0 !important;
+}
