@@ -462,6 +462,7 @@ class ChatBot extends Component {
         key={index}
         step={step}
         steps={steps}
+        previousStep={previousStep}
         previousValue={previousStep.value}
         triggerNextStep={this.triggerNextStep}
         avatarStyle={avatarStyle}
