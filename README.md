@@ -52,6 +52,7 @@ ReactDOM.render(
 
 1. [Seth Loh Website](https://github.com/lackdaz/lackdaz.github.io) - Personal website of Seth Loh ([demo](https://www.sethloh.com))
 2. [Paul's Website](https://psheon.github.io/) - Personal website of Paul Jiang ([demo](https://psheon.github.io/archives/))
+3. [Cisco Partner Support API Chatbot](https://github.com/btotharye/cisco-pss-api-chatbot) - Code with screenshots to have your own Cisco Serial lookup chatbot.
 
 Built something with `react-simple-chatbot`? Submit a PR and add it to this list!
 
