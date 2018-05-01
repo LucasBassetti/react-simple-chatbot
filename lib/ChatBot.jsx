@@ -428,7 +428,14 @@ class ChatBot extends Component {
 
   renderStep(step, index) {
     const { renderedSteps } = this.state;
-    const { avatarStyle, bubbleStyle, customStyle, hideBotAvatar, hideUserAvatar } = this.props;
+    const {
+      avatarStyle,
+      bubbleStyle,
+      bubbleOptionStyle,
+      customStyle,
+      hideBotAvatar,
+      hideUserAvatar,
+    } = this.props;
     const { options, component, asMessage } = step;
     const steps = this.generateRenderedStepsById();
     const previousStep = index > 0 ? renderedSteps[index - 1] : {};
@@ -452,7 +459,7 @@ class ChatBot extends Component {
           key={index}
           step={step}
           triggerNextStep={this.triggerNextStep}
-          bubbleStyle={bubbleStyle}
+          bubbleOptionStyle={bubbleOptionStyle}
         />
       );
     }
@@ -584,6 +591,7 @@ ChatBot.propTypes = {
   botAvatar: PropTypes.string,
   botDelay: PropTypes.number,
   bubbleStyle: PropTypes.object,
+  bubbleOptionStyle: PropTypes.object,
   cache: PropTypes.bool,
   cacheName: PropTypes.string,
   className: PropTypes.string,
@@ -618,6 +626,7 @@ ChatBot.defaultProps = {
   avatarStyle: {},
   botDelay: 1000,
   bubbleStyle: {},
+  bubbleOptionStyle: {},
   cache: false,
   cacheName: 'rsc_cache',
   className: '',

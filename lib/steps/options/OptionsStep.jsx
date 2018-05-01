@@ -20,7 +20,7 @@ class OptionsStep extends Component {
   }
 
   renderOption(option) {
-    const { bubbleStyle } = this.props;
+    const { bubbleOptionStyle } = this.props;
     const { user } = this.props.step;
     const { value, label } = option;
 
@@ -31,7 +31,7 @@ class OptionsStep extends Component {
       >
         <OptionElement
           className="rsc-os-option-element"
-          style={bubbleStyle}
+          style={bubbleOptionStyle}
           user={user}
           onClick={() => this.onOptionClick({ value })}
         >
@@ -57,7 +57,7 @@ class OptionsStep extends Component {
 OptionsStep.propTypes = {
   step: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
-  bubbleStyle: PropTypes.object.isRequired,
+  bubbleOptionStyle: PropTypes.object.isRequired,
 };
 
 export default OptionsStep;
