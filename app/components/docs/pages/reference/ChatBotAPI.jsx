@@ -22,10 +22,16 @@ const properties = [
     description: 'The delay time of bot messages',
   },
   {
+    name: 'bubbleOptionStyle',
+    type: 'PropTypes.object',
+    defaultValue: '',
+    description: 'The style object used to override the option element',
+  },
+  {
     name: 'bubbleStyle',
     type: 'PropTypes.object',
     defaultValue: '',
-    description: 'The style object to use to override the bubble element',
+    description: 'The style object used to override the bubble element',
   },
   {
     name: 'cache',
