@@ -11,7 +11,7 @@ const Input = styled.input`
   box-shadow: ${props => props.invalid ? 'inset 0 0 2px #E53935' : 'none'};
   box-sizing: border-box;
   color: ${props => props.invalid ? '#E53935' : ''};
-  font-size: 14px;
+  font-size: 16px;
   opacity: ${props => props.disabled && !props.invalid ? '.5' : '1'};
   outline: none;
   padding: ${props => props.hasButton ? '16px 52px 16px 10px' : '16px 10px'};
