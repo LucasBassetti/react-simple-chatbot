@@ -80,7 +80,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-ga": "^2.2.0",
-    "react-simple-chatbot": "git+https://github.com/LucasBassetti/react-simple-chatbot.git",
+    "react-simple-chatbot": "^0.3.1",
     "styled-components": "^2.2.3"
   }
 }

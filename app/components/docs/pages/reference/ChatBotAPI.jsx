@@ -70,6 +70,12 @@ const properties = [
     description: 'The style object to use to override the custom step element',
   },
   {
+    name: 'enableMobileAutoFocus',
+    type: 'PropTypes.bool',
+    defaultValue: <code>false</code>,
+    description: 'Enable mobile input auto focus for user steps',
+  },
+  {
     name: 'floating',
     type: 'PropTypes.bool',
     defaultValue: <code>false</code>,
