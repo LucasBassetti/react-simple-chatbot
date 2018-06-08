@@ -18,14 +18,19 @@ const steps = [
   {
     id: '1',
     message: 'Hello World',
-    end: true,
+    trigger: '2',
+  },
+  {
+    id: '2',
+    user: true,
+    trigger: '1',
   },
 ];
 
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
-    <ChatBot steps={steps} />
+    <ChatBot floating={true} opened={true} steps={steps} />
   </ThemeProvider>
 );
 

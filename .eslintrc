@@ -4,7 +4,8 @@
     "window": true,
     "Audio": true,
     "document": true,
-    "localStorage": true
+    "localStorage": true,
+    "navigator": true
   },
   "rules": {
     "guard-for-in": ["off"],

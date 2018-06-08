@@ -16,6 +16,7 @@ import Input from './Input';
 import SubmitButton from './SubmitButton';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
+import { isMobile } from './utils';
 
 class ChatBot extends Component {
   /* istanbul ignore next */
@@ -41,6 +42,7 @@ class ChatBot extends Component {
     this.getTriggeredStep = this.getTriggeredStep.bind(this);
     this.generateRenderedStepsById = this.generateRenderedStepsById.bind(this);
     this.triggerNextStep = this.triggerNextStep.bind(this);
+    this.onResize = this.onResize.bind(this);
     this.onValueChange = this.onValueChange.bind(this);
     this.onRecognitionChange = this.onRecognitionChange.bind(this);
     this.onRecognitionEnd = this.onRecognitionEnd.bind(this);
@@ -56,6 +58,7 @@ class ChatBot extends Component {
       cache,
       cacheName,
       customDelay,
+      enableMobileAutoFocus,
       userAvatar,
       userDelay,
     } = this.props;
@@ -90,20 +93,24 @@ class ChatBot extends Component {
       steps[firstStep.id].message = firstStep.message;
     }
 
-    const { currentStep, previousStep, previousSteps, renderedSteps } = storage.getData(
-      {
-        cacheName,
-        cache,
-        firstStep,
-        steps,
-      },
-      () => {
-        // focus input if last step cached is a user step
-        this.setState({ disabled: false }, () => {
+    const {
+      currentStep,
+      previousStep,
+      previousSteps,
+      renderedSteps,
+    } = storage.getData({
+      cacheName,
+      cache,
+      firstStep,
+      steps,
+    }, () => {
+      // focus input if last step cached is a user step
+      this.setState({ disabled: false }, () => {
+        if (enableMobileAutoFocus || !isMobile()) {
           this.input.focus();
-        });
-      },
-    );
+        }
+      });
+    });
 
     this.setState({
       currentStep,
@@ -127,6 +134,7 @@ class ChatBot extends Component {
       );
     }
     this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
+    window.addEventListener('resize', this.onResize);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -139,10 +147,15 @@ class ChatBot extends Component {
 
   componentWillUnmount() {
     this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted);
+    window.removeEventListener('resize', this.onResize);
   }
 
   onNodeInserted(event) {
     event.currentTarget.scrollTop = event.currentTarget.scrollHeight;
+  }
+
+  onResize() {
+    this.content.scrollTop = this.content.scrollHeight;
   }
 
   onRecognitionChange(value) {
@@ -188,7 +201,13 @@ class ChatBot extends Component {
   }
 
   triggerNextStep(data) {
-    const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
+    const { enableMobileAutoFocus } = this.props;
+    const {
+      defaultUserSettings,
+      previousSteps,
+      renderedSteps,
+      steps,
+    } = this.state;
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
 
@@ -254,7 +273,9 @@ class ChatBot extends Component {
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
         if (nextStep.user) {
           this.setState({ disabled: false }, () => {
-            this.input.focus();
+            if (enableMobileAutoFocus || !isMobile()) {
+              this.input.focus();
+            }
           });
         } else {
           renderedSteps.push(nextStep);
@@ -387,32 +408,29 @@ class ChatBot extends Component {
   }
 
   checkInvalidInput() {
+    const { enableMobileAutoFocus } = this.props;
     const { currentStep, inputValue } = this.state;
     const result = currentStep.validator(inputValue);
     const value = inputValue;
 
     if (typeof result !== 'boolean' || !result) {
-      this.setState(
-        {
-          inputValue: result.toString(),
-          inputInvalid: true,
-          disabled: true,
-        },
-        () => {
-          setTimeout(() => {
-            this.setState(
-              {
-                inputValue: value,
-                inputInvalid: false,
-                disabled: false,
-              },
-              () => {
-                this.input.focus();
-              },
-            );
-          }, 2000);
-        },
-      );
+      this.setState({
+        inputValue: result.toString(),
+        inputInvalid: true,
+        disabled: true,
+      }, () => {
+        setTimeout(() => {
+          this.setState({
+            inputValue: value,
+            inputInvalid: false,
+            disabled: false,
+          }, () => {
+            if (enableMobileAutoFocus || !isMobile()) {
+              this.input.focus();
+            }
+          });
+        }, 2000);
+      });
 
       return true;
     }
@@ -600,6 +618,7 @@ ChatBot.propTypes = {
   contentStyle: PropTypes.object,
   customDelay: PropTypes.number,
   customStyle: PropTypes.object,
+  enableMobileAutoFocus: PropTypes.bool,
   floating: PropTypes.bool,
   footerStyle: PropTypes.object,
   handleEnd: PropTypes.func,
@@ -635,6 +654,7 @@ ChatBot.defaultProps = {
   contentStyle: {},
   customStyle: {},
   customDelay: 1000,
+  enableMobileAutoFocus: false,
   floating: false,
   footerStyle: {},
   handleEnd: undefined,
