@@ -17,15 +17,33 @@ const otherFontTheme = {
 const steps = [
   {
     id: '1',
-    message: 'Hello World',
-    end: true,
+    message: 'Hello, What\'s your name?',
+    trigger: '2',
   },
+  {
+    id: '2',
+    trigger: '3',
+    user: true
+  },
+  {
+    id: '3',
+    message: 'Nice to meet you, by',
+    end: true
+  }
 ];
 
+const handleEnd = ({ steps, values }) => {
+  // console.log(steps);
+  // console.log(values);
+  console.log(values);
+}
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
-    <ChatBot steps={steps} />
+    <ChatBot
+      steps={steps}
+      handleEnd={handleEnd}
+    />
   </ThemeProvider>
 );
 

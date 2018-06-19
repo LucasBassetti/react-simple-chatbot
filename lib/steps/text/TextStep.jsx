@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Random from 'random-id';
 import Bubble from './Bubble';
 import Image from './Image';
 import ImageContainer from './ImageContainer';
@@ -66,9 +67,11 @@ class TextStep extends Component {
       hideBotAvatar,
       hideUserAvatar,
     } = this.props;
+    const { loading } = this.state;
     const {
       avatar,
       user,
+      files = []
     } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
@@ -102,11 +105,19 @@ class TextStep extends Component {
           isFirst={isFirst}
           isLast={isLast}
         >
-          {
-            this.state.loading &&
-            <Loading />
-          }
-          { !this.state.loading && this.renderMessage() }
+          {loading && <Loading />}
+          { !loading && (
+              files && files.length ? (
+                files.map(el => (
+                  <Image
+                    src={el}
+                    key={Random(24)}
+                  />
+                ))
+              ) : (
+                this.renderMessage()
+              )
+          )}
         </Bubble>
       </TextStepContainer>
     );

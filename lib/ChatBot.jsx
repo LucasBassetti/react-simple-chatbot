@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Random from 'random-id';
+import Dropzone from 'react-dropzone';
 import { CustomStep, OptionsStep, TextStep } from './steps';
 import schema from './schemas/schema';
 import * as storage from './storage';
@@ -18,12 +19,29 @@ import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
 
+const overlayStyle = {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  padding: '2.5em 0px',
+  background: 'rgba(102, 0, 255, 0.38)',
+  color: 'rgb(255, 255, 255)',
+  zIndex: 3,
+  display: 'flex',
+  alignItem: 'center',
+  justifyContent: 'center',
+  fontSize: '1.2em',
+};
+
 class ChatBot extends Component {
   /* istanbul ignore next */
   constructor(props) {
     super(props);
 
     this.state = {
+      dropzoneActive: false,
       renderedSteps: [],
       previousSteps: [],
       currentStep: {},
@@ -44,11 +62,16 @@ class ChatBot extends Component {
     this.triggerNextStep = this.triggerNextStep.bind(this);
     this.onResize = this.onResize.bind(this);
     this.onValueChange = this.onValueChange.bind(this);
+    this.onPaste = this.onPaste.bind(this);
     this.onRecognitionChange = this.onRecognitionChange.bind(this);
     this.onRecognitionEnd = this.onRecognitionEnd.bind(this);
     this.onRecognitionStop = this.onRecognitionStop.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmitButton = this.handleSubmitButton.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.onDragEnter = this.onDragEnter.bind(this);
+    this.onDragLeave = this.onDragLeave.bind(this);
+    this.handleFiles = this.handleFiles.bind(this);
   }
 
   componentWillMount() {
@@ -175,6 +198,39 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   }
 
+  onPaste(event) {
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+
+    const images = [...items]
+      .filter(el => el.type.indexOf('image') === 0)
+      .map(el => el.getAsFile());
+
+    if (images && images.length) {
+      this.handleFiles(images);
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  onDragEnter() {
+    this.setState({
+      dropzoneActive: true,
+    });
+  }
+
+  onDragLeave() {
+    this.setState({
+      dropzoneActive: false,
+    });
+  }
+
+  onDrop(files) {
+    this.handleFiles(files);
+    this.setState({
+      dropzoneActive: false,
+    });
+  }
+
   getTriggeredStep(trigger, value) {
     const steps = this.generateRenderedStepsById();
     return typeof trigger === 'function' ? trigger({ value, steps }) : trigger;
@@ -186,6 +242,28 @@ class ChatBot extends Component {
     const steps = this.generateRenderedStepsById();
     const previousValue = previousSteps[lastStepIndex].value;
     return typeof message === 'function' ? message({ previousValue, steps }) : message;
+  }
+
+  handleFiles(files) {
+    const result = [];
+    files.forEach((blob) => {
+// eslint-disable-next-line no-undef
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        result.push(e.target.result);
+        if (result.length === files.length) {
+          this.setState({
+            inputValue: files.map(el => el.name).join(', '),
+            currentStep: Object.assign({},
+              this.state.currentStep,
+              { files: result },
+            ),
+          });
+          this.submitUserMessage();
+        }
+      };
+      reader.readAsDataURL(blob);
+    });
   }
 
   generateRenderedStepsById() {
@@ -315,7 +393,10 @@ class ChatBot extends Component {
         steps[id] = { id, message, value };
       }
 
-      const values = previousSteps.filter(step => step.value).map(step => step.value);
+      const values = previousSteps.filter(step => step.value).map(step => ({
+        value: step.value,
+        files: step.files,
+      }));
 
       this.props.handleEnd({ renderedSteps, steps, values });
     }
@@ -511,6 +592,7 @@ class ChatBot extends Component {
       renderedSteps,
       speaking,
       recognitionEnable,
+      dropzoneActive,
     } = this.state;
     const {
       className,
@@ -546,62 +628,73 @@ class ChatBot extends Component {
     const inputPlaceholder = speaking ? recognitionPlaceholder : placeholder;
 
     return (
-      <div className={`rsc ${className}`}>
-        {floating && (
-          <FloatButton
-            className="rsc-float-button"
-            opened={opened}
-            onClick={() => this.toggleChatBot(true)}
-          >
-            <ChatIcon />
-          </FloatButton>
-        )}
-        <ChatBotContainer
-          className="rsc-container"
-          floating={floating}
-          opened={opened}
-          style={style}
-          width={width}
-        >
-          {!hideHeader && header}
-          <Content
-            className="rsc-content"
-            innerRef={contentRef => (this.content = contentRef)}
+      <Dropzone
+        disabled={disabled}
+        disableClick
+        style={{ position: 'relative' }}
+        onDrop={this.onDrop}
+        onDragEnter={this.onDragEnter}
+        onDragLeave={this.onDragLeave}
+      >
+        <div className={`rsc ${className}`}>
+          {floating && (
+            <FloatButton
+              className="rsc-float-button"
+              opened={opened}
+              onClick={() => this.toggleChatBot(true)}
+            >
+              <ChatIcon />
+            </FloatButton>
+          )}
+          <ChatBotContainer
+            className="rsc-container"
             floating={floating}
-            style={contentStyle}
+            opened={opened}
+            style={style}
+            width={width}
           >
-            {_.map(renderedSteps, this.renderStep)}
-          </Content>
-          <Footer className="rsc-footer" style={footerStyle}>
-            <Input
-              type="textarea"
-              style={inputStyle}
-              innerRef={inputRef => (this.input = inputRef)}
-              className="rsc-input"
-              placeholder={inputInvalid ? '' : inputPlaceholder}
-              onKeyPress={this.handleKeyPress}
-              onChange={this.onValueChange}
-              value={inputValue}
+            { dropzoneActive && <div style={overlayStyle}>Drop files...</div> }
+            {!hideHeader && header}
+            <Content
+              className="rsc-content"
+              innerRef={contentRef => (this.content = contentRef)}
               floating={floating}
-              invalid={inputInvalid}
-              disabled={disabled}
-              hasButton={!hideSubmitButton}
-            />
-            {!hideSubmitButton && (
-              <SubmitButton
-                className="rsc-submit-button"
-                style={submitButtonStyle}
-                onClick={this.handleSubmitButton}
+              style={contentStyle}
+            >
+              {_.map(renderedSteps, this.renderStep)}
+            </Content>
+            <Footer className="rsc-footer" style={footerStyle}>
+              <Input
+                type="textarea"
+                style={inputStyle}
+                innerRef={inputRef => (this.input = inputRef)}
+                className="rsc-input"
+                placeholder={inputInvalid ? '' : inputPlaceholder}
+                onKeyPress={this.handleKeyPress}
+                onChange={this.onValueChange}
+                onPaste={this.onPaste}
+                value={inputValue}
+                floating={floating}
                 invalid={inputInvalid}
                 disabled={disabled}
-                speaking={speaking}
-              >
-                {icon}
-              </SubmitButton>
-            )}
-          </Footer>
-        </ChatBotContainer>
-      </div>
+                hasButton={!hideSubmitButton}
+              />
+              {!hideSubmitButton && (
+                <SubmitButton
+                  className="rsc-submit-button"
+                  style={submitButtonStyle}
+                  onClick={this.handleSubmitButton}
+                  invalid={inputInvalid}
+                  disabled={disabled}
+                  speaking={speaking}
+                >
+                  {icon}
+                </SubmitButton>
+              )}
+            </Footer>
+          </ChatBotContainer>
+        </div>
+      </Dropzone>
     );
   }
 }
