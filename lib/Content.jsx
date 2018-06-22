@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Content = styled.div`
-  height: 400px;
+  height: ${props => props.contentHeight};
   overflow-y: scroll;
   margin-top: 2px;
   padding-top: 6px;

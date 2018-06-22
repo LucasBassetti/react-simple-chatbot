@@ -25,7 +25,12 @@ const steps = [
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
-    <ChatBot steps={steps} />
+    <ChatBot
+      steps={steps}
+      hideHeader={true}
+      hideFooter={true}
+      contentHeight="100px"
+    />
   </ThemeProvider>
 );
 
