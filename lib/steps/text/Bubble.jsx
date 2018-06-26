@@ -4,6 +4,7 @@ import defaultTheme from '../../theme';
 
 const Bubble = styled.div`
   animation: ${scale} .3s ease forwards;
+  white-space: pre-line;
   background: ${props => (props.user ? props.theme.userBubbleColor : props.theme.botBubbleColor)};
   border-radius: ${(props) => {
     const { isFirst, isLast, user } = props;

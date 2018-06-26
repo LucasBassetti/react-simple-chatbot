@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Random from 'random-id';
 import Bubble from './Bubble';
 import Image from './Image';
 import ImageContainer from './ImageContainer';
 import Loading from '../common/Loading';
+import AttachmentPreview from './AttachmentPreview';
 import TextStepContainer from './TextStepContainer';
+
+const previewMimeTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
 
 class TextStep extends Component {
   /* istanbul ignore next */
@@ -66,9 +70,11 @@ class TextStep extends Component {
       hideBotAvatar,
       hideUserAvatar,
     } = this.props;
+    const { loading } = this.state;
     const {
       avatar,
       user,
+      files = [],
     } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
@@ -102,11 +108,23 @@ class TextStep extends Component {
           isFirst={isFirst}
           isLast={isLast}
         >
-          {
-            this.state.loading &&
-            <Loading />
-          }
-          { !this.state.loading && this.renderMessage() }
+          {loading && <Loading />}
+          {!loading && (
+            files && files.length ? (
+              files.map(el => (
+                previewMimeTypes.find(t => t === el.type) ? (
+                  <AttachmentPreview
+                    src={el.src}
+                    key={Random(24)}
+                  />
+                ) : (
+                  el.name
+                )
+            ))
+            ) : (
+              this.renderMessage()
+            )
+          )}
         </Bubble>
       </TextStepContainer>
     );

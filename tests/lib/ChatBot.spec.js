@@ -74,11 +74,11 @@ describe('ChatBot', () => {
 
     before((done) => {
       wrapper.setState({ inputValue: 'test' });
-      wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
+      wrapper.find('textarea.rsc-input').simulate('keyPress', { key: 'Enter' });
 
       setTimeout(() => {
         wrapper.setState({ inputValue: 'test' });
-        wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
+        wrapper.find('textarea.rsc-input').simulate('keyPress', { key: 'Enter' });
       }, 100);
 
       setTimeout(() => {

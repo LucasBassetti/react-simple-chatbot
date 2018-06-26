@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Random from 'random-id';
+import Dropzone from 'react-dropzone';
 import { CustomStep, OptionsStep, TextStep } from './steps';
 import schema from './schemas/schema';
 import * as storage from './storage';
@@ -12,11 +13,27 @@ import HeaderTitle from './HeaderTitle';
 import HeaderIcon from './HeaderIcon';
 import FloatButton from './FloatButton';
 import Footer from './Footer';
-import Input from './Input';
+import Textarea from './Textarea';
 import SubmitButton from './SubmitButton';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
+
+const overlayStyle = {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  padding: '2.5em 0px',
+  background: 'rgba(102, 0, 255, 0.38)',
+  color: 'rgb(255, 255, 255)',
+  zIndex: 3,
+  display: 'flex',
+  alignItem: 'center',
+  justifyContent: 'center',
+  fontSize: '1.2em',
+};
 
 class ChatBot extends Component {
   /* istanbul ignore next */
@@ -24,6 +41,7 @@ class ChatBot extends Component {
     super(props);
 
     this.state = {
+      dropzoneActive: false,
       renderedSteps: [],
       previousSteps: [],
       currentStep: {},
@@ -44,11 +62,16 @@ class ChatBot extends Component {
     this.triggerNextStep = this.triggerNextStep.bind(this);
     this.onResize = this.onResize.bind(this);
     this.onValueChange = this.onValueChange.bind(this);
+    this.onPaste = this.onPaste.bind(this);
     this.onRecognitionChange = this.onRecognitionChange.bind(this);
     this.onRecognitionEnd = this.onRecognitionEnd.bind(this);
     this.onRecognitionStop = this.onRecognitionStop.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmitButton = this.handleSubmitButton.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.onDragEnter = this.onDragEnter.bind(this);
+    this.onDragLeave = this.onDragLeave.bind(this);
+    this.handleFiles = this.handleFiles.bind(this);
   }
 
   componentWillMount() {
@@ -175,6 +198,43 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   }
 
+  onPaste(event) {
+    const { acceptedFileTypes } = this.props;
+    const { enableFiles = false } = this.state.currentStep;
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+
+    let files = [...items];
+    if (acceptedFileTypes.length) {
+      files = files.filter(el => acceptedFileTypes.find(type => type === el.type));
+    }
+    files = files.map(el => el.getAsFile()).filter(el => !!el);
+
+    if (files && files.length && enableFiles) {
+      this.handleFiles(files);
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  onDragEnter() {
+    this.setState({
+      dropzoneActive: true,
+    });
+  }
+
+  onDragLeave() {
+    this.setState({
+      dropzoneActive: false,
+    });
+  }
+
+  onDrop(files) {
+    this.handleFiles(files);
+    this.setState({
+      dropzoneActive: false,
+    });
+  }
+
   getTriggeredStep(trigger, value) {
     const steps = this.generateRenderedStepsById();
     return typeof trigger === 'function' ? trigger({ value, steps }) : trigger;
@@ -188,13 +248,42 @@ class ChatBot extends Component {
     return typeof message === 'function' ? message({ previousValue, steps }) : message;
   }
 
+  handleFiles(files) {
+    const result = [];
+    files.forEach((blob) => {
+// eslint-disable-next-line no-undef
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        result.push({
+          name: blob.name,
+          type: blob.type,
+          src: e.target.result,
+        });
+        if (result.length === files.length) {
+          this.setState({
+            inputValue: files.map(el => el.name).join(', '),
+            currentStep: Object.assign({},
+              this.state.currentStep,
+              { files: result },
+            ),
+          });
+          this.submitUserMessage(true);
+        }
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
+
   generateRenderedStepsById() {
     const { previousSteps } = this.state;
     const steps = {};
 
     for (let i = 0, len = previousSteps.length; i < len; i += 1) {
-      const { id, message, value } = previousSteps[i];
+      const { id, message, value, files } = previousSteps[i];
       steps[id] = { id, message, value };
+      if (files) {
+        steps[id].files = files;
+      }
     }
 
     return steps;
@@ -315,7 +404,10 @@ class ChatBot extends Component {
         steps[id] = { id, message, value };
       }
 
-      const values = previousSteps.filter(step => step.value).map(step => step.value);
+      const values = previousSteps.filter(step => step.value).map(step => ({
+        value: step.value,
+        files: step.files,
+      }));
 
       this.props.handleEnd({ renderedSteps, steps, values });
     }
@@ -361,6 +453,18 @@ class ChatBot extends Component {
   }
 
   handleKeyPress(event) {
+    const { enterNewLineKeyCode, holdNewLineKey } = this.props;
+    const { inputValue } = this.state;
+
+    const keyCode = event.which || event.keyCode;
+
+    if (keyCode === enterNewLineKeyCode && !!event[holdNewLineKey]) {
+      // New line
+      this.setState({
+        inputValue: `${inputValue}\n`,
+      });
+      return;
+    }
     if (event.key === 'Enter') {
       this.submitUserMessage();
     }
@@ -378,11 +482,13 @@ class ChatBot extends Component {
     this.submitUserMessage();
   }
 
-  submitUserMessage() {
+  submitUserMessage(disableValidation = false) {
     const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
     let { currentStep } = this.state;
 
-    const isInvalid = currentStep.validator && this.checkInvalidInput();
+    const isInvalid = !disableValidation ?
+      currentStep.validator && this.checkInvalidInput() :
+      false;
 
     if (!isInvalid) {
       const step = {
@@ -511,7 +617,10 @@ class ChatBot extends Component {
       renderedSteps,
       speaking,
       recognitionEnable,
+      currentStep,
+      dropzoneActive,
     } = this.state;
+    const { enableFiles = false } = currentStep;
     const {
       className,
       contentHeight,
@@ -529,6 +638,7 @@ class ChatBot extends Component {
       style,
       submitButtonStyle,
       width,
+      acceptedFileTypes,
     } = this.props;
 
     const header = headerComponent || (
@@ -548,65 +658,77 @@ class ChatBot extends Component {
     const inputPlaceholder = speaking ? recognitionPlaceholder : placeholder;
 
     return (
-      <div className={`rsc ${className}`}>
-        {floating && (
-          <FloatButton
-            className="rsc-float-button"
-            opened={opened}
-            onClick={() => this.toggleChatBot(true)}
-          >
-            <ChatIcon />
-          </FloatButton>
-        )}
-        <ChatBotContainer
-          className="rsc-container"
-          floating={floating}
-          opened={opened}
-          style={style}
-          width={width}
-        >
-          {!hideHeader && header}
-          <Content
-            className="rsc-content"
-            contentHeight={contentHeight}
-            innerRef={contentRef => (this.content = contentRef)}
+      <Dropzone
+        accept={acceptedFileTypes.join(', ')}
+        disabled={disabled || !enableFiles}
+        disableClick
+        style={{ position: 'relative' }}
+        onDrop={this.onDrop}
+        onDragEnter={this.onDragEnter}
+        onDragLeave={this.onDragLeave}
+      >
+        <div className={`rsc ${className}`}>
+          {floating && (
+            <FloatButton
+              className="rsc-float-button"
+              opened={opened}
+              onClick={() => this.toggleChatBot(true)}
+            >
+              <ChatIcon />
+            </FloatButton>
+          )}
+          <ChatBotContainer
+            className="rsc-container"
             floating={floating}
-            style={contentStyle}
+            opened={opened}
+            style={style}
+            width={width}
           >
-            {_.map(renderedSteps, this.renderStep)}
-          </Content>
-          {!hideFooter && (
-            <Footer className="rsc-footer" style={footerStyle}>
-              <Input
-                type="textarea"
-                style={inputStyle}
-                innerRef={inputRef => (this.input = inputRef)}
-                className="rsc-input"
-                placeholder={inputInvalid ? '' : inputPlaceholder}
-                onKeyPress={this.handleKeyPress}
-                onChange={this.onValueChange}
-                value={inputValue}
-                floating={floating}
-                invalid={inputInvalid}
-                disabled={disabled}
-                hasButton={!hideSubmitButton}
-              />
-              {!hideSubmitButton && (
-                <SubmitButton
-                  className="rsc-submit-button"
-                  style={submitButtonStyle}
-                  onClick={this.handleSubmitButton}
+            { dropzoneActive && <div style={overlayStyle}>Drop files...</div> }
+            {!hideHeader && header}
+            <Content
+              className="rsc-content"
+              contentHeight={contentHeight}
+              innerRef={contentRef => (this.content = contentRef)}
+              floating={floating}
+              style={contentStyle}
+            >
+              {_.map(renderedSteps, this.renderStep)}
+            </Content>
+            {!hideFooter && (
+              <Footer className="rsc-footer" style={footerStyle}>
+                <Textarea
+                  rows={1}
+                  style={inputStyle}
+                  innerRef={inputRef => (this.input = inputRef)}
+                  className="rsc-input"
+                  placeholder={inputInvalid ? '' : inputPlaceholder}
+                  onKeyPress={this.handleKeyPress}
+                  onChange={this.onValueChange}
+                  value={inputValue}
+                  onPaste={this.onPaste}
+                  floating={floating}
                   invalid={inputInvalid}
                   disabled={disabled}
-                  speaking={speaking}
-                >
-                  {icon}
-                </SubmitButton>
-              )}
-            </Footer>
-          )}
-        </ChatBotContainer>
-      </div>
+                  hasButton={!hideSubmitButton}
+                />
+                {!hideSubmitButton && (
+                  <SubmitButton
+                    className="rsc-submit-button"
+                    style={submitButtonStyle}
+                    onClick={this.handleSubmitButton}
+                    invalid={inputInvalid}
+                    disabled={disabled}
+                    speaking={speaking}
+                  >
+                    {icon}
+                  </SubmitButton>
+                )}
+              </Footer>
+            )}
+          </ChatBotContainer>
+        </div>
+      </Dropzone>
     );
   }
 }
@@ -646,8 +768,11 @@ ChatBot.propTypes = {
   style: PropTypes.object,
   submitButtonStyle: PropTypes.object,
   userAvatar: PropTypes.string,
+  acceptedFileTypes: PropTypes.array,
   userDelay: PropTypes.number,
   width: PropTypes.string,
+  enterNewLineKeyCode: PropTypes.number,
+  holdNewLineKey: PropTypes.oneOf(['ctrlKey', 'altKey', 'shiftKey']),
 };
 
 ChatBot.defaultProps = {
@@ -684,10 +809,13 @@ ChatBot.defaultProps = {
   toggleFloating: undefined,
   userDelay: 1000,
   width: '350px',
+  acceptedFileTypes: [],
   botAvatar:
     'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDUxMiA1MTIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIHN0eWxlPSJmaWxsOiM5M0M3RUY7IiBkPSJNMzAyLjU0NSw2OS44MThjMC0yNS43MDctMjAuODQtNDYuNTQ1LTQ2LjU0NS00Ni41NDVzLTQ2LjU0NSwyMC44MzgtNDYuNTQ1LDQ2LjU0NQ0KCWMwLDE3LjIyNSw5LjM2NSwzMi4yNTQsMjMuMjczLDQwLjMwNHY4My44MThoNDYuNTQ1di04My44MThDMjkzLjE4MSwxMDIuMDczLDMwMi41NDUsODcuMDQzLDMwMi41NDUsNjkuODE4eiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6IzVBOEJCMDsiIGQ9Ik0yNTYsMjMuMjczdjE3MC42NjdoMjMuMjczdi04My44MThjMTMuOTA4LTguMDQ5LDIzLjI3My0yMy4wNzcsMjMuMjczLTQwLjMwNA0KCUMzMDIuNTQ1LDQ0LjExMSwyODEuNzA1LDIzLjI3MywyNTYsMjMuMjczeiIvPg0KPHJlY3QgeT0iMjQwLjQ4NSIgc3R5bGU9ImZpbGw6IzkzQzdFRjsiIHdpZHRoPSIyNDguMjQyIiBoZWlnaHQ9IjEyNC4xMjEiLz4NCjxyZWN0IHg9IjI2My43NTgiIHk9IjI0MC40ODUiIHN0eWxlPSJmaWxsOiM1QThCQjA7IiB3aWR0aD0iMjQ4LjI0MiIgaGVpZ2h0PSIxMjQuMTIxIi8+DQo8cmVjdCB4PSIxODYuMTgyIiB5PSIzNjQuNjA2IiBzdHlsZT0iZmlsbDojOTNDN0VGOyIgd2lkdGg9IjEzOS42MzYiIGhlaWdodD0iMTI0LjEyMSIvPg0KPHJlY3QgeD0iMjU2IiB5PSIzNjQuNjA2IiBzdHlsZT0iZmlsbDojNUE4QkIwOyIgd2lkdGg9IjY5LjgxOCIgaGVpZ2h0PSIxMjQuMTIxIi8+DQo8cmVjdCB4PSI0Ni41NDUiIHk9IjE2Mi45MDkiIHN0eWxlPSJmaWxsOiNDQ0U5Rjk7IiB3aWR0aD0iNDE4LjkwOSIgaGVpZ2h0PSIyNzkuMjczIi8+DQo8cmVjdCB4PSIyNTYiIHk9IjE2Mi45MDkiIHN0eWxlPSJmaWxsOiM5M0M3RUY7IiB3aWR0aD0iMjA5LjQ1NSIgaGVpZ2h0PSIyNzkuMjczIi8+DQo8cGF0aCBzdHlsZT0iZmlsbDojM0M1RDc2OyIgZD0iTTE5My45MzksMjcxLjUxNWMwLDE3LjEzOC0xMy44OTQsMzEuMDMtMzEuMDMsMzEuMDNsMCwwYy0xNy4xMzYsMC0zMS4wMy0xMy44OTItMzEuMDMtMzEuMDNsMCwwDQoJYzAtMTcuMTM4LDEzLjg5NC0zMS4wMywzMS4wMy0zMS4wM2wwLDBDMTgwLjA0NiwyNDAuNDg1LDE5My45MzksMjU0LjM3NywxOTMuOTM5LDI3MS41MTVMMTkzLjkzOSwyNzEuNTE1eiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6IzFFMkUzQjsiIGQ9Ik0zODAuMTIxLDI3MS41MTVjMCwxNy4xMzgtMTMuODk0LDMxLjAzLTMxLjAzLDMxLjAzbDAsMGMtMTcuMTM3LDAtMzEuMDMtMTMuODkyLTMxLjAzLTMxLjAzbDAsMA0KCWMwLTE3LjEzOCwxMy44OTQtMzEuMDMsMzEuMDMtMzEuMDNsMCwwQzM2Ni4yMjcsMjQwLjQ4NSwzODAuMTIxLDI1NC4zNzcsMzgwLjEyMSwyNzEuNTE1TDM4MC4xMjEsMjcxLjUxNXoiLz4NCjxwYXRoIHN0eWxlPSJmaWxsOiMzQzVENzY7IiBkPSJNMTg2LjE4MiwzNDkuMDkxYzAsMzguNTU4LDMxLjI1OCw2OS44MTgsNjkuODE4LDY5LjgxOGwwLDBjMzguNTU4LDAsNjkuODE4LTMxLjI2LDY5LjgxOC02OS44MTgNCglIMTg2LjE4MnoiLz4NCjxwYXRoIHN0eWxlPSJmaWxsOiMxRTJFM0I7IiBkPSJNMjU2LDM0OS4wOTFjMCwzOC41NTgsMCw0Ni41NDUsMCw2OS44MThsMCwwYzM4LjU1OCwwLDY5LjgxOC0zMS4yNiw2OS44MTgtNjkuODE4SDI1NnoiLz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K',
   userAvatar:
     'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgLTIwOC41IDIxIDEwMCAxMDAiIGlkPSJMYXllcl8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9Ii0yMDguNSAyMSAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PGc+PGNpcmNsZSBjeD0iLTE1OC41IiBjeT0iNzEiIGZpbGw9IiNGNUVFRTUiIGlkPSJNYXNrIiByPSI1MCIvPjxnPjxkZWZzPjxjaXJjbGUgY3g9Ii0xNTguNSIgY3k9IjcxIiBpZD0iTWFza18yXyIgcj0iNTAiLz48L2RlZnM+PGNsaXBQYXRoIGlkPSJNYXNrXzRfIj48dXNlIG92ZXJmbG93PSJ2aXNpYmxlIiB4bGluazpocmVmPSIjTWFza18yXyIvPjwvY2xpcFBhdGg+PHBhdGggY2xpcC1wYXRoPSJ1cmwoI01hc2tfNF8pIiBkPSJNLTEwOC41LDEyMXYtMTRjMCwwLTIxLjItNC45LTI4LTYuN2MtMi41LTAuNy03LTMuMy03LTEyICAgICBjMC0xLjcsMC02LjMsMC02LjNoLTE1aC0xNWMwLDAsMCw0LjYsMCw2LjNjMCw4LjctNC41LDExLjMtNywxMmMtNi44LDEuOS0yOC4xLDcuMy0yOC4xLDYuN3YxNGg1MC4xSC0xMDguNXoiIGZpbGw9IiNFNkMxOUMiIGlkPSJNYXNrXzNfIi8+PGcgY2xpcC1wYXRoPSJ1cmwoI01hc2tfNF8pIj48ZGVmcz48cGF0aCBkPSJNLTEwOC41LDEyMXYtMTRjMCwwLTIxLjItNC45LTI4LTYuN2MtMi41LTAuNy03LTMuMy03LTEyYzAtMS43LDAtNi4zLDAtNi4zaC0xNWgtMTVjMCwwLDAsNC42LDAsNi4zICAgICAgIGMwLDguNy00LjUsMTEuMy03LDEyYy02LjgsMS45LTI4LjEsNy4zLTI4LjEsNi43djE0aDUwLjFILTEwOC41eiIgaWQ9Ik1hc2tfMV8iLz48L2RlZnM+PGNsaXBQYXRoIGlkPSJNYXNrXzVfIj48dXNlIG92ZXJmbG93PSJ2aXNpYmxlIiB4bGluazpocmVmPSIjTWFza18xXyIvPjwvY2xpcFBhdGg+PHBhdGggY2xpcC1wYXRoPSJ1cmwoI01hc2tfNV8pIiBkPSJNLTE1OC41LDEwMC4xYzEyLjcsMCwyMy0xOC42LDIzLTM0LjQgICAgICBjMC0xNi4yLTEwLjMtMjQuNy0yMy0yNC43cy0yMyw4LjUtMjMsMjQuN0MtMTgxLjUsODEuNS0xNzEuMiwxMDAuMS0xNTguNSwxMDAuMXoiIGZpbGw9IiNENEIwOEMiIGlkPSJoZWFkLXNoYWRvdyIvPjwvZz48L2c+PHBhdGggZD0iTS0xNTguNSw5NmMxMi43LDAsMjMtMTYuMywyMy0zMWMwLTE1LjEtMTAuMy0yMy0yMy0yM3MtMjMsNy45LTIzLDIzICAgIEMtMTgxLjUsNzkuNy0xNzEuMiw5Ni0xNTguNSw5NnoiIGZpbGw9IiNGMkNFQTUiIGlkPSJoZWFkIi8+PC9nPjwvc3ZnPg==',
+  enterNewLineKeyCode: 13,
+  holdNewLineKey: 'ctrlKey',
 };
 
 export default ChatBot;
