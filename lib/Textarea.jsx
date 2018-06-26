@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { invalidInput } from './common/animations';
 
-const Input = styled.input`
+const Textarea = styled.textarea`
+  resize: none;
   animation: ${props => props.invalid ? `${invalidInput} .2s ease` : ''};
   border: 0;
   border-radius: 0;
@@ -26,4 +27,4 @@ const Input = styled.input`
   }
 `;
 
-export default Input;
+export default Textarea;
