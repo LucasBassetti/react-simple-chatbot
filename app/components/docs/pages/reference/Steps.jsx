@@ -99,6 +99,12 @@ const sections = [
         required: 'false',
         description: 'if true indicate that this step is the last',
       },
+      {
+        name: 'metadata',
+        type: 'Object',
+        required: 'false',
+        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format',
+      },
     ],
   },
   {
@@ -135,6 +141,12 @@ const sections = [
         required: 'false',
         description: 'if true indicate that this step is the last',
       },
+      {
+        name: 'metadata',
+        type: 'Object',
+        required: 'false',
+        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format',
+      },
     ],
   },
   {
@@ -158,6 +170,12 @@ const sections = [
         type: 'Boolean',
         required: 'false',
         description: 'if true indicate that this step is the last',
+      },
+      {
+        name: 'metadata',
+        type: 'Object',
+        required: 'false',
+        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format',
       },
     ],
   },
@@ -213,6 +231,12 @@ const sections = [
         required: 'false',
         description: 'if true indicate that this step is the last',
       },
+      {
+        name: 'metadata',
+        type: 'Object',
+        required: 'false',
+        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format',
+      },
     ],
   },
   {
@@ -236,6 +260,12 @@ const sections = [
         type: 'String | Number | Function',
         required: 'true',
         description: 'The id of next step to be triggered after update',
+      },
+      {
+        name: 'metadata',
+        type: 'Object',
+        required: 'false',
+        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format',
       },
     ],
   },
