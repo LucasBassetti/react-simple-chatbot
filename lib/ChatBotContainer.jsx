@@ -11,6 +11,7 @@ const ChatBotContainer = styled.div`
   bottom: ${props => props.floating ? '32px' : 'initial'};
   right: ${props => props.floating ? '32px' : 'initial'};
   width: ${props => props.width};
+  height: ${props => props.height};
   z-index: 999;
   transform: ${props => props.opened ? 'scale(1)' : 'scale(0)'};
   transform-origin: bottom right;
