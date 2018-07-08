@@ -531,7 +531,7 @@ class ChatBot extends Component {
       style,
       submitButtonStyle,
       width,
-      height
+      height,
     } = this.props;
 
     const header = headerComponent || (
