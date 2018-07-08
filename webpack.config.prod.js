@@ -4,6 +4,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: path.resolve(__dirname, 'lib/index'),
+  externals: { 'react': 'react', 'react-dom': 'react-dom', 'styled-components': 'styled-components' },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'react-simple-chatbot.js',
