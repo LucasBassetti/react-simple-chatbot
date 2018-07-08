@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: path.resolve(__dirname, 'src/main.jsx'),
-  externals: { 'react': 'react', 'react-dom': 'react-dom', 'styled-components': 'styled-components' },
+  externals: { 'styled-components': 'styled-components' },
   output: {
     path: path.resolve(__dirname, 'src'),
     publicPath: '/',
