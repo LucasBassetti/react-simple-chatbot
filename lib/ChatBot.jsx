@@ -193,8 +193,8 @@ class ChatBot extends Component {
     const steps = {};
 
     for (let i = 0, len = previousSteps.length; i < len; i += 1) {
-      const { id, message, value } = previousSteps[i];
-      steps[id] = { id, message, value };
+      const { id, message, value, metadata } = previousSteps[i];
+      steps[id] = { id, message, value, metadata };
     }
 
     return steps;
@@ -304,15 +304,15 @@ class ChatBot extends Component {
       const { previousSteps } = this.state;
 
       const renderedSteps = previousSteps.map((step) => {
-        const { id, message, value } = step;
-        return { id, message, value };
+        const { id, message, value, metadata } = step;
+        return { id, message, value, metadata };
       });
 
       const steps = [];
 
       for (let i = 0, len = previousSteps.length; i < len; i += 1) {
-        const { id, message, value } = previousSteps[i];
-        steps[id] = { id, message, value };
+        const { id, message, value, metadata } = previousSteps[i];
+        steps[id] = { id, message, value, metadata };
       }
 
       const values = previousSteps.filter(step => step.value).map(step => step.value);
