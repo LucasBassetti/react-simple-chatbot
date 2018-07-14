@@ -85,19 +85,25 @@ const sections = [
         name: 'avatar',
         type: 'String',
         required: 'false',
-        description: 'the avatar to be showed just in this step. Note: this step must be a step that avatar appears',
+        description: 'The avatar to be showed just in this step. Note: this step must be a step that avatar appears',
       },
       {
         name: 'delay',
         type: 'Number',
         required: 'false',
-        description: 'set the delay time to message be shown',
+        description: 'Set the delay time to message be shown',
       },
       {
         name: 'end',
         type: 'Boolean',
         required: 'false',
-        description: 'if true indicate that this step is the last',
+        description: 'If true indicate that this step is the last',
+      },
+      {
+        name: 'placeholder',
+        type: 'String',
+        required: 'false',
+        description: 'Overwrite the input placeholder',
       },
       {
         name: 'metadata',
@@ -142,6 +148,12 @@ const sections = [
         description: 'if true indicate that this step is the last',
       },
       {
+        name: 'placeholder',
+        type: 'String',
+        required: 'false',
+        description: 'Overwrite the input placeholder',
+      },
+      {
         name: 'metadata',
         type: 'Object',
         required: 'false',
@@ -170,6 +182,12 @@ const sections = [
         type: 'Boolean',
         required: 'false',
         description: 'if true indicate that this step is the last',
+      },
+      {
+        name: 'placeholder',
+        type: 'String',
+        required: 'false',
+        description: 'Overwrite the input placeholder',
       },
       {
         name: 'metadata',
@@ -232,6 +250,12 @@ const sections = [
         description: 'if true indicate that this step is the last',
       },
       {
+        name: 'placeholder',
+        type: 'String',
+        required: 'false',
+        description: 'Overwrite the input placeholder',
+      },
+      {
         name: 'metadata',
         type: 'Object',
         required: 'false',
@@ -260,6 +284,12 @@ const sections = [
         type: 'String | Number | Function',
         required: 'true',
         description: 'The id of next step to be triggered after update',
+      },
+      {
+        name: 'placeholder',
+        type: 'String',
+        required: 'false',
+        description: 'Overwrite the input placeholder',
       },
       {
         name: 'metadata',
