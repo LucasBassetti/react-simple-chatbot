@@ -270,4 +270,23 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
     });
   });
+
+  describe('Hide Input', () => {
+    const wrapper = mount(
+      <ChatBot
+        steps={[
+          {
+            id: '1',
+            message: 'Hide Input',
+            hideInput:true,
+            end: true,
+          },
+        ]}
+      />,
+    );
+
+    it('should be rendered without input', () => {
+      expect(wrapper.find('input.rsc-input')).to.have.length(0);
+    });
+  });
 });
