@@ -106,6 +106,12 @@ const sections = [
         description: 'Overwrite the input placeholder',
       },
       {
+        name: 'hideInput',
+        type: 'Boolean',
+        required: 'false',
+        description: 'Hide text input when step is triggered',
+      },
+      {
         name: 'metadata',
         type: 'Object',
         required: 'false',
@@ -190,6 +196,12 @@ const sections = [
         description: 'Overwrite the input placeholder',
       },
       {
+        name: 'hideInput',
+        type: 'Boolean',
+        required: 'false',
+        description: 'Hide text input when step is triggered',
+      },
+      {
         name: 'metadata',
         type: 'Object',
         required: 'false',
@@ -254,6 +266,12 @@ const sections = [
         type: 'String',
         required: 'false',
         description: 'Overwrite the input placeholder',
+      },
+      {
+        name: 'hideInput',
+        type: 'Boolean',
+        required: 'false',
+        description: 'Hide text input when step is triggered',
       },
       {
         name: 'metadata',
