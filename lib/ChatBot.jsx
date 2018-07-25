@@ -507,6 +507,7 @@ class ChatBot extends Component {
 
   render() {
     const {
+      currentStep,
       disabled,
       inputInvalid,
       inputValue,
@@ -548,7 +549,8 @@ class ChatBot extends Component {
     const icon =
       (_.isEmpty(inputValue) || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
 
-    const inputPlaceholder = speaking ? recognitionPlaceholder : placeholder;
+    const inputPlaceholder = speaking ? recognitionPlaceholder :
+      currentStep.placeholder || placeholder;
 
     return (
       <div className={`rsc ${className}`}>
