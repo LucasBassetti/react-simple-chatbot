@@ -512,7 +512,6 @@ class ChatBot extends Component {
       inputInvalid,
       inputValue,
       opened,
-      currentStep,
       renderedSteps,
       speaking,
       recognitionEnable,
