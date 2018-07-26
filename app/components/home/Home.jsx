@@ -63,7 +63,8 @@ class Home extends Component {
           <ChatBot
             style={{
               // boxShadow: '0 0 100px #ddd',
-              width: '280px',
+              width: '300px',
+              height: '420px',
             }}
             hideHeader={true}
             botBubbleColor="#6E48AA"

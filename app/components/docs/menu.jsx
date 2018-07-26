@@ -147,11 +147,11 @@ const menu = [
         title: 'React Native',
         component: <ReactNative />,
       },
-      {
-        href: '/docs/releases',
-        title: 'Releases',
-        component: <Releases />,
-      },
+      // {
+      //   href: '/docs/releases',
+      //   title: 'Releases',
+      //   component: <Releases />,
+      // },
     ],
   },
 ];
