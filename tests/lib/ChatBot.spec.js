@@ -8,7 +8,7 @@ import FloatButton from '../../lib/FloatButton';
 import Header from '../../lib/Header';
 import HeaderIcon from '../../lib/HeaderIcon';
 import { CloseIcon } from '../../lib/icons';
-// import { TextStep, OptionsStep, CustomStep } from '../../lib/steps';
+import { TextStep, OptionsStep, CustomStep } from '../../lib/steps';
 
 const CustomComponent = () => (
   <div />
@@ -287,6 +287,52 @@ describe('ChatBot', () => {
 
     it('should be rendered without input', () => {
       expect(wrapper.find('input.rsc-input')).to.have.length(0);
+    });
+  });
+
+  describe('Metadata', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        steps={[
+          {
+            id: '1',
+            message: 'Set metadata!',
+            metadata: {
+              custom: 'Hello World',
+            },
+            trigger: '2',
+          },
+          {
+            id: '2',
+            message: params => (params.steps[1].metadata.custom),
+            end: true,
+          },
+        ]}
+      />,
+    );
+
+    before(() => {
+      // Somehow it needs something like this, to wait for the application to be rendered.
+      // TODO: improve this...
+      wrapper.simulate('keyPress', { key: 'Enter' });
+    });
+
+    after(() => {
+      wrapper.unmount();
+    });
+
+    it('should be accessible in "steps" and "previousStep"', () => {
+      const bubbles = wrapper.find(TextStep);
+      const step2Bubble = bubbles.at(1);
+      expect(step2Bubble.props().previousStep.metadata.custom).to.be.equal('Hello World');
+      expect(step2Bubble.props().steps[1].metadata.custom).to.be.equal('Hello World');
+    });
+
+    it('should render in second bubble', () => {
+      const bubbles = wrapper.find(TextStep);
+      const step2Bubble = bubbles.at(1);
+      expect(step2Bubble.text()).to.be.equal('Hello World');
     });
   });
 });
