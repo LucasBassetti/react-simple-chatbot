@@ -102,4 +102,20 @@ describe('schema', () => {
       schema.checkInvalidIds(steps);
     }).to.not.throw();
   });
+  it('should not throw error with metadata', () => {
+    const step = { id: '1', message: 'Test', metadata: { data: 'test' } };
+    expect(() => {
+      schema.parse(step);
+    }).to.not.throw();
+    const resultStep = schema.parse(step);
+    expect(resultStep).to.be.equal(step);
+  });
+  it('should not throw error with inputAttributes', () => {
+    const step = { id: '1', message: 'Test', inputAttributes: { autoComplete: 'firstname' } };
+    expect(() => {
+      schema.parse(step);
+    }).to.not.throw();
+    const resultStep = schema.parse(step);
+    expect(resultStep).to.be.equal(step);
+  });
 });

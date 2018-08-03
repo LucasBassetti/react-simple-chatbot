@@ -335,4 +335,25 @@ describe('ChatBot', () => {
       expect(step2Bubble.text()).to.be.equal('Hello World');
     });
   });
+
+  describe('Input Attributes', () => {
+    const wrapper = mount(
+      <ChatBot
+        steps={[
+          {
+            id: '1',
+            message: 'Hide Input',
+            inputAttributes: {
+              autoComplete: 'firstname',
+            },
+            end: true,
+          },
+        ]}
+      />,
+    );
+
+    it('should be rendered with input to autocomplete on \'firstname\'', () => {
+      expect(wrapper.find('input.rsc-input').props().autoComplete).to.be.equal('firstname');
+    });
+  });
 });

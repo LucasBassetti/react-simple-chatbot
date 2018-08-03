@@ -527,6 +527,7 @@ class ChatBot extends Component {
       hideSubmitButton,
       inputStyle,
       placeholder,
+      inputAttributes,
       recognitionPlaceholder,
       style,
       submitButtonStyle,
@@ -550,6 +551,8 @@ class ChatBot extends Component {
 
     const inputPlaceholder = speaking ? recognitionPlaceholder :
       currentStep.placeholder || placeholder;
+
+    const inputAttributesOverride = currentStep.inputAttributes || inputAttributes;
 
     return (
       <div className={`rsc ${className}`}>
@@ -596,6 +599,7 @@ class ChatBot extends Component {
                 invalid={inputInvalid}
                 disabled={disabled}
                 hasButton={!hideSubmitButton}
+                {...inputAttributesOverride}
               />
             )}
             {!currentStep.hideInput && !hideSubmitButton && (
@@ -643,6 +647,7 @@ ChatBot.propTypes = {
   opened: PropTypes.bool,
   toggleFloating: PropTypes.func,
   placeholder: PropTypes.string,
+  inputAttributes: PropTypes.object,
   recognitionEnable: PropTypes.bool,
   recognitionLang: PropTypes.string,
   recognitionPlaceholder: PropTypes.string,
@@ -679,6 +684,7 @@ ChatBot.defaultProps = {
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
+  inputAttributes: {},
   recognitionEnable: false,
   recognitionLang: 'en',
   recognitionPlaceholder: 'Listening ...',
