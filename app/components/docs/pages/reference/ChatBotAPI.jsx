@@ -82,6 +82,12 @@ const properties = [
     description: 'Render chatbot with a floating button',
   },
   {
+    name: 'floatingStyle',
+    type: 'PropTypes.object',
+    defaultValue: '',
+    description: 'The style object to use to override the floating element. This will also override the chatbot contanaier styles (left, right, bottom, top and transformOrigin)',
+  },
+  {
     name: 'footerStyle',
     type: 'PropTypes.object',
     defaultValue: '',
@@ -128,6 +134,12 @@ const properties = [
     type: 'PropTypes.bool',
     defaultValue: <code>false</code>,
     description: 'If true the user avatar will be hidden in all steps',
+  },
+  {
+    name: 'inputAttributes',
+    type: 'PropTypes.object',
+    defaultValue: '',
+    description: 'Set the globally attributes on the input field',
   },
   {
     name: 'inputStyle',

@@ -112,6 +112,12 @@ const sections = [
         description: 'Hide text input when step is triggered',
       },
       {
+        name: 'inputAttributes',
+        type: 'Object',
+        required: 'false',
+        description: 'Set any attributes on the input field (type, name, autoComplete)',
+      },
+      {
         name: 'metadata',
         type: 'Object',
         required: 'false',
