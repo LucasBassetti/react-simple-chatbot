@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import SubmitButton from '../../lib/SubmitButton';
+import SubmitButton from '../../lib/components/SubmitButton';
 
 describe('SubmitButton', () => {
   it('should render a disabled button', () => {

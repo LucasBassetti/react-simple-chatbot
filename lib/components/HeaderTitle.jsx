@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import defaultTheme from './theme';
+import defaultTheme from '../theme';
 
 const HeaderTitle = styled.h2`
   margin: 0;

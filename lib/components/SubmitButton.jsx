@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import defaultTheme from './theme';
-import { pulse } from './common/animations';
+import defaultTheme from '../theme';
+import { pulse } from '../common/animations';
 
 const fillFunc = (props) => {
   const { speaking, invalid, theme } = props;

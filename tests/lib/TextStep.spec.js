@@ -2,9 +2,9 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import { TextStep } from '../../lib/steps';
-import Bubble from '../../lib/steps/text/Bubble';
-import Image from '../../lib/steps/text/Image';
+import { TextStep } from '../../lib/steps_components';
+import Bubble from '../../lib/steps_components/text/Bubble';
+import Image from '../../lib/steps_components/text/Image';
 
 const CustomComponent = () => (
   <div />

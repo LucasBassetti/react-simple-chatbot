@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import Input from '../../lib/Input';
+import Input from '../../lib/components/Input';
 
 describe('Input', () => {
   it('should render a disabled input', () => {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { invalidInput } from './common/animations';
+import { invalidInput } from '../common/animations';
 
 const Input = styled.input`
   animation: ${props => props.invalid ? `${invalidInput} .2s ease` : ''};

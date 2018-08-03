@@ -2,8 +2,8 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import { CustomStep } from '../../lib/steps';
-import CustomStepContainer from '../../lib/steps/custom/CustomStepContainer';
+import { CustomStep } from '../../lib/steps_components';
+import CustomStepContainer from '../../lib/steps_components/custom/CustomStepContainer';
 
 const Example = () => (
   <div className="example">

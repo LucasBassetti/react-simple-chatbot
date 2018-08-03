@@ -2,8 +2,8 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import { OptionsStep } from '../../lib/steps';
-import OptionElement from '../../lib/steps/options/OptionElement';
+import { OptionsStep } from '../../lib/steps_components';
+import OptionElement from '../../lib/steps_components/options/OptionElement';
 
 describe('OptionsStep', () => {
   const settings = {

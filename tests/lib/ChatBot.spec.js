@@ -3,12 +3,14 @@ import { describe, it, before, after } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import ChatBot from '../../lib/ChatBot';
-import ChatBotContainer from '../../lib/ChatBotContainer';
-import FloatButton from '../../lib/FloatButton';
-import Header from '../../lib/Header';
-import HeaderIcon from '../../lib/HeaderIcon';
+import {
+  ChatBotContainer,
+  FloatButton,
+  Header,
+  HeaderIcon,
+} from '../../lib/components';
 import { CloseIcon } from '../../lib/icons';
-import { TextStep } from '../../lib/steps';
+import { TextStep } from '../../lib/steps_components';
 
 const CustomComponent = () => (
   <div />
@@ -229,6 +231,11 @@ describe('ChatBot', () => {
         return (
           <ChatBot
             floating={true}
+            floatingStyle={{
+              left: '32px',
+              right: 'initial',
+              transformOrigin: 'bottom left',
+            }}
             opened={opened}
             toggleFloating={this.toggleFloating}
             botDelay={0}
@@ -268,6 +275,12 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
       wrapper.find(FloatButton).simulate('click');
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+    });
+
+    it('should modify the transform-origin style in chatbot container', () => {
+      expect(wrapper.find(ChatBotContainer).prop('floatingStyle').left).to.be.equal('32px');
+      expect(wrapper.find(ChatBotContainer).prop('floatingStyle').right).to.be.equal('initial');
+      expect(wrapper.find(ChatBotContainer).prop('floatingStyle').transformOrigin).to.be.equal('bottom left');
     });
   });
 
