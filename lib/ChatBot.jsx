@@ -127,6 +127,7 @@ class ChatBot extends Component {
   componentDidMount() {
     const { recognitionEnable } = this.state;
     const { recognitionLang } = this.props;
+
     if (recognitionEnable) {
       this.recognition = new Recognition(
         this.onRecognitionChange,
@@ -135,8 +136,11 @@ class ChatBot extends Component {
         recognitionLang,
       );
     }
-    this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
-    window.addEventListener('resize', this.onResize);
+
+    if (this.content) {
+      this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
+      window.addEventListener('resize', this.onResize);
+    }
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -148,8 +152,10 @@ class ChatBot extends Component {
   }
 
   componentWillUnmount() {
-    this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted);
-    window.removeEventListener('resize', this.onResize);
+    if (this.content) {
+      this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted);
+      window.removeEventListener('resize', this.onResize);
+    }
   }
 
   onNodeInserted(event) {
