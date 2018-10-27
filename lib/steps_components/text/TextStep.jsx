@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Bubble from './Bubble';
@@ -19,7 +20,7 @@ class TextStep extends Component {
   }
 
   componentDidMount() {
-    const { step } = this.props;
+    const { step, speak, previousValue } = this.props;
     const { component, delay, waitAction } = step;
     const isComponentWatingUser = component && waitAction;
     setTimeout(() => {
@@ -27,20 +28,21 @@ class TextStep extends Component {
         if (!isComponentWatingUser && !step.rendered) {
           this.props.triggerNextStep();
         }
+        speak(step, previousValue);
       });
     }, delay);
   }
 
+  getMessage() {
+    const { previousValue, step } = this.props;
+    const { message } = step;
+
+    return message.replace(/{previousValue}/g, previousValue);
+  }
+
   renderMessage() {
-    const {
-      previousValue,
-      step,
-      steps,
-      previousStep,
-      triggerNextStep,
-    } = this.props;
+    const { step, steps, previousStep, triggerNextStep } = this.props;
     const { component } = step;
-    let { message } = step;
 
     if (component) {
       return React.cloneElement(component, {
@@ -51,9 +53,7 @@ class TextStep extends Component {
       });
     }
 
-    message = message.replace(/{previousValue}/g, previousValue);
-
-    return message;
+    return this.getMessage();
   }
 
   render() {
@@ -66,33 +66,24 @@ class TextStep extends Component {
       hideBotAvatar,
       hideUserAvatar,
     } = this.props;
-    const {
-      avatar,
-      user,
-    } = step;
+    const { avatar, user } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
 
     return (
-      <TextStepContainer
-        className="rsc-ts"
-        user={user}
-      >
-        <ImageContainer
-          className="rsc-ts-image-container"
-          user={user}
-        >
-          {
-            isFirst && showAvatar &&
-            <Image
-              className="rsc-ts-image"
-              style={avatarStyle}
-              showAvatar={showAvatar}
-              user={user}
-              src={avatar}
-              alt="avatar"
-            />
-          }
+      <TextStepContainer className="rsc-ts" user={user}>
+        <ImageContainer className="rsc-ts-image-container" user={user}>
+          {isFirst &&
+            showAvatar && (
+              <Image
+                className="rsc-ts-image"
+                style={avatarStyle}
+                showAvatar={showAvatar}
+                user={user}
+                src={avatar}
+                alt="avatar"
+              />
+            )}
         </ImageContainer>
         <Bubble
           className="rsc-ts-bubble"
@@ -102,11 +93,8 @@ class TextStep extends Component {
           isFirst={isFirst}
           isLast={isLast}
         >
-          {
-            this.state.loading &&
-            <Loading />
-          }
-          { !this.state.loading && this.renderMessage() }
+          {this.state.loading && <Loading />}
+          {!this.state.loading && this.renderMessage()}
         </Bubble>
       </TextStepContainer>
     );
@@ -118,6 +106,7 @@ TextStep.propTypes = {
   isLast: PropTypes.bool.isRequired,
   step: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
+  speak: PropTypes.func,
   avatarStyle: PropTypes.object.isRequired,
   bubbleStyle: PropTypes.object.isRequired,
   hideBotAvatar: PropTypes.bool.isRequired,
@@ -131,6 +120,7 @@ TextStep.defaultProps = {
   previousStep: {},
   steps: {},
   previousValue: '',
+  speak: _.noop,
 };
 
 export default TextStep;

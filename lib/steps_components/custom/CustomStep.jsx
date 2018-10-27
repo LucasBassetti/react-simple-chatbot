@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from '../common/Loading';
@@ -16,7 +17,7 @@ class CustomStep extends Component {
   }
 
   componentDidMount() {
-    const { step } = this.props;
+    const { speak, step, previousValue } = this.props;
     const { delay, waitAction } = step;
 
     setTimeout(() => {
@@ -24,6 +25,7 @@ class CustomStep extends Component {
         if (!waitAction && !step.rendered) {
           this.props.triggerNextStep();
         }
+        speak(step, previousValue);
       });
     }, delay);
   }
@@ -44,15 +46,8 @@ class CustomStep extends Component {
     const { style } = this.props;
 
     return (
-      <CustomStepContainer
-        className="rsc-cs"
-        style={style}
-      >
-        {
-          loading ? (
-            <Loading />
-          ) : this.renderComponent()
-        }
+      <CustomStepContainer className="rsc-cs" style={style}>
+        {loading ? <Loading /> : this.renderComponent()}
       </CustomStepContainer>
     );
   }
@@ -64,6 +59,12 @@ CustomStep.propTypes = {
   style: PropTypes.object.isRequired,
   previousStep: PropTypes.object.isRequired,
   triggerNextStep: PropTypes.func.isRequired,
+  previousValue: PropTypes.any,
+  speak: PropTypes.func,
+};
+CustomStep.defaultProps = {
+  previousValue: '',
+  speak: _.noop,
 };
 
 export default CustomStep;
