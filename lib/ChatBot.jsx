@@ -17,7 +17,8 @@ import {
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
-import { isMobile, speakFn } from './utils';
+import { isMobile } from './utils';
+import { speakFn } from './speechSynthesis';
 
 class ChatBot extends Component {
   /* istanbul ignore next */
