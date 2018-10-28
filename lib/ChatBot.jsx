@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Random from 'random-id';
@@ -324,7 +323,10 @@ class ChatBot extends Component {
       this.props.handleEnd({ renderedSteps, steps, values });
     }
   }
-
+  isInputValueEmpty() {
+    const { inputValue } = this.state;
+    return Boolean(inputValue) && inputValue.length > 0;
+  }
   isLastPosition(step) {
     const { renderedSteps } = this.state;
     const length = renderedSteps.length;
@@ -371,8 +373,8 @@ class ChatBot extends Component {
   }
 
   handleSubmitButton() {
-    const { inputValue, speaking, recognitionEnable } = this.state;
-    if ((_.isEmpty(inputValue) || speaking) && recognitionEnable) {
+    const { speaking, recognitionEnable } = this.state;
+    if ((this.isInputValueEmpty() || speaking) && recognitionEnable) {
       this.recognition.speak();
       if (!speaking) {
         this.setState({ speaking: true });
@@ -565,7 +567,7 @@ class ChatBot extends Component {
     );
 
     const icon =
-      (_.isEmpty(inputValue) || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
+      (this.isInputValueEmpty() || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
 
     const inputPlaceholder = speaking
       ? recognitionPlaceholder
@@ -603,7 +605,7 @@ class ChatBot extends Component {
             height={height}
             hideInput={currentStep.hideInput}
           >
-            {_.map(renderedSteps, this.renderStep)}
+            {Object.values(renderedSteps).map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
