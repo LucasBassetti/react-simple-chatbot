@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from '../common/Loading';
@@ -64,7 +63,7 @@ CustomStep.propTypes = {
 };
 CustomStep.defaultProps = {
   previousValue: '',
-  speak: _.noop,
+  speak: () => {},
 };
 
 export default CustomStep;
