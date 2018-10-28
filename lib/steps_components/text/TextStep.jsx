@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Bubble from './Bubble';
@@ -120,7 +119,7 @@ TextStep.defaultProps = {
   previousStep: {},
   steps: {},
   previousValue: '',
-  speak: _.noop,
+  speak: () => {},
 };
 
 export default TextStep;
