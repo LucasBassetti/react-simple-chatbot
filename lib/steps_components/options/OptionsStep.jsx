@@ -49,9 +49,9 @@ class OptionsStep extends Component {
 }
 
 OptionsStep.propTypes = {
+  bubbleOptionStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   step: PropTypes.objectOf(PropTypes.any).isRequired,
   triggerNextStep: PropTypes.func.isRequired,
-  bubbleOptionStyle: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default OptionsStep;

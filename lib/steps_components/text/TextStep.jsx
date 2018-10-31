@@ -108,25 +108,31 @@ class TextStep extends Component {
 }
 
 TextStep.propTypes = {
+  avatarStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   isFirst: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
-  step: PropTypes.objectOf(PropTypes.any).isRequired,
-  triggerNextStep: PropTypes.func.isRequired,
-  speak: PropTypes.func,
-  avatarStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   bubbleStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   hideBotAvatar: PropTypes.bool.isRequired,
   hideUserAvatar: PropTypes.bool.isRequired,
   previousStep: PropTypes.objectOf(PropTypes.any),
-  previousValue: PropTypes.any,
+  previousValue: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.array,
+  ]),
+  speak: PropTypes.func,
+  step: PropTypes.objectOf(PropTypes.any).isRequired,
   steps: PropTypes.objectOf(PropTypes.any),
+  triggerNextStep: PropTypes.func.isRequired,
 };
 
 TextStep.defaultProps = {
   previousStep: {},
-  steps: {},
   previousValue: '',
   speak: () => {},
+  steps: {},
 };
 
 export default TextStep;

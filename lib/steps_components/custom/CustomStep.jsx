@@ -57,13 +57,19 @@ class CustomStep extends Component {
 }
 
 CustomStep.propTypes = {
+  previousStep: PropTypes.objectOf(PropTypes.any).isRequired,
+  previousValue: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.array,
+  ]),
+  speak: PropTypes.func,
   step: PropTypes.objectOf(PropTypes.any).isRequired,
   steps: PropTypes.objectOf(PropTypes.any).isRequired,
   style: PropTypes.objectOf(PropTypes.any).isRequired,
-  previousStep: PropTypes.objectOf(PropTypes.any).isRequired,
   triggerNextStep: PropTypes.func.isRequired,
-  previousValue: PropTypes.any,
-  speak: PropTypes.func,
 };
 CustomStep.defaultProps = {
   previousValue: '',

@@ -13,5 +13,8 @@
     "no-return-assign": 0,
     "guard-for-in": 0,
     "no-restricted-syntax": 0,
+    "no-param-reassign": 0,
+    "react/no-will-update-set-state": 0,
+    "new-cap": 0,
   }
 }
