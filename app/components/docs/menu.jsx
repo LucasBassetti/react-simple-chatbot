@@ -14,8 +14,9 @@ import {
   Options,
   PreviousValue,
   SimpleForm,
-  Validator,
   SpeechRecognition,
+  SpeechSynthesis,
+  Validator,
   WikipediaSearch,
 } from './pages/examples';
 
@@ -69,6 +70,11 @@ const menu = [
         href: '/docs/speech-recognition',
         title: 'Speech Recognition',
         component: <SpeechRecognition />,
+      },
+      {
+        href: '/docs/speech-synthesis',
+        title: 'Speech Synthesis',
+        component: <SpeechSynthesis />,
       },
       {
         href: '/docs/options',

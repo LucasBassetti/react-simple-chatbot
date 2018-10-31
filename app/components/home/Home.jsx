@@ -61,6 +61,7 @@ class Home extends Component {
         </div>
         <div className="column">
           <ChatBot
+            speechSynthesis={{ enable: true, lang: 'en' }}
             style={{
               // boxShadow: '0 0 100px #ddd',
               width: '300px',

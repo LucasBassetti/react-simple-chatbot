@@ -80,7 +80,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-ga": "^2.2.0",
-    "react-simple-chatbot": "^0.3.4",
+    "react-simple-chatbot": "^0.4.0",
     "styled-components": "^3.3.3"
   }
 }

@@ -82,6 +82,12 @@ const properties = [
     description: 'Render chatbot with a floating button',
   },
   {
+    name: 'floatingIcon',
+    type: 'PropTypes.string, PropTypes.element',
+    defaultValue: '',
+    description: 'Override the floating icon. Floating icon can be an url or a React Element.',
+  },
+  {
     name: 'floatingStyle',
     type: 'PropTypes.object',
     defaultValue: '',
@@ -176,6 +182,12 @@ const properties = [
     type: 'PropTypes.string',
     defaultValue: <code>Listening</code>,
     description: 'Chatbot speech recognition placeholder',
+  },
+  {
+    name: 'speechSynthesis',
+    type: 'PropTypes.object',
+    defaultValue: <code>{"{ enable: false, lang: 'en', voice: null }"}</code>,
+    description: 'If true, enable instant text-to-speech with voice',
   },
   {
     name: 'steps',
