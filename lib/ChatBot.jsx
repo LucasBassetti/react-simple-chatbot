@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Random from 'random-id';
@@ -19,6 +18,7 @@ import {
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
+import { speakFn } from './speechSynthesis';
 
 class ChatBot extends Component {
   /* istanbul ignore next */
@@ -39,7 +39,7 @@ class ChatBot extends Component {
       recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
       defaultUserSettings: {},
     };
-
+    this.speak = speakFn(props.speechSynthesis);
     this.renderStep = this.renderStep.bind(this);
     this.getTriggeredStep = this.getTriggeredStep.bind(this);
     this.generateRenderedStepsById = this.generateRenderedStepsById.bind(this);
@@ -95,24 +95,22 @@ class ChatBot extends Component {
       steps[firstStep.id].message = firstStep.message;
     }
 
-    const {
-      currentStep,
-      previousStep,
-      previousSteps,
-      renderedSteps,
-    } = storage.getData({
-      cacheName,
-      cache,
-      firstStep,
-      steps,
-    }, () => {
-      // focus input if last step cached is a user step
-      this.setState({ disabled: false }, () => {
-        if (enableMobileAutoFocus || !isMobile()) {
-          this.input.focus();
-        }
-      });
-    });
+    const { currentStep, previousStep, previousSteps, renderedSteps } = storage.getData(
+      {
+        cacheName,
+        cache,
+        firstStep,
+        steps,
+      },
+      () => {
+        // focus input if last step cached is a user step
+        this.setState({ disabled: false }, () => {
+          if (enableMobileAutoFocus || !isMobile()) {
+            this.input.focus();
+          }
+        });
+      },
+    );
 
     this.setState({
       currentStep,
@@ -210,12 +208,7 @@ class ChatBot extends Component {
 
   triggerNextStep(data) {
     const { enableMobileAutoFocus } = this.props;
-    const {
-      defaultUserSettings,
-      previousSteps,
-      renderedSteps,
-      steps,
-    } = this.state;
+    const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
 
@@ -331,7 +324,10 @@ class ChatBot extends Component {
       this.props.handleEnd({ renderedSteps, steps, values });
     }
   }
-
+  isInputValueEmpty() {
+    const { inputValue } = this.state;
+    return Boolean(inputValue) && inputValue.length > 0;
+  }
   isLastPosition(step) {
     const { renderedSteps } = this.state;
     const length = renderedSteps.length;
@@ -378,8 +374,8 @@ class ChatBot extends Component {
   }
 
   handleSubmitButton() {
-    const { inputValue, speaking, recognitionEnable } = this.state;
-    if ((_.isEmpty(inputValue) || speaking) && recognitionEnable) {
+    const { speaking, recognitionEnable } = this.state;
+    if ((this.isInputValueEmpty() || speaking) && recognitionEnable) {
       this.recognition.speak();
       if (!speaking) {
         this.setState({ speaking: true });
@@ -406,15 +402,18 @@ class ChatBot extends Component {
       renderedSteps.push(currentStep);
       previousSteps.push(currentStep);
 
-      this.setState({
-        currentStep,
-        renderedSteps,
-        previousSteps,
-        disabled: true,
-        inputValue: '',
-      }, () => {
-        this.input.blur();
-      });
+      this.setState(
+        {
+          currentStep,
+          renderedSteps,
+          previousSteps,
+          disabled: true,
+          inputValue: '',
+        },
+        () => {
+          this.input.blur();
+        },
+      );
     }
   }
 
@@ -425,23 +424,29 @@ class ChatBot extends Component {
     const value = inputValue;
 
     if (typeof result !== 'boolean' || !result) {
-      this.setState({
-        inputValue: result.toString(),
-        inputInvalid: true,
-        disabled: true,
-      }, () => {
-        setTimeout(() => {
-          this.setState({
-            inputValue: value,
-            inputInvalid: false,
-            disabled: false,
-          }, () => {
-            if (enableMobileAutoFocus || !isMobile()) {
-              this.input.focus();
-            }
-          });
-        }, 2000);
-      });
+      this.setState(
+        {
+          inputValue: result.toString(),
+          inputInvalid: true,
+          disabled: true,
+        },
+        () => {
+          setTimeout(() => {
+            this.setState(
+              {
+                inputValue: value,
+                inputInvalid: false,
+                disabled: false,
+              },
+              () => {
+                if (enableMobileAutoFocus || !isMobile()) {
+                  this.input.focus();
+                }
+              },
+            );
+          }, 2000);
+        },
+      );
 
       return true;
     }
@@ -466,6 +471,7 @@ class ChatBot extends Component {
       customStyle,
       hideBotAvatar,
       hideUserAvatar,
+      speechSynthesis,
     } = this.props;
     const { options, component, asMessage } = step;
     const steps = this.generateRenderedStepsById();
@@ -475,10 +481,12 @@ class ChatBot extends Component {
       return (
         <CustomStep
           key={index}
+          speak={this.speak}
           step={step}
           steps={steps}
           style={customStyle}
           previousStep={previousStep}
+          previousValue={previousStep.value}
           triggerNextStep={this.triggerNextStep}
         />
       );
@@ -489,6 +497,8 @@ class ChatBot extends Component {
         <OptionsStep
           key={index}
           step={step}
+          speak={this.speak}
+          previousValue={previousStep.value}
           triggerNextStep={this.triggerNextStep}
           bubbleOptionStyle={bubbleOptionStyle}
         />
@@ -500,6 +510,7 @@ class ChatBot extends Component {
         key={index}
         step={step}
         steps={steps}
+        speak={this.speak}
         previousStep={previousStep}
         previousValue={previousStep.value}
         triggerNextStep={this.triggerNextStep}
@@ -507,6 +518,7 @@ class ChatBot extends Component {
         bubbleStyle={bubbleStyle}
         hideBotAvatar={hideBotAvatar}
         hideUserAvatar={hideUserAvatar}
+        speechSynthesis={speechSynthesis}
         isFirst={this.isFirstPosition(step)}
         isLast={this.isLastPosition(step)}
       />
@@ -556,10 +568,11 @@ class ChatBot extends Component {
     );
 
     const icon =
-      (_.isEmpty(inputValue) || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
+      (this.isInputValueEmpty() || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
 
-    const inputPlaceholder = speaking ? recognitionPlaceholder :
-      currentStep.placeholder || placeholder;
+    const inputPlaceholder = speaking
+      ? recognitionPlaceholder
+      : currentStep.placeholder || placeholder;
 
     const inputAttributesOverride = currentStep.inputAttributes || inputAttributes;
 
@@ -593,7 +606,7 @@ class ChatBot extends Component {
             height={height}
             hideInput={currentStep.hideInput}
           >
-            {_.map(renderedSteps, this.renderStep)}
+            {Object.values(renderedSteps).map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
@@ -613,18 +626,19 @@ class ChatBot extends Component {
                 {...inputAttributesOverride}
               />
             )}
-            {!currentStep.hideInput && !hideSubmitButton && (
-              <SubmitButton
-                className="rsc-submit-button"
-                style={submitButtonStyle}
-                onClick={this.handleSubmitButton}
-                invalid={inputInvalid}
-                disabled={disabled}
-                speaking={speaking}
-              >
-                {icon}
-              </SubmitButton>
-            )}
+            {!currentStep.hideInput &&
+              !hideSubmitButton && (
+                <SubmitButton
+                  className="rsc-submit-button"
+                  style={submitButtonStyle}
+                  onClick={this.handleSubmitButton}
+                  invalid={inputInvalid}
+                  disabled={disabled}
+                  speaking={speaking}
+                >
+                  {icon}
+                </SubmitButton>
+              )}
           </Footer>
         </ChatBotContainer>
       </div>
@@ -670,6 +684,11 @@ ChatBot.propTypes = {
   userDelay: PropTypes.number,
   width: PropTypes.string,
   height: PropTypes.string,
+  speechSynthesis: PropTypes.shape({
+    enable: PropTypes.bool,
+    lang: PropTypes.string,
+    voice: PropTypes.instanceOf(window.SpeechSynthesisVoice),
+  }),
 };
 
 ChatBot.defaultProps = {
@@ -701,6 +720,11 @@ ChatBot.defaultProps = {
   recognitionEnable: false,
   recognitionLang: 'en',
   recognitionPlaceholder: 'Listening ...',
+  speechSynthesis: {
+    enable: false,
+    lang: 'en',
+    voice: null,
+  },
   style: {},
   submitButtonStyle: {},
   toggleFloating: undefined,
