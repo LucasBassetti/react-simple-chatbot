@@ -1,10 +1,10 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
+  mode: 'production',
   entry: path.resolve(__dirname, 'lib/index'),
   externals: { 'styled-components': 'styled-components' },
   output: {
@@ -19,7 +19,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
-    new LodashModuleReplacementPlugin(),
     new UglifyJsPlugin({
       comments: false,
     }),
@@ -30,7 +29,16 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        use: ['babel-loader'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: [
+              '@babel/plugin-transform-arrow-functions',
+              '@babel/plugin-proposal-class-properties',
+            ],
+          },
+        },
       },
     ],
   },

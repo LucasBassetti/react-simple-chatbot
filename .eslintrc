@@ -1,4 +1,5 @@
 {
+  "parser": "babel-eslint",
   "extends": ["airbnb"],
   "globals": {
     "window": true,
@@ -8,20 +9,9 @@
     "navigator": true
   },
   "rules": {
-    "guard-for-in": ["off"],
-    "no-console": ["off"],
-    "no-use-before-define": ["off"],
-    "no-restricted-syntax": ["off"],
-    "no-param-reassign": ["off"],
-    "no-return-assign": ["off"],
-    "no-confusing-arrow": ["off"],
-    "class-methods-use-this": ["off"],
-    "jsx-a11y/no-static-element-interactions": ["off"],
-    "jsx-a11y/img-has-alt": ["off"],
-    "react/no-will-update-set-state": ["off"],
-    "react/jsx-boolean-value": ["off"],
-    "react/react-in-jsx-scope": ["off"],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/forbid-prop-types": ["off"]
+    "no-confusing-arrow": 0,
+    "no-return-assign": 0,
+    "guard-for-in": 0,
+    "no-restricted-syntax": 0,
   }
 }

@@ -4,34 +4,38 @@ import Loading from '../common/Loading';
 import CustomStepContainer from './CustomStepContainer';
 
 class CustomStep extends Component {
-  /* istanbul ignore next */
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-
-    this.renderComponent = this.renderComponent.bind(this);
-  }
+  state = {
+    loading: true,
+  };
 
   componentDidMount() {
-    const { speak, step, previousValue } = this.props;
+    const {
+      speak,
+      step,
+      previousValue,
+      triggerNextStep,
+    } = this.props;
     const { delay, waitAction } = step;
 
     setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!waitAction && !step.rendered) {
-          this.props.triggerNextStep();
+          triggerNextStep();
         }
         speak(step, previousValue);
       });
     }, delay);
   }
 
-  renderComponent() {
-    const { step, steps, previousStep, triggerNextStep } = this.props;
+  renderComponent = () => {
+    const {
+      step,
+      steps,
+      previousStep,
+      triggerNextStep,
+    } = this.props;
     const { component } = step;
+
     return React.cloneElement(component, {
       step,
       steps,
@@ -53,10 +57,10 @@ class CustomStep extends Component {
 }
 
 CustomStep.propTypes = {
-  step: PropTypes.object.isRequired,
-  steps: PropTypes.object.isRequired,
-  style: PropTypes.object.isRequired,
-  previousStep: PropTypes.object.isRequired,
+  step: PropTypes.objectOf(PropTypes.any).isRequired,
+  steps: PropTypes.objectOf(PropTypes.any).isRequired,
+  style: PropTypes.objectOf(PropTypes.any).isRequired,
+  previousStep: PropTypes.objectOf(PropTypes.any).isRequired,
   triggerNextStep: PropTypes.func.isRequired,
   previousValue: PropTypes.any,
   speak: PropTypes.func,

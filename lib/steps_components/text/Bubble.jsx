@@ -7,11 +7,15 @@ const Bubble = styled.div`
   background: ${props => (props.user ? props.theme.userBubbleColor : props.theme.botBubbleColor)};
   border-radius: ${(props) => {
     const { isFirst, isLast, user } = props;
+
     if (!isFirst && !isLast) {
       return user ? '18px 0 0 18px' : '0 18px 18px 0px';
-    } else if (!isFirst && isLast) {
+    }
+
+    if (!isFirst && isLast) {
       return user ? '18px 0 18px 18px' : '0 18px 18px 18px';
     }
+
     return props.user ? '18px 18px 0 18px' : '18px 18px 18px 0';
   }};
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
@@ -21,9 +25,12 @@ const Bubble = styled.div`
   max-width: 50%;
   margin: ${(props) => {
     const { isFirst, showAvatar, user } = props;
+
     if (!isFirst && showAvatar) {
       return user ? '-8px 46px 10px 0' : '-8px 0 10px 46px';
-    } else if (!isFirst && !showAvatar) {
+    }
+
+    if (!isFirst && !showAvatar) {
       return user ? '-8px 0px 10px 0' : '-8px 0 10px 0px';
     }
 
@@ -35,6 +42,7 @@ const Bubble = styled.div`
   transform: scale(0);
   transform-origin: ${(props) => {
     const { isFirst, user } = props;
+
     if (isFirst) {
       return user ? 'bottom right' : 'bottom left';
     }
