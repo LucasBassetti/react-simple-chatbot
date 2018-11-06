@@ -663,7 +663,7 @@ class ChatBot extends Component {
             height={height}
             hideInput={currentStep.hideInput}
           >
-            {Object.values(renderedSteps).map(this.renderStep)}
+            {renderedSteps.map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {

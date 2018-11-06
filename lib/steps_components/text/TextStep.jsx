@@ -36,7 +36,7 @@ class TextStep extends Component {
     const { previousValue, step } = this.props;
     const { message } = step;
 
-    return message.replace(/{previousValue}/g, previousValue);
+    return message ? message.replace(/{previousValue}/g, previousValue) : '';
   }
 
   renderMessage = () => {
@@ -99,8 +99,7 @@ class TextStep extends Component {
           isFirst={isFirst}
           isLast={isLast}
         >
-          {loading && <Loading />}
-          {!loading && this.renderMessage()}
+          {loading ? <Loading /> : this.renderMessage()}
         </Bubble>
       </TextStepContainer>
     );
