@@ -64,7 +64,7 @@ class ChatBot extends Component {
     const chatSteps = {};
 
     const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
-    const defaultUserSettings = { delay: userDelay, avatar: userAvatar };
+    const defaultUserSettings = { delay: userDelay, avatar: userAvatar, hideInput: false };
     const defaultCustomSettings = { delay: customDelay };
 
     for (let i = 0, len = steps.length; i < len; i += 1) {
@@ -108,7 +108,9 @@ class ChatBot extends Component {
         // focus input if last step cached is a user step
         this.setState({ disabled: false }, () => {
           if (enableMobileAutoFocus || !isMobile()) {
-            this.input.focus();
+            if (this.input) {
+              this.input.focus();
+            }
           }
         });
       },
@@ -297,7 +299,9 @@ class ChatBot extends Component {
         if (nextStep.user) {
           this.setState({ disabled: false }, () => {
             if (enableMobileAutoFocus || !isMobile()) {
-              this.input.focus();
+              if (this.input) {
+                this.input.focus();
+              }
             }
           });
         } else {
@@ -461,7 +465,9 @@ class ChatBot extends Component {
           inputValue: '',
         },
         () => {
-          this.input.blur();
+          if (this.input) {
+            this.input.blur();
+          }
         },
       );
     }
@@ -490,7 +496,9 @@ class ChatBot extends Component {
               },
               () => {
                 if (enableMobileAutoFocus || !isMobile()) {
-                  this.input.focus();
+                  if (this.input) {
+                    this.input.focus();
+                  }
                 }
               },
             );
