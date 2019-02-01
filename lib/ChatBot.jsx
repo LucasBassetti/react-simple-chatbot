@@ -750,7 +750,7 @@ ChatBot.propTypes = {
   speechSynthesis: PropTypes.shape({
     enable: PropTypes.bool,
     lang: PropTypes.string,
-    voice: PropTypes.instanceOf(window.SpeechSynthesisVoice),
+    voice: typeof window !== 'undefined' ? PropTypes.instanceOf(window.SpeechSynthesisVoice) : PropTypes.any,
   }),
   steps: PropTypes.arrayOf(PropTypes.object).isRequired,
   style: PropTypes.objectOf(PropTypes.any),
