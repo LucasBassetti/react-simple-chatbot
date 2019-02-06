@@ -2,4 +2,4 @@ language: node_js
 node_js:
   - 8
 before_install:
-  - "npm install react react-dom styled-components"
+  - "npm install react@16.4.1 react-dom@16.4.1 styled-components@3.4.10"
