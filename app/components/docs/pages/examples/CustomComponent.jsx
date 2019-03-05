@@ -14,7 +14,7 @@ const exampleCode =
     {
       id: '2',
       component: (
-        <div> This is a example component </div>
+        <div> This is an example component </div>
       ),
       end: true,
     },
