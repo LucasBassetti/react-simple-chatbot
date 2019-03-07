@@ -14,4 +14,10 @@ describe('SubmitButton', () => {
     const wrapper = mount(<SubmitButton invalid={true} />);
     expect(wrapper.props().invalid).to.be.equal(true);
   });
+
+  it('should render a speaking button', () => {
+    const wrapper = mount(<SubmitButton speaking={true} />);
+    expect(wrapper.props().speaking).to.be.equal(true);
+  });
+
 });

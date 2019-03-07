@@ -1,8 +1,8 @@
-import styled from 'styled-components';
 import { invalidInput } from '../common/animations';
+import styled, { css } from 'styled-components';
 
 const Input = styled.input`
-  animation: ${props => props.invalid ? `${invalidInput} .2s ease` : ''};
+  animation: ${props => props.invalid ? css`${invalidInput} .2s ease` : ''};
   border: 0;
   border-radius: 0;
   border-bottom-left-radius: 10px;

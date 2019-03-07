@@ -31,6 +31,18 @@ class ChatBot extends Component {
   constructor(props) {
     super(props);
 
+    this.content = null;
+    this.input = null;
+
+    this.setContentRef = element => {
+      this.content = element;
+    };
+
+    this.setInputRef = element => {
+      this.input = element;
+    };
+
+
     this.state = {
       renderedSteps: [],
       previousSteps: [],
@@ -665,7 +677,7 @@ class ChatBot extends Component {
           {!hideHeader && header}
           <Content
             className="rsc-content"
-            innerRef={contentRef => (this.content = contentRef)}
+            ref={this.setContentRef}
             floating={floating}
             style={contentStyle}
             height={height}
@@ -679,7 +691,7 @@ class ChatBot extends Component {
                 <Input
                   type="textarea"
                   style={inputStyle}
-                  innerRef={inputRef => (this.input = inputRef)}
+                  ref={this.setInputRef}
                   className="rsc-input"
                   placeholder={inputInvalid ? '' : inputPlaceholder}
                   onKeyPress={this.handleKeyPress}
