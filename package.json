@@ -89,8 +89,8 @@
     "react-dom": "^16.4.1"
   },
   "peerDependencies": {
-    "styled-components": ">= 2.0.0 < 4",
-    "react": "^16.x",
-    "react-dom": "^16.x"
+    "styled-components": "^4.0.0",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0"
   }
 }

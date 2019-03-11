@@ -34,11 +34,11 @@ class ChatBot extends Component {
     this.content = null;
     this.input = null;
 
-    this.setContentRef = element => {
+    this.setContentRef = (element) => {
       this.content = element;
     };
 
-    this.setInputRef = element => {
+    this.setInputRef = (element) => {
       this.input = element;
     };
 
