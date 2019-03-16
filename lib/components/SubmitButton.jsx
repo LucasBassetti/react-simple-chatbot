@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import defaultTheme from '../theme';
 import { pulse } from '../common/animations';
 
@@ -31,7 +31,7 @@ const SubmitButton = styled.button`
     height: 23px;
     border-radius: 50%;
     animation: ${({ theme, speaking }) =>
-      speaking ? `${pulse(theme.headerBgColor)} 2s ease infinite` : ''};
+      speaking ? css`${pulse(theme.headerBgColor)} 2s ease infinite` : ''};
   }
   &:not(:disabled):hover {
     opacity: 0.7;
