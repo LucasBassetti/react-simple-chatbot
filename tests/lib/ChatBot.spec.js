@@ -12,6 +12,8 @@ import {
 import { CloseIcon } from '../../lib/icons';
 import { TextStep } from '../../lib/steps_components';
 
+import { parse } from 'flatted';
+
 const CustomComponent = () => (
   <div />
 );
@@ -24,7 +26,7 @@ describe('ChatBot', () => {
         botDelay={0}
         userDelay={0}
         customDelay={0}
-        handleEnd={() => {}}
+        handleEnd={() => { }}
         steps={[
           {
             id: '1',
@@ -125,7 +127,7 @@ describe('ChatBot', () => {
         botDelay={0}
         userDelay={0}
         customDelay={0}
-        handleEnd={() => {}}
+        handleEnd={() => { }}
         steps={[
           {
             id: '1',
@@ -148,7 +150,7 @@ describe('ChatBot', () => {
         botDelay={0}
         userDelay={0}
         customDelay={0}
-        handleEnd={() => {}}
+        handleEnd={() => { }}
         steps={[
           {
             id: '1',
@@ -173,7 +175,7 @@ describe('ChatBot', () => {
         cache={true}
         userDelay={0}
         customDelay={0}
-        handleEnd={() => {}}
+        handleEnd={() => { }}
         steps={[
           {
             id: '1',
@@ -205,7 +207,7 @@ describe('ChatBot', () => {
     });
 
     it('should cache the steps', () => {
-      const data = JSON.parse(localStorage.getItem('rsc_cache'));
+      const data = parse(localStorage.getItem('rsc_cache'));
       expect(data.renderedSteps.length).to.be.equal(2);
     });
   });
@@ -241,7 +243,7 @@ describe('ChatBot', () => {
             botDelay={0}
             userDelay={0}
             customDelay={0}
-            handleEnd={() => {}}
+            handleEnd={() => { }}
             steps={[
               {
                 id: '1',
