@@ -61,7 +61,7 @@ class ChatBot extends Component {
     this.speak = speakFn(props.speechSynthesis);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { steps } = this.props;
     const {
       botDelay,
@@ -104,6 +104,23 @@ class ChatBot extends Component {
       chatSteps[firstStep.id].message = firstStep.message;
     }
 
+    const { recognitionEnable } = this.state;
+    const { recognitionLang } = this.props;
+
+    if (recognitionEnable) {
+      this.recognition = new Recognition(
+        this.onRecognitionChange,
+        this.onRecognitionEnd,
+        this.onRecognitionStop,
+        recognitionLang,
+      );
+    }
+
+    if (this.content) {
+      this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
+      window.addEventListener('resize', this.onResize);
+    }
+
     const {
       currentStep,
       previousStep,
@@ -138,31 +155,15 @@ class ChatBot extends Component {
     });
   }
 
-  componentDidMount() {
-    const { recognitionEnable } = this.state;
-    const { recognitionLang } = this.props;
-
-    if (recognitionEnable) {
-      this.recognition = new Recognition(
-        this.onRecognitionChange,
-        this.onRecognitionEnd,
-        this.onRecognitionStop,
-        recognitionLang,
-      );
+  static getDerivedStateFromProps(props, state) {
+    const { opened, toggleFloating } = props;
+    if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
+      return {
+        ...state,
+        opened
+      }
     }
-
-    if (this.content) {
-      this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
-      window.addEventListener('resize', this.onResize);
-    }
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    const { opened } = nextProps;
-
-    if (opened !== undefined && opened !== nextState.opened) {
-      this.setState({ opened });
-    }
+    return state;
   }
 
   componentWillUnmount() {
