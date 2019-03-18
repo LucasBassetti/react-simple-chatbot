@@ -160,8 +160,8 @@ class ChatBot extends Component {
     if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
       return {
         ...state,
-        opened
-      }
+        opened,
+      };
     }
     return state;
   }
