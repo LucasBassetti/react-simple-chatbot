@@ -386,7 +386,7 @@ class ChatBot extends Component {
 
   isInputValueEmpty = () => {
     const { inputValue } = this.state;
-    return Boolean(inputValue) && inputValue.length > 0;
+    return !inputValue || inputValue.length === 0;
   }
 
   isLastPosition = (step) => {
@@ -436,6 +436,7 @@ class ChatBot extends Component {
 
   handleSubmitButton = () => {
     const { speaking, recognitionEnable } = this.state;
+
     if ((this.isInputValueEmpty() || speaking) && recognitionEnable) {
       this.recognition.speak();
       if (!speaking) {
@@ -443,6 +444,7 @@ class ChatBot extends Component {
       }
       return;
     }
+
     this.submitUserMessage();
   }
 
