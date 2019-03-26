@@ -9,16 +9,11 @@ import TextStepContainer from './TextStepContainer';
 class TextStep extends Component {
   /* istanbul ignore next */
   state = {
-    loading: true,
+    loading: true
   };
 
   componentDidMount() {
-    const {
-      step,
-      speak,
-      previousValue,
-      triggerNextStep,
-    } = this.props;
+    const { step, speak, previousValue, triggerNextStep } = this.props;
     const { component, delay, waitAction } = step;
     const isComponentWatingUser = component && waitAction;
 
@@ -37,15 +32,10 @@ class TextStep extends Component {
     const { message } = step;
 
     return message ? message.replace(/{previousValue}/g, previousValue) : '';
-  }
+  };
 
   renderMessage = () => {
-    const {
-      step,
-      steps,
-      previousStep,
-      triggerNextStep,
-    } = this.props;
+    const { step, steps, previousStep, triggerNextStep } = this.props;
     const { component } = step;
 
     if (component) {
@@ -53,12 +43,12 @@ class TextStep extends Component {
         step,
         steps,
         previousStep,
-        triggerNextStep,
+        triggerNextStep
       });
     }
 
     return this.getMessage();
-  }
+  };
 
   render() {
     const {
@@ -68,7 +58,7 @@ class TextStep extends Component {
       avatarStyle,
       bubbleStyle,
       hideBotAvatar,
-      hideUserAvatar,
+      hideUserAvatar
     } = this.props;
     const { loading } = this.state;
     const { avatar, user } = step;
@@ -78,18 +68,16 @@ class TextStep extends Component {
     return (
       <TextStepContainer className={`rsc-ts ${user ? 'rsc-ts-user' : 'rsc-ts-bot'}`} user={user}>
         <ImageContainer className="rsc-ts-image-container" user={user}>
-          {
-            isFirst && showAvatar && (
-              <Image
-                className="rsc-ts-image"
-                style={avatarStyle}
-                showAvatar={showAvatar}
-                user={user}
-                src={avatar}
-                alt="avatar"
-              />
-            )
-          }
+          {isFirst && showAvatar && (
+            <Image
+              className="rsc-ts-image"
+              style={avatarStyle}
+              showAvatar={showAvatar}
+              user={user}
+              src={avatar}
+              alt="avatar"
+            />
+          )}
         </ImageContainer>
         <Bubble
           className="rsc-ts-bubble"
@@ -119,19 +107,19 @@ TextStep.propTypes = {
     PropTypes.bool,
     PropTypes.number,
     PropTypes.object,
-    PropTypes.array,
+    PropTypes.array
   ]),
   speak: PropTypes.func,
   step: PropTypes.objectOf(PropTypes.any).isRequired,
   steps: PropTypes.objectOf(PropTypes.any),
-  triggerNextStep: PropTypes.func.isRequired,
+  triggerNextStep: PropTypes.func.isRequired
 };
 
 TextStep.defaultProps = {
   previousStep: {},
   previousValue: '',
   speak: () => {},
-  steps: {},
+  steps: {}
 };
 
 export default TextStep;

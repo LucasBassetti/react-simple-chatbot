@@ -13,7 +13,7 @@ const Header = styled.div`
 `;
 
 Header.defaultProps = {
-  theme: defaultTheme,
+  theme: defaultTheme
 };
 
 export default Header;

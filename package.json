@@ -1,6 +1,6 @@
 {
   "name": "react-simple-chatbot",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "prepublish": "npm run build",
     "prepush": "npm run lint && npm run test:coverage",
     "start": "./node_modules/.bin/webpack-dev-server --inline --content-base build/",
+    "prettier-watch": "onchange '**/*.js' '**/*.jsx' -- prettier --write {{changed}}",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "test": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --require @babel/register",
     "test:watch": "npm test -- --watch",
@@ -83,6 +84,10 @@
   },
   "dependencies": {
     "circular-json": "^0.3.1",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "onchange": "^5.2.0",
+    "prettier": "^1.16.4",
     "prop-types": "^15.6.0",
     "random-id": "0.0.2",
     "react": "^16.4.1",

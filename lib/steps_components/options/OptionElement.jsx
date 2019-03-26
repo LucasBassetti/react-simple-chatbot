@@ -10,11 +10,13 @@ const OptionElement = styled.a`
   font-size: 14px;
   padding: 12px;
 
-  &:hover { opacity: .7; }
+  &:hover {
+    opacity: 0.7;
+  }
 `;
 
 OptionElement.defaultProps = {
-  theme: defaultTheme,
+  theme: defaultTheme
 };
 
 export default OptionElement;

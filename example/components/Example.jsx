@@ -11,17 +11,16 @@ const otherFontTheme = {
   botBubbleColor: '#6E48AA',
   botFontColor: '#fff',
   userBubbleColor: '#fff',
-  userFontColor: '#4a4a4a',
+  userFontColor: '#4a4a4a'
 };
 
 const steps = [
   {
     id: '1',
     message: 'Hello World',
-    end: true,
-  },
+    end: true
+  }
 ];
-
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>

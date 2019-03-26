@@ -5,16 +5,11 @@ import CustomStepContainer from './CustomStepContainer';
 
 class CustomStep extends Component {
   state = {
-    loading: true,
+    loading: true
   };
 
   componentDidMount() {
-    const {
-      speak,
-      step,
-      previousValue,
-      triggerNextStep,
-    } = this.props;
+    const { speak, step, previousValue, triggerNextStep } = this.props;
     const { delay, waitAction } = step;
 
     setTimeout(() => {
@@ -28,21 +23,16 @@ class CustomStep extends Component {
   }
 
   renderComponent = () => {
-    const {
-      step,
-      steps,
-      previousStep,
-      triggerNextStep,
-    } = this.props;
+    const { step, steps, previousStep, triggerNextStep } = this.props;
     const { component } = step;
 
     return React.cloneElement(component, {
       step,
       steps,
       previousStep,
-      triggerNextStep,
+      triggerNextStep
     });
-  }
+  };
 
   render() {
     const { loading } = this.state;
@@ -63,17 +53,17 @@ CustomStep.propTypes = {
     PropTypes.bool,
     PropTypes.number,
     PropTypes.object,
-    PropTypes.array,
+    PropTypes.array
   ]),
   speak: PropTypes.func,
   step: PropTypes.objectOf(PropTypes.any).isRequired,
   steps: PropTypes.objectOf(PropTypes.any).isRequired,
   style: PropTypes.objectOf(PropTypes.any).isRequired,
-  triggerNextStep: PropTypes.func.isRequired,
+  triggerNextStep: PropTypes.func.isRequired
 };
 CustomStep.defaultProps = {
   previousValue: '',
-  speak: () => {},
+  speak: () => {}
 };
 
 export default CustomStep;

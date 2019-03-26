@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const MicIcon = props => (
+const MicIcon = ({ size }) => (
   <svg
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
-    width={props.size}
-    height={props.size}
+    width={size}
+    height={size}
     viewBox="0 0 400 400"
   >
     <g>
@@ -17,11 +17,11 @@ const MicIcon = props => (
 );
 
 MicIcon.propTypes = {
-  size: PropTypes.number,
+  size: PropTypes.number
 };
 
 MicIcon.defaultProps = {
-  size: 20,
+  size: 20
 };
 
 export default MicIcon;

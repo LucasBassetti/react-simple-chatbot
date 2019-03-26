@@ -13,8 +13,8 @@ const FloatButton = styled.a`
   justify-content: center;
   position: fixed;
   right: 32px;
-  transform: ${props => props.opened ? 'scale(0)' : 'scale(1)'};
-  transition: transform .3s ease;
+  transform: ${props => (props.opened ? 'scale(0)' : 'scale(1)')};
+  transition: transform 0.3s ease;
   width: 56px;
   z-index: 999;
 `;
@@ -22,8 +22,8 @@ const FloatButton = styled.a`
 FloatButton.defaultProps = {
   theme: {
     headerBgColor: '#6e48aa',
-    headerFontColor: '#fff',
-  },
+    headerFontColor: '#fff'
+  }
 };
 
 export default FloatButton;
