@@ -118,28 +118,28 @@
               p = [e],
               f = [n ? r : '[Circular]'],
               d = e,
-              h = 1;
-            return function(e, b) {
+              b = 1;
+            return function(e, h) {
               return (
-                t && (b = t.call(this, e, b)),
+                t && (h = t.call(this, e, h)),
                 '' !== e &&
                   (d !== this &&
-                    ((s = h - c.call(l, this) - 1),
-                    (h -= s),
-                    l.splice(h, l.length),
-                    u.splice(h - 1, u.length),
+                    ((s = b - c.call(l, this) - 1),
+                    (b -= s),
+                    l.splice(b, l.length),
+                    u.splice(b - 1, u.length),
                     (d = this)),
-                  'object' == typeof b && b
-                    ? (c.call(l, b) < 0 && l.push((d = b)),
-                      (h = l.length),
-                      (s = c.call(p, b)) < 0
-                        ? ((s = p.push(b) - 1),
+                  'object' == typeof h && h
+                    ? (c.call(l, h) < 0 && l.push((d = h)),
+                      (b = l.length),
+                      (s = c.call(p, h)) < 0
+                        ? ((s = p.push(h) - 1),
                           n
                             ? (u.push(('' + e).replace(a, o)), (f[s] = r + u.join(r)))
                             : (f[s] = f[0]))
-                        : (b = f[s]))
-                    : 'string' == typeof b && n && (b = b.replace(o, i).replace(r, o))),
-                b
+                        : (h = f[s]))
+                    : 'string' == typeof h && n && (h = h.replace(o, i).replace(r, o))),
+                h
               );
             };
           })(e, t, !s),
@@ -395,12 +395,12 @@
                 })(e, t);
             })(e, t);
       }
-      function h(e) {
+      function b(e) {
         if (void 0 === e)
           throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
         return e;
       }
-      function b(e, t, n) {
+      function h(e, t, n) {
         return (
           t in e
             ? Object.defineProperty(e, t, {
@@ -500,14 +500,14 @@
             Object.defineProperty(e, r.key, r);
         }
       }
-      function w(e) {
-        return (w = Object.setPrototypeOf
+      function O(e) {
+        return (O = Object.setPrototypeOf
           ? Object.getPrototypeOf
           : function(e) {
               return e.__proto__ || Object.getPrototypeOf(e);
             })(e);
       }
-      function O(e, t) {
+      function w(e, t) {
         if ('function' != typeof t && null !== t)
           throw new TypeError('Super expression must either be null or a function');
         (e.prototype = Object.create(t && t.prototype, {
@@ -653,12 +653,12 @@
                 })(e, t);
             })(e, t);
       }
-      function M(e) {
+      function A(e) {
         if (void 0 === e)
           throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
         return e;
       }
-      function A(e, t, n) {
+      function M(e, t, n) {
         return (
           t in e
             ? Object.defineProperty(e, t, {
@@ -733,7 +733,7 @@
           e
         );
       }
-      function V() {
+      function F() {
         var e = (function(e, t) {
           return (
             t || (t = e.slice(0)),
@@ -746,13 +746,13 @@
           ';\n  height: 56px;\n  justify-content: space-between;\n  padding: 0 10px;\n'
         ]);
         return (
-          (V = function() {
+          (F = function() {
             return e;
           }),
           e
         );
       }
-      function F() {
+      function V() {
         var e = (function(e, t) {
           return (
             t || (t = e.slice(0)),
@@ -760,7 +760,7 @@
           );
         })(['\n  margin: 0;\n  font-size: ', ';\n']);
         return (
-          (F = function() {
+          (V = function() {
             return e;
           }),
           e
@@ -780,7 +780,7 @@
           e
         );
       }
-      function U() {
+      function D() {
         var e = (function(e, t) {
           return (
             t || (t = e.slice(0)),
@@ -793,13 +793,13 @@
           ';\n  transition: transform 0.3s ease;\n  width: 56px;\n  z-index: 999;\n'
         ]);
         return (
-          (U = function() {
+          (D = function() {
             return e;
           }),
           e
         );
       }
-      function D() {
+      function U() {
         var e = (function(e, t) {
           return (
             t || (t = e.slice(0)),
@@ -807,7 +807,7 @@
           );
         })(['\n  height: 24px;\n  width: 24px;\n']);
         return (
-          (D = function() {
+          (U = function() {
             return e;
           }),
           e
@@ -828,7 +828,7 @@
         );
       }
       function K() {
-        var e = $(['\n          ', ' .2s ease\n        ']);
+        var e = J(['\n          ', ' .2s ease\n        ']);
         return (
           (K = function() {
             return e;
@@ -836,8 +836,8 @@
           e
         );
       }
-      function W() {
-        var e = $([
+      function $() {
+        var e = J([
           '\n  animation: ',
           ';\n  border: 0;\n  border-radius: 0;\n  border-bottom-left-radius: 10px;\n  border-bottom-right-radius: 10px;\n  border-top: ',
           ';\n  box-shadow: ',
@@ -849,22 +849,22 @@
           ';\n  }\n'
         ]);
         return (
-          (W = function() {
+          ($ = function() {
             return e;
           }),
           e
         );
       }
-      function $(e, t) {
+      function J(e, t) {
         return (
           t || (t = e.slice(0)),
           Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } }))
         );
       }
-      function J() {
+      function W() {
         var e = Z(['\n            ', ' 2s ease infinite\n          ']);
         return (
-          (J = function() {
+          (W = function() {
             return e;
           }),
           e
@@ -986,7 +986,7 @@
         pe = n.n(le),
         fe = n(2),
         de = n.n(fe),
-        he = function(e) {
+        be = function(e) {
           var t = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 1,
             n = (function(e) {
               e = e.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, function(e, t, n, r) {
@@ -1003,10 +1003,10 @@
             .concat(n.b, ', ')
             .concat(t, ')');
         },
-        be = Object(fe.keyframes)(a()),
+        he = Object(fe.keyframes)(a()),
         ge = Object(fe.keyframes)(i()),
         ye = Object(fe.keyframes)(o()),
-        ve = de.a.span(u(), be, function(e) {
+        ve = de.a.span(u(), he, function(e) {
           return e.delay;
         }),
         me = function() {
@@ -1027,18 +1027,18 @@
             })(this, t);
             for (var r = arguments.length, o = new Array(r), i = 0; i < r; i++) o[i] = arguments[i];
             return (
-              b(
-                h(
-                  h(
+              h(
+                b(
+                  b(
                     (n = (function(e, t) {
-                      return !t || ('object' !== l(t) && 'function' != typeof t) ? h(e) : t;
+                      return !t || ('object' !== l(t) && 'function' != typeof t) ? b(e) : t;
                     })(this, (e = f(t)).call.apply(e, [this].concat(o))))
                   )
                 ),
                 'state',
                 { loading: !0 }
               ),
-              b(h(h(n)), 'renderComponent', function() {
+              h(b(b(n)), 'renderComponent', function() {
                 var e = n.props,
                   t = e.step,
                   r = e.steps,
@@ -1110,8 +1110,8 @@
         triggerNextStep: ce.a.func.isRequired
       }),
         (xe.defaultProps = { previousValue: '', speak: function() {} });
-      var we = xe,
-        Oe = de.a.li(g(), ge),
+      var Oe = xe,
+        we = de.a.li(g(), ge),
         je = {
           background: '#f5f8fb',
           fontFamily: 'monospace',
@@ -1149,7 +1149,7 @@
                   j(
                     (n = (function(e, t) {
                       return !t || ('object' !== S(t) && 'function' != typeof t) ? j(e) : t;
-                    })(this, (e = w(t)).call.apply(e, [this].concat(o))))
+                    })(this, (e = O(t)).call.apply(e, [this].concat(o))))
                   )
                 ),
                 'onOptionClick',
@@ -1165,7 +1165,7 @@
                   i = e.value,
                   a = e.label;
                 return se.a.createElement(
-                  Oe,
+                  we,
                   { key: i, className: 'rsc-os-option' },
                   se.a.createElement(
                     Ee,
@@ -1185,7 +1185,7 @@
             );
           }
           return (
-            O(t, ae.Component),
+            w(t, ae.Component),
             (function(e, t, n) {
               t && x(e.prototype, t), n && x(e, n);
             })(t, [
@@ -1271,10 +1271,10 @@
             return e.user ? 'bottom left' : 'bottom right';
           }
         ),
-        Me = de.a.div(z(), function(e) {
+        Ae = de.a.div(z(), function(e) {
           return e.user ? '1' : '0';
         }),
-        Ae = de.a.div(q(), function(e) {
+        Me = de.a.div(q(), function(e) {
           return e.user ? 'flex-end' : 'flex-start';
         }),
         Te = (function(e) {
@@ -1285,24 +1285,24 @@
             })(this, t);
             for (var r = arguments.length, o = new Array(r), i = 0; i < r; i++) o[i] = arguments[i];
             return (
-              A(
-                M(
-                  M(
+              M(
+                A(
+                  A(
                     (n = (function(e, t) {
-                      return !t || ('object' !== C(t) && 'function' != typeof t) ? M(e) : t;
+                      return !t || ('object' !== C(t) && 'function' != typeof t) ? A(e) : t;
                     })(this, (e = N(t)).call.apply(e, [this].concat(o))))
                   )
                 ),
                 'state',
                 { loading: !0 }
               ),
-              A(M(M(n)), 'getMessage', function() {
+              M(A(A(n)), 'getMessage', function() {
                 var e = n.props,
                   t = e.previousValue,
                   r = e.step.message;
                 return r ? r.replace(/{previousValue}/g, t) : '';
               }),
-              A(M(M(n)), 'renderMessage', function() {
+              M(A(A(n)), 'renderMessage', function() {
                 var e = n.props,
                   t = e.step,
                   r = e.steps,
@@ -1357,10 +1357,10 @@
                     l = t.user,
                     p = l ? !s : !a;
                   return se.a.createElement(
-                    Ae,
+                    Me,
                     { className: 'rsc-ts '.concat(l ? 'rsc-ts-user' : 'rsc-ts-bot'), user: l },
                     se.a.createElement(
-                      Me,
+                      Ae,
                       { className: 'rsc-ts-image-container', user: l },
                       n &&
                         p &&
@@ -1429,7 +1429,7 @@
           { key: 'inputAttributes', types: ['object'], required: !1 },
           { key: 'metadata', types: ['object'], required: !1 }
         ],
-        Ve = [
+        Fe = [
           { key: 'id', types: ['string', 'number'], required: !0 },
           { key: 'message', types: ['string', 'function'], required: !0 },
           { key: 'avatar', types: ['string'], required: !1 },
@@ -1441,7 +1441,7 @@
           { key: 'inputAttributes', types: ['object'], required: !1 },
           { key: 'metadata', types: ['object'], required: !1 }
         ],
-        Fe = [
+        Ve = [
           { key: 'id', types: ['string', 'number'], required: !0 },
           { key: 'options', types: ['object'], required: !0 },
           { key: 'end', types: ['boolean'], required: !1 },
@@ -1465,7 +1465,7 @@
           { key: 'inputAttributes', types: ['object'], required: !1 },
           { key: 'metadata', types: ['object'], required: !1 }
         ],
-        Ue = [
+        De = [
           { key: 'id', types: ['string', 'number'], required: !0 },
           { key: 'update', types: ['string', 'number'], required: !0 },
           { key: 'trigger', types: ['string', 'number', 'function'], required: !0 },
@@ -1473,17 +1473,17 @@
           { key: 'inputAttributes', types: ['object'], required: !1 },
           { key: 'metadata', types: ['object'], required: !1 }
         ],
-        De = n(3),
+        Ue = n(3),
         He = {
           parse: function(e) {
             var t = [];
             if (e.user) t = Be;
-            else if (e.message) t = Ve;
-            else if (e.options) t = Fe;
+            else if (e.message) t = Fe;
+            else if (e.options) t = Ve;
             else if (e.component) t = Le;
             else {
-              if (!e.update) throw new Error('The step '.concat(De.stringify(e), ' is invalid'));
-              t = Ue;
+              if (!e.update) throw new Error('The step '.concat(Ue.stringify(e), ' is invalid'));
+              t = De;
             }
             for (var n = 0, r = t.length; n < r; n += 1) {
               var o = t[n],
@@ -1492,7 +1492,7 @@
                 s = o.required;
               if (!e[i] && s)
                 throw new Error(
-                  "Key '".concat(i, "' is required in step ").concat(De.stringify(e))
+                  "Key '".concat(i, "' is required in step ").concat(Ue.stringify(e))
                 );
               if (e[i] && 'any' !== a[0] && a.indexOf(T(e[i])) < 0)
                 throw new Error(
@@ -1549,14 +1549,14 @@
           }
         },
         Ke = n(3),
-        We = function(e, t) {
+        $e = function(e, t) {
           var n = Ke.parse(Ke.stringify(t));
           for (var r in n)
             for (var o = 0, i = n[r].length; o < i; o += 1)
               n[r][o].component && (n[r][o].component = n[r][o].id);
           localStorage.setItem(e, Ke.stringify(n));
         },
-        $e = de.a.div(
+        Je = de.a.div(
           _(),
           function(e) {
             return e.theme.background;
@@ -1603,8 +1603,8 @@
             return e.floating ? '0' : '';
           }
         );
-      $e.defaultProps = { theme: je };
-      var Je = $e,
+      Je.defaultProps = { theme: je };
+      var We = Je,
         Ye = de.a.div(
           B(),
           function(e) {
@@ -1618,7 +1618,7 @@
           }
         ),
         Ze = de.a.div(
-          V(),
+          F(),
           function(e) {
             return e.theme.headerBgColor;
           },
@@ -1631,14 +1631,14 @@
         );
       Ze.defaultProps = { theme: je };
       var Ge = Ze,
-        Qe = de.a.h2(F(), function(e) {
+        Qe = de.a.h2(V(), function(e) {
           return e.theme.headerFontSize;
         });
       Qe.defaultProps = { theme: je };
       var Xe = Qe,
         et = de.a.a(L()),
         tt = de.a.a(
-          U(),
+          D(),
           function(e) {
             return e.theme.headerBgColor;
           },
@@ -1651,10 +1651,10 @@
         );
       tt.defaultProps = { theme: { headerBgColor: '#6e48aa', headerFontColor: '#fff' } };
       var nt = tt,
-        rt = de.a.img(D()),
+        rt = de.a.img(U()),
         ot = de.a.div(H()),
         it = de.a.input(
-          W(),
+          $(),
           function(e) {
             return e.invalid ? Object(fe.css)(K(), ye) : '';
           },
@@ -1698,9 +1698,9 @@
             var t = e.theme;
             return e.speaking
               ? Object(fe.css)(
-                  J(),
+                  W(),
                   (function(e) {
-                    return Object(fe.keyframes)(r(), he(e, 0.4), he(e, 0), he(e, 0));
+                    return Object(fe.keyframes)(r(), be(e, 0.4), be(e, 0), be(e, 0));
                   })(t.headerBgColor)
                 )
               : '';
@@ -1870,8 +1870,8 @@
           );
         };
       (dt.propTypes = { size: ce.a.number }), (dt.defaultProps = { size: 20 });
-      var ht = dt,
-        bt = function(e) {
+      var bt = dt,
+        ht = function(e) {
           var t = e.size;
           return se.a.createElement(
             'svg',
@@ -1896,8 +1896,8 @@
             )
           );
         };
-      (bt.propTypes = { size: ce.a.number }), (bt.defaultProps = { size: 20 });
-      var gt = bt,
+      (ht.propTypes = { size: ce.a.number }), (ht.defaultProps = { size: 20 });
+      var gt = ht,
         yt = function() {
           return /iphone|ipod|android|ie|blackberry|fennec/i.test(navigator.userAgent);
         },
@@ -2014,26 +2014,26 @@
                     n.setState({ currentStep: c, renderedSteps: a, previousSteps: i });
                 } else if (c.trigger) {
                   c.replace && a.pop();
-                  var h = n.getTriggeredStep(c.trigger, c.value),
-                    b = Object.assign({}, s[h]);
-                  if (b.message) b.message = n.getStepMessage(b.message);
-                  else if (b.update) {
-                    var g = b;
-                    if ((b = Object.assign({}, s[g.update])).options)
-                      for (var y = 0, v = b.options.length; y < v; y += 1)
-                        b.options[y].trigger = g.trigger;
-                    else b.trigger = g.trigger;
+                  var b = n.getTriggeredStep(c.trigger, c.value),
+                    h = Object.assign({}, s[b]);
+                  if (h.message) h.message = n.getStepMessage(h.message);
+                  else if (h.update) {
+                    var g = h;
+                    if ((h = Object.assign({}, s[g.update])).options)
+                      for (var y = 0, v = h.options.length; y < v; y += 1)
+                        h.options[y].trigger = g.trigger;
+                    else h.trigger = g.trigger;
                   }
-                  (b.key = pe()(24)),
+                  (h.key = pe()(24)),
                     (l = c),
-                    (c = b),
+                    (c = h),
                     n.setState({ renderedSteps: a, currentStep: c, previousStep: l }, function() {
-                      b.user
+                      h.user
                         ? n.setState({ disabled: !1 }, function() {
                             (!t && yt()) || (n.input && n.input.focus());
                           })
-                        : (a.push(b),
-                          i.push(b),
+                        : (a.push(h),
+                          i.push(h),
                           n.setState({ renderedSteps: a, previousSteps: i }));
                     });
                 }
@@ -2042,7 +2042,7 @@
                   x = m.cacheName;
                 S &&
                   setTimeout(function() {
-                    We(x, { currentStep: c, previousStep: l, previousSteps: i, renderedSteps: a });
+                    $e(x, { currentStep: c, previousStep: l, previousSteps: i, renderedSteps: a });
                   }, 300);
               }),
               ie(oe(oe(n)), 'handleEnd', function() {
@@ -2186,15 +2186,15 @@
                   p = o.speechSynthesis,
                   f = e.options,
                   d = e.component,
-                  h = e.asMessage,
-                  b = n.generateRenderedStepsById(),
+                  b = e.asMessage,
+                  h = n.generateRenderedStepsById(),
                   g = t > 0 ? r[t - 1] : {};
-                return d && !h
-                  ? se.a.createElement(we, {
+                return d && !b
+                  ? se.a.createElement(Oe, {
                       key: t,
                       speak: n.speak,
                       step: e,
-                      steps: b,
+                      steps: h,
                       style: u,
                       previousStep: g,
                       previousValue: g.value,
@@ -2212,7 +2212,7 @@
                   : se.a.createElement(_e, {
                       key: t,
                       step: e,
-                      steps: b,
+                      steps: h,
                       speak: n.speak,
                       previousStep: g,
                       previousValue: g.value,
@@ -2256,275 +2256,296 @@
             re(t, ae.Component),
             (function(e, t, n) {
               t && te(e.prototype, t), n && te(e, n);
-            })(t, [
-              {
-                key: 'componentWillMount',
-                value: function() {
-                  for (
-                    var e = this,
-                      t = this.props.steps,
-                      n = this.props,
-                      r = n.botDelay,
-                      o = n.botAvatar,
-                      i = n.cache,
-                      a = n.cacheName,
-                      s = n.customDelay,
-                      u = n.enableMobileAutoFocus,
-                      c = n.userAvatar,
-                      l = {},
-                      p = { delay: r, avatar: o },
-                      f = { delay: n.userDelay, avatar: c, hideInput: !1 },
-                      d = { delay: s },
-                      h = 0,
-                      b = t.length;
-                    h < b;
-                    h += 1
-                  ) {
-                    var g = t[h],
-                      y = {};
-                    g.user ? (y = f) : g.message || g.asMessage ? (y = p) : g.component && (y = d),
-                      (l[g.id] = Object.assign({}, y, He.parse(g)));
-                  }
-                  He.checkInvalidIds(l);
-                  var v = t[0];
-                  if (v.message) {
-                    var m = v.message;
-                    (v.message = 'function' == typeof m ? m() : m), (l[v.id].message = v.message);
-                  }
-                  var S = (function(e, t) {
-                      var n = e.cacheName,
-                        r = e.cache,
-                        o = e.firstStep,
-                        i = e.steps,
-                        a = o,
-                        s = [i[a.id]],
-                        u = [i[a.id]];
-                      if (r && localStorage.getItem(n)) {
-                        var c = Ke.parse(localStorage.getItem(n)),
-                          l = c.renderedSteps[c.renderedSteps.length - 1];
-                        if (!l || !l.end) {
-                          for (var p = 0, f = c.renderedSteps.length; p < f; p += 1) {
-                            var d = c.renderedSteps[p];
-                            if (
-                              ((c.renderedSteps[p].delay = 0),
-                              (c.renderedSteps[p].rendered = !0),
-                              d.component)
-                            ) {
-                              var h = d.id;
-                              c.renderedSteps[p].component = i[h].component;
-                            }
-                          }
-                          var b = c.currentStep,
-                            g = b.trigger,
-                            y = b.end,
-                            v = b.options,
-                            m = c.currentStep.id;
-                          if ((v && delete c.currentStep.rendered, !g && !y))
-                            if (v)
-                              for (var S = 0; S < v.length; S += 1)
-                                c.currentStep.options[S].trigger = i[m].options[S].trigger;
-                            else c.currentStep.trigger = i[m].trigger;
-                          return c.currentStep.user && t(), c;
-                        }
-                        localStorage.removeItem(n);
-                      }
-                      return {
-                        currentStep: a,
-                        previousStep: {},
-                        previousSteps: u,
-                        renderedSteps: s
-                      };
-                    })({ cacheName: a, cache: i, firstStep: v, steps: l }, function() {
-                      e.setState({ disabled: !1 }, function() {
-                        (!u && yt()) || (e.input && e.input.focus());
-                      });
-                    }),
-                    x = S.currentStep,
-                    w = S.previousStep,
-                    O = S.previousSteps,
-                    j = S.renderedSteps;
-                  this.setState({
-                    currentStep: x,
-                    defaultUserSettings: f,
-                    previousStep: w,
-                    previousSteps: O,
-                    renderedSteps: j,
-                    steps: l
-                  });
-                }
-              },
-              {
-                key: 'componentDidMount',
-                value: function() {
-                  var e = this.state.recognitionEnable,
-                    t = this.props.recognitionLang;
-                  e &&
-                    (this.recognition = new lt(
-                      this.onRecognitionChange,
-                      this.onRecognitionEnd,
-                      this.onRecognitionStop,
-                      t
-                    )),
-                    this.content &&
-                      (this.content.addEventListener('DOMNodeInserted', this.onNodeInserted),
-                      window.addEventListener('resize', this.onResize));
-                }
-              },
-              {
-                key: 'componentWillUpdate',
-                value: function(e, t) {
-                  var n = e.opened;
-                  void 0 !== n && n !== t.opened && this.setState({ opened: n });
-                }
-              },
-              {
-                key: 'componentWillUnmount',
-                value: function() {
-                  this.content &&
-                    (this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted),
-                    window.removeEventListener('resize', this.onResize));
-                }
-              },
-              {
-                key: 'render',
-                value: function() {
-                  var e = this,
-                    t = this.state,
-                    n = t.currentStep,
-                    r = t.disabled,
-                    o = t.inputInvalid,
-                    i = t.inputValue,
-                    a = t.opened,
-                    s = t.renderedSteps,
-                    u = t.speaking,
-                    c = t.recognitionEnable,
-                    l = this.props,
-                    p = l.className,
-                    f = l.contentStyle,
-                    d = l.floating,
-                    h = l.floatingIcon,
-                    b = l.floatingStyle,
-                    g = l.footerStyle,
-                    y = l.headerComponent,
-                    v = l.headerTitle,
-                    m = l.hideHeader,
-                    S = l.hideSubmitButton,
-                    x = l.inputStyle,
-                    w = l.placeholder,
-                    O = l.inputAttributes,
-                    j = l.recognitionPlaceholder,
-                    k = l.style,
-                    E = l.submitButtonStyle,
-                    P = l.width,
-                    z = l.height,
-                    q =
-                      y ||
-                      se.a.createElement(
-                        Ge,
-                        { className: 'rsc-header' },
-                        se.a.createElement(Xe, { className: 'rsc-header-title' }, v),
-                        d &&
-                          se.a.createElement(
-                            et,
-                            {
-                              className: 'rsc-header-close-button',
-                              onClick: function() {
-                                return e.toggleChatBot(!1);
+            })(
+              t,
+              [
+                {
+                  key: 'componentDidMount',
+                  value: function() {
+                    for (
+                      var e = this,
+                        t = this.props.steps,
+                        n = this.props,
+                        r = n.botDelay,
+                        o = n.botAvatar,
+                        i = n.cache,
+                        a = n.cacheName,
+                        s = n.customDelay,
+                        u = n.enableMobileAutoFocus,
+                        c = n.userAvatar,
+                        l = {},
+                        p = { delay: r, avatar: o },
+                        f = { delay: n.userDelay, avatar: c, hideInput: !1 },
+                        d = { delay: s },
+                        b = 0,
+                        h = t.length;
+                      b < h;
+                      b += 1
+                    ) {
+                      var g = t[b],
+                        y = {};
+                      g.user
+                        ? (y = f)
+                        : g.message || g.asMessage
+                        ? (y = p)
+                        : g.component && (y = d),
+                        (l[g.id] = Object.assign({}, y, He.parse(g)));
+                    }
+                    He.checkInvalidIds(l);
+                    var v = t[0];
+                    if (v.message) {
+                      var m = v.message;
+                      (v.message = 'function' == typeof m ? m() : m), (l[v.id].message = v.message);
+                    }
+                    var S = this.state.recognitionEnable,
+                      x = this.props.recognitionLang;
+                    S &&
+                      (this.recognition = new lt(
+                        this.onRecognitionChange,
+                        this.onRecognitionEnd,
+                        this.onRecognitionStop,
+                        x
+                      )),
+                      this.content &&
+                        (this.content.addEventListener('DOMNodeInserted', this.onNodeInserted),
+                        window.addEventListener('resize', this.onResize));
+                    var O = (function(e, t) {
+                        var n = e.cacheName,
+                          r = e.cache,
+                          o = e.firstStep,
+                          i = e.steps,
+                          a = o,
+                          s = [i[a.id]],
+                          u = [i[a.id]];
+                        if (r && localStorage.getItem(n)) {
+                          var c = Ke.parse(localStorage.getItem(n)),
+                            l = c.renderedSteps[c.renderedSteps.length - 1];
+                          if (!l || !l.end) {
+                            for (var p = 0, f = c.renderedSteps.length; p < f; p += 1) {
+                              var d = c.renderedSteps[p];
+                              if (
+                                ((c.renderedSteps[p].delay = 0),
+                                (c.renderedSteps[p].rendered = !0),
+                                d.component)
+                              ) {
+                                var b = d.id;
+                                c.renderedSteps[p].component = i[b].component;
                               }
-                            },
-                            se.a.createElement(ft, null)
-                          )
-                      ),
-                    C =
-                      (this.isInputValueEmpty() || u) && c
-                        ? se.a.createElement(gt, null)
-                        : se.a.createElement(ht, null),
-                    R = u ? j : n.placeholder || w,
-                    N = n.inputAttributes || O;
-                  return se.a.createElement(
-                    'div',
-                    { className: 'rsc '.concat(p) },
-                    d &&
-                      se.a.createElement(
-                        nt,
-                        {
-                          className: 'rsc-float-button',
-                          style: b,
-                          opened: a,
-                          onClick: function() {
-                            return e.toggleChatBot(!0);
+                            }
+                            var h = c.currentStep,
+                              g = h.trigger,
+                              y = h.end,
+                              v = h.options,
+                              m = c.currentStep.id;
+                            if ((v && delete c.currentStep.rendered, !g && !y))
+                              if (v)
+                                for (var S = 0; S < v.length; S += 1)
+                                  c.currentStep.options[S].trigger = i[m].options[S].trigger;
+                              else c.currentStep.trigger = i[m].trigger;
+                            return c.currentStep.user && t(), c;
                           }
-                        },
-                        'string' == typeof h ? se.a.createElement(rt, { src: h }) : h
-                      ),
-                    se.a.createElement(
-                      Je,
-                      {
-                        className: 'rsc-container',
-                        floating: d,
-                        floatingStyle: b,
-                        opened: a,
-                        style: k,
-                        width: P,
-                        height: z
-                      },
-                      !m && q,
-                      se.a.createElement(
-                        Ye,
-                        {
-                          className: 'rsc-content',
-                          ref: this.setContentRef,
-                          floating: d,
-                          style: f,
-                          height: z,
-                          hideInput: n.hideInput
-                        },
-                        s.map(this.renderStep)
-                      ),
-                      se.a.createElement(
-                        ot,
-                        { className: 'rsc-footer', style: g },
-                        !n.hideInput &&
-                          se.a.createElement(
-                            it,
-                            ee(
+                          localStorage.removeItem(n);
+                        }
+                        return {
+                          currentStep: a,
+                          previousStep: {},
+                          previousSteps: u,
+                          renderedSteps: s
+                        };
+                      })({ cacheName: a, cache: i, firstStep: v, steps: l }, function() {
+                        e.setState({ disabled: !1 }, function() {
+                          (!u && yt()) || (e.input && e.input.focus());
+                        });
+                      }),
+                      w = O.currentStep,
+                      j = O.previousStep,
+                      k = O.previousSteps,
+                      E = O.renderedSteps;
+                    this.setState({
+                      currentStep: w,
+                      defaultUserSettings: f,
+                      previousStep: j,
+                      previousSteps: k,
+                      renderedSteps: E,
+                      steps: l
+                    });
+                  }
+                },
+                {
+                  key: 'componentWillUnmount',
+                  value: function() {
+                    this.content &&
+                      (this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted),
+                      window.removeEventListener('resize', this.onResize));
+                  }
+                },
+                {
+                  key: 'render',
+                  value: function() {
+                    var e = this,
+                      t = this.state,
+                      n = t.currentStep,
+                      r = t.disabled,
+                      o = t.inputInvalid,
+                      i = t.inputValue,
+                      a = t.opened,
+                      s = t.renderedSteps,
+                      u = t.speaking,
+                      c = t.recognitionEnable,
+                      l = this.props,
+                      p = l.className,
+                      f = l.contentStyle,
+                      d = l.floating,
+                      b = l.floatingIcon,
+                      h = l.floatingStyle,
+                      g = l.footerStyle,
+                      y = l.headerComponent,
+                      v = l.headerTitle,
+                      m = l.hideHeader,
+                      S = l.hideSubmitButton,
+                      x = l.inputStyle,
+                      O = l.placeholder,
+                      w = l.inputAttributes,
+                      j = l.recognitionPlaceholder,
+                      k = l.style,
+                      E = l.submitButtonStyle,
+                      P = l.width,
+                      z = l.height,
+                      q =
+                        y ||
+                        se.a.createElement(
+                          Ge,
+                          { className: 'rsc-header' },
+                          se.a.createElement(Xe, { className: 'rsc-header-title' }, v),
+                          d &&
+                            se.a.createElement(
+                              et,
                               {
-                                type: 'textarea',
-                                style: x,
-                                ref: this.setInputRef,
-                                className: 'rsc-input',
-                                placeholder: o ? '' : R,
-                                onKeyPress: this.handleKeyPress,
-                                onChange: this.onValueChange,
-                                value: i,
-                                floating: d,
+                                className: 'rsc-header-close-button',
+                                onClick: function() {
+                                  return e.toggleChatBot(!1);
+                                }
+                              },
+                              se.a.createElement(ft, null)
+                            )
+                        ),
+                      C =
+                        (this.isInputValueEmpty() || u) && c
+                          ? se.a.createElement(gt, null)
+                          : se.a.createElement(bt, null),
+                      R = u ? j : n.placeholder || O,
+                      N = n.inputAttributes || w;
+                    return se.a.createElement(
+                      'div',
+                      { className: 'rsc '.concat(p) },
+                      d &&
+                        se.a.createElement(
+                          nt,
+                          {
+                            className: 'rsc-float-button',
+                            style: h,
+                            opened: a,
+                            onClick: function() {
+                              return e.toggleChatBot(!0);
+                            }
+                          },
+                          'string' == typeof b ? se.a.createElement(rt, { src: b }) : b
+                        ),
+                      se.a.createElement(
+                        We,
+                        {
+                          className: 'rsc-container',
+                          floating: d,
+                          floatingStyle: h,
+                          opened: a,
+                          style: k,
+                          width: P,
+                          height: z
+                        },
+                        !m && q,
+                        se.a.createElement(
+                          Ye,
+                          {
+                            className: 'rsc-content',
+                            ref: this.setContentRef,
+                            floating: d,
+                            style: f,
+                            height: z,
+                            hideInput: n.hideInput
+                          },
+                          s.map(this.renderStep)
+                        ),
+                        se.a.createElement(
+                          ot,
+                          { className: 'rsc-footer', style: g },
+                          !n.hideInput &&
+                            se.a.createElement(
+                              it,
+                              ee(
+                                {
+                                  type: 'textarea',
+                                  style: x,
+                                  ref: this.setInputRef,
+                                  className: 'rsc-input',
+                                  placeholder: o ? '' : R,
+                                  onKeyPress: this.handleKeyPress,
+                                  onChange: this.onValueChange,
+                                  value: i,
+                                  floating: d,
+                                  invalid: o,
+                                  disabled: r,
+                                  hasButton: !S
+                                },
+                                N
+                              )
+                            ),
+                          !n.hideInput &&
+                            !S &&
+                            se.a.createElement(
+                              st,
+                              {
+                                className: 'rsc-submit-button',
+                                style: E,
+                                onClick: this.handleSubmitButton,
                                 invalid: o,
                                 disabled: r,
-                                hasButton: !S
+                                speaking: u
                               },
-                              N
+                              C
                             )
-                          ),
-                        !n.hideInput &&
-                          !S &&
-                          se.a.createElement(
-                            st,
-                            {
-                              className: 'rsc-submit-button',
-                              style: E,
-                              onClick: this.handleSubmitButton,
-                              invalid: o,
-                              disabled: r,
-                              speaking: u
-                            },
-                            C
-                          )
+                        )
                       )
-                    )
-                  );
+                    );
+                  }
                 }
-              }
-            ]),
+              ],
+              [
+                {
+                  key: 'getDerivedStateFromProps',
+                  value: function(e, t) {
+                    var n = e.opened;
+                    return void 0 !== e.toggleFloating && void 0 !== n && n !== t.opened
+                      ? (function(e) {
+                          for (var t = 1; t < arguments.length; t++) {
+                            var n = null != arguments[t] ? arguments[t] : {},
+                              r = Object.keys(n);
+                            'function' == typeof Object.getOwnPropertySymbols &&
+                              (r = r.concat(
+                                Object.getOwnPropertySymbols(n).filter(function(e) {
+                                  return Object.getOwnPropertyDescriptor(n, e).enumerable;
+                                })
+                              )),
+                              r.forEach(function(t) {
+                                ie(e, t, n[t]);
+                              });
+                          }
+                          return e;
+                        })({}, t, { opened: n })
+                      : t;
+                  }
+                }
+              ]
+            ),
             t
           );
         })();
