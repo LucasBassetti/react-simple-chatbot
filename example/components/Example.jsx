@@ -24,7 +24,9 @@ const steps = [
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
+    <React.StrictMode>
     <ChatBot steps={steps} />
+    </React.StrictMode>
   </ThemeProvider>
 );
 
