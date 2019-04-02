@@ -29,6 +29,8 @@ class ChatBot extends Component {
     this.content = null;
     this.input = null;
 
+    this.supportsScrollBehavior = false;
+
     this.setContentRef = element => {
       this.content = element;
     };
@@ -110,6 +112,8 @@ class ChatBot extends Component {
       );
     }
 
+    this.supportsScrollBehavior = 'scrollBehavior' in document.documentElement.style;
+
     if (this.content) {
       this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
       window.addEventListener('resize', this.onResize);
@@ -163,7 +167,18 @@ class ChatBot extends Component {
   }
 
   onNodeInserted = event => {
-    event.currentTarget.scrollTop = event.currentTarget.scrollHeight;
+    const { currentTarget: target } = event;
+    const { enableSmoothScroll } = this.props;
+
+    if (enableSmoothScroll && this.supportsScrollBehavior) {
+      target.scroll({
+        top: target.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      target.scrollTop = target.scrollHeight;
+    }
   };
 
   onResize = () => {
@@ -698,6 +713,7 @@ ChatBot.propTypes = {
   customDelay: PropTypes.number,
   customStyle: PropTypes.objectOf(PropTypes.any),
   enableMobileAutoFocus: PropTypes.bool,
+  enableSmoothScroll: PropTypes.bool,
   floating: PropTypes.bool,
   floatingIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   floatingStyle: PropTypes.objectOf(PropTypes.any),
@@ -746,6 +762,7 @@ ChatBot.defaultProps = {
   customStyle: {},
   customDelay: 1000,
   enableMobileAutoFocus: false,
+  enableSmoothScroll: false,
   floating: false,
   floatingIcon: <ChatIcon />,
   floatingStyle: {},
