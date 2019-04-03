@@ -1,7 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   mode: 'production',
@@ -16,17 +16,17 @@ module.exports = {
     publicPath: 'dist/',
     library: 'ReactSimpleChatbot',
     libraryTarget: 'umd',
-    globalObject: 'typeof self !== \'undefined\' ? self : this',
+    globalObject: "typeof self !== 'undefined' ? self : this"
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx']
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new UglifyJsPlugin({
-      comments: false,
+      comments: false
     }),
-    process.env.BUNDLE_ANALYZE === 'true' ? new BundleAnalyzerPlugin() : () => { }
+    process.env.BUNDLE_ANALYZE === 'true' ? new BundleAnalyzerPlugin() : () => {}
   ],
   module: {
     rules: [
@@ -35,8 +35,8 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader'
-        },
-      },
-    ],
-  },
+        }
+      }
+    ]
+  }
 };
