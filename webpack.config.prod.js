@@ -1,14 +1,28 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   mode: 'production',
+  devtool: 'source-map',
   entry: path.resolve(__dirname, 'lib/index'),
   externals: {
     'styled-components': 'styled-components',
     react: 'react'
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        sourceMap: true,
+        terserOptions: {
+          output: {
+            comments: false,
+          }
+        },
+      }),
+    ]
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -23,10 +37,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
-    new UglifyJsPlugin({
-      comments: false
-    }),
-    process.env.BUNDLE_ANALYZE === 'true' ? new BundleAnalyzerPlugin() : () => {}
+    process.env.BUNDLE_ANALYZE === 'true' ? new BundleAnalyzerPlugin() : () => { }
   ],
   module: {
     rules: [
