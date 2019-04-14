@@ -2,26 +2,25 @@ import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import schema from '../../lib/schemas/schema';
-
-const JSON = require('circular-json');
+import { stringify } from 'flatted';
 
 describe('schema', () => {
   it('should throw a invalid step error', () => {
     const step = { test: 'test' };
     expect(() => {
       schema.parse(step);
-    }).to.throw(Error, `The step ${JSON.stringify(step)} is invalid`);
+    }).to.throw(Error, `The step ${stringify(step)} is invalid`);
   });
 
   it('should throw a key required error', () => {
     const step = { message: 'test' };
     expect(() => {
       schema.parse(step);
-    }).to.throw(Error, `Key 'id' is required in step ${JSON.stringify(step)}`);
+    }).to.throw(Error, `Key 'id' is required in step ${stringify(step)}`);
   });
 
   it('should throw a key type error', () => {
-    const step = { id: () => {}, options: [] };
+    const step = { id: () => { }, options: [] };
     expect(() => {
       schema.parse(step);
     }).to.throw(Error, 'The type of \'id\' value must be string or number instead of function');
@@ -33,8 +32,8 @@ describe('schema', () => {
       message: 'test',
       test: 'test',
     });
-    const resultStep = JSON.stringify({ id: '1', message: 'test' });
-    expect(JSON.stringify(step)).to.be.equal(resultStep);
+    const resultStep = stringify({ id: '1', message: 'test' });
+    expect(stringify(step)).to.be.equal(resultStep);
   });
 
   it('should not throw error to a user step', () => {
