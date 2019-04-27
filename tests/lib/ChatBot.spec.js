@@ -371,4 +371,53 @@ describe('ChatBot', () => {
       expect(wrapper.find('input.rsc-input').props().autoComplete).to.be.equal('firstname');
     });
   });
+  
+  describe('Extra control', () => {
+    const CustomControl = () => (
+      <button className="my-button">custom</button>
+    );
+    const wrapper = mount(
+      <ChatBot
+        botDelay={10}
+        userDelay={10}
+        customDelay={10}
+        extraControl={<CustomControl />}
+        steps={[
+          {
+            id: '1',
+            user: true,
+            hideExtraControl: false,
+            trigger: '2'
+          },
+          {
+            id: '2',
+            user: true,
+            hideExtraControl: true,
+            trigger: '3'
+          },
+          {
+            id: '3',
+            message: 'end',
+            end: true
+          }
+        ]}
+      />,
+    );
+
+    it('should be rendered with an extra control beside submit button', () => {
+      expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(1);
+    });
+
+    it('the extra control should be hidden', () => {
+      console.log("Setting input value");
+      wrapper.setState({ inputValue: 'test' });
+      console.log("Simulate key press");
+      wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
+      setTimeout(() => {
+        console.log("testing hidden");
+        expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(0);  
+      }, 500);
+    });
+
+  });
 });
