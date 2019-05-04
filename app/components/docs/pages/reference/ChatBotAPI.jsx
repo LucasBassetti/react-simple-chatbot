@@ -76,6 +76,12 @@ const properties = [
     description: 'Enable mobile input auto focus for user steps',
   },
   {
+    name: 'enableSmoothScroll',
+    type: 'PropTypes.bool',
+    defaultValue: <code>false</code>,
+    description: <React.Fragment>Enables smooth scrolling. Uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/ScrollToOptions/behavior" target="_blank">ScrollToOptions.behavior</a> smooth on [window|element].scroll(). Can be polyfilled.</React.Fragment>,
+  },
+  {
     name: 'floating',
     type: 'PropTypes.bool',
     defaultValue: <code>false</code>,
@@ -100,7 +106,7 @@ const properties = [
     description: 'The style object to use to override the footer element',
   },
   {
-    name: 'handleEnd({ renderedSteps, steps, values })',
+    name: 'handleEnd({renderedSteps, steps, values })',
     type: 'PropTypes.func',
     defaultValue: '',
     description: 'The callback function when chat ends',
@@ -211,7 +217,7 @@ const properties = [
     name: 'toggleFloating',
     type: 'PropTypes.func',
     defaultValue: <code>undefined</code>,
-    description: 'Must be used with opened prop. You must use it to change your opened prop using your custom function like myToggleFloating({ opened })',
+    description: 'Must be used with opened prop. You must use it to change your opened prop using your custom function like myToggleFloating({opened})',
   },
   {
     name: 'width',
