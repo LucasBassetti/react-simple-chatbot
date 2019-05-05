@@ -602,6 +602,7 @@ class ChatBot extends Component {
       className,
       contentStyle,
       extraControl,
+      controlStyle,
       floating,
       floatingIcon,
       floatingStyle,
@@ -690,7 +691,7 @@ class ChatBot extends Component {
                 {...inputAttributesOverride}
               />
             )}
-            <div className="rsc-controls">
+            <div style={controlStyle} className="rsc-controls">
               {!currentStep.hideInput && !currentStep.hideExtraControl && extraControl}
               {!currentStep.hideInput && !hideSubmitButton && (
                 <SubmitButton
@@ -724,6 +725,7 @@ ChatBot.propTypes = {
   contentStyle: PropTypes.objectOf(PropTypes.any),
   customDelay: PropTypes.number,
   customStyle: PropTypes.objectOf(PropTypes.any),
+  controlStyle: PropTypes.objectOf(PropTypes.any),
   enableMobileAutoFocus: PropTypes.bool,
   enableSmoothScroll: PropTypes.bool,
   extraControl: PropTypes.objectOf(PropTypes.element),
@@ -773,6 +775,7 @@ ChatBot.defaultProps = {
   className: '',
   contentStyle: {},
   customStyle: {},
+  controlStyle: { position: 'absolute', right: '0', top: '0' },
   customDelay: 1000,
   enableMobileAutoFocus: false,
   enableSmoothScroll: false,
