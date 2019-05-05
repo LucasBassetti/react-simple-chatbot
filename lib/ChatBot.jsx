@@ -632,6 +632,15 @@ class ChatBot extends Component {
       </Header>
     );
 
+    let customControl;
+    if (extraControl !== undefined) {
+      customControl = React.cloneElement(extraControl, {
+        disabled,
+        speaking,
+        invalid: inputInvalid
+      });
+    }
+
     const icon =
       (this.isInputValueEmpty() || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
 
@@ -692,7 +701,7 @@ class ChatBot extends Component {
               />
             )}
             <div style={controlStyle} className="rsc-controls">
-              {!currentStep.hideInput && !currentStep.hideExtraControl && extraControl}
+              {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
               {!currentStep.hideInput && !hideSubmitButton && (
                 <SubmitButton
                   className="rsc-submit-button"
