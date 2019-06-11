@@ -331,6 +331,16 @@ class ChatBot extends Component {
         });
       }, 300);
     }
+
+    const { handleNextStep } = this.props;
+    if (handleNextStep) {
+      handleNextStep({
+        currentStep,
+        previousStep,
+        previousSteps,
+        renderedSteps
+      });
+    }
   };
 
   handleEnd = () => {
@@ -719,6 +729,7 @@ ChatBot.propTypes = {
   floatingStyle: PropTypes.objectOf(PropTypes.any),
   footerStyle: PropTypes.objectOf(PropTypes.any),
   handleEnd: PropTypes.func,
+  handleNextStep: PropTypes.func,
   headerComponent: PropTypes.element,
   headerTitle: PropTypes.string,
   height: PropTypes.string,
@@ -768,6 +779,7 @@ ChatBot.defaultProps = {
   floatingStyle: {},
   footerStyle: {},
   handleEnd: undefined,
+  handleNextStep: undefined,
   headerComponent: undefined,
   headerTitle: 'Chat',
   height: '520px',
