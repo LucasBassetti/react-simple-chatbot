@@ -334,12 +334,14 @@ class ChatBot extends Component {
 
     const { handleNextStep } = this.props;
     if (handleNextStep) {
-      handleNextStep({
-        currentStep,
-        previousStep,
-        previousSteps,
-        renderedSteps
-      });
+      setTimeout(() => {
+        handleNextStep({
+          currentStep,
+          previousStep,
+          previousSteps,
+          renderedSteps
+        });
+      }, 300);
     }
   };
 
