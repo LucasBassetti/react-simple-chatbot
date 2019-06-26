@@ -28,10 +28,18 @@ class TextStep extends Component {
   }
 
   getMessage = () => {
-    const { previousValue, step } = this.props;
-    const { message } = step;
+    const { previousValue, step, steps } = this.props;
+    let { message } = step;
+    message = message ? message.replace(/{previousValue}/g, previousValue) : '';
 
-    return message ? message.replace(/{previousValue}/g, previousValue) : '';
+    const variables = message.match(/{[^{}]+}/g);
+    if (variables) {
+      for (const variable of variables) {
+        message = message.replace(new RegExp(variable, 'g'), steps[variable].value);
+      }
+    }
+
+    return message;
   };
 
   renderMessage = () => {
