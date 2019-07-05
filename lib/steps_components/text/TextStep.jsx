@@ -32,13 +32,24 @@ class TextStep extends Component {
     let { message } = step;
     message = message ? message.replace(/{previousValue}/g, previousValue) : '';
 
+    message = this.replaceAllVariables(message, steps);
+
+    return message;
+  };
+
+  replaceAllVariables = (message, steps) => {
     const variables = message.match(/{[^{}]+}/g);
     if (variables) {
-      for (const variable of variables) {
-        message = message.replace(new RegExp(variable, 'g'), steps[variable].value);
+      for (let variable of variables) {
+        if (steps[variable]) {
+          message = message.replace(new RegExp(variable, 'g'), steps[variable].value);
+        }
+        variable = variable.replace(/[{}]/g, '');
+        if (steps[variable]) {
+          message = message.replace(new RegExp(`{${variable}}`, 'g'), steps[variable].value);
+        }
       }
     }
-
     return message;
   };
 
