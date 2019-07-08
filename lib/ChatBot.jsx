@@ -217,6 +217,10 @@ class ChatBot extends Component {
 
   generateRenderedStepsById = () => {
     const { previousSteps } = this.state;
+    return this.generateStepsById(previousSteps);
+  };
+
+  generateStepsById = previousSteps => {
     const steps = {};
 
     for (let i = 0, len = previousSteps.length; i < len; i += 1) {
@@ -542,6 +546,7 @@ class ChatBot extends Component {
     const { options, component, asMessage } = step;
     const steps = this.generateRenderedStepsById();
     const previousStep = index > 0 ? renderedSteps[index - 1] : {};
+    const previousSteps = index > 0 ? this.generateStepsById(renderedSteps.slice(0, index)) : {};
 
     if (component && !asMessage) {
       return (
@@ -578,6 +583,7 @@ class ChatBot extends Component {
         steps={steps}
         speak={this.speak}
         previousStep={previousStep}
+        previousSteps={previousSteps}
         previousValue={previousStep.value}
         triggerNextStep={this.triggerNextStep}
         avatarStyle={avatarStyle}

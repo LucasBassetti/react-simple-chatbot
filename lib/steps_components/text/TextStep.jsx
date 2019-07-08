@@ -28,11 +28,11 @@ class TextStep extends Component {
   }
 
   getMessage = () => {
-    const { previousValue, step, steps } = this.props;
+    const { previousValue, step, previousSteps } = this.props;
     let { message } = step;
     message = message ? message.replace(/{previousValue}/g, previousValue) : '';
 
-    message = this.replaceAllVariables(message, steps);
+    message = this.replaceAllVariables(message, previousSteps);
 
     return message;
   };
@@ -121,6 +121,7 @@ TextStep.propTypes = {
   hideBotAvatar: PropTypes.bool.isRequired,
   hideUserAvatar: PropTypes.bool.isRequired,
   previousStep: PropTypes.objectOf(PropTypes.any),
+  previousSteps: PropTypes.objectOf(PropTypes.any),
   previousValue: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,
@@ -136,6 +137,7 @@ TextStep.propTypes = {
 
 TextStep.defaultProps = {
   previousStep: {},
+  previousSteps: {},
   previousValue: '',
   speak: () => {},
   steps: {}
