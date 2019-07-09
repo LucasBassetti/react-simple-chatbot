@@ -237,6 +237,11 @@ class ChatBot extends Component {
     return steps;
   };
 
+  metadata = step => {
+    const timestamp = { timestamp: new Date().toJSON() };
+    return { metadata: Object.assign({}, step.metadata, timestamp) };
+  };
+
   triggerNextStep = data => {
     const { enableMobileAutoFocus } = this.props;
     const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
@@ -262,11 +267,18 @@ class ChatBot extends Component {
       delete currentStep.options;
 
       // replace choose option for user message
-      currentStep = Object.assign({}, currentStep, option, defaultUserSettings, {
-        user: true,
-        message: option.label,
-        trigger
-      });
+      currentStep = Object.assign(
+        {},
+        currentStep,
+        option,
+        defaultUserSettings,
+        {
+          user: true,
+          message: option.label,
+          trigger
+        },
+        this.metadata(currentStep)
+      );
 
       renderedSteps.pop();
       previousSteps.pop();
@@ -461,7 +473,7 @@ class ChatBot extends Component {
         value: inputValue
       };
 
-      currentStep = Object.assign({}, defaultUserSettings, currentStep, step);
+      currentStep = Object.assign({}, defaultUserSettings, currentStep, step, this.metadata(step));
 
       renderedSteps.push(currentStep);
       previousSteps.push(currentStep);

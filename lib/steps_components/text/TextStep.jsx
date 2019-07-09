@@ -80,7 +80,7 @@ class TextStep extends Component {
       hideUserAvatar
     } = this.props;
     const { loading } = this.state;
-    const { avatar, user } = step;
+    const { avatar, user, metadata } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
 
@@ -105,6 +105,7 @@ class TextStep extends Component {
           showAvatar={showAvatar}
           isFirst={isFirst}
           isLast={isLast}
+          title={metadata && metadata.timestamp}
         >
           {loading ? <Loading /> : this.renderMessage()}
         </Bubble>
