@@ -16,9 +16,10 @@ class OptionsStep extends Component {
     const { bubbleOptionStyle, step } = this.props;
     const { user } = step;
     const { value, label } = option;
+    const key = typeof value === 'object' && value !== null ? JSON.stringify(value) : value;
 
     return (
-      <Option key={value} className="rsc-os-option">
+      <Option key={key} className="rsc-os-option">
         <OptionElement
           className="rsc-os-option-element"
           style={bubbleOptionStyle}
@@ -38,7 +39,9 @@ class OptionsStep extends Component {
     return (
       <OptionsStepContainer className="rsc-os">
         <Options className="rsc-os-options">
-          {Object.keys(options).map(key => options[key]).map(this.renderOption)}
+          {Object.keys(options)
+            .map(key => options[key])
+            .map(this.renderOption)}
         </Options>
       </OptionsStepContainer>
     );

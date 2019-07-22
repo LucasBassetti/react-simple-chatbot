@@ -48,6 +48,11 @@ class TextStep extends Component {
         if (steps[variable]) {
           message = message.replace(new RegExp(`{${variable}}`, 'g'), steps[variable].value);
         }
+        const split = variable.split('.');
+        const step = steps[`{${split[0]}}`];
+        if (step) {
+          message = message.replace(new RegExp(`{${variable}}`, 'g'), step.value[split[1]]);
+        }
       }
     }
     return message;
