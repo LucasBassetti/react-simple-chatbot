@@ -42,11 +42,14 @@ class TextStep extends Component {
     if (variables) {
       for (let variable of variables) {
         if (steps[variable]) {
-          message = message.replace(new RegExp(variable, 'g'), steps[variable].value);
+          message = message.replace(new RegExp(variable, 'g'), this.getValue(steps, variable));
         }
         variable = variable.replace(/[{}]/g, '');
         if (steps[variable]) {
-          message = message.replace(new RegExp(`{${variable}}`, 'g'), steps[variable].value);
+          message = message.replace(
+            new RegExp(`{${variable}}`, 'g'),
+            this.getValue(steps, variable)
+          );
         }
         const split = variable.split('.');
         const step = steps[`{${split[0]}}`];
@@ -56,6 +59,12 @@ class TextStep extends Component {
       }
     }
     return message;
+  };
+
+  getValue = (steps, variable) => {
+    const defaultValue = /\d+\..+\..+-.+\..+/;
+    if (steps[variable].value.match(defaultValue)) return '';
+    return steps[variable].value;
   };
 
   renderMessage = () => {
