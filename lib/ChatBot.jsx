@@ -546,6 +546,7 @@ class ChatBot extends Component {
           previousStep={previousStep}
           previousValue={previousStep.value}
           triggerNextStep={this.triggerNextStep}
+          emulateSubmitUserMessage={this.emulateSubmitUserMessage}
         />
       );
     }
