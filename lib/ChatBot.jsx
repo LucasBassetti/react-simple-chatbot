@@ -433,9 +433,9 @@ class ChatBot extends Component {
     this.submitUserMessage();
   };
 
-  emulateSubmitUserMessage = (userMessage) => {
-    this.setState({inputValue = userMessage}, this.submitUserMessage)
-  }
+  emulateSubmitUserMessage = userMessage => {
+    this.setState({ inputValue: userMessage }, this.submitUserMessage);
+  };
 
   submitUserMessage = () => {
     const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
