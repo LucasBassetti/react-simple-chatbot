@@ -433,6 +433,10 @@ class ChatBot extends Component {
     this.submitUserMessage();
   };
 
+  emulateSubmitUserMessage = (userMessage) => {
+    this.setState({inputValue = userMessage}, this.submitUserMessage)
+  }
+
   submitUserMessage = () => {
     const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
     let { currentStep } = this.state;
@@ -712,6 +716,7 @@ ChatBot.propTypes = {
   contentStyle: PropTypes.objectOf(PropTypes.any),
   customDelay: PropTypes.number,
   customStyle: PropTypes.objectOf(PropTypes.any),
+  emulateSubmitUserMessage: PropTypes.func,
   enableMobileAutoFocus: PropTypes.bool,
   enableSmoothScroll: PropTypes.bool,
   floating: PropTypes.bool,
@@ -761,6 +766,7 @@ ChatBot.defaultProps = {
   contentStyle: {},
   customStyle: {},
   customDelay: 1000,
+  emulateSubmitUserMessage: undefined,
   enableMobileAutoFocus: false,
   enableSmoothScroll: false,
   floating: false,
