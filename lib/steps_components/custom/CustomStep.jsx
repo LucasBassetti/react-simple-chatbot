@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from '../common/Loading';
 import CustomStepContainer from './CustomStepContainer';
+import Image from '../text/Image';
+import ImageContainer from '../text/ImageContainer';
+import TextStepContainer from '../text/TextStepContainer';
 
 class CustomStep extends Component {
   state = {
@@ -37,10 +40,25 @@ class CustomStep extends Component {
 
   render() {
     const { loading } = this.state;
-    const { style } = this.props;
+    const { style, step, avatarStyle, hideBotAvatar, hideUserAvatar, hideAvatar } = this.props;
+    const { avatar, user } = step;
+
+    const showAvatar = !hideBotAvatar && !hideAvatar;
 
     return (
       <CustomStepContainer className="rsc-cs" style={style}>
+        <ImageContainer className="rsc-ts-image-container" user={user}>
+          {showAvatar && (
+            <Image
+              className="rsc-ts-image"
+              style={avatarStyle}
+              showAvatar={showAvatar}
+              user={user}
+              src={avatar}
+              alt="avatar"
+            />
+          )}
+        </ImageContainer>
         {loading ? <Loading /> : this.renderComponent()}
       </CustomStepContainer>
     );
@@ -61,11 +79,16 @@ CustomStep.propTypes = {
   steps: PropTypes.objectOf(PropTypes.any).isRequired,
   style: PropTypes.objectOf(PropTypes.any).isRequired,
   triggerNextStep: PropTypes.func.isRequired,
-  emulateSubmitUserMessage: PropTypes.func.isRequired
+  emulateSubmitUserMessage: PropTypes.func.isRequired,
+  avatarStyle: PropTypes.objectOf(PropTypes.any).isRequired,
+  hideBotAvatar: PropTypes.bool.isRequired,
+  hideUserAvatar: PropTypes.bool.isRequired,
+  hideAvatar: PropTypes.bool.isRequired
 };
 CustomStep.defaultProps = {
   previousValue: '',
-  speak: () => {}
+  speak: () => {},
+  hideAvatar: false
 };
 
 export default CustomStep;
