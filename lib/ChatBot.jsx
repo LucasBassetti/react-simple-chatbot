@@ -73,7 +73,7 @@ class ChatBot extends Component {
 
     const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
     const defaultUserSettings = { delay: userDelay, avatar: userAvatar, hideInput: false };
-    const defaultCustomSettings = { delay: customDelay };
+    const defaultCustomSettings = { delay: customDelay, avatar: botAvatar };
 
     for (let i = 0, len = steps.length; i < len; i += 1) {
       const step = steps[i];
@@ -433,6 +433,10 @@ class ChatBot extends Component {
     this.submitUserMessage();
   };
 
+  emulateSubmitUserMessage = userMessage => {
+    this.setState({ inputValue: userMessage }, this.submitUserMessage);
+  };
+
   submitUserMessage = () => {
     const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
     let { currentStep } = this.state;
@@ -527,7 +531,7 @@ class ChatBot extends Component {
       hideUserAvatar,
       speechSynthesis
     } = this.props;
-    const { options, component, asMessage } = step;
+    const { options, component, asMessage, hideAvatar } = step;
     const steps = this.generateRenderedStepsById();
     const previousStep = index > 0 ? renderedSteps[index - 1] : {};
 
@@ -542,6 +546,11 @@ class ChatBot extends Component {
           previousStep={previousStep}
           previousValue={previousStep.value}
           triggerNextStep={this.triggerNextStep}
+          emulateSubmitUserMessage={this.emulateSubmitUserMessage}
+          avatarStyle={avatarStyle}
+          hideBotAvatar={hideBotAvatar}
+          hideUserAvatar={hideUserAvatar}
+          hideAvatar={hideAvatar}
         />
       );
     }
@@ -554,6 +563,7 @@ class ChatBot extends Component {
           speak={this.speak}
           previousValue={previousStep.value}
           triggerNextStep={this.triggerNextStep}
+          emulateSubmitUserMessage={this.emulateSubmitUserMessage}
           bubbleOptionStyle={bubbleOptionStyle}
         />
       );
@@ -568,6 +578,7 @@ class ChatBot extends Component {
         previousStep={previousStep}
         previousValue={previousStep.value}
         triggerNextStep={this.triggerNextStep}
+        emulateSubmitUserMessage={this.emulateSubmitUserMessage}
         avatarStyle={avatarStyle}
         bubbleStyle={bubbleStyle}
         hideBotAvatar={hideBotAvatar}

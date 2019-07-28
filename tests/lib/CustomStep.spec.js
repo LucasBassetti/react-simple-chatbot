@@ -5,19 +5,15 @@ import { mount } from 'enzyme';
 import { CustomStep } from '../../lib/steps_components';
 import CustomStepContainer from '../../lib/steps_components/custom/CustomStepContainer';
 
-const Example = () => (
-  <div className="example">
-    Example
-  </div>
-);
+const Example = () => <div className="example">Example</div>;
 
 describe('CustomStep', () => {
   describe('Without wait user', () => {
     const steps = {
       step1: {
         id: '1',
-        component: <Example />,
-      },
+        component: <Example />
+      }
     };
     const step = steps.step1;
     const settings = {
@@ -27,6 +23,7 @@ describe('CustomStep', () => {
       style: { border: 0 },
       previousStep: step,
       triggerNextStep: () => {},
+      emulateSubmitUserMessage: () => {}
     };
 
     const wrapper = mount(<CustomStep {...settings} />);
@@ -50,8 +47,8 @@ describe('CustomStep', () => {
       step1: {
         id: '1',
         component: <Example />,
-        waitAction: true,
-      },
+        waitAction: true
+      }
     };
     const step = steps.step1;
     const settings = {
@@ -61,6 +58,7 @@ describe('CustomStep', () => {
       previousStep: step,
       style: {},
       triggerNextStep: () => {},
+      emulateSubmitUserMessage: () => {}
     };
 
     const wrapper = mount(<CustomStep {...settings} />);
