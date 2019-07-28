@@ -531,7 +531,7 @@ class ChatBot extends Component {
       hideUserAvatar,
       speechSynthesis
     } = this.props;
-    const { options, component, asMessage } = step;
+    const { options, component, asMessage, hideAvatar } = step;
     const steps = this.generateRenderedStepsById();
     const previousStep = index > 0 ? renderedSteps[index - 1] : {};
 
@@ -550,6 +550,7 @@ class ChatBot extends Component {
           avatarStyle={avatarStyle}
           hideBotAvatar={hideBotAvatar}
           hideUserAvatar={hideUserAvatar}
+          hideAvatar={hideAvatar}
         />
       );
     }
