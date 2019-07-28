@@ -73,7 +73,7 @@ class ChatBot extends Component {
 
     const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
     const defaultUserSettings = { delay: userDelay, avatar: userAvatar, hideInput: false };
-    const defaultCustomSettings = { delay: customDelay };
+    const defaultCustomSettings = { delay: customDelay, avatar: botAvatar };
 
     for (let i = 0, len = steps.length; i < len; i += 1) {
       const step = steps[i];
@@ -547,6 +547,9 @@ class ChatBot extends Component {
           previousValue={previousStep.value}
           triggerNextStep={this.triggerNextStep}
           emulateSubmitUserMessage={this.emulateSubmitUserMessage}
+          avatarStyle={avatarStyle}
+          hideBotAvatar={hideBotAvatar}
+          hideUserAvatar={hideUserAvatar}
         />
       );
     }
