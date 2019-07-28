@@ -40,10 +40,10 @@ class CustomStep extends Component {
 
   render() {
     const { loading } = this.state;
-    const { style, step, avatarStyle, hideBotAvatar, hideUserAvatar } = this.props;
+    const { style, step, avatarStyle, hideBotAvatar, hideUserAvatar, hideAvatar } = this.props;
     const { avatar, user } = step;
 
-    const showAvatar = !hideBotAvatar;
+    const showAvatar = !hideBotAvatar && !hideAvatar;
 
     return (
       <CustomStepContainer className="rsc-cs" style={style}>
@@ -82,11 +82,13 @@ CustomStep.propTypes = {
   emulateSubmitUserMessage: PropTypes.func.isRequired,
   avatarStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   hideBotAvatar: PropTypes.bool.isRequired,
-  hideUserAvatar: PropTypes.bool.isRequired
+  hideUserAvatar: PropTypes.bool.isRequired,
+  hideAvatar: PropTypes.bool.isRequired
 };
 CustomStep.defaultProps = {
   previousValue: '',
-  speak: () => {}
+  speak: () => {},
+  hideAvatar: false
 };
 
 export default CustomStep;
