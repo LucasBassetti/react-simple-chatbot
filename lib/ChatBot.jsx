@@ -303,8 +303,7 @@ class ChatBot extends Component {
       } else if (nextStep.update) {
         const updateStep = nextStep;
         nextStep = Object.assign({}, steps[updateStep.update]);
-
-        if (nextStep.options) {
+        if (nextStep.options || updateStep.updateOptions) {
           if (updateStep.updateOptions) {
             nextStep.options = updateStep.updateOptions;
           } else {
@@ -312,6 +311,7 @@ class ChatBot extends Component {
               nextStep.options[i].trigger = updateStep.trigger;
             }
           }
+          nextStep.user = false;
         } else {
           nextStep.trigger = updateStep.trigger;
         }
