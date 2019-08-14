@@ -17,11 +17,12 @@ const Input = styled.input`
   box-sizing: border-box;
   color: ${props => (props.invalid ? '#E53935' : '')};
   font-size: 16px;
-  opacity: ${props => (props.disabled && !props.invalid ? '.5' : '1')};
+  opacity: ${props => (props.disabled && !props.invalid ? '0' : '1')};
   outline: none;
   padding: ${props => (props.hasButton ? '16px 52px 16px 10px' : '16px 10px')};
   width: 100%;
   -webkit-appearance: none;
+  transition: opacity 0.2s ease-in-out;
 
   &:disabled {
     background: #fff;
