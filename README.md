@@ -54,6 +54,7 @@ ReactDOM.render(
 2. [Paul's Website](https://psheon.github.io/) - Personal website of Paul Jiang ([demo](https://psheon.github.io/archives/))
 3. [Cisco Partner Support API Chatbot](https://github.com/btotharye/cisco-pss-api-chatbot) - Code with screenshots to have your own Cisco Serial lookup chatbot.
 4. [Chatcompose](https://www.chatcompose.com/en.html) - Chatbot Platform for Conversational Marketing and Support.
+5. [Mixat](https://www.svt.se/mixat) - News Chatbot for tweenies. Also as app ([iOS](https://apps.apple.com/se/app/mixat-h%C3%A4r-f%C3%A5r-du-koll/id1239444432) or [Android](https://play.google.com/store/apps/details?id=se.svt.mixat))
 
 Built something with `react-simple-chatbot`? Submit a PR and add it to this list!
 
