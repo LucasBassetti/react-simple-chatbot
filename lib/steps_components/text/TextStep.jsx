@@ -121,7 +121,12 @@ class TextStep extends Component {
           isLast={isLast}
           title={metadata && metadata.timestamp}
         >
-          {loading ? <Loading /> : this.renderMessage()}
+          {loading ? (
+            <Loading />
+          ) : (
+            // eslint-disable-next-line react/no-danger
+            <span dangerouslySetInnerHTML={{ __html: this.renderMessage() }} />
+          )}
         </Bubble>
       </TextStepContainer>
     );
