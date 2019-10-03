@@ -262,9 +262,19 @@ class ChatBot extends Component {
     if (isEnd) {
       this.handleEnd();
     } else if (currentStep.options && data) {
-      const option = currentStep.options.filter(o => o.value === data.value)[0];
+      const option = Object.assign({}, currentStep.options.filter(o => o.value === data.value)[0]);
       const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
       delete currentStep.options;
+
+      // Find the last state and append it to the new one
+      const lastSameSteps = previousSteps.filter(step => step.id === currentStep.id);
+      const lastSameStep = lastSameSteps.length > 1 && lastSameSteps[lastSameSteps.length - 2];
+      if (typeof lastSameStep.value === 'object' && typeof option.value === 'object') {
+        option.value = {
+          ...lastSameStep.value,
+          ...option.value
+        };
+      }
 
       // replace choose option for user message
       currentStep = Object.assign(
