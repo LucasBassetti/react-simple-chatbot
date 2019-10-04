@@ -6,7 +6,7 @@ const $ = require('jquery');
 require('./Steps.css');
 
 const textStepCode =
-`{
+  `{
   id: '1',
   message: 'Hello World',
   trigger: '2',
@@ -24,7 +24,7 @@ const textStepCode =
 `;
 
 const userStepCode =
-`{
+  `{
   id: '1',
   user: true,
   end: true,
@@ -32,7 +32,7 @@ const userStepCode =
 `;
 
 const optionsStepCode =
-`{
+  `{
   id: '1',
   options: [
     { value: 1, label: 'Number 1', trigger: '3' },
@@ -43,7 +43,7 @@ const optionsStepCode =
 `;
 
 const updateStepCode =
-`{
+  `{
   id: '1',
   update: '2',
   trigger: '3',
@@ -51,7 +51,7 @@ const updateStepCode =
 `;
 
 const customStepCode =
-`{
+  `{
   id: '1',
   component: <CustomComponent />
   trigger: '2'
@@ -121,7 +121,7 @@ const sections = [
         name: 'metadata',
         type: 'Object',
         required: 'false',
-        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format',
+        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format. The metadata property "speak" enables custom phrases to be spoken when using speech synthesis. {speak: "Custom phrase"}',
       },
     ],
   },
@@ -283,7 +283,7 @@ const sections = [
         name: 'metadata',
         type: 'Object',
         required: 'false',
-        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format',
+        description: 'Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format. The metadata property "speak" enables phrases to be spoken when using speech synthesis. This is especially useful from an accessibility perspective as it enables descriptions for a component.',
       },
     ],
   },
