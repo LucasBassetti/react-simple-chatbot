@@ -597,4 +597,60 @@ describe('ChatBot', () => {
       }
     });
   });
+
+  describe('Objects in Message', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          {
+            '@class': '.OptionsStep',
+            id: '{variables}',
+            options: [
+              {
+                value: { fee: 15, days: 3 },
+                label: 'fee: 15 & days: 3',
+                trigger: 'last'
+              },
+              {
+                value: { fee: 30, days: 1 },
+                label: 'fee: 30 & days: 1',
+                trigger: 'last'
+              }
+            ]
+          },
+          {
+            '@class': '.TextStep',
+            id: 'last',
+            message: 'Thanks! {variables}',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    // delay checking to let React update and render
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 200);
+    });
+
+    it('should render', () => {
+      expect(wrapper.find(ChatBot).length).to.equal(1);
+    });
+
+    it('should allow selecting selecting options', () => {
+      const options = wrapper.find('button.rsc-os-option-element');
+      expect(options.length).to.equal(2);
+
+      options.at(0).simulate('click');
+    });
+
+    it('should render objects in message correctly', () => {
+      expect(wrapper.text()).to.contain('("fee":15,"days":3)');
+    });
+  });
 });

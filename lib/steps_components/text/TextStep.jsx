@@ -62,15 +62,15 @@ class TextStep extends Component {
   };
 
   getValue = (steps, variable) => {
-    const defaultValue = /\d+\..+\..+-.+\..+/;
-    if (steps[variable].value.match(defaultValue)) return '';
-
     const { value } = steps[variable];
     if (typeof value === 'object' && !Array.isArray(value)) {
       return JSON.stringify(value)
         .replace(/{/g, '(')
         .replace(/}/g, ')');
     }
+
+    const defaultValue = /\d+\..+\..+-.+\..+/;
+    if (steps[variable].value.match(defaultValue)) return '';
 
     return steps[variable].value;
   };
