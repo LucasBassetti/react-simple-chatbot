@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { describe, it, before, after } from 'mocha';
+import { describe, it, before, beforeEach, after } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import ChatBot from '../../lib/ChatBot';
@@ -10,7 +10,7 @@ import {
   HeaderIcon,
 } from '../../lib/components';
 import { CloseIcon } from '../../lib/icons';
-import { TextStep } from '../../lib/steps_components';
+import { TextStep, OptionsStep } from '../../lib/steps_components';
 import OptionElement from '../../lib/steps_components/options/OptionElement';
 
 import { parse } from 'flatted';
@@ -380,27 +380,169 @@ describe('ChatBot', () => {
         userDelay={0}
         customDelay={0}
         steps={[
-          { id: '1', message: 'Hello!', trigger: '2.f745.dc70c5aaf-4010.f36e69ad1' },
-          { id: '2.f745.dc70c5aaf-4010.f36e69ad1', message: 'Choose one!', trigger: '{variables}' },
-          { id: '{variables}', options: Array(2) },
           {
+            '@class': '.TextStep',
+            id: '1',
+            message: 'Hello!',
+            trigger: '2.f745.dc70c5aaf-4010.f36e69ad1'
+          },
+          {
+            '@class': '.TextStep',
+            id: '2.f745.dc70c5aaf-4010.f36e69ad1',
+            message: 'Choose one!',
+            trigger: '{variables}'
+          },
+          {
+            '@class': '.OptionsStep',
+            id: '{variables}',
+            options: [
+              {
+                value: { fee: 15, days: 3 },
+                label: 'Fee: 15 & Days: 3',
+                trigger: '5.f745.dc70c5aaf-4010.f36e69ad1'
+              },
+              {
+                value: { fee: 30, days: 1 },
+                label: 'Fee: 30 & Days: 1',
+                trigger: '5.f745.dc70c5aaf-4010.f36e69ad1'
+              }
+            ]
+          },
+          {
+            '@class': '.TextStep',
             id: '5.f745.dc70c5aaf-4010.f36e69ad1',
-            message: 'Thanks!↵Fee: {variables.fee}↵Days: {variables.days}',
+            message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
             trigger: '6.0d00.f4f7fc513-6505.865edf1f5'
           },
           {
+            '@class': '.TextStep',
             id: '6.0d00.f4f7fc513-6505.865edf1f5',
             message: 'Choose again!',
             trigger: '2bcc4b03-f23e-337c-9830-fe430d69901b'
           },
           {
+            '@class': '.UpdateOptionsStep',
             id: '2bcc4b03-f23e-337c-9830-fe430d69901b',
             update: '{variables}',
-            updateOptions: Array(2)
+            updateOptions: [
+              { value: { fee: 16 }, label: 'Fee: 16', trigger: '8.0d00.f4f7fc513-6505.865edf1f5' },
+              { value: { days: 2 }, label: 'Days: 2', trigger: '8.0d00.f4f7fc513-6505.865edf1f5' }
+            ]
           },
           {
+            '@class': '.TextStep',
             id: '8.0d00.f4f7fc513-6505.865edf1f5',
-            message: 'Thanks!↵Fee: {variables.fee}↵Days: {variables.days}',
+            message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    // required as each UI update takes time
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 200);
+    });
+
+    it('should render', () => {
+      expect(wrapper.find(ChatBot).length).to.equal(1);
+    });
+
+    it('should have two options', () => {
+      wrapper.update();
+      const options = wrapper.find('button.rsc-os-option-element');
+      expect(options.length).to.be.equal(2);
+    });
+
+    it('options should be correct', () => {
+      const options = wrapper.find('button.rsc-os-option-element');
+      const expectedTexts = ['Fee: 15 & Days: 3', 'Fee: 30 & Days: 1'];
+      for (const expectedText of expectedTexts) {
+        expect(wrapper.text()).to.contain(expectedText);
+      }
+
+      options.at(1).simulate('click');
+    });
+
+    it('should have two options, after selection', () => {
+      wrapper.update();
+      const options = wrapper.find('button.rsc-os-option-element');
+      expect(options.length).to.be.equal(2);
+    });
+
+    it('options should be correct, after selection', () => {
+      const options = wrapper.find('button.rsc-os-option-element');
+      const expectedTexts = ['Fee: 16', 'Days: 2'];
+      for (const expectedText of expectedTexts) {
+        expect(wrapper.text()).to.contain(expectedText);
+      }
+
+      options.at(0).simulate('click');
+    });
+  });
+
+  describe('Coalesce Input Not Replace', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          {
+            '@class': '.TextStep',
+            id: '1',
+            message: 'Hello!',
+            trigger: '2.f745.dc70c5aaf-4010.f36e69ad1'
+          },
+          {
+            '@class': '.TextStep',
+            id: '2.f745.dc70c5aaf-4010.f36e69ad1',
+            message: 'Choose one!',
+            trigger: '{variables}'
+          },
+          {
+            '@class': '.OptionsStep',
+            id: '{variables}',
+            options: [
+              {
+                value: { fee: 15, days: 3 },
+                label: 'Option A',
+                trigger: '5.f745.dc70c5aaf-4010.f36e69ad1'
+              },
+              {
+                value: { fee: 30, days: 1 },
+                label: 'Option B',
+                trigger: '5.f745.dc70c5aaf-4010.f36e69ad1'
+              }
+            ]
+          },
+          {
+            '@class': '.TextStep',
+            id: '5.f745.dc70c5aaf-4010.f36e69ad1',
+            message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
+            trigger: '6.0d00.f4f7fc513-6505.865edf1f5'
+          },
+          {
+            '@class': '.TextStep',
+            id: '6.0d00.f4f7fc513-6505.865edf1f5',
+            message: 'Choose again!',
+            trigger: '2bcc4b03-f23e-337c-9830-fe430d69901b'
+          },
+          {
+            '@class': '.UpdateOptionsStep',
+            id: '2bcc4b03-f23e-337c-9830-fe430d69901b',
+            update: '{variables}',
+            updateOptions: [
+              { value: { fee: 16 }, label: 'Option A', trigger: '8.0d00.f4f7fc513-6505.865edf1f5' },
+              { value: { days: 2 }, label: 'Option B', trigger: '8.0d00.f4f7fc513-6505.865edf1f5' }
+            ]
+          },
+          {
+            '@class': '.TextStep',
+            id: '8.0d00.f4f7fc513-6505.865edf1f5',
+            message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
             end: true
           }
         ]}
@@ -413,40 +555,46 @@ describe('ChatBot', () => {
       }, 500);
     });
 
-    let cumulativeDelay = 0;
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 200);
+    });
 
     it('should render', () => {
       expect(wrapper.find(ChatBot).length).to.be.equal(1);
     });
 
     it('should present first with 2 options', () => {
-      const delay = 200;
-      cumulativeDelay += delay;
-      setTimeout(() => {
-        const options = wrapper.find(OptionElement);
-        expect(options.length).to.be.equal(2);
+      wrapper.update();
+      const options = wrapper.find('button.rsc-os-option-element');
+      expect(options.length).to.be.equal(2);
 
-        options[0].simulate('click');
-      }, cumulativeDelay);
+      options.at(0).simulate('click');
     });
 
-    // it('correct output after first choice', () => {
-    //   const delay = 100;
-    //   cumulativeDelay += delay;
-    //   setTimeout(() => {
-    //     const bubbleTexts = wrapper.findAll('div.rsc-ts-bubble');
-    //     expect().to.be.
-    //   }, cumulativeDelay);
-    // })
+    it('correct output after first choice', () => {
+      wrapper.update();
+      const expectedTexts = ['Thanks!', 'Fee: 15', 'Days: 3'];
+      for (const expectedText of expectedTexts) {
+        expect(wrapper.text()).to.contain(expectedText);
+      }
+    });
 
     it('should present next with 2 options', () => {
-      const delay = 200;
-      cumulativeDelay += delay;
-      setTimeout(() => {
-        const secondOptions = wrapper.find(OptionElement);
-        expect(secondOptions.length).to.be.equal(2);
-        secondOptions[0].simulate('click');
-      }, cumulativeDelay);
+      wrapper.update();
+      const options = wrapper.find('button.rsc-os-option-element');
+      expect(options.length).to.be.equal(2);
+
+      options.at(0).simulate('click');
     });
-  })
+
+    it('correct coalesced output after second choice', () => {
+      wrapper.update();
+      const expectedTexts = ['Thanks!', 'Fee: 16', 'Days: 3'];
+      for (const expectedText of expectedTexts) {
+        expect(wrapper.text()).to.contain(expectedText);
+      }
+    });
+  });
 });
