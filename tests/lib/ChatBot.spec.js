@@ -11,6 +11,7 @@ import {
 } from '../../lib/components';
 import { CloseIcon } from '../../lib/icons';
 import { TextStep } from '../../lib/steps_components';
+import OptionElement from '../../lib/steps_components/options/OptionElement';
 
 import { parse } from 'flatted';
 
@@ -371,4 +372,81 @@ describe('ChatBot', () => {
       expect(wrapper.find('input.rsc-input').props().autoComplete).to.be.equal('firstname');
     });
   });
+
+  describe('Update Options', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          { id: '1', message: 'Hello!', trigger: '2.f745.dc70c5aaf-4010.f36e69ad1' },
+          { id: '2.f745.dc70c5aaf-4010.f36e69ad1', message: 'Choose one!', trigger: '{variables}' },
+          { id: '{variables}', options: Array(2) },
+          {
+            id: '5.f745.dc70c5aaf-4010.f36e69ad1',
+            message: 'Thanks!↵Fee: {variables.fee}↵Days: {variables.days}',
+            trigger: '6.0d00.f4f7fc513-6505.865edf1f5'
+          },
+          {
+            id: '6.0d00.f4f7fc513-6505.865edf1f5',
+            message: 'Choose again!',
+            trigger: '2bcc4b03-f23e-337c-9830-fe430d69901b'
+          },
+          {
+            id: '2bcc4b03-f23e-337c-9830-fe430d69901b',
+            update: '{variables}',
+            updateOptions: Array(2)
+          },
+          {
+            id: '8.0d00.f4f7fc513-6505.865edf1f5',
+            message: 'Thanks!↵Fee: {variables.fee}↵Days: {variables.days}',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    before(done => {
+      setTimeout(() => {
+        done();
+      }, 500);
+    });
+
+    let cumulativeDelay = 0;
+
+    it('should render', () => {
+      expect(wrapper.find(ChatBot).length).to.be.equal(1);
+    });
+
+    it('should present first with 2 options', () => {
+      const delay = 200;
+      cumulativeDelay += delay;
+      setTimeout(() => {
+        const options = wrapper.find(OptionElement);
+        expect(options.length).to.be.equal(2);
+
+        options[0].simulate('click');
+      }, cumulativeDelay);
+    });
+
+    // it('correct output after first choice', () => {
+    //   const delay = 100;
+    //   cumulativeDelay += delay;
+    //   setTimeout(() => {
+    //     const bubbleTexts = wrapper.findAll('div.rsc-ts-bubble');
+    //     expect().to.be.
+    //   }, cumulativeDelay);
+    // })
+
+    it('should present next with 2 options', () => {
+      const delay = 200;
+      cumulativeDelay += delay;
+      setTimeout(() => {
+        const secondOptions = wrapper.find(OptionElement);
+        expect(secondOptions.length).to.be.equal(2);
+        secondOptions[0].simulate('click');
+      }, cumulativeDelay);
+    });
+  })
 });
