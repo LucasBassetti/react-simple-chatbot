@@ -2,7 +2,13 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import { isNestedVariable, splitByFirstPeriod, insertIntoObjectByPath, isVariable, getVariableName } from '../../lib/utils';
+import {
+  isNestedVariable,
+  splitByFirstPeriod,
+  isVariable,
+  getVariableName,
+  insertIntoObjectByPath
+} from '../../lib/utils';
 
 describe('Utils', () => {
   describe('isVariable', () => {
@@ -69,6 +75,51 @@ describe('Utils', () => {
 
     it('should work for no-property variable', () => {
       expect(splitByFirstPeriod('variable')).to.deep.equal(['variable', null]);
+    });
+  });
+
+  describe('insertIntoObjectByPath', () => {
+    const object = {
+      property1: {
+        property2: 'hello'
+      },
+      property3: 'hi there'
+    };
+
+    it('should work for 1-depth path', () => {
+      insertIntoObjectByPath(object, 'property4', 'value');
+
+      expect(object.property4).to.equal('value');
+    });
+
+    it('should replace old value', () => {
+      insertIntoObjectByPath(object, 'property1.property2', 'new value');
+
+      expect(object.property1.property2).to.equal('new value');
+    });
+
+    it('should work for 2-depth path', () => {
+      insertIntoObjectByPath(object, 'property1.property5', 'value');
+
+      expect(object.property1.property5).to.equal('value');
+    });
+
+    it('should work for multi-depth path with multiple non-existing properties', () => {
+      insertIntoObjectByPath(object, 'property1.property6.property7.property8', 'value');
+
+      expect(object.property1.property6.property7.property8).to.equal('value');
+    });
+
+    it('should work for multi-depth path with multiple non-existing properties', () => {
+      insertIntoObjectByPath(object, 'property1.property6.property7.property8', 'value');
+
+      expect(object.property1.property6.property7.property8).to.equal('value');
+    });
+
+    it('should not work when the path can not contain object due to previous value', () => {
+      insertIntoObjectByPath(object, 'property1.property2.property9.property10', 'value');
+
+      expect(object.property1.property2.property9).to.be.undefined;
     });
   });
 });
