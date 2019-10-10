@@ -43,17 +43,32 @@ describe('Utils', () => {
     });
 
     it('should work for proper nested variable', () => {
-      expect(getVariableName('{variable.prop1.prop2}')).to.be.equal('variable.prop1.prop2');
+      expect(getVariableName('{variable.prop1.prop2}')).to.equal('variable.prop1.prop2');
     });
 
     it('should work for non-variable', () => {
-      expect(getVariableName('variable.prop1.prop2')).to.be.equal('variable.prop1.prop2');
+      expect(getVariableName('variable.prop1.prop2')).to.equal('variable.prop1.prop2');
     });
   });
 
   describe('splitByFirstPeriod', () => {
     it('should work for single-property variable', () => {
-      expect(splitByFirstPeriod(''))
-    })
-  })
+      expect(splitByFirstPeriod('variable.property')).to.deep.equal(['variable', 'property']);
+    });
+
+    it('should work for braced single-property variable', () => {
+      expect(splitByFirstPeriod('{variable.property}')).to.deep.equal(['variable', 'property']);
+    });
+
+    it('should work for multi-property variable', () => {
+      expect(splitByFirstPeriod('variable.prop1.prop2.prop3')).to.deep.equal([
+        'variable',
+        'prop1.prop2.prop3'
+      ]);
+    });
+
+    it('should work for no-property variable', () => {
+      expect(splitByFirstPeriod('variable')).to.deep.equal(['variable', null]);
+    });
+  });
 });
