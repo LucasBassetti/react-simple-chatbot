@@ -22,8 +22,8 @@ describe('Utils', () => {
 
     it('should not work for no braces string', () => {
       expect(isVariable('variable')).to.be.false;
-    })
-  })
+    });
+  });
 
   describe('isNestedVariable', () => {
     it('should work for a proper nested variable', () => {
