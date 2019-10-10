@@ -6,7 +6,7 @@ import {
   isNestedVariable,
   splitByFirstPeriod,
   isVariable,
-  getVariableName,
+  extractVariableName,
   insertIntoObjectByPath
 } from '../../lib/utils';
 
@@ -43,17 +43,17 @@ describe('Utils', () => {
     });
   });
 
-  describe('getVariableName', () => {
+  describe('extractVariableName', () => {
     it('should work for proper variable', () => {
-      expect(getVariableName('{variable}')).to.be.equal('variable');
+      expect(extractVariableName('{variable}')).to.be.equal('variable');
     });
 
     it('should work for proper nested variable', () => {
-      expect(getVariableName('{variable.prop1.prop2}')).to.equal('variable.prop1.prop2');
+      expect(extractVariableName('{variable.prop1.prop2}')).to.equal('variable.prop1.prop2');
     });
 
     it('should work for non-variable', () => {
-      expect(getVariableName('variable.prop1.prop2')).to.equal('variable.prop1.prop2');
+      expect(extractVariableName('variable.prop1.prop2')).to.equal('variable.prop1.prop2');
     });
   });
 
