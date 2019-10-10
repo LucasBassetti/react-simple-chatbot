@@ -275,8 +275,9 @@ class ChatBot extends Component {
         } else {
           insertIntoObjectByPath(parentStep.value, remaining, data.value);
         }
+      } else {
+        currentStep.value = data.value;
       }
-      currentStep.value = data.value;
     }
     if (data && data.hideInput) {
       currentStep.hideInput = data.hideInput;
