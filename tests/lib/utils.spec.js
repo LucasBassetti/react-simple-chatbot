@@ -7,7 +7,8 @@ import {
   splitByFirstPeriod,
   isVariable,
   extractVariableName,
-  insertIntoObjectByPath
+  insertIntoObjectByPath,
+  makeVariable
 } from '../../lib/utils';
 
 describe('Utils', () => {
@@ -54,6 +55,16 @@ describe('Utils', () => {
 
     it('should work for non-variable', () => {
       expect(extractVariableName('variable.prop1.prop2')).to.equal('variable.prop1.prop2');
+    });
+  });
+
+  describe('makeVariable', () => {
+    it('should work for non-variable name', () => {
+      expect(makeVariable('variable')).to.equal('{variable}');
+    });
+
+    it('should work for variable', () => {
+      expect(makeVariable('{variable}')).to.equal('{variable}');
     });
   });
 
