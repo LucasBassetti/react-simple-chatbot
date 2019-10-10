@@ -681,12 +681,34 @@ describe('ChatBot', () => {
             '@class': '.UserStep',
             id: '{variables.property}',
             user: true,
-            trigger: 'last'
+            trigger: 'display'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'display',
+            message: 'Thanks! {variables}',
+            trigger: '{variables.property2}'
+          },
+          {
+            '@class': '.OptionsStep',
+            id: '{variables.property2}',
+            options: [
+              {
+                value: { property3: 'value' },
+                label: 'Property 3',
+                trigger: 'last'
+              },
+              {
+                value: { property4: 'value' },
+                label: 'Property4',
+                trigger: 'last'
+              }
+            ]
           },
           {
             '@class': '.TextStep',
             id: 'last',
-            message: 'Thanks! {variables}',
+            message: 'Updated! {variables}',
             end: true
           }
         ]}
@@ -704,7 +726,7 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBot).length).to.equal(1);
     });
 
-    it('should allow selecting selecting options', () => {
+    it('should allow selecting options', () => {
       wrapper.update();
       const options = wrapper.find('button.rsc-os-option-element');
       expect(options.length).to.equal(2);
@@ -718,9 +740,24 @@ describe('ChatBot', () => {
       wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
     });
 
-    it('should render objects in message correctly', () => {
+    it('should render nested inputted values in message correctly', () => {
       wrapper.update();
       expect(wrapper.text()).to.contain('("fee":15,"days":3,"property":"value")');
+    });
+
+    it('should allow selecting options', () => {
+      wrapper.update();
+      const options = wrapper.find('button.rsc-os-option-element');
+      expect(options.length).to.equal(2);
+
+      options.at(0).simulate('click');
+    });
+
+    it('should render nested options in message correctly', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain(
+        '("fee":15,"days":3,"property":"value","property2":("property3":"value"))'
+      );
     });
   });
 });
