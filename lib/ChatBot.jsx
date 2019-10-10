@@ -18,7 +18,7 @@ import {
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
-import { isMobile } from './utils';
+import { isMobile, isNestedVariable, splitByFirstPeriod, insertIntoObjectByPath } from './utils';
 import { speakFn } from './speechSynthesis';
 
 class ChatBot extends Component {
@@ -242,6 +242,11 @@ class ChatBot extends Component {
     return { metadata: Object.assign({}, step.metadata, timestamp) };
   };
 
+  findLastStepWithId = (steps, id) => {
+    const similarSteps = steps.filter(step => step.id === id);
+    return similarSteps.length > 0 ? similarSteps[similarSteps.length - 1] : null;
+  };
+
   triggerNextStep = data => {
     const { enableMobileAutoFocus } = this.props;
     const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
@@ -250,6 +255,16 @@ class ChatBot extends Component {
     const isEnd = currentStep.end;
 
     if (data && data.value) {
+      if (isNestedVariable(currentStep.id)) {
+        const [parentObjectName, remaining] = splitByFirstPeriod(currentStep.id);
+        const parentStep = this.findLastStepWithId(previousSteps, parentObjectName);
+        if (!parentStep) {
+          // eslint-disable-next-line no-console
+          console.error('Error: Could not find parent step of the nested variable');
+        } else {
+          insertIntoObjectByPath(parentStep.value, remaining, data.value);
+        }
+      }
       currentStep.value = data.value;
     }
     if (data && data.hideInput) {
