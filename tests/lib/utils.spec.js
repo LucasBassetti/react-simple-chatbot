@@ -2,7 +2,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import { isNestedVariable, splitByFirstPeriod, insertIntoObjectByPath, isVariable } from '../../lib/utils';
+import { isNestedVariable, splitByFirstPeriod, insertIntoObjectByPath, isVariable, getVariableName } from '../../lib/utils';
 
 describe('Utils', () => {
   describe('isVariable', () => {
@@ -34,7 +34,21 @@ describe('Utils', () => {
 
     it('should not work for deeply nested variable', () => {
       expect(isNestedVariable('{variable.prop1.prop2}')).to.be.true;
-    })
+    });
+  });
+
+  describe('getVariableName', () => {
+    it('should work for proper variable', () => {
+      expect(getVariableName('{variable}')).to.be.equal('variable');
+    });
+
+    it('should work for proper nested variable', () => {
+      expect(getVariableName('{variable.prop1.prop2}')).to.be.equal('variable.prop1.prop2');
+    });
+
+    it('should work for non-variable', () => {
+      expect(getVariableName('variable.prop1.prop2')).to.be.equal('variable.prop1.prop2');
+    });
   });
 
   describe('splitByFirstPeriod', () => {
