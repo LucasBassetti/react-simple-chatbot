@@ -719,8 +719,8 @@ describe('ChatBot', () => {
     });
 
     it('should render objects in message correctly', () => {
-      console.log(wrapper.text());
-      expect(wrapper.text()).to.contain('("fee":15,"days":3,"property": "value")');
+      wrapper.update();
+      expect(wrapper.text()).to.contain('("fee":15,"days":3,"property":"value")');
     });
   });
 });

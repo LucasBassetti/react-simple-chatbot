@@ -514,6 +514,16 @@ class ChatBot extends Component {
         value: inputValue
       };
 
+      if (isNestedVariable(currentStep.id)) {
+        const [parentObjectName, remaining] = splitByFirstPeriod(currentStep.id);
+        const parentStep = this.findLastStepWithId(previousSteps, parentObjectName);
+        if (!parentStep) {
+          // eslint-disable-next-line no-console
+          console.error('Error: Could not find parent step of the nested variable');
+        } else {
+          insertIntoObjectByPath(parentStep.value, remaining, inputValue);
+        }
+      }
       currentStep = Object.assign({}, defaultUserSettings, currentStep, step, this.metadata(step));
 
       renderedSteps.push(currentStep);
