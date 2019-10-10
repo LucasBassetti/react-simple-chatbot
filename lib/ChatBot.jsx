@@ -18,7 +18,14 @@ import {
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
-import { isMobile, isNestedVariable, splitByFirstPeriod, insertIntoObjectByPath } from './utils';
+import {
+  isMobile,
+  isNestedVariable,
+  splitByFirstPeriod,
+  insertIntoObjectByPath,
+  isVariable,
+  makeVariable
+} from './utils';
 import { speakFn } from './speechSynthesis';
 
 class ChatBot extends Component {
@@ -243,6 +250,10 @@ class ChatBot extends Component {
   };
 
   findLastStepWithId = (steps, id) => {
+    if (!isVariable(id)) {
+      id = makeVariable(id);
+    }
+
     const similarSteps = steps.filter(step => step.id === id);
     return similarSteps.length > 0 ? similarSteps[similarSteps.length - 1] : null;
   };
