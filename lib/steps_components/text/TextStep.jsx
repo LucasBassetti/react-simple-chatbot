@@ -64,7 +64,7 @@ class TextStep extends Component {
   getValue = (steps, variable) => {
     const { value } = steps[variable];
     if (typeof value === 'object' && !Array.isArray(value)) {
-      return JSON.stringify(value)
+      return JSON.stringify(value, null, 1)
         .replace(/{/g, '(')
         .replace(/}/g, ')');
     }

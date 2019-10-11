@@ -19,6 +19,9 @@ const CustomComponent = () => (
   <div />
 );
 
+const removeNewLineChars = str =>
+  typeof str === 'string' ? str.replace(/(\r\n|\n|\r)/gm, '') : str;
+
 describe('ChatBot', () => {
   describe('Simple', () => {
     const wrapper = mount(
@@ -650,7 +653,7 @@ describe('ChatBot', () => {
     });
 
     it('should render objects in message correctly', () => {
-      expect(wrapper.text()).to.contain('("fee":15,"days":3)');
+      expect(removeNewLineChars(wrapper.text())).to.contain('( "fee": 15, "days": 3)');
     });
   });
 
@@ -742,7 +745,9 @@ describe('ChatBot', () => {
 
     it('should render nested inputted values in message correctly', () => {
       wrapper.update();
-      expect(wrapper.text()).to.contain('("fee":15,"days":3,"property":"value")');
+      expect(removeNewLineChars(wrapper.text())).to.contain(
+        '( "fee": 15, "days": 3, "property": "value")'
+      );
     });
 
     it('should allow selecting options', () => {
@@ -755,8 +760,8 @@ describe('ChatBot', () => {
 
     it('should render nested options in message correctly', () => {
       wrapper.update();
-      expect(wrapper.text()).to.contain(
-        '("fee":15,"days":3,"property":"value","property2":("property3":"value"))'
+      expect(removeNewLineChars(wrapper.text())).to.contain(
+        '( "fee": 15, "days": 3, "property": "value", "property2": (  "property3": "value" ))'
       );
     });
   });
