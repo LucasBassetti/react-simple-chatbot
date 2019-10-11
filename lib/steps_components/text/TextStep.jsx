@@ -47,14 +47,16 @@ class TextStep extends Component {
     const variables = message.match(/{[^{}]+}/g);
     if (variables) {
       for (let variable of variables) {
-        if (steps[variable] || steps[makeVariable(splitByFirstPeriod(variable)[0])])
+        if (steps[variable] || steps[makeVariable(splitByFirstPeriod(variable)[0])]) {
           message = message.replace(new RegExp(variable, 'g'), this.getValue(steps, variable));
-        else {
+        } else {
           variable = variable.replace(/[{}]/g, '');
-          message = message.replace(
-            new RegExp(`{${variable}}`, 'g'),
-            this.getValue(steps, variable)
-          );
+          if (steps[variable] || steps[splitByFirstPeriod(variable)[0]]) {
+            message = message.replace(
+              new RegExp(`{${variable}}`, 'g'),
+              this.getValue(steps, variable)
+            );
+          }
         }
       }
     }
@@ -71,7 +73,8 @@ class TextStep extends Component {
         value = getFromObjectByPath(steps[parentVariable].value, remainingPath);
       }
     } else {
-      value = steps[variable];
+      // eslint-disable-next-line prefer-destructuring
+      value = steps[variable].value;
     }
 
     if (typeof value === 'object' && !Array.isArray(value)) {
@@ -81,7 +84,7 @@ class TextStep extends Component {
     }
 
     const defaultValue = /\d+\..+\..+-.+\..+/;
-    if (value.match(defaultValue)) return '';
+    if (typeof value === 'string' && value.match(defaultValue)) return '';
 
     return value;
   };
