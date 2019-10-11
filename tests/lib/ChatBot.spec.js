@@ -657,9 +657,9 @@ describe('ChatBot', () => {
     });
   });
 
-  describe('Nested variables', () => {
+  describe('Nested variables Input', () => {
     const wrapper = mount(
-      <ChatBot 
+      <ChatBot
         botDelay={0}
         userDelay={0}
         customDelay={0}
@@ -763,6 +763,64 @@ describe('ChatBot', () => {
       expect(removeNewLineChars(wrapper.text())).to.contain(
         '( "fee": 15, "days": 3, "property": "value", "property2": (  "property3": "value" ))'
       );
+    });
+  });
+
+  describe('Nested variables Output', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          {
+            '@class': '.OptionsStep',
+            id: '{variables}',
+            options: [
+              {
+                value: {
+                  property1: 'value1',
+                  property2: {
+                    property3: 'value3'
+                  }
+                },
+                label: 'Option 1',
+                trigger: 'last'
+              }
+            ]
+          },
+          {
+            '@class': '.TextStep',
+            id: 'last',
+            message: 'Property1: {variables.property1}, Property3: {variables.property2.property3}',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    // delay checking to let React update and render
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 150);
+    });
+
+    it('should render', () => {
+      expect(wrapper.find(ChatBot).length).to.equal(1);
+    });
+
+    it('should allow selecting options', () => {
+      wrapper.update();
+      const options = wrapper.find('button.rsc-os-option-element');
+      expect(options.length).to.equal(1);
+
+      options.at(0).simulate('click');
+    });
+
+    it('should output nested variables in message correctly', () => {
+      wrapper.update();
+      expect(removeNewLineChars(wrapper.text())).to.contain('Property1: value1, Property3: value3');
     });
   });
 });

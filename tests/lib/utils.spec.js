@@ -8,7 +8,8 @@ import {
   isVariable,
   extractVariableName,
   insertIntoObjectByPath,
-  makeVariable
+  makeVariable,
+  getFromObjectByPath
 } from '../../lib/utils';
 
 describe('Utils', () => {
@@ -131,6 +132,34 @@ describe('Utils', () => {
       insertIntoObjectByPath(object, 'property1.property2.property9.property10', 'value');
 
       expect(object.property1.property2.property9).to.be.undefined;
+    });
+  });
+
+  describe('getFromObjectByPath', () => {
+    const object = {
+      property1: 'value1',
+      property2: {
+        property3: 'value3',
+        property4: {
+          property5: 'value5'
+        }
+      }
+    };
+
+    it('should be able to get from 1-depth nested variable', () => {
+      expect(getFromObjectByPath(object, 'property1')).to.equal('value1');
+    });
+
+    it('should be able to get from multi-depth nested variable', () => {
+      expect(getFromObjectByPath(object, 'property2.property4.property5')).to.equal('value5');
+    });
+
+    it('should be return undefined or null for non-existing 1-depth path', () => {
+      expect(getFromObjectByPath(object, 'property6')).to.be.undefined;
+    });
+
+    it('should be return undefined or null for non-existing multi-depth path', () => {
+      expect(getFromObjectByPath(object, 'property1.property2.property3')).to.be.undefined;
     });
   });
 });

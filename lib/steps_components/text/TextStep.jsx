@@ -5,6 +5,12 @@ import Image from './Image';
 import ImageContainer from './ImageContainer';
 import Loading from '../common/Loading';
 import TextStepContainer from './TextStepContainer';
+import {
+  isNestedVariable,
+  splitByFirstPeriod,
+  makeVariable,
+  getFromObjectByPath
+} from '../../utils';
 
 class TextStep extends Component {
   /* istanbul ignore next */
@@ -41,20 +47,14 @@ class TextStep extends Component {
     const variables = message.match(/{[^{}]+}/g);
     if (variables) {
       for (let variable of variables) {
-        if (steps[variable]) {
+        if (steps[variable] || steps[makeVariable(splitByFirstPeriod(variable)[0])])
           message = message.replace(new RegExp(variable, 'g'), this.getValue(steps, variable));
-        }
-        variable = variable.replace(/[{}]/g, '');
-        if (steps[variable]) {
+        else {
+          variable = variable.replace(/[{}]/g, '');
           message = message.replace(
             new RegExp(`{${variable}}`, 'g'),
             this.getValue(steps, variable)
           );
-        }
-        const split = variable.split('.');
-        const step = steps[`{${split[0]}}`];
-        if (step) {
-          message = message.replace(new RegExp(`{${variable}}`, 'g'), step.value[split[1]]);
         }
       }
     }
@@ -62,7 +62,18 @@ class TextStep extends Component {
   };
 
   getValue = (steps, variable) => {
-    const { value } = steps[variable];
+    let value;
+
+    if (isNestedVariable(variable)) {
+      const [parentVariableName, remainingPath] = splitByFirstPeriod(variable);
+      const parentVariable = makeVariable(parentVariableName);
+      if (steps[parentVariable] && steps[parentVariable].value) {
+        value = getFromObjectByPath(steps[parentVariable].value, remainingPath);
+      }
+    } else {
+      value = steps[variable];
+    }
+
     if (typeof value === 'object' && !Array.isArray(value)) {
       return JSON.stringify(value, null, 1)
         .replace(/{/g, '(')
@@ -70,9 +81,9 @@ class TextStep extends Component {
     }
 
     const defaultValue = /\d+\..+\..+-.+\..+/;
-    if (steps[variable].value.match(defaultValue)) return '';
+    if (value.match(defaultValue)) return '';
 
-    return steps[variable].value;
+    return value;
   };
 
   renderMessage = () => {
