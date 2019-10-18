@@ -18,7 +18,14 @@ import {
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
-import { isMobile } from './utils';
+import {
+  isMobile,
+  isNestedVariable,
+  splitByFirstPeriod,
+  insertIntoObjectByPath,
+  isVariable,
+  makeVariable
+} from './utils';
 import { speakFn } from './speechSynthesis';
 
 class ChatBot extends Component {
@@ -242,6 +249,15 @@ class ChatBot extends Component {
     return { metadata: Object.assign({}, step.metadata, timestamp) };
   };
 
+  findLastStepWithId = (steps, id) => {
+    if (!isVariable(id)) {
+      id = makeVariable(id);
+    }
+
+    const similarSteps = steps.filter(step => step.id === id);
+    return similarSteps.length > 0 ? similarSteps[similarSteps.length - 1] : null;
+  };
+
   triggerNextStep = data => {
     const { enableMobileAutoFocus } = this.props;
     const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
@@ -250,7 +266,18 @@ class ChatBot extends Component {
     const isEnd = currentStep.end;
 
     if (data && data.value) {
-      currentStep.value = data.value;
+      if (isNestedVariable(currentStep.id)) {
+        const [parentObjectName, remaining] = splitByFirstPeriod(currentStep.id);
+        const parentStep = this.findLastStepWithId(previousSteps, parentObjectName);
+        if (!parentStep) {
+          // eslint-disable-next-line no-console
+          console.error('Error: Could not find parent step of the nested variable');
+        } else {
+          insertIntoObjectByPath(parentStep.value, remaining, data.value);
+        }
+      } else {
+        currentStep.value = data.value;
+      }
     }
     if (data && data.hideInput) {
       currentStep.hideInput = data.hideInput;
@@ -262,9 +289,19 @@ class ChatBot extends Component {
     if (isEnd) {
       this.handleEnd();
     } else if (currentStep.options && data) {
-      const option = currentStep.options.filter(o => o.value === data.value)[0];
+      const option = Object.assign({}, currentStep.options.filter(o => o.value === data.value)[0]);
       const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
       delete currentStep.options;
+
+      // Find the last state and append it to the new one
+      const lastSameSteps = previousSteps.filter(step => step.id === currentStep.id);
+      const lastSameStep = lastSameSteps.length > 1 && lastSameSteps[lastSameSteps.length - 2];
+      if (typeof lastSameStep.value === 'object' && typeof option.value === 'object') {
+        option.value = {
+          ...lastSameStep.value,
+          ...option.value
+        };
+      }
 
       // replace choose option for user message
       currentStep = Object.assign(
@@ -477,6 +514,16 @@ class ChatBot extends Component {
         value: inputValue
       };
 
+      if (isNestedVariable(currentStep.id)) {
+        const [parentObjectName, remaining] = splitByFirstPeriod(currentStep.id);
+        const parentStep = this.findLastStepWithId(previousSteps, parentObjectName);
+        if (!parentStep) {
+          // eslint-disable-next-line no-console
+          console.error('Error: Could not find parent step of the nested variable');
+        } else {
+          insertIntoObjectByPath(parentStep.value, remaining, inputValue);
+        }
+      }
       currentStep = Object.assign({}, defaultUserSettings, currentStep, step, this.metadata(step));
 
       renderedSteps.push(currentStep);
