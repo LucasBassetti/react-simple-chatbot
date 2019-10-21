@@ -145,6 +145,8 @@ class TextStep extends Component {
         >
           {loading ? (
             <Loading />
+          ) : step.component ? (
+            this.renderMessage()
           ) : (
             // eslint-disable-next-line react/no-danger
             <span dangerouslySetInnerHTML={{ __html: this.renderMessage() }} />
