@@ -260,9 +260,12 @@ class ChatBot extends Component {
 
   evaluateExpression = evalExpression => {
     const steps = [];
-    this.previousSteps.forEach(step => {
+
+    const { previousSteps, currentStep } = this.state;
+    previousSteps.forEach(step => {
       steps[step.id] = step;
     });
+    steps[currentStep.id] = currentStep;
 
     // eslint-disable-next-line no-eval
     eval(evalExpression);

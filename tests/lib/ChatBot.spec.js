@@ -841,18 +841,25 @@ describe('ChatBot', () => {
             '@class': '.UserStep',
             id: '{salary}',
             user: true,
-            evalExpression: 'steps["{salary}"] = "$" + steps["{salary}"]',
             trigger: 'display'
           },
           {
             '@class': '.TextStep',
             id: 'display',
+            evalExpression: 'steps["{salary}"].value = "$" + steps["{salary}"].value',
             message: 'Your salary is {salary}',
             end: true
           }
         ]}
       />
     );
+
+    // delay checking to let React update and render
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 150);
+    });
 
     it('should render', () => {
       expect(wrapper.find(ChatBot).length).to.equal(1);
