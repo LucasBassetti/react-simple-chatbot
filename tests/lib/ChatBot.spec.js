@@ -823,4 +823,50 @@ describe('ChatBot', () => {
       expect(removeNewLineChars(wrapper.text())).to.contain('Property1: value1, Property3: value3');
     });
   });
+
+  describe('Eval expression', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          {
+            '@class': '.TextStep',
+            id: '1',
+            message: 'Enter your salary!',
+            trigger: '{salary}'
+          },
+          {
+            '@class': '.UserStep',
+            id: '{salary}',
+            user: true,
+            evalExpression: 'steps["{salary}"] = "$" + steps["{salary}"]',
+            trigger: 'display'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'display',
+            message: 'Your salary is {salary}',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    it('should render', () => {
+      expect(wrapper.find(ChatBot).length).to.equal(1);
+    });
+
+    it('should allow inserting values', () => {
+      wrapper.update();
+      wrapper.setState({ inputValue: '1000' });
+      wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
+    });
+
+    it('should update the entered value', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain('Your salary is $1000');
+    });
+  });
 });
