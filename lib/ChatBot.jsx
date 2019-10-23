@@ -258,6 +258,16 @@ class ChatBot extends Component {
     return similarSteps.length > 0 ? similarSteps[similarSteps.length - 1] : null;
   };
 
+  evaluateExpression = evalExpression => {
+    const steps = [];
+    this.previousSteps.forEach(step => {
+      steps[step.id] = step;
+    });
+
+    // eslint-disable-next-line no-eval
+    eval(evalExpression);
+  };
+
   triggerNextStep = data => {
     const { enableMobileAutoFocus } = this.props;
     const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
@@ -352,6 +362,10 @@ class ChatBot extends Component {
         } else {
           nextStep.trigger = updateStep.trigger;
         }
+      }
+
+      if (typeof nextStep.evalExpression === 'string') {
+        this.evaluateExpression(nextStep.evalExpression);
       }
 
       nextStep.key = Random(24);
