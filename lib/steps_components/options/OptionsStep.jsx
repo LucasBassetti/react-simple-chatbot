@@ -6,25 +6,24 @@ import Options from './Options';
 import OptionsStepContainer from './OptionsStepContainer';
 
 class OptionsStep extends Component {
-  onOptionClick = ({ value }) => {
+  onOptionClick = option => {
     const { triggerNextStep } = this.props;
 
-    triggerNextStep({ value });
+    triggerNextStep(option);
   };
 
   renderOption = option => {
     const { bubbleOptionStyle, step } = this.props;
     const { user } = step;
-    const { value, label } = option;
-    const key = typeof value === 'object' && value !== null ? JSON.stringify(value) : value;
+    const { label } = option;
 
     return (
-      <Option key={key} className="rsc-os-option">
+      <Option key={JSON.stringify(option)} className="rsc-os-option">
         <OptionElement
           className="rsc-os-option-element"
           style={bubbleOptionStyle}
           user={user}
-          onClick={() => this.onOptionClick({ value })}
+          onClick={() => this.onOptionClick(option)}
         >
           {label}
         </OptionElement>

@@ -11,13 +11,13 @@ describe('OptionsStep', () => {
       id: '1',
       options: [
         { value: 'op1', label: 'Option 1', target: '2' },
-        { value: 'op2', label: 'Option 2', target: '3' },
-      ],
+        { value: 'op2', label: 'Option 2', target: '3' }
+      ]
       // bubbleColor: '#eee',
       // fontColor: '#000',
     },
     bubbleStyle: {},
-    triggerNextStep: () => {},
+    triggerNextStep: () => {}
   };
 
   const wrapper = mount(<OptionsStep {...settings} />);
@@ -31,7 +31,7 @@ describe('OptionsStep', () => {
     expect(wrapper.find(OptionElement).length).to.be.equal(2);
   });
 
-  it('should render the first option with label equal \'Option 1\'', () => {
+  it("should render the first option with label equal 'Option 1'", () => {
     const label = wrapper.find(OptionElement).first().text();
     expect(label).to.be.equal('Option 1');
   });
