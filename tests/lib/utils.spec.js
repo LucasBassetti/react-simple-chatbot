@@ -9,7 +9,8 @@ import {
   extractVariableName,
   insertIntoObjectByPath,
   makeVariable,
-  getFromObjectByPath
+  getFromObjectByPath,
+  deepCopy
 } from '../../lib/utils';
 
 describe('Utils', () => {
@@ -160,6 +161,44 @@ describe('Utils', () => {
 
     it('should be return undefined or null for non-existing multi-depth path', () => {
       expect(getFromObjectByPath(object, 'property1.property2.property3')).to.be.undefined;
+    });
+  });
+
+  describe('deepCopy', () => {
+    const object1 = {
+      property1: 'value1',
+      property2: {
+        property3: 'value3',
+        property4: {
+          property5: 'value5'
+        }
+      }
+    };
+
+    const object2 = deepCopy(object1);
+
+    it('should produce exactly same object', () => {
+      expect(object2.property1).to.equal('value1');
+      expect(object2.property2.property3).to.equal('value3');
+      expect(object2.property2.property4.property5).to.equal('value5');
+    });
+
+    it('should not allow changes in deeply copied object affect other', () => {
+      object2.property1 = 'newValue1';
+      expect(object1.property1).to.not.equal('newValue1');
+      object2.property2.property3 = 'newValue3';
+      expect(object1.property2.property3).to.not.equal('newValue3');
+      object2.property2.property4.property5 = 'newValue5';
+      expect(object1.property2.property4.property5).to.not.equal('newValue5');
+    });
+
+    it('should not allow changes in original object affect other', () => {
+      object1.property1 = 'entirelyNewValue1';
+      expect(object2.property1).to.not.equal('entirelyNewValue1');
+      object1.property2.property3 = 'entirelyNewValue3';
+      expect(object2.property2.property3).to.not.equal('entirelyNewValue3');
+      object1.property2.property4.property5 = 'entirelyNewValue5';
+      expect(object2.property2.property4.property5).to.not.equal('entirelyNewValue5');
     });
   });
 });

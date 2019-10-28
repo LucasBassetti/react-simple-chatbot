@@ -865,4 +865,87 @@ describe('ChatBot', () => {
       expect(bubbles.at(0).text()).to.be.equal('Female');
     });
   });
+
+  describe('Eval expression', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          {
+            '@class': '.TextStep',
+            id: '1',
+            message: 'Enter your salary!',
+            trigger: '{salary}'
+          },
+          {
+            '@class': '.UserStep',
+            id: '{salary}',
+            user: true,
+            trigger: 'display'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'display',
+            evalExpression: 'values["{salary}"] = "$" + previousValues["{salary}"]',
+            message: 'Your salary is {salary}',
+            trigger: 'assign-variable-without-optionstep'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'assign-variable-without-optionstep',
+            evalExpression: 'values["{variable}"] = "value"',
+            message: 'Assigning value to variable',
+            trigger: 'display-variable'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'display-variable',
+            message: 'The variable is {variable}',
+            trigger: 'check-evalExpression-precedence'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'check-evalExpression-precedence',
+            evalExpression: 'values["{person}"] = { name: "FirstName LastName", age: 34 }',
+            message: 'Your name is {person.name} and you are {person.age} years old',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    // delay checking to let React update and render
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 150);
+    });
+
+    it('should render', () => {
+      expect(wrapper.find(ChatBot).length).to.equal(1);
+    });
+
+    it('should allow inserting values', () => {
+      wrapper.update();
+      wrapper.setState({ inputValue: '1000' });
+      wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
+    });
+
+    it('should update the entered value', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain('Your salary is $1000');
+    });
+
+    it('should allow new variables to be created', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain('The variable is value');
+    });
+
+    it('should evaluate evalExpression before rendering step', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain('Your name is FirstName LastName and you are 34 years old');
+    });
+  });
 });
