@@ -39,11 +39,43 @@ jobs:
               echo "Error: build is not up-to-date" ;
               exit 1
             fi
+  auto-build:
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "3b:d9:54:9b:b2:a9:66:36:49:35:21:7a:57:06:33:bf"
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Rebuild ./dist folder and Commit
+          command: |
+            npm run build ;
+            if git diff --quiet ;
+            then
+              echo "This build is up-to-date" ;
+            else
+              echo "The build is not up-to-date" ;
+              echo "Commiting updated build to repo" ;
+              git config user.email "bot@circleci.com" ;
+              git config user.name "CircleCI Bot" ;
+              git commit -am "Auto-build from CircleCI [skip ci]"
+              git push origin master ;
+            fi
+
 workflows:
   version: 2
-  build-and-test:
+  build-test-and-autobuild:
     jobs:
       - build
       - test:
           requires:
             - build
+      - auto-build:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
