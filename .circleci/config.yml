@@ -8,9 +8,6 @@ jobs:
       - run:
           name: Download dependencies
           command: npm ci
-#      - run:
-#          name: Run build
-#          command: npm run build
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
@@ -32,7 +29,7 @@ jobs:
           name: Check dist folder
           command: |
             npm run build
-            if git diff --quiet --exit-code ./dist ;
+            if git diff --quiet --exit-code --cached ./dist ;
             then
               echo "Error: build is not up-to-date"
               exit 1
