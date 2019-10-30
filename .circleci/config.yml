@@ -28,8 +28,11 @@ jobs:
       - run:
           name: Check dist folder
           command: |
-            npm run build
-            if git diff --quiet --exit-code --cached ./dist ;
+            echo "Running npm run build" ;
+            npm run build ;
+            echo "Running git status" ;
+            git status ;
+            if git diff --quiet ;
             then
               echo "Success: the build is up-to-date";
             else
