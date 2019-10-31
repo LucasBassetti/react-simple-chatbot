@@ -32,7 +32,7 @@ jobs:
             npm run build ;
             echo "Running git status" ;
             git status ;
-            if git diff --quiet ;
+            if git diff --quiet ./dist ;
             then
               echo "Success: the build is up-to-date";
             else
@@ -53,7 +53,7 @@ jobs:
           name: Rebuild ./dist folder and Commit
           command: |
             npm run build ;
-            if git diff --quiet ;
+            if git diff --quiet ./dist ;
             then
               echo "This build is up-to-date" ;
             else
@@ -61,7 +61,8 @@ jobs:
               echo "Commiting updated build to repo" ;
               git config user.email "bot@circleci.com" ;
               git config user.name "CircleCI Bot" ;
-              git commit -am "Auto-build from CircleCI [skip ci]"
+              git add ./dist ;
+              git commit -m "Auto-build from CircleCI [skip CI]" ;
               git push origin master ;
             fi
 
