@@ -557,10 +557,12 @@ class ChatBot extends Component {
 
     const isInvalid = currentStep.validator && this.checkInvalidInput();
 
+    const parsedValue = currentStep.parser ? currentStep.parser(inputValue) : inputValue;
+
     if (!isInvalid) {
       const step = {
         message: inputValue,
-        value: inputValue
+        value: parsedValue
       };
 
       if (isNestedVariable(currentStep.id)) {
@@ -575,7 +577,7 @@ class ChatBot extends Component {
             id: parentStep.id,
             value: deepCopy(parentStep.value)
           };
-          insertIntoObjectByPath(newStep.value, remaining, inputValue);
+          insertIntoObjectByPath(newStep.value, remaining, parsedValue);
           previousSteps.push(newStep);
           renderedSteps.push(newStep);
         }
