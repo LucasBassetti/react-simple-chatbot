@@ -453,7 +453,7 @@ describe('ChatBot', () => {
 
     it('should have two options', () => {
       wrapper.update();
-      const options = wrapper.find('button.rsc-os-option-element');
+      const options = wrapper.find(OptionElementSelector);
       expect(options.length).to.be.equal(2);
     });
 
@@ -954,6 +954,118 @@ describe('ChatBot', () => {
     });
   });
 
+  describe('Multiple choices chat', () => {
+    const wrapper = mount(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          {
+            '@class': '.TextStep',
+            id: '1',
+            message: 'Which fruits would you like?!',
+            trigger: '{choices}'
+          },
+          {
+            '@class': '.ChoiceStep',
+            id: '{choices}',
+            choices: [
+              {
+                label: 'Apple',
+                value: 'apple'
+              },
+              {
+                label: 'Banana',
+                value: 'banana'
+              },
+              {
+                label: 'Orange',
+                value: 'orange'
+              }
+            ],
+            trigger: ({ value }) => {
+              if (
+                value.includes('apple') &&
+                value.includes('orange') &&
+                !value.includes('banana')
+              ) {
+                return 'AppleAndOrange';
+              }
+              return 'InvalidChoices';
+            }
+          },
+          {
+            '@class': '.TextStep',
+            id: 'InvalidChoices',
+            message: 'The valid choice would have been Apple and Orange',
+            trigger: 'EndMessage'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'AppleAndOrange',
+            message: 'Apple and Orange chosen',
+            trigger: 'EndMessage'
+          },
+          {
+            '@class': '.TextStep',
+            id: 'EndMessage',
+            message: 'First choice: {choices}',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    const ChoiceElementSelector = 'button.rsc-mcs-choice-element';
+
+    const SubmitElementSelector = 'button.rsc-mcs-submit-element';
+
+    // delay checking to let React update and render
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 100);
+    });
+
+    it('should render', () => {
+      expect(wrapper.find(ChatBot).length).to.equal(1);
+    });
+
+    it('should ask with 3 choices', () => {
+      wrapper.update();
+      const choices = wrapper.find(ChoiceElementSelector);
+      expect(choices.length).to.equal(3);
+
+      // choose Apple and Orange
+      choices.at(0).simulate('click');
+      choices.at(2).simulate('click');
+    });
+
+    it('should have 1 submit button', () => {
+      wrapper.update();
+      const submitElement = wrapper.find(SubmitElementSelector);
+
+      // submit
+      submitElement.simulate('click');
+    });
+
+    it('should replace MultipleChoiceStep with TextStep', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain('Apple Orange');
+    });
+
+    it('should show proper text after choices selection', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain('Apple and Orange chosen');
+    });
+
+    it('should store data in step', () => {
+      wrapper.update();
+      expect(wrapper.text()).to.contain('First choice: [\n "apple",\n "orange"\n]');
+    });
+  });
+
   describe('Reloading of chat (using cache)', () => {
     describe('Reloading at OptionStep', () => {
       const cacheName = 'reload-at-optionstep';
@@ -1222,10 +1334,12 @@ describe('ChatBot', () => {
       });
     });
   });
-  
+
   describe('Extra control', () => {
     const CustomControl = () => (
-      <button className="my-button">custom</button>
+      <button type="button" className="my-button">
+        custom
+      </button>
     );
     const wrapper = mount(
       <ChatBot
@@ -1252,7 +1366,7 @@ describe('ChatBot', () => {
             end: true
           }
         ]}
-      />,
+      />
     );
 
     it('should be rendered with an extra control beside submit button', () => {
@@ -1260,15 +1374,11 @@ describe('ChatBot', () => {
     });
 
     it('the extra control should be hidden', () => {
-      console.log("Setting input value");
       wrapper.setState({ inputValue: 'test' });
-      console.log("Simulate key press");
       wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
       setTimeout(() => {
-        console.log("testing hidden");
-        expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(0);  
+        expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(0);
       }, 500);
     });
-
   });
 });

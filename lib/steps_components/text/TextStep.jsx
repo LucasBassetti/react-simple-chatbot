@@ -77,7 +77,7 @@ class TextStep extends Component {
       value = steps[variable].value;
     }
 
-    if (typeof value === 'object' && !Array.isArray(value)) {
+    if (typeof value === 'object') {
       return JSON.stringify(value, null, 1)
         .replace(/{/g, '(')
         .replace(/}/g, ')');
@@ -143,6 +143,7 @@ class TextStep extends Component {
           isLast={isLast}
           title={metadata && metadata.timestamp}
         >
+          {/* eslint-disable-next-line no-nested-ternary */}
           {loading ? (
             <Loading />
           ) : step.component ? (

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import defaultTheme from '../../theme';
 
-const OptionElement = styled.button`
+const ChoiceElement = styled.button`
   background: ${({ theme }) => theme.botBubbleColor};
   border: 0;
   border-radius: 22px;
@@ -20,8 +20,8 @@ const OptionElement = styled.button`
   }
 `;
 
-OptionElement.defaultProps = {
+ChoiceElement.defaultProps = {
   theme: defaultTheme
 };
 
-export default OptionElement;
+export default ChoiceElement;
