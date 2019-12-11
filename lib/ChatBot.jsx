@@ -302,7 +302,6 @@ class ChatBot extends Component {
     const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
 
     let { currentStep, previousStep } = this.state;
-    const isEnd = currentStep.end;
 
     const getValueFromData = () => {
       if (data && data.value) {
@@ -333,9 +332,7 @@ class ChatBot extends Component {
       currentStep.trigger = this.getTriggeredStep(data.trigger, value);
     }
 
-    if (isEnd) {
-      this.handleEnd();
-    } else if (currentStep.options && data) {
+    if (currentStep.options && data) {
       const option = Object.assign({}, currentStep.options.filter(o => deepEqual(o, data))[0]);
       const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
       delete currentStep.options;
@@ -359,7 +356,8 @@ class ChatBot extends Component {
         {
           user: true,
           message: option.label,
-          trigger
+          trigger,
+          end: !trigger
         },
         this.metadata(currentStep)
       );
@@ -408,6 +406,8 @@ class ChatBot extends Component {
         renderedSteps,
         previousSteps
       });
+    } else if (currentStep.end) {
+      this.handleEnd();
     } else if (currentStep.trigger) {
       if (currentStep.replace) {
         renderedSteps.pop();
@@ -470,6 +470,7 @@ class ChatBot extends Component {
     } else if (nextStep.update) {
       const updateStep = nextStep;
       nextStep = Object.assign({}, steps[updateStep.update], { updatedBy: updateStep.id });
+      nextStep.end = updateStep.end;
       if (nextStep.options || updateStep.updateOptions) {
         if (updateStep.updateOptions) {
           nextStep.options = updateStep.updateOptions;
