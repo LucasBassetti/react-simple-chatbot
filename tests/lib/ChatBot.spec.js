@@ -15,9 +15,15 @@ const CustomComponent = () => <div />;
 const removeNewLineChars = str =>
   typeof str === 'string' ? str.replace(/(\r\n|\n|\r)/gm, '') : str;
 
+const ChatBotWithoutDelay = props => (
+  <ChatBot botDelay={0} userDelay={0} customDelay={0} {...props} />
+);
+
 describe('ChatBot', () => {
   const OptionElementSelector = 'button.rsc-os-option-element';
   const InputElementSelector = 'input.rsc-input';
+  const MultipleChoiceElementSelector = 'button.rsc-mcs-choice-element';
+  const MultipleSubmitElementSelector = 'button.rsc-mcs-submit-element';
 
   describe('Simple', () => {
     const wrapper = mount(
@@ -1017,10 +1023,6 @@ describe('ChatBot', () => {
       />
     );
 
-    const ChoiceElementSelector = 'button.rsc-mcs-choice-element';
-
-    const SubmitElementSelector = 'button.rsc-mcs-submit-element';
-
     // delay checking to let React update and render
     beforeEach(done => {
       setTimeout(() => {
@@ -1034,7 +1036,7 @@ describe('ChatBot', () => {
 
     it('should ask with 3 choices', () => {
       wrapper.update();
-      const choices = wrapper.find(ChoiceElementSelector);
+      const choices = wrapper.find(MultipleChoiceElementSelector);
       expect(choices.length).to.equal(3);
 
       // choose Apple and Orange
@@ -1044,7 +1046,7 @@ describe('ChatBot', () => {
 
     it('should have 1 submit button', () => {
       wrapper.update();
-      const submitElement = wrapper.find(SubmitElementSelector);
+      const submitElement = wrapper.find(MultipleSubmitElementSelector);
 
       // submit
       submitElement.simulate('click');
@@ -1052,7 +1054,7 @@ describe('ChatBot', () => {
 
     it('should replace MultipleChoiceStep with TextStep', () => {
       wrapper.update();
-      expect(wrapper.text()).to.contain('Apple Orange');
+      expect(wrapper.text()).to.contain('Apple, Orange');
     });
 
     it('should show proper text after choices selection', () => {
@@ -1527,6 +1529,89 @@ describe('ChatBot', () => {
       expect(lastStep.message).to.equal('End');
       // eslint-disable-next-line no-unused-expressions
       expect(lastStep.end).to.be.true;
+    });
+  });
+
+  describe('Read-only chat', () => {
+    // delay checking to let React update and render
+    beforeEach(done => {
+      setTimeout(() => {
+        done();
+      }, 150);
+    });
+
+    let wrapper;
+
+    it('should disable Options on read-only', done => {
+      wrapper = mount(
+        <ChatBotWithoutDelay
+          readOnly
+          steps={[
+            {
+              id: '1',
+              options: [
+                {
+                  label: 'Option',
+                  value: '',
+                  trigger: 'end'
+                }
+              ]
+            },
+            {
+              id: 'end',
+              message: 'This is next step. This should not have triggered'
+            }
+          ]}
+        />
+      );
+
+      setTimeout(() => {
+        const options = wrapper.find(OptionElementSelector);
+
+        options.at(0).simulate('click');
+
+        setTimeout(() => {
+          expect(wrapper.find(OptionElementSelector).length).to.equal(1);
+          done();
+        }, 150);
+      }, 150);
+    });
+
+    it('should disable MultipleChoices on read-only', done => {
+      wrapper = mount(
+        <ChatBotWithoutDelay
+          readOnly
+          steps={[
+            {
+              id: '1',
+              choices: [
+                {
+                  label: 'Choice',
+                  value: ''
+                }
+              ],
+              trigger: 'end'
+            },
+            {
+              id: 'end',
+              message: 'This is next step. This should not have triggered'
+            }
+          ]}
+        />
+      );
+
+      setTimeout(() => {
+        const choices = wrapper.find(MultipleChoiceElementSelector);
+        const submitButton = wrapper.find(MultipleSubmitElementSelector);
+
+        choices.at(0).simulate('click');
+        submitButton.at(0).simulate('click');
+
+        setTimeout(() => {
+          expect(wrapper.find(MultipleChoiceElementSelector).length).to.equal(1);
+          done();
+        }, 200);
+      }, 150);
     });
   });
 });

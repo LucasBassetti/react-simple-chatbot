@@ -52,7 +52,7 @@ class MultipleChoiceStep extends Component {
   };
 
   renderChoice = choice => {
-    const { bubbleChoiceStyle, step } = this.props;
+    const { bubbleChoiceStyle, style, step } = this.props;
     const { disabled } = this.state;
     const { user } = step;
     const { label } = choice;
@@ -65,7 +65,7 @@ class MultipleChoiceStep extends Component {
           className={`rsc-mcs-choice-element ${
             choice.selected ? 'rsc-mcs-choice-element--selected' : ''
           }`}
-          style={bubbleChoiceStyle}
+          style={{ ...bubbleChoiceStyle, ...style }}
           user={user}
           onClick={disabled ? doNothing : () => this.onChoiceClick(choice)}
         >
@@ -103,10 +103,15 @@ class MultipleChoiceStep extends Component {
   }
 }
 
+MultipleChoiceStep.defaultProps = {
+  style: null
+};
+
 MultipleChoiceStep.propTypes = {
   bubbleChoiceStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   step: PropTypes.objectOf(PropTypes.any).isRequired,
-  triggerNextStep: PropTypes.func.isRequired
+  triggerNextStep: PropTypes.func.isRequired,
+  style: PropTypes.objectOf(PropTypes.string)
 };
 
 export default MultipleChoiceStep;
