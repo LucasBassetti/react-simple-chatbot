@@ -1,6 +1,20 @@
 import React, { Component } from 'react';
+import { ThemeProvider } from 'styled-components';
 import PropTypes from 'prop-types';
 import ChatBot from 'react-simple-chatbot';
+import logo from './images/download.png';
+
+const otherFontTheme = {
+  background: '#f5f8fb',
+  fontFamily: 'Helvetica Neue',
+  headerBgColor: '#EF6C00',
+  headerFontColor: '#fff',
+  headerFontSize: '15px',
+  botBubbleColor: '#EF6C00',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a'
+};
 
 class LinkHandler extends Component {
   componentWillMount() {
@@ -18,7 +32,7 @@ class LinkHandler extends Component {
   }
 
   render() {
-    return <span />;
+    return null
   }
 }
 
@@ -64,8 +78,8 @@ class Tutorial extends Component {
     if (loading) {
       return <span />;
     }
-
     return (
+      <ThemeProvider theme={otherFontTheme}>
       <ChatBot
         className="tutorial"
         customStyle={{ display: 'none' }}
@@ -73,6 +87,7 @@ class Tutorial extends Component {
         floating={true}
         handleEnd={this.handleEnd}
         headerTitle="RSC Support"
+        botAvatar={logo}
         steps={[
           {
             id: '1',
@@ -152,6 +167,7 @@ class Tutorial extends Component {
           },
         ]}
       />
+      </ThemeProvider>
     );
   }
 }
