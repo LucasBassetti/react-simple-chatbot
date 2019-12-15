@@ -5,6 +5,7 @@ import Image from './Image';
 import ImageContainer from './ImageContainer';
 import Loading from '../common/Loading';
 import TextStepContainer from './TextStepContainer';
+import logo from '../../images/download.png';
 
 class TextStep extends Component {
   /* istanbul ignore next */
@@ -61,6 +62,7 @@ class TextStep extends Component {
       hideUserAvatar
     } = this.props;
     const { loading } = this.state;
+    /*eslint-disable*/
     const { avatar, user } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
@@ -74,7 +76,7 @@ class TextStep extends Component {
               style={avatarStyle}
               showAvatar={showAvatar}
               user={user}
-              src={avatar}
+              src={logo}
               alt="avatar"
             />
           )}
