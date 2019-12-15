@@ -5,7 +5,6 @@ import Image from './Image';
 import ImageContainer from './ImageContainer';
 import Loading from '../common/Loading';
 import TextStepContainer from './TextStepContainer';
-import logo from '../../images/download.png';
 
 class TextStep extends Component {
   /* istanbul ignore next */
