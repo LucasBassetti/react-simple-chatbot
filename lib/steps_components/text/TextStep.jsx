@@ -62,7 +62,6 @@ class TextStep extends Component {
       hideUserAvatar
     } = this.props;
     const { loading } = this.state;
-    /*eslint-disable*/
     const { avatar, user } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
@@ -76,7 +75,7 @@ class TextStep extends Component {
               style={avatarStyle}
               showAvatar={showAvatar}
               user={user}
-              src={logo}
+              src={avatar}
               alt="avatar"
             />
           )}
