@@ -11,7 +11,14 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'example'),
     host: '0.0.0.0',
-    disableHostCheck: true
+    port: '3001',
+    disableHostCheck: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        secure: false
+      }
+    }
   },
   resolve: {
     extensions: ['.js', '.jsx']

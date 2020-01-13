@@ -43,6 +43,7 @@ describe('Recognition', () => {
       const recognition = new Recognition(onChange, onEnd);
       recognition.speak();
       recognition.recognition.say('hi, this is a test');
+      // TODO: Remove this setTimeout
       setTimeout(() => {
         expect(onEnd.called).to.be.equal(true);
       }, 1000);

@@ -26,7 +26,8 @@ import {
   insertIntoObjectByPath,
   isVariable,
   makeVariable,
-  deepCopy
+  deepCopy,
+  getStepFromBackend
 } from './utils';
 import { speakFn } from './speechSynthesis';
 import MultipleChoiceStep from './steps_components/multiple_choice/MultipleChoiceStep';
@@ -60,55 +61,33 @@ class ChatBot extends Component {
       inputValue: '',
       inputInvalid: false,
       speaking: false,
-      recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
-      defaultUserSettings: {}
+      recognitionEnable: props.recognitionEnable && Recognition.isSupported()
     };
 
     this.speak = speakFn(props.speechSynthesis);
   }
 
-  componentDidMount() {
-    const { steps } = this.props;
-    const {
-      botDelay,
-      botAvatar,
-      cache,
-      cacheName,
-      customDelay,
-      enableMobileAutoFocus,
-      userAvatar,
-      userDelay
-    } = this.props;
+  async componentDidMount() {
+    const { nextStepUrl, parseStep } = this.props;
+    let { steps } = this.props;
+    steps = steps || [];
+    const { cache, cacheName, enableMobileAutoFocus } = this.props;
     const chatSteps = {};
 
-    const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
-    const defaultUserSettings = {
-      delay: userDelay,
-      avatar: userAvatar,
-      hideInput: false,
-      hideExtraControl: false
-    };
-    const defaultCustomSettings = { delay: customDelay };
+    if (nextStepUrl && steps.length === 0) {
+      const step = await this.getStepFromApi();
+      chatSteps[step.id] = step;
+      steps = [step];
+    } else {
+      for (let i = 0, len = steps.length; i < len; i += 1) {
+        const step = parseStep ? parseStep(steps[i]) : steps[i];
 
-    for (let i = 0, len = steps.length; i < len; i += 1) {
-      const step = steps[i];
-      let settings = {};
-
-      if (step.user) {
-        settings = defaultUserSettings;
-      } else if (step.message || step.asMessage) {
-        settings = defaultBotSettings;
-      } else if (step.component) {
-        settings = defaultCustomSettings;
+        chatSteps[step.id] = this.assignDefaultSetting(schema.parse(step));
       }
-
-      chatSteps[step.id] = Object.assign({}, settings, schema.parse(step));
+      schema.checkInvalidIds(chatSteps);
     }
 
-    schema.checkInvalidIds(chatSteps);
-
     const firstStep = steps[0];
-
     if (firstStep.message) {
       const { message } = firstStep;
       firstStep.message = typeof message === 'function' ? message() : message;
@@ -134,12 +113,13 @@ class ChatBot extends Component {
       window.addEventListener('resize', this.onResize);
     }
 
-    const { currentStep, previousStep, previousSteps, renderedSteps } = storage.getData(
+    const { currentStep, previousStep, previousSteps, renderedSteps } = await storage.getData(
       {
         cacheName,
         cache,
         firstStep,
-        steps: chatSteps
+        steps: chatSteps,
+        getStepFromApi: this.getStepFromApi
       },
       () => {
         // focus input if last step cached is a user step
@@ -155,7 +135,6 @@ class ChatBot extends Component {
 
     this.setState({
       currentStep,
-      defaultUserSettings,
       previousStep,
       previousSteps,
       renderedSteps,
@@ -180,6 +159,21 @@ class ChatBot extends Component {
       window.removeEventListener('resize', this.onResize);
     }
   }
+
+  getDefaultSettings = () => {
+    const { botDelay, botAvatar, userDelay, userAvatar, customDelay } = this.props;
+
+    const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
+    const defaultUserSettings = {
+      delay: userDelay,
+      avatar: userAvatar,
+      hideInput: false,
+      hideExtraControl: false
+    };
+    const defaultCustomSettings = { delay: customDelay };
+
+    return { defaultBotSettings, defaultUserSettings, defaultCustomSettings };
+  };
 
   onNodeInserted = event => {
     const { currentTarget: target } = event;
@@ -297,9 +291,10 @@ class ChatBot extends Component {
     this.setState({ previousSteps, renderedSteps });
   };
 
-  triggerNextStep = data => {
+  triggerNextStep = async data => {
     const { enableMobileAutoFocus } = this.props;
-    const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
+    const { previousSteps, renderedSteps, steps } = this.state;
+    const { defaultUserSettings } = this.getDefaultSettings();
 
     let { currentStep, previousStep } = this.state;
 
@@ -413,7 +408,7 @@ class ChatBot extends Component {
         renderedSteps.pop();
       }
 
-      const nextStep = this.getNextStep(currentStep, steps);
+      const nextStep = await this.getNextStep(currentStep, steps);
 
       previousStep = currentStep;
       currentStep = nextStep;
@@ -438,6 +433,7 @@ class ChatBot extends Component {
 
     const { cache, cacheName } = this.props;
     if (cache) {
+      // TODO: Get rid of this setTimeout (use promises/async-await)
       setTimeout(() => {
         storage.setData(cacheName, {
           currentStep,
@@ -445,11 +441,12 @@ class ChatBot extends Component {
           previousSteps,
           renderedSteps
         });
-      }, 300);
+      }, 10);
     }
 
     const { handleNextStep } = this.props;
     if (handleNextStep) {
+      // TODO: Get rid of this setTimeout (use promises/async-await)
       setTimeout(() => {
         handleNextStep({
           currentStep,
@@ -461,14 +458,18 @@ class ChatBot extends Component {
     }
   };
 
-  getNextStep = (currentStep, steps) => {
+  getNextStep = async (currentStep, steps) => {
     const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);
-    let nextStep = Object.assign({}, steps[trigger]);
-
+    let nextStep = steps[trigger]
+      ? Object.assign({}, steps[trigger])
+      : await this.getStepFromApi(trigger);
     if (nextStep.message) {
       nextStep.message = this.getStepMessage(nextStep.message);
     } else if (nextStep.update) {
       const updateStep = nextStep;
+      steps[updateStep.update] = steps[updateStep.update]
+        ? steps[updateStep.update]
+        : await this.getStepFromApi(updateStep.update);
       nextStep = Object.assign({}, steps[updateStep.update], { updatedBy: updateStep.id });
       nextStep.end = updateStep.end;
       if (nextStep.options || updateStep.updateOptions) {
@@ -491,6 +492,40 @@ class ChatBot extends Component {
 
     nextStep.key = Random(24);
     return nextStep;
+  };
+
+  getStepFromApi = async trigger => {
+    const { nextStepUrl, parseStep } = this.props;
+    const step = await getStepFromBackend(nextStepUrl, trigger);
+
+    const parsedStep = parseStep ? parseStep(step) : step;
+    const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
+
+    // append to steps
+    const { steps } = this.state;
+    steps[completeStep.id] = completeStep;
+    this.setState({ steps });
+
+    return completeStep;
+  };
+
+  assignDefaultSetting = step => {
+    const {
+      defaultBotSettings,
+      defaultUserSettings,
+      defaultCustomSettings
+    } = this.getDefaultSettings();
+
+    let settings = {};
+    if (step.user) {
+      settings = defaultUserSettings;
+    } else if (step.message || step.asMessage) {
+      settings = defaultBotSettings;
+    } else if (step.component) {
+      settings = defaultCustomSettings;
+    }
+
+    return Object.assign({}, settings, step);
   };
 
   saveValueAsStep = (value, id, renderedSteps, previousSteps) => {
@@ -618,7 +653,8 @@ class ChatBot extends Component {
   };
 
   submitUserMessage = () => {
-    const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
+    const { inputValue, previousSteps, renderedSteps } = this.state;
+    const { defaultUserSettings } = this.getDefaultSettings();
     let { currentStep } = this.state;
 
     const isInvalid = currentStep.validator && this.checkInvalidInput();
@@ -944,6 +980,8 @@ class ChatBot extends Component {
 }
 
 ChatBot.propTypes = {
+  nextStepUrl: PropTypes.string,
+  parseStep: PropTypes.func,
   avatarStyle: PropTypes.objectOf(PropTypes.any),
   botAvatar: PropTypes.string,
   botDelay: PropTypes.number,
@@ -988,7 +1026,7 @@ ChatBot.propTypes = {
         ? PropTypes.instanceOf(window.SpeechSynthesisVoice)
         : PropTypes.any
   }),
-  steps: PropTypes.arrayOf(PropTypes.object).isRequired,
+  steps: PropTypes.arrayOf(PropTypes.object),
   style: PropTypes.objectOf(PropTypes.any),
   submitButtonStyle: PropTypes.objectOf(PropTypes.any),
   userAvatar: PropTypes.string,
@@ -997,6 +1035,9 @@ ChatBot.propTypes = {
 };
 
 ChatBot.defaultProps = {
+  nextStepUrl: undefined,
+  parseStep: undefined,
+  steps: undefined,
   avatarStyle: {},
   botDelay: 1000,
   bubbleOptionStyle: {},
