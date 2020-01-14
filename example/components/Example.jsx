@@ -54,6 +54,70 @@ const steps = [
   }
 ];
 
+const extractNumericalValue = (text) => {
+  const whiteSpaceRegex = /\s/g;
+  const currencyRegex = /[$£€]/g;
+  text = text
+    .replace(whiteSpaceRegex, '')
+    .replace(currencyRegex, '')
+    .replace('%', '')
+    .replace(',', '.'); // Decimal separator
+
+  return text === '' ? NaN : Number(text);
+};
+
+const getValidator = (format, invalidFormatMessage) => {
+  if (format === 'any') {
+    return () => true;
+  }
+
+  // format === 'positive_numeric'
+  if (invalidFormatMessage === null || invalidFormatMessage === undefined)
+    invalidFormatMessage = 'Please enter positive numeric value';
+  return (value) => {
+    const numericValue = extractNumericalValue(value);
+    return isNaN(numericValue) || numericValue < 0 ? invalidFormatMessage : true;
+  };
+};
+
+const getParser = (format) => {
+  if (format === 'any') {
+    return (value) => value;
+  }
+
+  // format === 'positive_numeric'
+  return (value) => {
+    return extractNumericalValue(value);
+  };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const trigger = (trigger) => ({ value, steps }) => {
+  for (const condition in trigger) {
+    // eslint-disable-next-line
+    if (trigger.hasOwnProperty(condition) && eval(condition)) {
+      return trigger[condition];
+    }
+  }
+  throw new Error('Missing condition for value: ' + value);
+};
+
+const parseStep = (step) => {
+  const stepIsUserStep = step.user;
+  const stepIsUpdateUserStep = step.update && !step.updateOptions;
+  if (stepIsUserStep || stepIsUpdateUserStep) {
+    const validator = getValidator(step.format, step.invalidFormatMessage);
+    const parser = getParser(step.format);
+    step = { ...step, validator, parser };
+    delete step.format;
+    delete step.invalidFormatMessage;
+  }
+  if (typeof step.trigger === 'object' && step.trigger !== null) {
+    step = { ...step, trigger: trigger(step.trigger) };
+  }
+  return { ...step };
+};
+
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
     <React.StrictMode>
@@ -63,6 +127,7 @@ const ThemedExample = () => (
       {/*/>*/}
       <ChatBot
         cache={true}
+        parseStep={parseStep}
         nextStepUrl='/api/v1/chats/1SLK9Bu1BAfttq--N1OM2t7ydp-X5Ja3A/models/null/modelKey/null/states/saladus/nextStep/'
       />
     </React.StrictMode>
