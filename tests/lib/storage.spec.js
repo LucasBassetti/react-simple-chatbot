@@ -414,6 +414,55 @@ describe('Storage', () => {
     expect(currentStep.trigger).to.equal(newTriggerFunction);
   });
 
+  it('reassigns trigger, parser and validator to only-update user step', async () => {
+    const triggerFunction = () => {};
+    const parserFunction = () => {};
+    const validatorFunction = () => {};
+
+    const steps = {
+      'update-user-step': {
+        update: '{input}',
+        updateUser: true,
+        trigger: triggerFunction,
+        parser: parserFunction,
+        validator: validatorFunction
+      }
+    };
+
+    const latestStep = {
+      ...steps['update-user-step'],
+      id: '{input}',
+      user: true,
+      updatedBy: 'update-user-step',
+      trigger: triggerFunction,
+      parser: parserFunction,
+      validator: validatorFunction
+    };
+
+    const state = {
+      renderedSteps: [],
+      previousSteps: [],
+      previousStep: {},
+      currentStep: latestStep
+    };
+
+    const stringifiedState = storage.setData('storage_cache', state);
+
+    const { currentStep } = await storage.getData(
+      {
+        cacheName: 'storage_cache',
+        cache: stringifiedState,
+        firstStep: steps['update-user-step'],
+        steps
+      },
+      () => {}
+    );
+
+    expect(currentStep.trigger).to.equal(triggerFunction);
+    expect(currentStep.parser).to.equal(parserFunction);
+    expect(currentStep.validator).to.equal(validatorFunction);
+  });
+
   it('uses fetch to update parsed step', async () => {
     const steps = {};
     const state = {

@@ -371,14 +371,6 @@ class ChatBot extends Component {
       const message = data.map(each => each.label).join(', ');
       delete currentStep.choices;
 
-      // Find the last state and append it to the new one
-      const lastSameSteps = renderedSteps.filter(step => step.id === currentStep.id);
-      const lastSameStep = lastSameSteps.length > 1 && lastSameSteps[lastSameSteps.length - 2];
-      let updatedValue = value;
-      if (Array.isArray(lastSameStep.value) && Array.isArray(value)) {
-        updatedValue = [...lastSameStep.value, ...updatedValue];
-      }
-
       currentStep = Object.assign(
         {},
         currentStep,
@@ -386,7 +378,7 @@ class ChatBot extends Component {
         {
           user: true,
           message,
-          value: updatedValue
+          value
         },
         this.metadata(currentStep)
       );
@@ -459,6 +451,7 @@ class ChatBot extends Component {
   };
 
   getNextStep = async (currentStep, steps) => {
+    const { nextStepUrl } = this.props;
     const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);
     let nextStep = steps[trigger]
       ? Object.assign({}, steps[trigger])
@@ -467,11 +460,11 @@ class ChatBot extends Component {
       nextStep.message = this.getStepMessage(nextStep.message);
     } else if (nextStep.update) {
       const updateStep = nextStep;
-      steps[updateStep.update] = steps[updateStep.update]
-        ? steps[updateStep.update]
-        : await this.getStepFromApi(updateStep.update);
+      if (nextStepUrl && !steps[updateStep.update])
+        steps[updateStep.update] = await this.getStepFromApi(updateStep.update);
       nextStep = Object.assign({}, steps[updateStep.update], { updatedBy: updateStep.id });
       nextStep.end = updateStep.end;
+      nextStep.id = updateStep.update;
       if (nextStep.options || updateStep.updateOptions) {
         if (updateStep.updateOptions) {
           nextStep.options = updateStep.updateOptions;
@@ -482,6 +475,9 @@ class ChatBot extends Component {
         }
         nextStep.user = false;
       } else {
+        if (updateStep.updateUser) nextStep.user = updateStep.updateUser;
+        if (updateStep.validator) nextStep.validator = updateStep.validator;
+        if (updateStep.parser) nextStep.parser = updateStep.parser;
         nextStep.trigger = updateStep.trigger;
       }
     }

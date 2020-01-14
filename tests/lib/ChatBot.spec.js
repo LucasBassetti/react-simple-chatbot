@@ -1062,6 +1062,7 @@ describe('ChatBot', () => {
               }
             ],
             trigger: ({ value }) => {
+              if (value.length > 2) return 'only-two-choices';
               if (
                 value.includes('apple') &&
                 value.includes('orange') &&
@@ -1073,7 +1074,11 @@ describe('ChatBot', () => {
             }
           },
           {
-            '@class': '.TextStep',
+            id: 'only-two-choices',
+            message: 'Please choose two or less fruits',
+            trigger: '{choices}'
+          },
+          {
             id: 'InvalidChoices',
             message: 'The valid choice would have been Apple and Orange',
             trigger: 'EndMessage'
@@ -1114,36 +1119,54 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBot).length).to.equal(1);
     });
 
-    it('should ask with 3 choices', () => {
-      wrapper.update();
+    it('should ask with 3 choices and 1 submit button', () => {
       const choices = wrapper.find(MultipleChoiceElementSelector);
       expect(choices.length).to.equal(3);
-
-      // choose Apple and Orange
-      choices.at(0).simulate('click');
-      choices.at(2).simulate('click');
     });
 
     it('should have 1 submit button', () => {
-      wrapper.update();
+      const submitElement = wrapper.find(MultipleSubmitElementSelector);
+      expect(submitElement.length).to.equal(1);
+    });
+
+    it('Action: select all 3 choices and submit', () => {
+      const choices = wrapper.find(MultipleChoiceElementSelector);
       const submitElement = wrapper.find(MultipleSubmitElementSelector);
 
-      // submit
+      choices.at(0).simulate('click');
+      choices.at(1).simulate('click');
+      choices.at(2).simulate('click');
+
+      submitElement.simulate('click');
+    });
+
+    it('should re-ask', () => {
+      expect(wrapper.text()).to.contain('Please choose two or less fruits');
+      const choices = wrapper.find(MultipleChoiceElementSelector);
+      expect(choices.length).to.equal(3);
+      const submitElement = wrapper.find(MultipleSubmitElementSelector);
+      expect(submitElement.length).to.equal(1);
+    });
+
+    it('Action: select 2 choices and submit', () => {
+      const choices = wrapper.find(MultipleChoiceElementSelector);
+      const submitElement = wrapper.find(MultipleSubmitElementSelector);
+
+      choices.at(0).simulate('click');
+      choices.at(2).simulate('click');
+
       submitElement.simulate('click');
     });
 
     it('should replace MultipleChoiceStep with TextStep', () => {
-      wrapper.update();
       expect(wrapper.text()).to.contain('Apple, Orange');
     });
 
     it('should show proper text after choices selection', () => {
-      wrapper.update();
       expect(wrapper.text()).to.contain('Apple and Orange chosen');
     });
 
     it('should store data in step', () => {
-      wrapper.update();
       expect(wrapper.text()).to.contain('First choice: [\n "apple",\n "orange"\n]');
     });
   });
@@ -1445,16 +1468,7 @@ describe('ChatBot', () => {
         }
       ];
 
-      const chatBot = (
-        <ChatBot
-          cache
-          cacheName={cacheName}
-          botDelay={0}
-          userDelay={0}
-          customDelay={0}
-          steps={steps}
-        />
-      );
+      const chatBot = <ChatBotWithoutDelay cache cacheName={cacheName} steps={steps} />;
 
       let wrapper;
       let clock;
@@ -1583,7 +1597,7 @@ describe('ChatBot', () => {
       }
     ];
 
-    const chatBot = <ChatBot botDelay={0} userDelay={0} customDelay={0} steps={steps} />;
+    const chatBot = <ChatBotWithoutDelay steps={steps} />;
 
     const wrapper = mount(chatBot);
 
@@ -1650,7 +1664,7 @@ describe('ChatBot', () => {
       }
     ];
 
-    const chatBot = <ChatBot botDelay={0} userDelay={0} customDelay={0} steps={steps} />;
+    const chatBot = <ChatBotWithoutDelay steps={steps} />;
 
     const wrapper = mount(chatBot);
 
@@ -2067,6 +2081,91 @@ describe('ChatBot', () => {
 
     it('should reach the end of chat', () => {
       expect(wrapper.text()).to.contain('Chat has ended');
+    });
+  });
+
+  describe('Should work even when only update steps are present', () => {
+    const chatBot = (
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          {
+            id: '1',
+            message: 'First message',
+            trigger: 'ask-options'
+          },
+          {
+            id: 'ask-options',
+            update: '{option}',
+            updateOptions: [
+              { label: 'Option Label 1', value: 'optionValue1', trigger: 'show-chosen-option' },
+              { label: 'Option Label 2', value: 'optionValue2', trigger: 'show-chosen-option' }
+            ]
+          },
+          {
+            id: 'show-chosen-option',
+            message: 'You chose option: {option}',
+            trigger: 'ask-for-input'
+          },
+          {
+            id: 'ask-for-input',
+            update: '{input}',
+            updateUser: true,
+            parser: value => value.replace('$', ''),
+            validator: value => value.indexOf('$') !== -1,
+            trigger: 'show-inputted-value'
+          },
+          {
+            id: 'show-inputted-value',
+            message: 'You inputted: {input}',
+            end: true
+          }
+        ]}
+      />
+    );
+
+    const wrapper = mount(chatBot);
+
+    let clock;
+
+    before(() => {
+      clock = sinon.useFakeTimers();
+    });
+
+    // required as each UI update takes time
+    beforeEach(async () => {
+      await clock.runAllAsync();
+      wrapper.update();
+    });
+
+    after(() => {
+      clock.restore();
+    });
+
+    it('Chat should render', () => {
+      expect(wrapper.find(ChatBot).length).to.equal(1);
+    });
+
+    it('Action: select first option among two options', () => {
+      const options = wrapper.find(OptionElementSelector);
+      expect(options.length).to.equal(2);
+
+      options.at(0).simulate('click');
+    });
+
+    it('should show selected option properly', () => {
+      expect(wrapper.text()).to.contain('You chose option: optionValue1');
+    });
+
+    it('Action: enter some value', () => {
+      wrapper.setState({ inputValue: '$some input' });
+      wrapper.find(InputElementSelector).simulate('keyPress', { key: 'Enter' });
+    });
+
+    it('should show inputted value properly', () => {
+      expect(wrapper.text()).to.contain('You inputted: some input');
     });
   });
 });
