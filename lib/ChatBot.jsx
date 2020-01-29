@@ -539,7 +539,7 @@ class ChatBot extends Component {
     if (handleEnd) {
       const { renderedSteps } = this.state;
 
-      const renderedStepsCopy = renderedSteps.map(step => {
+      const renderedStepsTrimmed = renderedSteps.map(step => {
         const { id, message, value, metadata } = step;
 
         return {
@@ -565,7 +565,7 @@ class ChatBot extends Component {
 
       const values = renderedSteps.filter(step => step.value).map(step => step.value);
 
-      handleEnd({ renderedStepsCopy, steps, values });
+      handleEnd({ renderedStepsTrimmed, steps, values });
     }
   };
 
