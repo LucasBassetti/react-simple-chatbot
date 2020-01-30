@@ -113,8 +113,7 @@ class TextStep extends Component {
       avatarStyle,
       bubbleStyle,
       hideBotAvatar,
-      hideUserAvatar,
-      progress
+      hideUserAvatar
     } = this.props;
     const { loading } = this.state;
     const { avatar, user, metadata } = step;
@@ -144,9 +143,8 @@ class TextStep extends Component {
           isLast={isLast}
           title={metadata && metadata.timestamp}
         >
-          {console.log(step.progress)}
           {/* eslint-disable-next-line no-nested-ternary */}
-          {loading || progress ? (
+          {loading ? (
             <Loading />
           ) : step.component ? (
             this.renderMessage()
@@ -179,8 +177,7 @@ TextStep.propTypes = {
   speak: PropTypes.func,
   step: PropTypes.objectOf(PropTypes.any).isRequired,
   steps: PropTypes.objectOf(PropTypes.any),
-  triggerNextStep: PropTypes.func.isRequired,
-  progress: PropTypes.bool
+  triggerNextStep: PropTypes.func.isRequired
 };
 
 TextStep.defaultProps = {
@@ -188,8 +185,7 @@ TextStep.defaultProps = {
   previousSteps: {},
   previousValue: '',
   speak: () => {},
-  steps: {},
-  progress: false
+  steps: {}
 };
 
 export default TextStep;

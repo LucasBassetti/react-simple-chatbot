@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Random from 'random-id';
 import deepEqual from 'deep-equal';
-import { CustomStep, OptionsStep, TextStep } from './steps_components';
+import { CustomStep, OptionsStep, TextStep, TextLoadingStep } from './steps_components';
 import schema from './schemas/schema';
 import * as storage from './storage';
 import {
@@ -61,6 +61,7 @@ class ChatBot extends Component {
       inputValue: '',
       inputInvalid: false,
       speaking: false,
+      isStepFetchingInProgress: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported()
     };
 
@@ -492,13 +493,9 @@ class ChatBot extends Component {
 
   getStepFromApi = async trigger => {
     const { nextStepUrl, parseStep } = this.props;
-    const { currentStep } = this.state;
-    currentStep.progress = true;
-    this.setState({ currentStep });
+    this.setState({ isStepFetchingInProgress: true });
     const step = await getStepFromBackend(nextStepUrl, trigger);
-    step.progress = false;
-    currentStep.progress = false;
-    this.setState({ currentStep });
+    this.setState({ isStepFetchingInProgress: false });
     const parsedStep = parseStep ? parseStep(step) : step;
     const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
 
@@ -854,7 +851,8 @@ class ChatBot extends Component {
       opened,
       renderedSteps,
       speaking,
-      recognitionEnable
+      recognitionEnable,
+      isStepFetchingInProgress
     } = this.state;
     const {
       className,
@@ -877,7 +875,11 @@ class ChatBot extends Component {
       submitButtonStyle,
       width,
       height,
-      readOnly
+      readOnly,
+      avatarStyle,
+      bubbleStyle,
+      hideBotAvatar,
+      hideUserAvatar
     } = this.props;
 
     const header = headerComponent || (
@@ -940,6 +942,16 @@ class ChatBot extends Component {
             hideInput={currentStep.hideInput}
           >
             {renderedSteps.map(this.renderStep)}
+            {isStepFetchingInProgress && (
+              <TextLoadingStep
+                avatarStyle={avatarStyle}
+                bubbleStyle={bubbleStyle}
+                hideBotAvatar={hideBotAvatar}
+                hideUserAvatar={hideUserAvatar}
+                avatar={currentStep.avatar}
+                user={currentStep.user}
+              />
+            )}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
