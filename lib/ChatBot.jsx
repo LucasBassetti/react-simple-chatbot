@@ -61,7 +61,6 @@ class ChatBot extends Component {
       inputValue: '',
       inputInvalid: false,
       speaking: false,
-      isStepFetchInProgress: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported()
     };
 
