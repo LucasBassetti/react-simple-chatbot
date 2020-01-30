@@ -61,6 +61,7 @@ class ChatBot extends Component {
       inputValue: '',
       inputInvalid: false,
       speaking: false,
+      isStepFetchInProgress: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported()
     };
 
@@ -492,8 +493,13 @@ class ChatBot extends Component {
 
   getStepFromApi = async trigger => {
     const { nextStepUrl, parseStep } = this.props;
+    const { currentStep } = this.state;
+    currentStep.progress = true;
+    this.setState({ currentStep });
     const step = await getStepFromBackend(nextStepUrl, trigger);
-
+    step.progress = false;
+    currentStep.progress = false;
+    this.setState({ currentStep });
     const parsedStep = parseStep ? parseStep(step) : step;
     const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
 
@@ -752,7 +758,7 @@ class ChatBot extends Component {
   };
 
   renderStep = (step, index) => {
-    const { renderedSteps } = this.state;
+    const { renderedSteps, currentStep } = this.state;
     const {
       avatarStyle,
       bubbleStyle,
@@ -835,6 +841,7 @@ class ChatBot extends Component {
         speechSynthesis={speechSynthesis}
         isFirst={this.isFirstPosition(step)}
         isLast={this.isLastPosition(step)}
+        progress={currentStep.progress}
       />
     );
   };
