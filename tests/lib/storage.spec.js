@@ -74,7 +74,10 @@ describe('Storage', () => {
       cacheName: 'storage_cache',
       cache: stringifiedState,
       firstStep: steps['1'],
-      steps
+      steps,
+      assignDefaultSetting: step => {
+        return step;
+      }
     });
 
     expect(currentStep).to.contain(state.currentStep);
@@ -132,7 +135,10 @@ describe('Storage', () => {
       cacheName: 'storage_cache',
       cache: stringifiedState,
       firstStep: steps['1'],
-      steps
+      steps,
+      assignDefaultSetting: step => {
+        return step;
+      }
     });
 
     expect(stateFromStorage.currentStep).to.eql({ ...currentStep, delay: 0 });
@@ -178,7 +184,10 @@ describe('Storage', () => {
         cacheName: 'storage_cache',
         cache: stringifiedState,
         firstStep: steps['1'],
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );
@@ -220,7 +229,10 @@ describe('Storage', () => {
       cacheName: 'storage_cache',
       cache: stringifiedState,
       firstStep: steps['1'],
-      steps
+      steps,
+      assignDefaultSetting: step => {
+        return step;
+      }
     });
 
     expect(currentStep).to.eql({ ...state.currentStep, delay: 0 });
@@ -258,7 +270,10 @@ describe('Storage', () => {
         cacheName: 'storage_cache',
         cache: stringifiedState,
         firstStep: steps['{userInput}'],
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );
@@ -295,7 +310,10 @@ describe('Storage', () => {
         cacheName: 'storage_cache',
         cache: stringifiedState,
         firstStep: steps['{option}'],
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );
@@ -356,7 +374,10 @@ describe('Storage', () => {
         cacheName: 'storage_cache',
         cache: stringifiedState,
         firstStep: steps['{option}'],
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );
@@ -406,7 +427,10 @@ describe('Storage', () => {
         cacheName: 'storage_cache',
         cache: stringifiedState,
         firstStep: steps['{input}'],
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );
@@ -453,7 +477,10 @@ describe('Storage', () => {
         cacheName: 'storage_cache',
         cache: stringifiedState,
         firstStep: steps['update-user-step'],
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );
@@ -498,7 +525,10 @@ describe('Storage', () => {
           const step = await getStepFromBackend(url, trigger);
           return { ...step, parser, validator };
         },
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );
@@ -550,7 +580,10 @@ describe('Storage', () => {
           if (trigger === '{userInput}') return { ...step, parser, validator };
           return step;
         },
-        steps
+        steps,
+        assignDefaultSetting: step => {
+          return step;
+        }
       },
       () => {}
     );

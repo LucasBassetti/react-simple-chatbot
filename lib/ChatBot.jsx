@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Random from 'random-id';
 import deepEqual from 'deep-equal';
 import { CustomStep, OptionsStep, TextStep } from './steps_components';
 import schema from './schemas/schema';
@@ -81,7 +80,9 @@ class ChatBot extends Component {
     } else {
       for (let i = 0, len = steps.length; i < len; i += 1) {
         const step = parseStep ? parseStep(steps[i]) : steps[i];
-
+        if (chatSteps[step.id]) {
+          throw new Error(`There are duplicate steps: id=${step.id}`);
+        }
         chatSteps[step.id] = this.assignDefaultSetting(schema.parse(step));
       }
       schema.checkInvalidIds(chatSteps);
@@ -119,7 +120,8 @@ class ChatBot extends Component {
         cache,
         firstStep,
         steps: chatSteps,
-        getStepFromApi: this.getStepFromApi
+        getStepFromApi: this.getStepFromApi,
+        assignDefaultSetting: this.assignDefaultSetting
       },
       () => {
         // focus input if last step cached is a user step
@@ -486,7 +488,6 @@ class ChatBot extends Component {
       this.evaluateExpression(nextStep.evalExpression);
     }
 
-    nextStep.key = Random(24);
     return nextStep;
   };
 
@@ -592,7 +593,7 @@ class ChatBot extends Component {
   isLastPosition = step => {
     const { renderedSteps } = this.state;
     const { length } = renderedSteps;
-    const stepIndex = renderedSteps.map(s => s.key).indexOf(step.key);
+    const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
 
     if (length <= 1 || stepIndex + 1 === length) {
       return true;
@@ -611,7 +612,7 @@ class ChatBot extends Component {
 
   isFirstPosition = step => {
     const { renderedSteps } = this.state;
-    const stepIndex = renderedSteps.map(s => s.key).indexOf(step.key);
+    const stepIndex = renderedSteps.map(s => s.id).indexOf(step.id);
 
     if (stepIndex === 0) {
       return true;
