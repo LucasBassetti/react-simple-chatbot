@@ -51,7 +51,6 @@ class ChatBot extends Component {
 
     this.state = {
       renderedSteps: [],
-      previousSteps: [],
       currentStep: {},
       previousStep: {},
       steps: {},
@@ -114,7 +113,7 @@ class ChatBot extends Component {
       window.addEventListener('resize', this.onResize);
     }
 
-    const { currentStep, previousStep, previousSteps, renderedSteps } = await storage.getData(
+    const { currentStep, previousStep, renderedSteps } = await storage.getData(
       {
         cacheName,
         cache,
@@ -138,7 +137,6 @@ class ChatBot extends Component {
     this.setState({
       currentStep,
       previousStep,
-      previousSteps,
       renderedSteps,
       steps: chatSteps
     });
@@ -219,16 +217,16 @@ class ChatBot extends Component {
   };
 
   getStepMessage = message => {
-    const { previousSteps } = this.state;
-    const lastStepIndex = previousSteps.length > 0 ? previousSteps.length - 1 : 0;
+    const { renderedSteps } = this.state;
+    const lastStepIndex = renderedSteps.length > 0 ? renderedSteps.length - 1 : 0;
     const steps = this.generateRenderedStepsById();
-    const previousValue = previousSteps[lastStepIndex].value;
+    const previousValue = renderedSteps[lastStepIndex].value;
     return typeof message === 'function' ? message({ previousValue, steps }) : message;
   };
 
   generateRenderedStepsById = () => {
-    const { previousSteps } = this.state;
-    return this.generateStepsById(previousSteps);
+    const { renderedSteps } = this.state;
+    return this.generateStepsById(renderedSteps);
   };
 
   generateStepsById = previousSteps => {
@@ -266,7 +264,7 @@ class ChatBot extends Component {
     const previousValues = {};
     const values = {};
 
-    const { previousSteps, renderedSteps, currentStep } = this.state;
+    const { renderedSteps, currentStep } = this.state;
     renderedSteps.forEach(step => {
       if (step.value != null) {
         previousValues[step.id] = deepCopy(step.value);
@@ -285,17 +283,16 @@ class ChatBot extends Component {
           id,
           value: values[id]
         };
-        previousSteps.push(newStep);
         renderedSteps.push(newStep);
       }
     }
 
-    this.setState({ previousSteps, renderedSteps });
+    this.setState({ renderedSteps });
   };
 
   triggerNextStep = async data => {
     const { enableMobileAutoFocus } = this.props;
-    const { previousSteps, renderedSteps, steps } = this.state;
+    const { renderedSteps, steps } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
 
     let { currentStep, previousStep } = this.state;
@@ -314,7 +311,7 @@ class ChatBot extends Component {
 
     if (value) {
       if (isNestedVariable(currentStep.id)) {
-        this.saveValueAsStep(value, currentStep.id, renderedSteps, previousSteps);
+        this.saveValueAsStep(value, currentStep.id, renderedSteps);
       } else {
         currentStep.value = value;
       }
@@ -360,14 +357,11 @@ class ChatBot extends Component {
       );
 
       renderedSteps.pop();
-      previousSteps.pop();
       renderedSteps.push(currentStep);
-      previousSteps.push(currentStep);
 
       this.setState({
         currentStep,
-        renderedSteps,
-        previousSteps
+        renderedSteps
       });
     } else if (currentStep.choices && data) {
       const message = data.map(each => each.label).join(', ');
@@ -386,14 +380,11 @@ class ChatBot extends Component {
       );
 
       renderedSteps.pop();
-      previousSteps.pop();
       renderedSteps.push(currentStep);
-      previousSteps.push(currentStep);
 
       this.setState({
         currentStep,
-        renderedSteps,
-        previousSteps
+        renderedSteps
       });
     } else if (currentStep.end) {
       this.handleEnd();
@@ -418,9 +409,8 @@ class ChatBot extends Component {
           });
         } else {
           renderedSteps.push(nextStep);
-          previousSteps.push(nextStep);
 
-          this.setState({ renderedSteps, previousSteps });
+          this.setState({ renderedSteps });
         }
       });
     }
@@ -432,7 +422,6 @@ class ChatBot extends Component {
         storage.setData(cacheName, {
           currentStep,
           previousStep,
-          previousSteps,
           renderedSteps
         });
       }, 10);
@@ -445,7 +434,6 @@ class ChatBot extends Component {
         handleNextStep({
           currentStep,
           previousStep,
-          previousSteps,
           renderedSteps
         });
       }, 300);
@@ -525,7 +513,7 @@ class ChatBot extends Component {
     return Object.assign({}, settings, step);
   };
 
-  saveValueAsStep = (value, id, renderedSteps, previousSteps) => {
+  saveValueAsStep = (value, id, renderedSteps) => {
     const [parentObjectName, remaining] = splitByFirstPeriod(id);
     const parentStep = this.findLastStepWithId(renderedSteps, parentObjectName);
     if (!parentStep) {
@@ -540,11 +528,8 @@ class ChatBot extends Component {
       insertIntoObjectByPath(newStep.value, remaining, value);
 
       // put newStep in second last position as some code later is going to replace last current element with updated current element
-      const lastStepOfPreviousSteps = previousSteps.pop();
       const lastStepOfRenderedSteps = renderedSteps.pop();
-      previousSteps.push(newStep);
       renderedSteps.push(newStep);
-      if (lastStepOfPreviousSteps) previousSteps.push(lastStepOfPreviousSteps);
       if (lastStepOfRenderedSteps) renderedSteps.push(lastStepOfRenderedSteps);
     }
   };
@@ -553,9 +538,9 @@ class ChatBot extends Component {
     const { handleEnd } = this.props;
 
     if (handleEnd) {
-      const { previousSteps } = this.state;
+      const { renderedSteps } = this.state;
 
-      const renderedSteps = previousSteps.map(step => {
+      const renderedStepsTrimmed = renderedSteps.map(step => {
         const { id, message, value, metadata } = step;
 
         return {
@@ -568,8 +553,8 @@ class ChatBot extends Component {
 
       const steps = [];
 
-      for (let i = 0, len = previousSteps.length; i < len; i += 1) {
-        const { id, message, value, metadata } = previousSteps[i];
+      for (let i = 0, len = renderedSteps.length; i < len; i += 1) {
+        const { id, message, value, metadata } = renderedSteps[i];
 
         steps[id] = {
           id,
@@ -579,9 +564,9 @@ class ChatBot extends Component {
         };
       }
 
-      const values = previousSteps.filter(step => step.value).map(step => step.value);
+      const values = renderedSteps.filter(step => step.value).map(step => step.value);
 
-      handleEnd({ renderedSteps, steps, values });
+      handleEnd({ renderedStepsTrimmed, steps, values });
     }
   };
 
@@ -650,7 +635,7 @@ class ChatBot extends Component {
   };
 
   submitUserMessage = () => {
-    const { inputValue, previousSteps, renderedSteps } = this.state;
+    const { inputValue, renderedSteps } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
     let { currentStep } = this.state;
 
@@ -677,20 +662,17 @@ class ChatBot extends Component {
             value: deepCopy(parentStep.value)
           };
           insertIntoObjectByPath(newStep.value, remaining, parsedValue);
-          previousSteps.push(newStep);
           renderedSteps.push(newStep);
         }
       }
       currentStep = Object.assign({}, defaultUserSettings, currentStep, step, this.metadata(step));
 
       renderedSteps.push(currentStep);
-      previousSteps.push(currentStep);
 
       this.setState(
         {
           currentStep,
           renderedSteps,
-          previousSteps,
           disabled: true,
           inputValue: ''
         },
