@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import deepEqual from 'deep-equal';
-import { CustomStep, OptionsStep, TextStep } from './steps_components';
+import { CustomStep, OptionsStep, TextStep, TextLoadingStep } from './steps_components';
 import schema from './schemas/schema';
 import * as storage from './storage';
 import {
@@ -59,6 +59,7 @@ class ChatBot extends Component {
       inputValue: '',
       inputInvalid: false,
       speaking: false,
+      isStepFetchingInProgress: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported()
     };
 
@@ -481,8 +482,9 @@ class ChatBot extends Component {
 
   getStepFromApi = async trigger => {
     const { nextStepUrl, parseStep } = this.props;
+    this.setState({ isStepFetchingInProgress: true });
     const step = await getStepFromBackend(nextStepUrl, trigger);
-
+    this.setState({ isStepFetchingInProgress: false });
     const parsedStep = parseStep ? parseStep(step) : step;
     const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
 
@@ -735,7 +737,7 @@ class ChatBot extends Component {
   };
 
   renderStep = (step, index) => {
-    const { renderedSteps } = this.state;
+    const { renderedSteps, currentStep } = this.state;
     const {
       avatarStyle,
       bubbleStyle,
@@ -818,6 +820,7 @@ class ChatBot extends Component {
         speechSynthesis={speechSynthesis}
         isFirst={this.isFirstPosition(step)}
         isLast={this.isLastPosition(step)}
+        progress={currentStep.progress}
       />
     );
   };
@@ -831,7 +834,8 @@ class ChatBot extends Component {
       opened,
       renderedSteps,
       speaking,
-      recognitionEnable
+      recognitionEnable,
+      isStepFetchingInProgress
     } = this.state;
     const {
       className,
@@ -854,7 +858,10 @@ class ChatBot extends Component {
       submitButtonStyle,
       width,
       height,
-      readOnly
+      readOnly,
+      botAvatar,
+      avatarStyle,
+      bubbleStyle
     } = this.props;
 
     const header = headerComponent || (
@@ -917,6 +924,14 @@ class ChatBot extends Component {
             hideInput={currentStep.hideInput}
           >
             {renderedSteps.map(this.renderStep)}
+            {isStepFetchingInProgress && (
+              <TextLoadingStep
+                avatarStyle={avatarStyle}
+                bubbleStyle={bubbleStyle}
+                avatar={botAvatar}
+                user={false}
+              />
+            )}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
