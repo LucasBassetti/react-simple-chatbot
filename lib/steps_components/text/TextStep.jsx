@@ -21,11 +21,11 @@ class TextStep extends Component {
   componentDidMount() {
     const { step, speak, previousValue, triggerNextStep } = this.props;
     const { component, delay, waitAction } = step;
-    const isComponentWatingUser = component && waitAction;
+    const isComponentWaitingUser = component && waitAction;
 
     setTimeout(() => {
       this.setState({ loading: false }, () => {
-        if (!isComponentWatingUser && !step.rendered) {
+        if (!isComponentWaitingUser && !step.rendered) {
           triggerNextStep();
         }
         speak(step, previousValue);
@@ -36,8 +36,8 @@ class TextStep extends Component {
   getMessage = () => {
     const { previousValue, step, previousSteps } = this.props;
     let { message } = step;
-    message = message ? message.replace(/{previousValue}/g, previousValue) : '';
 
+    message = message ? message.replace(/{previousValue}/g, previousValue) : '';
     message = this.replaceAllVariables(message, previousSteps);
 
     return message;

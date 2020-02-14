@@ -781,6 +781,7 @@ class ChatBot extends Component {
         <OptionsStep
           key={index}
           step={step}
+          previousSteps={previousSteps}
           previousValue={previousStep.value}
           triggerNextStep={readOnly ? doNothing : this.triggerNextStep}
           bubbleOptionStyle={bubbleOptionStyle}
