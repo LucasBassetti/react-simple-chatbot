@@ -346,13 +346,14 @@ class ChatBot extends Component {
       currentStep = Object.assign(
         {},
         currentStep,
-        option,
         defaultUserSettings,
         {
           user: true,
           message: option.label,
           trigger,
-          end: !trigger
+          end: !trigger,
+          value: option.value,
+          '@class': '.TextStep'
         },
         this.metadata(currentStep)
       );

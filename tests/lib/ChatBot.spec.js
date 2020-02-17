@@ -1590,14 +1590,14 @@ describe('ChatBot', () => {
         options: [
           {
             label: 'Option Label',
-            value: ''
+            value: 'optionValue'
           }
         ],
         end: true
       }
     ];
 
-    const chatBot = <ChatBotWithoutDelay steps={steps} />;
+    const chatBot = <ChatBot botDelay={0} userDelay={0} customDelay={0} steps={steps} />;
 
     const wrapper = mount(chatBot);
 
@@ -1634,6 +1634,17 @@ describe('ChatBot', () => {
       const replacer = wrapper.find(TextStep);
       expect(replacer.length).to.equal(1);
       expect(replacer.text()).to.equal('Option Label');
+    });
+
+    it('should have a text step in rendered steps', () => {
+      const renderedSteps = wrapper.find(ChatBot).state('renderedSteps');
+      const lastStep = renderedSteps[renderedSteps.length - 1];
+
+      expect(lastStep.message).to.equal('Option Label');
+      expect(lastStep.value).to.equal('optionValue');
+      expect(lastStep['@class']).to.equal('.TextStep');
+      // eslint-disable-next-line no-unused-expressions
+      expect(lastStep.label).to.be.undefined;
     });
 
     it('should still be rendering', () => {
