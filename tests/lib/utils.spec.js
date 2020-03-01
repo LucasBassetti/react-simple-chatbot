@@ -123,12 +123,6 @@ describe('Utils', () => {
       expect(object.property1.property6.property7.property8).to.equal('value');
     });
 
-    it('should work for multi-depth path with multiple non-existing properties', () => {
-      insertIntoObjectByPath(object, 'property1.property6.property7.property8', 'value');
-
-      expect(object.property1.property6.property7.property8).to.equal('value');
-    });
-
     it('should not work when the path can not contain object due to previous value', () => {
       insertIntoObjectByPath(object, 'property1.property2.property9.property10', 'value');
 

@@ -558,17 +558,19 @@ describe('Storage', () => {
     const parser = () => {};
     const validator = () => {};
 
-    axiosMock.onGet(url, { params: { stepId: '{userInput}' } }).replyOnce(200, {
+    axiosMock.onGet(url, { params: { stepId: '{userInput}', value: undefined } }).replyOnce(200, {
       id: '{userInput}',
       user: true,
       end: true
     });
 
-    axiosMock.onGet(url, { params: { stepId: 'update-user-input' } }).replyOnce(200, {
-      id: 'update-user-input',
-      user: true,
-      end: true
-    });
+    axiosMock
+      .onGet(url, { params: { stepId: 'update-user-input', value: undefined } })
+      .replyOnce(200, {
+        id: 'update-user-input',
+        user: true,
+        end: true
+      });
 
     const { currentStep } = await storage.getData(
       {
