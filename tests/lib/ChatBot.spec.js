@@ -1965,13 +1965,14 @@ describe('ChatBot', () => {
         parseStep={parseStep}
       />
     );
-    const axiosMock = new MockAdapter(axios);
+    let axiosMock;
 
     let wrapper;
     let clock;
 
     before(() => {
       clock = sinon.useFakeTimers();
+      axiosMock = new MockAdapter(axios);
 
       axiosMock.onGet(nextStepUrl).replyOnce(200, {
         id: '1',
@@ -2034,6 +2035,7 @@ describe('ChatBot', () => {
 
     after(() => {
       clock.restore();
+      axiosMock.restore();
     });
 
     it('should render', () => {

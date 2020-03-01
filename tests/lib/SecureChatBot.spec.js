@@ -1245,6 +1245,7 @@ describe('SecureChatBot', () => {
       let clock;
 
       before(() => {
+        localStorage.setItem(cacheName, null);
         clock = sinon.useFakeTimers();
         wrapper = mount(chatBot);
       });
@@ -1371,6 +1372,7 @@ describe('SecureChatBot', () => {
       let clock;
 
       before(() => {
+        localStorage.setItem(cacheName, null);
         clock = sinon.useFakeTimers();
         wrapper = mount(chatBot);
       });
@@ -1859,10 +1861,7 @@ describe('SecureChatBot', () => {
       {
         id: 'ask-input',
         user: true,
-        trigger: {
-          'value === "Stop"': 'end-step',
-          'value !== "Stop"': 'loop'
-        }
+        trigger: 'end-step'
       },
       {
         id: 'end-step',
@@ -1928,13 +1927,14 @@ describe('SecureChatBot', () => {
         parseStep={parseStep}
       />
     );
-    const axiosMock = new MockAdapter(axios);
+    let axiosMock;
 
     let wrapper;
     let clock;
 
     before(() => {
       clock = sinon.useFakeTimers();
+      axiosMock = new MockAdapter(axios);
 
       axiosMock.onGet(nextStepUrl).replyOnce(200, {
         id: '1',
@@ -1968,11 +1968,21 @@ describe('SecureChatBot', () => {
       axiosMock.onGet(nextStepUrl).replyOnce(200, {
         id: '{input}',
         user: true,
-        trigger: {
-          'value === "Go to update"': 'update-input',
-          'value !== "Go to update"': 'chat-end'
-        }
+        trigger: {}
       });
+
+      axiosMock
+        .onGet(nextStepUrl, {
+          params: {
+            stepId: '{input}',
+            value: 'Go to update'
+          }
+        })
+        .replyOnce(200, {
+          id: '{input}',
+          user: true,
+          trigger: 'update-input'
+        });
 
       axiosMock.onGet(nextStepUrl).replyOnce(200, {
         id: 'update-input',
@@ -1997,6 +2007,7 @@ describe('SecureChatBot', () => {
 
     after(() => {
       clock.restore();
+      axiosMock.restore();
     });
 
     it('should render', () => {
