@@ -10,13 +10,14 @@ const OptionElement = styled.button`
   display: inline-block;
   font-size: 14px;
   padding: 12px;
+  cursor: pointer;
 
   &:hover {
     opacity: 0.7;
   }
   &:active,
   &:hover:focus {
-    outline:none;
+    outline: none;
   }
 `;
 

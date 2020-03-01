@@ -9,9 +9,10 @@ const ChatBotContainer = styled.div`
   overflow: hidden;
   position: ${({ floating }) => (floating ? 'fixed' : 'relative')};
   bottom: ${({ floating, floatingStyle }) =>
-    floating ? floatingStyle.bottom || '32px' : 'initial'};
+    floating ? floatingStyle.bottom || 'initial' : 'initial'};
   top: ${({ floating, floatingStyle }) => (floating ? floatingStyle.top || 'initial' : 'initial')};
-  right: ${({ floating, floatingStyle }) => (floating ? floatingStyle.right || '32px' : 'initial')};
+  right: ${({ floating, floatingStyle }) =>
+    floating ? floatingStyle.right || 'initial' : 'initial'};
   left: ${({ floating, floatingStyle }) =>
     floating ? floatingStyle.left || 'initial' : 'initial'};
   width: ${({ width }) => width};
@@ -23,11 +24,11 @@ const ChatBotContainer = styled.div`
 
   @media screen and (max-width: 568px) {
     border-radius: ${({ floating }) => (floating ? '0' : '')};
-    bottom: 0 !important;
-    left: initial !important;
+    bottom: initial !important;
+    left: 0 !important;
     height: 100%;
-    right: 0 !important;
-    top: initial !important;
+    right: initial !important;
+    top: 0 !important;
     width: 100%;
   }
 `;

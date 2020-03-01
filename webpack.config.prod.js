@@ -18,10 +18,10 @@ module.exports = {
         sourceMap: true,
         terserOptions: {
           output: {
-            comments: false,
+            comments: false
           }
-        },
-      }),
+        }
+      })
     ]
   },
   output: {
@@ -37,7 +37,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
-    process.env.BUNDLE_ANALYZE === 'true' ? new BundleAnalyzerPlugin() : () => { }
+    process.env.BUNDLE_ANALYZE === 'true' ? new BundleAnalyzerPlugin() : () => {}
   ],
   module: {
     rules: [

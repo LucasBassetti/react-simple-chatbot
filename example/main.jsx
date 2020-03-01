@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Example from './components/Example';
+// import Example from './components/Example';
+import SimpleForm from './components/SimpleForm';
 
-render(<Example />, document.getElementById('root'));
+render(<SimpleForm />, document.getElementById('root'));

@@ -63,6 +63,7 @@ class TextStep extends Component {
     const { loading } = this.state;
     const { avatar, user } = step;
 
+    // hide avatar
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
 
     return (
