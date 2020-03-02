@@ -214,18 +214,10 @@ class SecureChatBot extends Component {
   };
 
   getTriggeredStep = async (stepId, trigger, value) => {
-    const isEmptyObject = obj => {
-      // noinspection LoopStatementThatDoesntLoopJS
-      for (const t in obj) return !1;
-      return !0;
-    };
-
-    if (
-      (typeof trigger === 'string' && trigger === '') ||
-      (typeof trigger === 'object' && isEmptyObject(trigger))
-    ) {
+    if (value) {
       const fullStep = await this.getStepFromApi(stepId, value);
-      return fullStep.trigger;
+      // eslint-disable-next-line prefer-destructuring
+      trigger = fullStep.trigger;
     }
 
     const steps = this.generateRenderedStepsById();
