@@ -214,6 +214,7 @@ class SecureChatBot extends Component {
   };
 
   getTriggeredStep = async (stepId, trigger, value) => {
+    console.log('Call Get Triggered Step', trigger, value);
     if (value) {
       const fullStep = await this.getStepFromApi(stepId, value);
       // eslint-disable-next-line prefer-destructuring
