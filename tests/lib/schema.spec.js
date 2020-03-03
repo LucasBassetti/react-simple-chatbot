@@ -1,8 +1,8 @@
 import React from 'react';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import schema from '../../lib/schemas/schema';
 import { stringify } from 'flatted';
+import schema from '../../lib/schemas/schema';
 
 describe('schema', () => {
   it('should throw a invalid step error', () => {
@@ -20,17 +20,17 @@ describe('schema', () => {
   });
 
   it('should throw a key type error', () => {
-    const step = { id: () => { }, options: [] };
+    const step = { id: () => {}, options: [] };
     expect(() => {
       schema.parse(step);
-    }).to.throw(Error, 'The type of \'id\' value must be string or number instead of function');
+    }).to.throw(Error, "The type of 'id' value must be string or number instead of function");
   });
 
   it('should delete a invalid key', () => {
     const step = schema.parse({
       id: '1',
       message: 'test',
-      test: 'test',
+      test: 'test'
     });
     const resultStep = stringify({ id: '1', message: 'test' });
     expect(stringify(step)).to.be.equal(resultStep);
@@ -44,6 +44,7 @@ describe('schema', () => {
   });
 
   it('should not throw error to a component step', () => {
+    // eslint-disable-next-line react/jsx-filename-extension
     const step = { id: '1', component: <div />, end: true };
     expect(() => {
       schema.parse(step);
@@ -62,8 +63,8 @@ describe('schema', () => {
       1: {
         id: '1',
         message: 'Test',
-        trigger: '2',
-      },
+        trigger: '2'
+      }
     };
     expect(() => {
       schema.checkInvalidIds(steps);
@@ -74,10 +75,8 @@ describe('schema', () => {
     const steps = {
       1: {
         id: '1',
-        options: [
-          { label: 'test', value: 'test', trigger: '2' },
-        ],
-      },
+        options: [{ label: 'test', value: 'test', trigger: '2' }]
+      }
     };
     expect(() => {
       schema.checkInvalidIds(steps);
@@ -89,13 +88,13 @@ describe('schema', () => {
       1: {
         id: '1',
         message: 'Test',
-        trigger: '2',
+        trigger: '2'
       },
       2: {
         id: '2',
         message: 'End',
-        end: true,
-      },
+        end: true
+      }
     };
     expect(() => {
       schema.checkInvalidIds(steps);

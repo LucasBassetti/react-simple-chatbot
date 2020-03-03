@@ -91,23 +91,10 @@ describe('SecureChatBot', () => {
             value: 'test'
           }
         })
-        .replyOnce(200, {
+        .reply(200, {
           id: 'user',
           user: true,
           trigger: 'update'
-        });
-
-      axiosMock
-        .onGet(nextStepUrl, {
-          params: {
-            stepId: 'user',
-            value: 'test'
-          }
-        })
-        .replyOnce(200, {
-          id: 'user',
-          user: true,
-          trigger: 'update',
         });
 
       axiosMock
