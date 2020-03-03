@@ -214,7 +214,6 @@ class SecureChatBot extends Component {
   };
 
   getTriggeredStep = async (stepId, trigger, value) => {
-    console.log('Call Get Triggered Step', trigger, value);
     if (value) {
       const fullStep = await this.getStepFromApi(stepId, value);
       // eslint-disable-next-line prefer-destructuring
@@ -332,7 +331,7 @@ class SecureChatBot extends Component {
       currentStep.hideExtraControl = data.hideExtraControl;
     }
 
-    if (data && data.trigger) {
+    if (data && !currentStep.end) {
       currentStep.trigger = await this.getTriggeredStep(currentStep.id, data.trigger, value);
     }
 
@@ -486,9 +485,9 @@ class SecureChatBot extends Component {
       }
     }
 
-    if (typeof nextStep.evalExpression === 'string') {
-      this.evaluateExpression(nextStep.evalExpression);
-    }
+    // if (typeof nextStep.evalExpression === 'string') {
+    //   this.evaluateExpression(nextStep.evalExpression);
+    // }
 
     return nextStep;
   };

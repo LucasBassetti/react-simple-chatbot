@@ -26,7 +26,7 @@ class TextStep extends Component {
     setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!isComponentWaitingUser && !step.rendered) {
-          triggerNextStep();
+          triggerNextStep(step);
         }
         speak(step, previousValue);
       });
