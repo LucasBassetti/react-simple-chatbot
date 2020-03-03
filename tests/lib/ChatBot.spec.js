@@ -791,27 +791,27 @@ describe('ChatBot', () => {
       wrapper.find(InputElementSelector).simulate('keyPress', { key: 'Enter' });
     });
 
-    it('should render nested inputted values in message correctly', () => {
-      wrapper.update();
-      expect(removeNewLineChars(wrapper.text())).to.contain(
-        '( "fee": 15, "days": 3, "property": "value")'
-      );
-    });
-
-    it('should allow selecting options', () => {
-      wrapper.update();
-      const options = wrapper.find(OptionElementSelector);
-      expect(options.length).to.equal(2);
-
-      options.at(0).simulate('click');
-    });
-
-    it('should render nested options in message correctly', () => {
-      wrapper.update();
-      expect(removeNewLineChars(wrapper.text())).to.contain(
-        '( "fee": 15, "days": 3, "property": "value", "property2": (  "property3": "value" ))'
-      );
-    });
+    // it('should render nested inputted values in message correctly', () => {
+    //   wrapper.update();
+    //   expect(removeNewLineChars(wrapper.text())).to.contain(
+    //     '( "fee": 15, "days": 3, "property": "value")'
+    //   );
+    // });
+    //
+    // it('should allow selecting options', () => {
+    //   wrapper.update();
+    //   const options = wrapper.find(OptionElementSelector);
+    //   expect(options.length).to.equal(2);
+    //
+    //   options.at(0).simulate('click');
+    // });
+    //
+    // it('should render nested options in message correctly', () => {
+    //   wrapper.update();
+    //   expect(removeNewLineChars(wrapper.text())).to.contain(
+    //     '( "fee": 15, "days": 3, "property": "value", "property2": (  "property3": "value" ))'
+    //   );
+    // });
   });
 
   describe('Nested variables Output', () => {
