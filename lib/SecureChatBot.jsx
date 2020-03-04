@@ -485,10 +485,6 @@ class SecureChatBot extends Component {
       }
     }
 
-    // if (typeof nextStep.evalExpression === 'string') {
-    //   this.evaluateExpression(nextStep.evalExpression);
-    // }
-
     return nextStep;
   };
 
