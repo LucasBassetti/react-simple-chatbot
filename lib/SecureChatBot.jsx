@@ -451,11 +451,7 @@ class SecureChatBot extends Component {
 
   getNextStep = async (currentStep, steps) => {
     const { nextStepUrl } = this.props;
-    const trigger = await this.getTriggeredStep(
-      currentStep.id,
-      currentStep.trigger,
-      currentStep.value
-    );
+    const { trigger } = currentStep;
     let nextStep = steps[trigger]
       ? Object.assign({}, steps[trigger])
       : await this.getStepFromApi(trigger);
@@ -489,6 +485,7 @@ class SecureChatBot extends Component {
   };
 
   getStepFromApi = async (stepId, value) => {
+    // console.trace('Get step from API', stepId, value);
     const { nextStepUrl, parseStep } = this.props;
     this.setState({ isStepFetchingInProgress: true });
     const step = await getStepFromBackend(nextStepUrl, stepId, value);

@@ -485,7 +485,7 @@ describe('SecureChatBot', () => {
             }
           }
         })
-        .reply(200, {
+        .replyOnce(200, {
           '@class': '.TextStep',
           id: '{variables}',
           message: 'Fee: 15 & Days: 3',
@@ -522,10 +522,10 @@ describe('SecureChatBot', () => {
             value: { fee: 16 }
           }
         })
-        .reply(200, {
+        .replyOnce(200, {
           '@class': '.TextStep',
           id: '{variables}',
-          message: 'Fee: 15 & Days: 3',
+          message: 'Fee: 16 & Days: 3',
           trigger: '5.f745.dc70c5aaf-4010.f36e69ad1'
         });
     });
