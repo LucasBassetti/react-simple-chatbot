@@ -1995,12 +1995,26 @@ describe('ChatBot', () => {
       });
 
       axiosMock.onGet(nextStepUrl).replyOnce(200, {
+        id: '{options}',
+        value: 'Option Value 1',
+        message: 'Option Value 1',
+        trigger: 'update-options'
+      });
+
+      axiosMock.onGet(nextStepUrl).replyOnce(200, {
         id: 'update-options',
         update: '{options}',
         updateOptions: [
           { label: 'New Label 1', value: 'New Value 1', trigger: '{input}' },
           { label: 'New Label 2', value: 'New Value 2', trigger: '{input}' }
         ]
+      });
+
+      axiosMock.onGet(nextStepUrl).replyOnce(200, {
+        id: '{options}',
+        value: 'New Value1',
+        message: 'New Label1',
+        trigger: '{input}'
       });
 
       axiosMock.onGet(nextStepUrl).replyOnce(200, {
@@ -2013,8 +2027,21 @@ describe('ChatBot', () => {
       });
 
       axiosMock.onGet(nextStepUrl).replyOnce(200, {
+        id: '{input}',
+        value: 'Go to update',
+        message: 'Go to update',
+        trigger: 'update-input'
+      });
+
+      axiosMock.onGet(nextStepUrl).replyOnce(200, {
         id: 'update-input',
-        update: '{input}',
+        update: '{input}'
+      });
+
+      axiosMock.onGet(nextStepUrl).replyOnce(200, {
+        id: '{input}',
+        value: 'Update Input',
+        message: 'Update Input',
         trigger: 'chat-end'
       });
 

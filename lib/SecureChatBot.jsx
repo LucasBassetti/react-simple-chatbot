@@ -213,13 +213,16 @@ class SecureChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   };
 
-  getTriggeredStep = async (stepId, trigger, value) => {
-    if (value) {
-      const fullStep = await this.getStepFromApi(stepId, value);
-      // eslint-disable-next-line prefer-destructuring
-      trigger = fullStep.trigger;
+  saveStepValue = async (stepId, value) => {
+    if (!value) {
+      throw new Error('Value is required parameter');
     }
 
+    const fullStep = await this.getStepFromApi(stepId, value);
+    return fullStep;
+  };
+
+  getTriggeredStep = (trigger, value) => {
     const steps = this.generateRenderedStepsById();
     return typeof trigger === 'function' ? trigger({ value, steps }) : trigger;
   };
@@ -299,7 +302,7 @@ class SecureChatBot extends Component {
   };
 
   triggerNextStep = async data => {
-    const { enableMobileAutoFocus } = this.props;
+    const { enableMobileAutoFocus, nextStepUrl } = this.props;
     const { renderedSteps, steps } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
 
@@ -331,8 +334,13 @@ class SecureChatBot extends Component {
       currentStep.hideExtraControl = data.hideExtraControl;
     }
 
-    if (data && !currentStep.end) {
-      currentStep.trigger = await this.getTriggeredStep(currentStep.id, data.trigger, value);
+    if (nextStepUrl && data && data.value) {
+      const { trigger } = await this.saveStepValue(currentStep.id, value);
+      currentStep.trigger = trigger;
+    }
+
+    if (data && data.trigger) {
+      currentStep.trigger = this.getTriggeredStep(data.trigger, value);
     }
 
     if (currentStep.options && data) {
@@ -485,7 +493,6 @@ class SecureChatBot extends Component {
   };
 
   getStepFromApi = async (stepId, value) => {
-    // console.trace('Get step from API', stepId, value);
     const { nextStepUrl, parseStep } = this.props;
     this.setState({ isStepFetchingInProgress: true });
     const step = await getStepFromBackend(nextStepUrl, stepId, value);

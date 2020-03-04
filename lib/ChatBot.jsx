@@ -4,6 +4,7 @@ import deepEqual from 'deep-equal';
 import { CustomStep, OptionsStep, TextStep, TextLoadingStep } from './steps_components';
 import schema from './schemas/schema';
 import * as storage from './storage';
+
 import {
   ChatBotContainer,
   Content,
@@ -212,6 +213,15 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   };
 
+  saveStepValue = async (stepId, value) => {
+    if (!value) {
+      throw new Error('Value is required parameter');
+    }
+
+    const fullStep = await this.getStepFromApi(stepId, value);
+    return fullStep;
+  };
+
   getTriggeredStep = (trigger, value) => {
     const steps = this.generateRenderedStepsById();
     return typeof trigger === 'function' ? trigger({ value, steps }) : trigger;
@@ -292,7 +302,7 @@ class ChatBot extends Component {
   };
 
   triggerNextStep = async data => {
-    const { enableMobileAutoFocus } = this.props;
+    const { enableMobileAutoFocus, nextStepUrl } = this.props;
     const { renderedSteps, steps } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
 
@@ -323,7 +333,11 @@ class ChatBot extends Component {
     if (data && data.hideExtraControl) {
       currentStep.hideExtraControl = data.hideExtraControl;
     }
-    if (data && data.trigger) {
+
+    if (nextStepUrl && data && data.value) {
+      const { trigger } = await this.saveStepValue(currentStep.id, value);
+      currentStep.trigger = trigger;
+    } else if (data && data.trigger) {
       currentStep.trigger = this.getTriggeredStep(data.trigger, value);
     }
 
@@ -474,17 +488,17 @@ class ChatBot extends Component {
       }
     }
 
-    if (typeof nextStep.evalExpression === 'string') {
+    if (!nextStepUrl && typeof nextStep.evalExpression === 'string') {
       this.evaluateExpression(nextStep.evalExpression);
     }
 
     return nextStep;
   };
 
-  getStepFromApi = async trigger => {
+  getStepFromApi = async (stepId, value) => {
     const { nextStepUrl, parseStep } = this.props;
     this.setState({ isStepFetchingInProgress: true });
-    const step = await getStepFromBackend(nextStepUrl, trigger);
+    const step = await getStepFromBackend(nextStepUrl, stepId, value);
     this.setState({ isStepFetchingInProgress: false });
     const parsedStep = parseStep ? parseStep(step) : step;
     const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
@@ -637,7 +651,8 @@ class ChatBot extends Component {
     this.submitUserMessage();
   };
 
-  submitUserMessage = () => {
+  submitUserMessage = async () => {
+    const { nextStepUrl } = this.props;
     const { inputValue, renderedSteps } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
     let { currentStep } = this.state;
@@ -653,6 +668,7 @@ class ChatBot extends Component {
       };
 
       if (isNestedVariable(currentStep.id)) {
+        // TODO: verify if there is nothing to do with this on state backend
         const [parentObjectName, remaining] = splitByFirstPeriod(currentStep.id);
         const parentStep = this.findLastStepWithId(renderedSteps, parentObjectName);
         if (!parentStep) {
@@ -668,7 +684,14 @@ class ChatBot extends Component {
           renderedSteps.push(newStep);
         }
       }
+
       currentStep = Object.assign({}, defaultUserSettings, currentStep, step, this.metadata(step));
+
+      // Should we wait for response here?
+      if (nextStepUrl) {
+        const { trigger } = await this.getStepFromApi(currentStep.id, currentStep.value);
+        currentStep.trigger = trigger;
+      }
 
       renderedSteps.push(currentStep);
 
