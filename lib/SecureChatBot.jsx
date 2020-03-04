@@ -648,7 +648,7 @@ class SecureChatBot extends Component {
     this.submitUserMessage();
   };
 
-  submitUserMessage = () => {
+  submitUserMessage = async () => {
     const { inputValue, renderedSteps } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
     let { currentStep } = this.state;
@@ -664,6 +664,7 @@ class SecureChatBot extends Component {
       };
 
       if (isNestedVariable(currentStep.id)) {
+        // TODO: verify if there is nothing to do with this on state backend
         const [parentObjectName, remaining] = splitByFirstPeriod(currentStep.id);
         const parentStep = this.findLastStepWithId(renderedSteps, parentObjectName);
         if (!parentStep) {
@@ -679,7 +680,13 @@ class SecureChatBot extends Component {
           renderedSteps.push(newStep);
         }
       }
+
       currentStep = Object.assign({}, defaultUserSettings, currentStep, step, this.metadata(step));
+
+      // Should we wait for response here?
+      const { trigger } = await this.getStepFromApi(currentStep.id, currentStep.value);
+
+      currentStep.trigger = trigger;
 
       renderedSteps.push(currentStep);
 
