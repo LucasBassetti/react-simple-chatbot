@@ -90,7 +90,6 @@ describe('MultipleChoiceStep', () => {
     const submitElement = wrapper.find(SubmitElementSelector);
     submitElement.simulate('click');
 
-    // TODO: Properly check 'chosenChoices', as it takes some time for triggerNextStep() to update it
     expect(chosenChoices.length).to.equal(0);
   });
 

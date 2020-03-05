@@ -76,6 +76,7 @@ class ChatBot extends Component {
 
     if (nextStepUrl && steps.length === 0) {
       steps = await this.getStepsFromApi();
+      // TODO: Fix after initial response is implemented.
       for (const step of steps) {
         chatSteps[step.id] = step;
       }
@@ -412,10 +413,13 @@ class ChatBot extends Component {
 
       const nextStep = await this.getNextStep(currentStep, steps);
 
+      // TODO: Remove after update logic is done.
+      if (nextStepUrl) steps[nextStep.id] = nextStep;
+
       previousStep = currentStep;
       currentStep = nextStep;
 
-      this.setState({ renderedSteps, currentStep, previousStep }, () => {
+      this.setState({ renderedSteps, currentStep, previousStep, steps }, () => {
         if (nextStep.user) {
           this.setState({ disabled: false }, () => {
             if (enableMobileAutoFocus || !isMobile()) {
@@ -496,7 +500,9 @@ class ChatBot extends Component {
       const nextSteps = await this.getStepsFromApi(trigger);
       const lastIndex = nextSteps.length - 1;
       const { renderedSteps } = this.state;
+
       for (let i = 0; i < lastIndex; i += 1) {
+        nextSteps[i]['@class'] = '.ValueStep';
         renderedSteps.push(nextSteps[i]);
       }
 
@@ -541,8 +547,6 @@ class ChatBot extends Component {
     const newSteps = await getStepsFromBackend(nextStepUrl, stepId, value);
     this.setState({ isStepFetchingInProgress: false });
 
-    // append to steps
-    const { steps } = this.state;
     const completeSteps = [];
 
     for (const step of newSteps) {
@@ -550,11 +554,8 @@ class ChatBot extends Component {
       const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
 
       completeSteps.push(completeStep);
-
-      steps[step.id] = completeStep;
     }
 
-    this.setState({ steps });
     return completeSteps;
   };
 

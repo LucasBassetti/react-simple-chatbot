@@ -58,6 +58,13 @@ describe('schema', () => {
     }).to.not.throw();
   });
 
+  it('should not throw error to a value step', () => {
+    const step = { id: '1', value: '2' };
+    expect(() => {
+      schema.parse(step);
+    }).to.not.throw();
+  });
+
   it('should throw error of inexistent step id', () => {
     const steps = {
       1: {
