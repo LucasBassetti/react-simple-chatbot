@@ -27,7 +27,7 @@ import {
   isVariable,
   makeVariable,
   deepCopy,
-  getStepFromBackend
+  getStepsFromBackend
 } from './utils';
 import { speakFn } from './speechSynthesis';
 import MultipleChoiceStep from './steps_components/multiple_choice/MultipleChoiceStep';
@@ -498,7 +498,7 @@ class ChatBot extends Component {
   getStepFromApi = async (stepId, value) => {
     const { nextStepUrl, parseStep } = this.props;
     this.setState({ isStepFetchingInProgress: true });
-    const step = await getStepFromBackend(nextStepUrl, stepId, value);
+    const step = await getStepsFromBackend(nextStepUrl, stepId, value);
     this.setState({ isStepFetchingInProgress: false });
     const parsedStep = parseStep ? parseStep(step) : step;
     const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));

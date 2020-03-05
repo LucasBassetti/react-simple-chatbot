@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import * as storage from '../../lib/storage';
-import { getStepFromBackend } from '../../lib/utils';
+import { getStepsFromBackend } from '../../lib/utils';
 
 describe('Storage', () => {
   it('stores data', () => {
@@ -522,7 +522,7 @@ describe('Storage', () => {
         cache: stringifiedState,
         firstStep: state.currentStep,
         getStepFromApi: async trigger => {
-          const step = await getStepFromBackend(url, trigger);
+          const step = await getStepsFromBackend(url, trigger);
           return { ...step, parser, validator };
         },
         steps,
@@ -578,7 +578,7 @@ describe('Storage', () => {
         cache: stringifiedState,
         firstStep: state.currentStep,
         getStepFromApi: async trigger => {
-          const step = await getStepFromBackend(url, trigger);
+          const step = await getStepsFromBackend(url, trigger);
           if (trigger === '{userInput}') return { ...step, parser, validator };
           return step;
         },
