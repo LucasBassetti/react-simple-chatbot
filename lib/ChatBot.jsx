@@ -498,16 +498,20 @@ class ChatBot extends Component {
   getStepFromApi = async (stepId, value) => {
     const { nextStepUrl, parseStep } = this.props;
     this.setState({ isStepFetchingInProgress: true });
-    const step = await getStepsFromBackend(nextStepUrl, stepId, value);
+    const newSteps = await getStepsFromBackend(nextStepUrl, stepId, value);
     this.setState({ isStepFetchingInProgress: false });
-    const parsedStep = parseStep ? parseStep(step) : step;
-    const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
 
     // append to steps
     const { steps } = this.state;
-    steps[completeStep.id] = completeStep;
-    this.setState({ steps });
 
+    for (const step of newSteps) {
+      const parsedStep = parseStep ? parseStep(step) : step;
+      const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));
+
+      steps[completeStep.id] = completeStep;
+    }
+
+    this.setState({ steps });
     return completeStep;
   };
 
