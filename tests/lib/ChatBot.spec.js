@@ -1979,12 +1979,17 @@ describe('ChatBot', () => {
           id: '1',
           message: 'This is the first text',
           trigger: '2'
+        },
+        {
+          id: '2',
+          message: 'This is the second text',
+          trigger: '3'
         }
       ]);
 
       axiosMock.onGet(nextStepUrl).replyOnce(200, [
         {
-          id: '2',
+          id: '3',
           message: 'This is the last text',
           trigger: '{options}'
         }
@@ -2093,9 +2098,10 @@ describe('ChatBot', () => {
 
     it('should get and display the first step', () => {
       expect(wrapper.text()).to.contain('This is the first text');
+      expect(wrapper.text()).to.contain('This is the second text');
     });
 
-    it('should get and display the second step', () => {
+    it('should get and display the last step', () => {
       expect(wrapper.text()).to.contain('This is the last text');
     });
 

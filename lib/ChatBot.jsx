@@ -73,9 +73,19 @@ class ChatBot extends Component {
     steps = steps || [];
     const { cache, cacheName, enableMobileAutoFocus } = this.props;
     const chatSteps = {};
+    let apiSteps = [];
 
     if (nextStepUrl && steps.length === 0) {
       steps = await this.getStepsFromApi();
+      if (steps.length === 0) {
+        throw new Error('Steps not found');
+      }
+      if (steps.length === 1) {
+        const [step] = steps;
+        chatSteps[step.id] = step;
+      } else {
+        apiSteps = apiSteps.concat(steps);
+      }
       // TODO: Fix after initial response is implemented.
       for (const step of steps) {
         chatSteps[step.id] = step;
@@ -137,10 +147,12 @@ class ChatBot extends Component {
       }
     );
 
+    // renderedSteps.concat(apiSteps);
+
     this.setState({
       currentStep,
       previousStep,
-      renderedSteps,
+      renderedSteps: renderedSteps.concat(apiSteps),
       steps: chatSteps
     });
   }
