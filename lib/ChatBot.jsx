@@ -147,8 +147,6 @@ class ChatBot extends Component {
       }
     );
 
-    // renderedSteps.concat(apiSteps);
-
     this.setState({
       currentStep,
       previousStep,
