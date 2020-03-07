@@ -1974,20 +1974,22 @@ describe('ChatBot', () => {
       clock = sinon.useFakeTimers();
       axiosMock = new MockAdapter(axios);
 
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: '1',
-          message: 'This is the first text',
-          trigger: '2'
-        },
-        {
-          id: '2',
-          message: 'This is the second text',
-          trigger: '3'
-        }
-      ]);
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .replyOnce(200, [
+          {
+            id: '1',
+            message: 'This is the first text',
+            trigger: '2'
+          },
+          {
+            id: '2',
+            message: 'This is the second text',
+            trigger: '3'
+          }
+        ]);
 
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
+      axiosMock.onGet(nextStepUrl, { params: { stepId: '3', value: undefined } }).replyOnce(200, [
         {
           id: '3',
           message: 'This is the last text',
@@ -1995,88 +1997,102 @@ describe('ChatBot', () => {
         }
       ]);
 
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: '{options}',
-          options: [
-            { label: 'Option Label 1', value: 'Option Value 1', trigger: 'update-options' },
-            { label: 'Option Label 2', value: 'Option Value 2', trigger: 'update-options' }
-          ]
-        }
-      ]);
-
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: '{options}',
-          value: 'Option Value 1',
-          message: 'Option Value 1',
-          trigger: 'update-options'
-        }
-      ]);
-
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: 'update-options',
-          update: '{options}',
-          updateOptions: [
-            { label: 'New Label 1', value: 'New Value 1', trigger: '{input}' },
-            { label: 'New Label 2', value: 'New Value 2', trigger: '{input}' }
-          ]
-        }
-      ]);
-
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: '{options}',
-          value: 'New Value1',
-          message: 'New Label1',
-          trigger: '{input}'
-        }
-      ]);
-
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: '{input}',
-          user: true,
-          trigger: {
-            'value === "Go to update"': 'update-input',
-            'value !== "Go to update"': 'chat-end'
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: undefined } })
+        .replyOnce(200, [
+          {
+            id: '{options}',
+            options: [
+              { label: 'Option Label 1', value: 'Option Value 1' },
+              { label: 'Option Label 2', value: 'Option Value 2' }
+            ]
           }
-        }
-      ]);
+        ]);
 
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: '{input}',
-          value: 'Go to update',
-          message: 'Go to update',
-          trigger: 'update-input'
-        }
-      ]);
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: 'Option Value 1' } })
+        .replyOnce(200, [
+          {
+            id: '{options}',
+            value: 'Option Value 1',
+            message: 'Option Value 1',
+            trigger: 'update-options'
+          }
+        ]);
 
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: 'update-input',
-          update: '{input}'
-        }
-      ]);
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: 'update-options', value: undefined } })
+        .replyOnce(200, [
+          {
+            id: 'update-options',
+            update: '{options}',
+            updateOptions: [
+              { label: 'New Label 1', value: 'New Value 1' },
+              { label: 'New Label 2', value: 'New Value 2' }
+            ]
+          }
+        ]);
 
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: '{input}',
-          value: 'Update Input',
-          message: 'Update Input',
-          trigger: 'chat-end'
-        }
-      ]);
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: 'New Value1' } })
+        .replyOnce(200, [
+          {
+            id: '{options}',
+            value: 'New Value1',
+            message: 'New Label1',
+            trigger: '{input}'
+          }
+        ]);
 
-      axiosMock.onGet(nextStepUrl).replyOnce(200, [
-        {
-          id: 'chat-end',
-          message: 'Chat has ended',
-          end: true
-        }
-      ]);
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: undefined } })
+        .replyOnce(200, [
+          {
+            id: '{input}',
+            user: true
+          }
+        ]);
+
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: 'Go to update' } })
+        .replyOnce(200, [
+          {
+            id: '{input}',
+            value: 'Go to update',
+            message: 'Go to update',
+            trigger: 'update-input'
+          }
+        ]);
+
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: 'update-input', value: undefined } })
+        .replyOnce(200, [
+          {
+            id: 'update-input',
+            update: '{input}'
+          }
+        ]);
+
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: 'Update Input' } })
+        .replyOnce(200, [
+          {
+            id: '{input}',
+            value: 'Update Input',
+            message: 'Update Input',
+            trigger: 'chat-end'
+          }
+        ]);
+
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: 'chat-end', value: undefined } })
+        .replyOnce(200, [
+          {
+            id: 'chat-end',
+            message: 'Chat has ended',
+            end: true
+          }
+        ]);
 
       wrapper = mount(chatBotWithApi);
     });
