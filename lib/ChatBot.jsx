@@ -78,6 +78,12 @@ class ChatBot extends Component {
 
     if (nextStepUrl && steps.length === 0) {
       steps = await getStepsFromBackend(nextStepUrl, undefined, undefined);
+
+      // TODO: Fix after initial response is implemented.
+      for (const step of steps) {
+        chatSteps[step.id] = step;
+      }
+
       if (steps.length === 0) {
         throw new Error('Steps not found');
       }
@@ -89,10 +95,6 @@ class ChatBot extends Component {
           steps.map(step => this.assignDefaultSetting(step))
         );
         currentStepFromApi = renderedStepsFromApi[renderedStepsFromApi.length - 1];
-      }
-      // TODO: Fix after initial response is implemented.
-      for (const step of steps) {
-        chatSteps[step.id] = step;
       }
     } else {
       for (let i = 0, len = steps.length; i < len; i += 1) {
