@@ -77,15 +77,17 @@ class ChatBot extends Component {
     let currentStepFromApi;
 
     if (nextStepUrl && steps.length === 0) {
-      steps = await this.getStepsFromApi();
+      steps = await getStepsFromBackend(nextStepUrl, undefined, undefined);
       if (steps.length === 0) {
         throw new Error('Steps not found');
       }
       if (steps.length === 1) {
         const [step] = steps;
-        chatSteps[step.id] = step;
+        chatSteps[step.id] = this.assignDefaultSetting(schema.parse(step));
       } else {
-        renderedStepsFromApi = this.parseRenderedSteps(steps);
+        renderedStepsFromApi = this.parseRenderedSteps(
+          steps.map(step => this.assignDefaultSetting(step))
+        );
         currentStepFromApi = renderedStepsFromApi[renderedStepsFromApi.length - 1];
       }
       // TODO: Fix after initial response is implemented.
