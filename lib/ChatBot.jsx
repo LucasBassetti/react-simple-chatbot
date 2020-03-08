@@ -559,31 +559,6 @@ class ChatBot extends Component {
       if (nextStep.message) {
         nextStep.message = this.getStepMessage(nextStep.message);
       }
-
-      // TODO: Following process should be done on backend.
-      if (nextStep.update) {
-        const updateStep = nextStep;
-        if (nextStepUrl && !steps[updateStep.update])
-          steps[updateStep.update] = await this.getStepsFromApi(updateStep.update);
-        nextStep = Object.assign({}, steps[updateStep.update], { updatedBy: updateStep.id });
-        nextStep.end = updateStep.end;
-        nextStep.id = updateStep.update;
-        if (nextStep.options || updateStep.updateOptions) {
-          if (updateStep.updateOptions) {
-            nextStep.options = updateStep.updateOptions;
-          } else {
-            for (let i = 0, len = nextStep.options.length; i < len; i += 1) {
-              nextStep.options[i].trigger = updateStep.trigger;
-            }
-          }
-          nextStep.user = false;
-        } else {
-          if (updateStep.updateUser) nextStep.user = updateStep.updateUser;
-          if (updateStep.validator) nextStep.validator = updateStep.validator;
-          if (updateStep.parser) nextStep.parser = updateStep.parser;
-          nextStep.trigger = updateStep.trigger;
-        }
-      }
     }
 
     return nextStep;

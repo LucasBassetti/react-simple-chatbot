@@ -1998,8 +1998,8 @@ describe('ChatBot', () => {
           {
             id: '{options}',
             options: [
-              { label: 'Option Label 1', value: 'Option Value 1' },
-              { label: 'Option Label 2', value: 'Option Value 2' }
+              { label: 'Option Label 1', value: 'Option Value 1', trigger: 'update-options' },
+              { label: 'Option Label 2', value: 'Option Value 2', trigger: 'update-options'}
             ]
           }
         ]);
@@ -2019,11 +2019,11 @@ describe('ChatBot', () => {
         .onGet(nextStepUrl, { params: { stepId: 'update-options', value: undefined } })
         .reply(200, [
           {
-            id: 'update-options',
-            update: '{options}',
-            updateOptions: [
-              { label: 'New Label 1', value: 'New Value 1' },
-              { label: 'New Label 2', value: 'New Value 2' }
+            id: '{options}',
+            updateBy: 'update-options',
+            options: [
+              { label: 'New Label 1', value: 'New Value 1', trigger: '{input}' },
+              { label: 'New Label 2', value: 'New Value 2', trigger: '{input}' }
             ]
           }
         ]);
@@ -2061,8 +2061,9 @@ describe('ChatBot', () => {
         .onGet(nextStepUrl, { params: { stepId: 'update-input', value: undefined } })
         .replyOnce(200, [
           {
-            id: 'update-input',
-            update: '{input}'
+            id: '{input}',
+            updateBy: 'update-input',
+            user: true
           }
         ]);
 
