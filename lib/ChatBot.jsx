@@ -725,7 +725,7 @@ class ChatBot extends Component {
 
   submitUserMessage = async () => {
     const { nextStepUrl } = this.props;
-    const { inputValue, renderedSteps, disabled } = this.state;
+    const { inputValue, renderedSteps } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
     let { currentStep } = this.state;
 
