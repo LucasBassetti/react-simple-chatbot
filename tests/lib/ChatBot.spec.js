@@ -1999,7 +1999,7 @@ describe('ChatBot', () => {
             id: '{options}',
             options: [
               { label: 'Option Label 1', value: 'Option Value 1', trigger: 'update-options' },
-              { label: 'Option Label 2', value: 'Option Value 2', trigger: 'update-options'}
+              { label: 'Option Label 2', value: 'Option Value 2', trigger: 'update-options' }
             ]
           }
         ]);
@@ -2138,7 +2138,7 @@ describe('ChatBot', () => {
       options.at(0).simulate('click');
     });
 
-    it('Action: give input', () => {
+    it('Action: give input twice', () => {
       wrapper.setState({ inputValue: 'Go to update' });
       wrapper.find(InputElementSelector).simulate('keyPress', { key: 'Enter' });
     });
@@ -2367,7 +2367,7 @@ describe('ChatBot', () => {
       const chatBot = (
         <ChatBot nextStepUrl={nextStepUrl} steps={[]} botDelay={0} customDelay={0} userDelay={0} />
       );
-
+      axiosMock.reset()
       axiosMock
         .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
         .replyOnce(200, [

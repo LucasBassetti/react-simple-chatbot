@@ -79,7 +79,7 @@ class ChatBot extends Component {
     if (nextStepUrl && steps.length === 0) {
       steps = await getStepsFromBackend(nextStepUrl, undefined, undefined);
 
-      // TODO: Fix after initial response is implemented.
+      // TODO: Delete after state backend is finished
       for (const step of steps) {
         chatSteps[step.id] = step;
       }
@@ -87,6 +87,7 @@ class ChatBot extends Component {
       if (steps.length === 0) {
         throw new Error('Steps not found');
       }
+
       if (steps.length === 1) {
         const [step] = steps;
         chatSteps[step.id] = this.assignDefaultSetting(schema.parse(step));
@@ -458,7 +459,6 @@ class ChatBot extends Component {
       if (currentStep.replace) {
         renderedSteps.pop();
       }
-
       const nextStep = await this.getNextStep(currentStep, steps);
 
       // TODO: Remove after update logic is done.
@@ -725,13 +725,17 @@ class ChatBot extends Component {
 
   submitUserMessage = async () => {
     const { nextStepUrl } = this.props;
-    const { inputValue, renderedSteps } = this.state;
+    const { inputValue, renderedSteps, disabled } = this.state;
     const { defaultUserSettings } = this.getDefaultSettings();
     let { currentStep } = this.state;
 
     const isInvalid = currentStep.validator && this.checkInvalidInput();
 
     const parsedValue = currentStep.parser ? currentStep.parser(inputValue) : inputValue;
+
+    // if (disabled) {
+    //   return;
+    // }
 
     if (!isInvalid) {
       const step = {
@@ -759,27 +763,9 @@ class ChatBot extends Component {
 
       currentStep = Object.assign({}, defaultUserSettings, currentStep, step, this.metadata(step));
 
-      if (nextStepUrl) {
-        try {
-          const { trigger } = await this.saveStepValue(currentStep.id, currentStep.value);
-          currentStep.trigger = trigger;
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(
-            `Could not get step trigger with id: ${currentStep.id} and value ${currentStep.value}`,
-            error
-          );
-        }
-      }
-
-      renderedSteps.push(currentStep);
-
       this.setState(
         {
-          currentStep,
-          renderedSteps,
-          disabled: true,
-          inputValue: ''
+          disabled: true
         },
         () => {
           if (this.input) {
@@ -787,6 +773,26 @@ class ChatBot extends Component {
           }
         }
       );
+
+      if (nextStepUrl) {
+        try {
+          const { trigger } = await this.saveStepValue(currentStep.id, currentStep.value);
+          currentStep.trigger = trigger;
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `Could not update step with id: ${currentStep.id} and value ${currentStep.value}`,
+            error
+          );
+        }
+      }
+
+      renderedSteps.push(currentStep);
+      this.setState({
+        currentStep,
+        renderedSteps,
+        inputValue: ''
+      });
     }
   };
 
