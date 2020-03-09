@@ -217,8 +217,7 @@ class ChatBot extends Component {
         const completeUserStep = parseStep ? parseStep(userStep) : userStep;
         return {
           ...completeUserStep,
-          delay: 0,
-          rendered: true
+          delay: 0
         };
       }
 
