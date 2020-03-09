@@ -10,16 +10,14 @@ class CustomStep extends Component {
 
   componentDidMount() {
     const { speak, step, previousValue, triggerNextStep } = this.props;
-    const { delay, waitAction } = step;
+    const { waitAction } = step;
 
-    setTimeout(() => {
-      this.setState({ loading: false }, () => {
-        if (!waitAction && !step.rendered) {
-          triggerNextStep();
-        }
-        speak(step, previousValue);
-      });
-    }, delay);
+    this.setState({ loading: false }, () => {
+      if (!waitAction && !step.rendered) {
+        triggerNextStep();
+      }
+      speak(step, previousValue);
+    });
   }
 
   renderComponent = () => {
