@@ -402,7 +402,7 @@ class ChatBot extends Component {
       currentStep.hideExtraControl = data.hideExtraControl;
     }
 
-    if (nextStepUrl && data && data.value) {
+    if (nextStepUrl && data && value) {
       const { trigger } = await this.saveStepValue(currentStep.id, value);
       currentStep.trigger = trigger;
     } else if (data && data.trigger) {
