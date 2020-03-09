@@ -27,7 +27,8 @@ import {
   isVariable,
   makeVariable,
   deepCopy,
-  getStepsFromBackend
+  getStepsFromBackend,
+  sleep
 } from './utils';
 import { speakFn } from './speechSynthesis';
 import MultipleChoiceStep from './steps_components/multiple_choice/MultipleChoiceStep';
@@ -90,7 +91,24 @@ class ChatBot extends Component {
       let currentStep = null;
       let previousStep = null;
 
+      const { botDelay, customDelay } = this.props;
+
+      this.setState({ isStepFetchingInProgress: true });
+      const startTime = Date.now();
+
       steps = await getStepsFromBackend(nextStepUrl, undefined, undefined);
+      if (steps.length === 0) {
+        throw new Error('Steps not found');
+      }
+      const firstStep = steps[0];
+
+      const timeDuration = Date.now() - startTime;
+      if (firstStep.message) {
+        await sleep(Math.max(botDelay - timeDuration, 0));
+      } else if (firstStep.component) {
+        await sleep(Math.max(customDelay - timeDuration, 0));
+      }
+      this.setState({ isStepFetchingInProgress: false });
 
       // TODO: Delete after state backend is finished
       for (const step of steps) {
@@ -528,8 +546,12 @@ class ChatBot extends Component {
   };
 
   getNextStep = async (currentStep, steps) => {
-    const { nextStepUrl } = this.props;
+    const { nextStepUrl, botDelay, customDelay } = this.props;
     const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);
+
+    this.setState({ isStepFetchingInProgress: true });
+    const startTime = Date.now();
+
     let nextStep;
 
     if (!nextStepUrl) {
@@ -579,14 +601,20 @@ class ChatBot extends Component {
       }
     }
 
+    const timeDuration = Date.now() - startTime;
+    if (nextStep.message) {
+      await sleep(Math.max(botDelay - timeDuration, 0));
+    } else if (nextStep.component) {
+      await sleep(Math.max(customDelay - timeDuration, 0));
+    }
+    this.setState({ isStepFetchingInProgress: false });
+
     return nextStep;
   };
 
   getStepsFromApi = async (stepId, value) => {
     const { nextStepUrl, parseStep } = this.props;
-    this.setState({ isStepFetchingInProgress: true });
     const newSteps = await getStepsFromBackend(nextStepUrl, stepId, value);
-    this.setState({ isStepFetchingInProgress: false });
 
     const completeSteps = [];
 

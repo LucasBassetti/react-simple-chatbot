@@ -12,8 +12,19 @@ import {
 } from '../../utils';
 
 class OptionsStep extends Component {
+  state = {
+    disabled: false
+  };
+
   onOptionClick = option => {
     const { triggerNextStep } = this.props;
+    const { disabled } = this.state;
+
+    this.setState({ disabled: true });
+
+    if (disabled) {
+      return;
+    }
 
     triggerNextStep(option);
   };

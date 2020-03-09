@@ -20,17 +20,15 @@ class TextStep extends Component {
 
   componentDidMount() {
     const { step, speak, previousValue, triggerNextStep } = this.props;
-    const { component, delay, waitAction } = step;
+    const { component, waitAction } = step;
     const isComponentWaitingUser = component && waitAction;
 
-    setTimeout(() => {
-      this.setState({ loading: false }, () => {
-        if (!isComponentWaitingUser && !step.rendered) {
-          triggerNextStep();
-        }
-        speak(step, previousValue);
-      });
-    }, delay);
+    this.setState({ loading: false }, () => {
+      if (!isComponentWaitingUser && !step.rendered) {
+        triggerNextStep();
+      }
+      speak(step, previousValue);
+    });
   }
 
   getMessage = () => {

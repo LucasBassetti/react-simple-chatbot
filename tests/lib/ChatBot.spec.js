@@ -2020,7 +2020,7 @@ describe('ChatBot', () => {
         .reply(200, [
           {
             id: '{options}',
-            updateBy: 'update-options',
+            updatedBy: 'update-options',
             options: [
               { label: 'New Label 1', value: 'New Value 1', trigger: '{input}' },
               { label: 'New Label 2', value: 'New Value 2', trigger: '{input}' }
@@ -2062,7 +2062,7 @@ describe('ChatBot', () => {
         .replyOnce(200, [
           {
             id: '{input}',
-            updateBy: 'update-input',
+            updatedBy: 'update-input',
             user: true
           }
         ]);

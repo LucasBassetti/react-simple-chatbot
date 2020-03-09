@@ -126,9 +126,12 @@ const ThemedExample = () => (
       {/*  steps={steps}*/}
       {/*/>*/}
       <ChatBot
+        botDelay={1000}
+        userDelay={5000}
+        customDelay={500}
         cache={true}
         parseStep={parseStep}
-        nextStepUrl='/api/v1/chats/1SLK9Bu1BAfttq--N1OM2t7ydp-X5Ja3A/models/null/modelKey/null/states/saladus/nextStep/'
+        nextStepUrl='/api/v1/chats/1fbjO6mJVyCCMOZdQO90qLfXCxghoX4Ps/models/null/modelKey/null/states/saladus/nextStep/'
       />
     </React.StrictMode>
   </ThemeProvider>
