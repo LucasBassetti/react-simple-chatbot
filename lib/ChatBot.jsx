@@ -115,6 +115,7 @@ class ChatBot extends Component {
       const waitingForUserInput = currentStep.user && !currentStep.value;
 
       if (waitingForUserInput) {
+        renderedSteps.pop();
         focusInput();
       }
 
