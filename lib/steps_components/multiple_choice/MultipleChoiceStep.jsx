@@ -79,6 +79,7 @@ class MultipleChoiceStep extends Component {
   render() {
     const { choices, disabled } = this.state;
     const { bubbleChoiceStyle } = this.props;
+    const doNothing = () => {};
 
     return (
       <MultipleChoiceStepContainer className="rsc-mcs">
@@ -91,7 +92,7 @@ class MultipleChoiceStep extends Component {
               <ChoiceElement
                 className="rsc-mcs-submit-element"
                 style={bubbleChoiceStyle}
-                onClick={this.onSubmitClick}
+                onClick={disabled ? doNothing : this.onSubmitClick}
               >
                 ✓
               </ChoiceElement>
