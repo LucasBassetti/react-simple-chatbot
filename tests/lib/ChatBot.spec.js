@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { after, before, beforeEach, afterEach, describe, it } from 'mocha';
-import chaiAsPromised from 'chai-as-promised';
-import { expect, use } from 'chai';
-import { mount, shallow } from 'enzyme';
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import { parse } from 'flatted';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -12,8 +11,6 @@ import { ChatBotContainer, FloatButton, Header, HeaderIcon } from '../../lib/com
 import { CloseIcon } from '../../lib/icons';
 import { TextStep } from '../../lib/steps_components';
 import { setData } from '../../lib/storage';
-
-use(chaiAsPromised);
 
 // eslint-disable-next-line react/jsx-filename-extension
 const CustomComponent = () => <div />;
