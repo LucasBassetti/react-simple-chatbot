@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { after, before, beforeEach, afterEach, describe, it } from 'mocha';
-import { expect } from 'chai';
-import { mount } from 'enzyme';
+import chaiAsPromised from 'chai-as-promised';
+import { expect, use } from 'chai';
+import { mount, shallow } from 'enzyme';
 import { parse } from 'flatted';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -11,6 +12,8 @@ import { ChatBotContainer, FloatButton, Header, HeaderIcon } from '../../lib/com
 import { CloseIcon } from '../../lib/icons';
 import { TextStep } from '../../lib/steps_components';
 import { setData } from '../../lib/storage';
+
+use(chaiAsPromised);
 
 // eslint-disable-next-line react/jsx-filename-extension
 const CustomComponent = () => <div />;
@@ -2005,7 +2008,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{options}', value: 'Option Value 1' } })
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: '"Option Value 1"' } })
         .reply(200, [
           {
             id: '{options}',
@@ -2029,7 +2032,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{options}', value: 'New Value 1' } })
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: '"New Value 1"' } })
         .replyOnce(200, [
           {
             id: '{options}',
@@ -2039,15 +2042,17 @@ describe('ChatBot', () => {
           }
         ]);
 
-      axiosMock.onGet(nextStepUrl, { params: { stepId: '{input}', value: undefined } }).reply(200, [
-        {
-          id: '{input}',
-          user: true
-        }
-      ]);
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: undefined } })
+        .replyOnce(200, [
+          {
+            id: '{input}',
+            user: true
+          }
+        ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{input}', value: 'Go to update' } })
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Go to update"' } })
         .replyOnce(200, [
           {
             id: '{input}',
@@ -2068,7 +2073,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{input}', value: 'Update Input' } })
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Update Input"' } })
         .replyOnce(200, [
           {
             id: '{input}',
@@ -2138,7 +2143,7 @@ describe('ChatBot', () => {
       options.at(0).simulate('click');
     });
 
-    it('Action: give input twice', () => {
+    it('Action: give input', () => {
       wrapper.setState({ inputValue: 'Go to update' });
       wrapper.find(InputElementSelector).simulate('keyPress', { key: 'Enter' });
     });
@@ -2260,19 +2265,21 @@ describe('ChatBot', () => {
       axiosMock.restore();
     });
 
-    // TODO: Make this test work
-    // it('should throw error when no steps are returned', async () => {
-    //   const nextStepUrl = 'api';
-    //   const chatBot = (
-    //     <ChatBot nextStepUrl={nextStepUrl} steps={[]} botDelay={0} customDelay={0} userDelay={0} />
-    //   );
-    //
-    //   axiosMock
-    //     .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
-    //     .replyOnce(200, []);
-    //
-    //   await expect(() => mount(chatBot)).to.be.rejectedWith(Error);
-    // });
+    it('should throw error when no steps are returned', async () => {
+      const nextStepUrl = 'api';
+
+      const chatBot = (
+        <ChatBot nextStepUrl={nextStepUrl} steps={[]} botDelay={0} customDelay={0} userDelay={0} />
+      );
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .replyOnce(200, []);
+
+      const wrapper = mount(chatBot);
+      await clock.runAllAsync();
+      // eslint-disable-next-line no-unused-expressions
+      expect(wrapper.instance().state.error).to.be.true;
+    });
 
     it('should render properly when last step is a text step', async () => {
       const nextStepUrl = 'api';
@@ -2367,7 +2374,7 @@ describe('ChatBot', () => {
       const chatBot = (
         <ChatBot nextStepUrl={nextStepUrl} steps={[]} botDelay={0} customDelay={0} userDelay={0} />
       );
-      axiosMock.reset()
+      axiosMock.reset();
       axiosMock
         .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
         .replyOnce(200, [
@@ -2383,7 +2390,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{input}', value: 'Some Input' } })
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Some Input"' } })
         .replyOnce(200, [
           {
             id: '{input}',

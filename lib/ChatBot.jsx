@@ -56,6 +56,7 @@ class ChatBot extends Component {
       currentStep: {},
       previousStep: {},
       steps: {},
+      error: false,
       disabled: true,
       opened: props.opened || !props.floating,
       inputValue: '',
@@ -98,7 +99,11 @@ class ChatBot extends Component {
 
       steps = await getStepsFromBackend(nextStepUrl, undefined, undefined);
       if (steps.length === 0) {
-        throw new Error('Steps not found');
+        // eslint-disable-next-line react/no-unused-state
+        this.setState({ error: true }, () => {
+          throw new Error('Steps not found');
+        });
+        return;
       }
       const firstStep = steps[0];
 
