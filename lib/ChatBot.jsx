@@ -99,10 +99,8 @@ class ChatBot extends Component {
 
       steps = await getStepsFromBackend(nextStepUrl, undefined, undefined);
       if (steps.length === 0) {
-        // eslint-disable-next-line react/no-unused-state
-        this.setState({ error: true }, () => {
-          throw new Error('Steps not found');
-        });
+        this.setState({ error: true });
+        console.error('Error: Could not find any steps');
         return;
       }
       const firstStep = steps[0];
@@ -987,6 +985,11 @@ class ChatBot extends Component {
   };
 
   render() {
+    const { error } = this.state;
+    if (error) {
+      return <h1> Component is not working because of unexpected error. </h1>;
+    }
+
     const {
       currentStep,
       disabled,
