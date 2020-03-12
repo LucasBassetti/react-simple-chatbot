@@ -409,7 +409,7 @@ class ChatBot extends Component {
 
     const value = getValueFromData();
 
-    if (value) {
+    if (!nextStepUrl && value) {
       if (isNestedVariable(currentStep.id)) {
         this.saveValueAsStep(value, currentStep.id, renderedSteps);
       } else {
@@ -792,7 +792,7 @@ class ChatBot extends Component {
         value: parsedValue
       };
 
-      if (isNestedVariable(currentStep.id)) {
+      if (!nextStepUrl && isNestedVariable(currentStep.id)) {
         // TODO: verify if there is nothing to do with this on state backend
         const [parentObjectName, remaining] = splitByFirstPeriod(currentStep.id);
         const parentStep = this.findLastStepWithId(renderedSteps, parentObjectName);

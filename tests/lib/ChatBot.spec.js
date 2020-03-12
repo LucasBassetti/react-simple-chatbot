@@ -402,19 +402,16 @@ describe('ChatBot', () => {
           customDelay={0}
           steps={[
             {
-              '@class': '.TextStep',
               id: '1',
               message: 'Hello!',
               trigger: '2.f745.dc70c5aaf-4010.f36e69ad1'
             },
             {
-              '@class': '.TextStep',
               id: '2.f745.dc70c5aaf-4010.f36e69ad1',
               message: 'Choose one!',
               trigger: '{variables}'
             },
             {
-              '@class': '.OptionsStep',
               id: '{variables}',
               options: [
                 {
@@ -430,19 +427,16 @@ describe('ChatBot', () => {
               ]
             },
             {
-              '@class': '.TextStep',
               id: '5.f745.dc70c5aaf-4010.f36e69ad1',
               message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
               trigger: '6.0d00.f4f7fc513-6505.865edf1f5'
             },
             {
-              '@class': '.TextStep',
               id: '6.0d00.f4f7fc513-6505.865edf1f5',
               message: 'Choose again!',
               trigger: '2bcc4b03-f23e-337c-9830-fe430d69901b'
             },
             {
-              '@class': '.UpdateOptionsStep',
               id: '2bcc4b03-f23e-337c-9830-fe430d69901b',
               update: '{variables}',
               updateOptions: [
@@ -455,7 +449,6 @@ describe('ChatBot', () => {
               ]
             },
             {
-              '@class': '.TextStep',
               id: '8.0d00.f4f7fc513-6505.865edf1f5',
               message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
               end: true
@@ -520,19 +513,16 @@ describe('ChatBot', () => {
         customDelay={0}
         steps={[
           {
-            '@class': '.TextStep',
             id: '1',
             message: 'Hello!',
             trigger: '2.f745.dc70c5aaf-4010.f36e69ad1'
           },
           {
-            '@class': '.TextStep',
             id: '2.f745.dc70c5aaf-4010.f36e69ad1',
             message: 'Choose one!',
             trigger: '{variables}'
           },
           {
-            '@class': '.OptionsStep',
             id: '{variables}',
             options: [
               {
@@ -548,19 +538,16 @@ describe('ChatBot', () => {
             ]
           },
           {
-            '@class': '.TextStep',
             id: '5.f745.dc70c5aaf-4010.f36e69ad1',
             message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
             trigger: '6.0d00.f4f7fc513-6505.865edf1f5'
           },
           {
-            '@class': '.TextStep',
             id: '6.0d00.f4f7fc513-6505.865edf1f5',
             message: 'Choose again!',
             trigger: '2bcc4b03-f23e-337c-9830-fe430d69901b'
           },
           {
-            '@class': '.UpdateOptionsStep',
             id: '2bcc4b03-f23e-337c-9830-fe430d69901b',
             update: '{variables}',
             updateOptions: [
@@ -569,7 +556,6 @@ describe('ChatBot', () => {
             ]
           },
           {
-            '@class': '.TextStep',
             id: '8.0d00.f4f7fc513-6505.865edf1f5',
             message: 'Thanks!\nFee: {variables.fee}\nDays: {variables.days}',
             end: true
@@ -639,7 +625,6 @@ describe('ChatBot', () => {
         customDelay={0}
         steps={[
           {
-            '@class': '.OptionsStep',
             id: '{variables}',
             options: [
               {
@@ -655,7 +640,6 @@ describe('ChatBot', () => {
             ]
           },
           {
-            '@class': '.TextStep',
             id: 'last',
             message: 'Thanks! {variables}',
             end: true
@@ -704,7 +688,6 @@ describe('ChatBot', () => {
         customDelay={0}
         steps={[
           {
-            '@class': '.OptionsStep',
             id: '{variables}',
             options: [
               {
@@ -720,19 +703,16 @@ describe('ChatBot', () => {
             ]
           },
           {
-            '@class': '.UserStep',
             id: '{variables.property}',
             user: true,
             trigger: 'display'
           },
           {
-            '@class': '.TextStep',
             id: 'display',
             message: 'Thanks! {variables}',
             trigger: '{variables.property2}'
           },
           {
-            '@class': '.OptionsStep',
             id: '{variables.property2}',
             options: [
               {
@@ -748,7 +728,6 @@ describe('ChatBot', () => {
             ]
           },
           {
-            '@class': '.TextStep',
             id: 'last',
             message: 'Updated! {variables}',
             end: true
@@ -822,7 +801,6 @@ describe('ChatBot', () => {
         customDelay={0}
         steps={[
           {
-            '@class': '.OptionsStep',
             id: '{variables}',
             options: [
               {
@@ -838,7 +816,6 @@ describe('ChatBot', () => {
             ]
           },
           {
-            '@class': '.TextStep',
             id: 'last',
             message: 'Property1: {variables.property1}, Property3: {variables.property2.property3}',
             end: true
@@ -947,39 +924,33 @@ describe('ChatBot', () => {
         customDelay={0}
         steps={[
           {
-            '@class': '.TextStep',
             id: '1',
             message: 'Enter your salary!',
             trigger: '{salary}'
           },
           {
-            '@class': '.UserStep',
             id: '{salary}',
             user: true,
             trigger: 'display'
           },
           {
-            '@class': '.TextStep',
             id: 'display',
             evalExpression: 'values["{salary}"] = "$" + previousValues["{salary}"]',
             message: 'Your salary is {salary}',
             trigger: 'assign-variable-without-optionstep'
           },
           {
-            '@class': '.TextStep',
             id: 'assign-variable-without-optionstep',
             evalExpression: 'values["{variable}"] = "value"',
             message: 'Assigning value to variable',
             trigger: 'display-variable'
           },
           {
-            '@class': '.TextStep',
             id: 'display-variable',
             message: 'The variable is {variable}',
             trigger: 'check-evalExpression-precedence'
           },
           {
-            '@class': '.TextStep',
             id: 'check-evalExpression-precedence',
             evalExpression: 'values["{person}"] = { name: "FirstName LastName", age: 34 }',
             message: 'Your name is {person.name} and you are {person.age} years old',
@@ -1039,13 +1010,11 @@ describe('ChatBot', () => {
         customDelay={0}
         steps={[
           {
-            '@class': '.TextStep',
             id: '1',
             message: 'Which fruits would you like?!',
             trigger: '{choices}'
           },
           {
-            '@class': '.ChoiceStep',
             id: '{choices}',
             choices: [
               {
@@ -1084,13 +1053,11 @@ describe('ChatBot', () => {
             trigger: 'EndMessage'
           },
           {
-            '@class': '.TextStep',
             id: 'AppleAndOrange',
             message: 'Apple and Orange chosen',
             trigger: 'EndMessage'
           },
           {
-            '@class': '.TextStep',
             id: 'EndMessage',
             message: 'First choice: {choices}',
             end: true
@@ -1455,13 +1422,11 @@ describe('ChatBot', () => {
 
       const steps = [
         {
-          '@class': '.TextStep',
           id: '1',
           message: 'First message',
           trigger: '2'
         },
         {
-          '@class': '.TextStep',
           id: '2',
           message: 'Second message',
           end: true
@@ -1478,7 +1443,6 @@ describe('ChatBot', () => {
 
         const state = {
           currentStep: {
-            '@class': '.TextStep',
             id: '1',
             key: 'GnVGFdK84RGxhy1m6uvQWxAr',
             message: 'First message',
@@ -1487,7 +1451,6 @@ describe('ChatBot', () => {
           previousStep: {},
           previousSteps: [
             {
-              '@class': '.TextStep',
               id: '1',
               key: 'GnVGFdK84RGxhy1m6uvQWxAr',
               message: 'First message',
@@ -1496,7 +1459,6 @@ describe('ChatBot', () => {
           ],
           renderedSteps: [
             {
-              '@class': '.TextStep',
               id: '1',
               key: 'GnVGFdK84RGxhy1m6uvQWxAr',
               message: 'First message',
@@ -1642,7 +1604,6 @@ describe('ChatBot', () => {
 
       expect(lastStep.message).to.equal('Option Label');
       expect(lastStep.value).to.equal('optionValue');
-      expect(lastStep['@class']).to.equal('.TextStep');
       // eslint-disable-next-line no-unused-expressions
       expect(lastStep.label).to.be.undefined;
     });
