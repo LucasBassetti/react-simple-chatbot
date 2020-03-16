@@ -39,7 +39,7 @@ const Bubble = styled.div`
   overflow: hidden;
   position: relative;
   padding: 12px;
-  transform: scale(0);
+  transform: ${({ animated }) => (animated ? `scale(0)` : `scale(100%)`)};
   transform-origin: ${props => {
     const { isFirst, user } = props;
 
@@ -52,7 +52,8 @@ const Bubble = styled.div`
 `;
 
 Bubble.defaultProps = {
-  theme: defaultTheme
+  theme: defaultTheme,
+  animated: true
 };
 
 export default Bubble;

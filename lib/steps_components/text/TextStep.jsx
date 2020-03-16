@@ -133,6 +133,7 @@ class TextStep extends Component {
           )}
         </ImageContainer>
         <Bubble
+          animated={step.animated}
           className="rsc-ts-bubble"
           style={bubbleStyle}
           user={user}

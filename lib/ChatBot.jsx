@@ -602,7 +602,9 @@ class ChatBot extends Component {
 
       nextStep = nextSteps[lastIndex];
 
-      if (nextStep.message) {
+      const nextStepIsTextStep = nextStep.message;
+      if (nextStepIsTextStep) {
+        nextStep.animated = false;
         nextStep.message = this.getStepMessage(nextStep.message);
       }
     }
