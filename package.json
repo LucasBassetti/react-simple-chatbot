@@ -86,6 +86,7 @@
     "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
+    "@types/uuid": "^7.0.0",
     "axios": "^0.19.0",
     "deep-equal": "^2.0.1",
     "eslint-config-prettier": "^4.1.0",
@@ -95,7 +96,9 @@
     "prettier": "^1.16.4",
     "prop-types": "^15.6.0",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react-dom": "^16.4.1",
+    "uuid": "^7.0.2",
+    "uuidv4": "^6.0.6"
   },
   "peerDependencies": {
     "react": "^16.3.0",
