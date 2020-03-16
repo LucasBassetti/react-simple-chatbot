@@ -301,12 +301,26 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   };
 
-  saveStepValue = async (stepId, value) => {
+  saveStepValue = async (stepId, value, label) => {
     if (!value) {
       throw new Error('Value is required parameter');
     }
 
+    const { renderedSteps, currentStep } = this.state;
+    const lastStep = renderedSteps[renderedSteps.length - 1];
+    if (label) {
+      if (!currentStep.user) renderedSteps.pop();
+      renderedSteps.push(this.assignDefaultSetting({ message: label, user: true, rendered: true }));
+      this.setState({ renderedSteps, isStepFetchingInProgress: true });
+    }
+
     const resultSteps = await this.getStepsFromApi(stepId, value);
+
+    if (label) {
+      renderedSteps.pop();
+      if (!currentStep.user) renderedSteps.push(lastStep);
+      this.setState({ renderedSteps, isStepFetchingInProgress: false });
+    }
 
     return resultSteps[0];
   };
@@ -407,7 +421,20 @@ class ChatBot extends Component {
       return null;
     };
 
+    const getLabelFromData = () => {
+      if (data && data.label) {
+        return data.label;
+      }
+
+      if (data && Array.isArray(data)) {
+        return data.map(each => each.label).join(', ');
+      }
+
+      return data;
+    };
+
     const value = getValueFromData();
+    const label = getLabelFromData();
 
     if (!nextStepUrl && value) {
       if (isNestedVariable(currentStep.id)) {
@@ -424,8 +451,9 @@ class ChatBot extends Component {
     }
 
     if (nextStepUrl && data && value) {
-      const { trigger } = await this.saveStepValue(currentStep.id, value);
+      const { trigger } = await this.saveStepValue(currentStep.id, value, label);
       currentStep.trigger = trigger;
+      currentStep.animated = false;
     } else if (data && data.trigger) {
       currentStep.trigger = this.getTriggeredStep(data.trigger, value);
     }
@@ -827,8 +855,13 @@ class ChatBot extends Component {
 
       if (nextStepUrl) {
         try {
-          const { trigger } = await this.saveStepValue(currentStep.id, currentStep.value);
+          const { trigger } = await this.saveStepValue(
+            currentStep.id,
+            currentStep.value,
+            currentStep.message
+          );
           currentStep.trigger = trigger;
+          currentStep.animated = false;
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error(
