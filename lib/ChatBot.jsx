@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import deepEqual from 'deep-equal';
+import { uuid } from 'uuidv4';
 import { CustomStep, OptionsStep, TextStep, TextLoadingStep } from './steps_components';
 import schema from './schemas/schema';
 import * as storage from './storage';
-import uuid from 'uuid'
 
 import {
   ChatBotContainer,
@@ -35,7 +35,6 @@ import { speakFn } from './speechSynthesis';
 import MultipleChoiceStep from './steps_components/multiple_choice/MultipleChoiceStep';
 
 class ChatBot extends Component {
-
   /* istanbul ignore next */
   constructor(props) {
     super(props);
@@ -66,7 +65,7 @@ class ChatBot extends Component {
       speaking: false,
       isStepFetchingInProgress: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
-      sessionId: uuid.v4()
+      sessionId: uuid()
     };
     this.speak = speakFn(props.speechSynthesis);
   }
@@ -98,7 +97,7 @@ class ChatBot extends Component {
 
       this.setState({ isStepFetchingInProgress: true });
       const startTime = Date.now();
-      const {sessionId} = this.state;
+      const { sessionId } = this.state;
 
       steps = await getStepsFromBackend(nextStepUrl, undefined, undefined, sessionId);
       if (steps.length === 0) {
