@@ -8,9 +8,13 @@ const Image = styled.img`
   height: 40px;
   min-width: 40px;
   padding: 3px;
-  transform: scale(0);
+  transform: ${({ animated }) => (animated ? `scale(0)` : `scale(100%)`)};
   transform-origin: ${props => (props.user ? 'bottom left' : 'bottom right')};
   width: 40;
 `;
+
+Image.defaultProps = {
+  animated: true
+};
 
 export default Image;

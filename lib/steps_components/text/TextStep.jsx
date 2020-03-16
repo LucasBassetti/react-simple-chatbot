@@ -123,6 +123,7 @@ class TextStep extends Component {
         <ImageContainer className="rsc-ts-image-container" user={user}>
           {isFirst && showAvatar && (
             <Image
+              animated={step.animated}
               className="rsc-ts-image"
               style={avatarStyle}
               showAvatar={showAvatar}
