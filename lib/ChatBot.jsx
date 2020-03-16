@@ -4,6 +4,7 @@ import deepEqual from 'deep-equal';
 import { CustomStep, OptionsStep, TextStep, TextLoadingStep } from './steps_components';
 import schema from './schemas/schema';
 import * as storage from './storage';
+import uuid from 'uuid'
 
 import {
   ChatBotContainer,
@@ -34,6 +35,7 @@ import { speakFn } from './speechSynthesis';
 import MultipleChoiceStep from './steps_components/multiple_choice/MultipleChoiceStep';
 
 class ChatBot extends Component {
+
   /* istanbul ignore next */
   constructor(props) {
     super(props);
@@ -63,9 +65,9 @@ class ChatBot extends Component {
       inputInvalid: false,
       speaking: false,
       isStepFetchingInProgress: false,
-      recognitionEnable: props.recognitionEnable && Recognition.isSupported()
+      recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
+      sessionId: uuid.v4()
     };
-
     this.speak = speakFn(props.speechSynthesis);
   }
 
@@ -96,8 +98,9 @@ class ChatBot extends Component {
 
       this.setState({ isStepFetchingInProgress: true });
       const startTime = Date.now();
+      const {sessionId} = this.state;
 
-      steps = await getStepsFromBackend(nextStepUrl, undefined, undefined);
+      steps = await getStepsFromBackend(nextStepUrl, undefined, undefined, sessionId);
       if (steps.length === 0) {
         this.setState({ error: true });
         console.error('Error: Could not find any steps');
@@ -617,7 +620,8 @@ class ChatBot extends Component {
 
   getStepsFromApi = async (stepId, value) => {
     const { nextStepUrl, parseStep } = this.props;
-    const newSteps = await getStepsFromBackend(nextStepUrl, stepId, value);
+    const { sessionId } = this.state;
+    const newSteps = await getStepsFromBackend(nextStepUrl, stepId, value, sessionId);
 
     const completeSteps = [];
 
