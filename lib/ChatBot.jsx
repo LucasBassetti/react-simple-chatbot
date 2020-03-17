@@ -1105,6 +1105,11 @@ class ChatBot extends Component {
 
     const wasPartiallyDelayedBefore = partialDelayedInMilliseconds !== 0;
 
+    const lastRenderedStep = renderedSteps[renderedSteps.length - 1];
+    const showLoadingStepAvatar =
+      lastRenderedStep &&
+      (!(lastRenderedStep.message || lastRenderedStep.asMessage) || lastRenderedStep.user);
+
     return (
       <div className={`rsc ${className}`} style={readOnly ? { cursor: 'not-allowed' } : null}>
         {floating && (
@@ -1138,6 +1143,7 @@ class ChatBot extends Component {
             {renderedSteps.map(this.renderStep)}
             {isStepFetchingInProgress && (
               <TextLoadingStep
+                showAvatar={showLoadingStepAvatar}
                 animated={!wasPartiallyDelayedBefore}
                 avatarStyle={avatarStyle}
                 bubbleStyle={bubbleStyle}

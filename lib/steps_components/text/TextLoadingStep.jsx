@@ -7,9 +7,7 @@ import Loading from '../common/Loading';
 import TextStepContainer from './TextStepContainer';
 
 function TextLoadingStep(props) {
-  const { avatarStyle, bubbleStyle, avatar, animated } = props;
-
-  const showAvatar = true;
+  const { avatarStyle, bubbleStyle, avatar, animated, showAvatar } = props;
 
   return (
     <TextStepContainer className="rsc-ts rsc-ts-bot" user={false}>
@@ -31,8 +29,9 @@ function TextLoadingStep(props) {
         className="rsc-ts-bubble"
         style={bubbleStyle}
         user={false}
-        showAvatar={showAvatar}
-        isFirst
+        showAvatar
+        isFirst={showAvatar}
+        isLast={!showAvatar}
         title="..."
       >
         <Loading />
@@ -45,12 +44,14 @@ TextLoadingStep.propTypes = {
   avatarStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   bubbleStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   avatar: PropTypes.string,
-  animated: PropTypes.bool
+  animated: PropTypes.bool,
+  showAvatar: PropTypes.bool
 };
 
 TextLoadingStep.defaultProps = {
   avatar: undefined,
-  animated: true
+  animated: true,
+  showAvatar: true
 };
 
 export default TextLoadingStep;
