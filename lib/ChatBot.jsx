@@ -596,6 +596,7 @@ class ChatBot extends Component {
       nextStep = Object.assign({}, steps[trigger]);
 
       if (nextStep.message) {
+        nextStep.animated = false;
         nextStep.message = this.getStepMessage(nextStep.message);
       } else if (nextStep.update) {
         const updateStep = nextStep;
