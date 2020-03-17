@@ -65,7 +65,8 @@ class ChatBot extends Component {
       speaking: false,
       isStepFetchingInProgress: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
-      sessionId: uuid()
+      sessionId: uuid(),
+      partialDelayedInMilliseconds: 0
     };
     this.speak = speakFn(props.speechSynthesis);
   }
@@ -316,7 +317,10 @@ class ChatBot extends Component {
       this.setState({ renderedSteps, isStepFetchingInProgress: true });
     }
 
+    const startTime = Date.now();
     const resultSteps = await this.getStepsFromApi(stepId, value);
+    const partialDelayedInMilliseconds = Date.now() - startTime;
+    this.setState({ partialDelayedInMilliseconds });
 
     if (label) {
       renderedSteps.pop();
@@ -636,13 +640,14 @@ class ChatBot extends Component {
       }
     }
 
-    const timeDuration = Date.now() - startTime;
+    const { partialDelayedInMilliseconds } = this.state;
+    const timeDuration = Date.now() - startTime - partialDelayedInMilliseconds;
     if (nextStep.message) {
       await sleep(Math.max(botDelay - timeDuration, 0));
     } else if (nextStep.component) {
       await sleep(Math.max(customDelay - timeDuration, 0));
     }
-    this.setState({ isStepFetchingInProgress: false });
+    this.setState({ isStepFetchingInProgress: false, partialDelayedInMilliseconds: 0 });
 
     return nextStep;
   };
@@ -1037,7 +1042,8 @@ class ChatBot extends Component {
       renderedSteps,
       speaking,
       recognitionEnable,
-      isStepFetchingInProgress
+      isStepFetchingInProgress,
+      partialDelayedInMilliseconds
     } = this.state;
     const {
       className,
@@ -1095,6 +1101,8 @@ class ChatBot extends Component {
 
     const inputAttributesOverride = currentStep.inputAttributes || inputAttributes;
 
+    const wasPartiallyDelayedBefore = partialDelayedInMilliseconds !== 0;
+
     return (
       <div className={`rsc ${className}`} style={readOnly ? { cursor: 'not-allowed' } : null}>
         {floating && (
@@ -1128,6 +1136,7 @@ class ChatBot extends Component {
             {renderedSteps.map(this.renderStep)}
             {isStepFetchingInProgress && (
               <TextLoadingStep
+                animated={!wasPartiallyDelayedBefore}
                 avatarStyle={avatarStyle}
                 bubbleStyle={bubbleStyle}
                 avatar={botAvatar}

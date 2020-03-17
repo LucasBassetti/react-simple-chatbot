@@ -7,7 +7,7 @@ import Loading from '../common/Loading';
 import TextStepContainer from './TextStepContainer';
 
 function TextLoadingStep(props) {
-  const { avatarStyle, bubbleStyle, avatar } = props;
+  const { avatarStyle, bubbleStyle, avatar, animated } = props;
 
   const showAvatar = true;
 
@@ -16,6 +16,7 @@ function TextLoadingStep(props) {
       <ImageContainer className="rsc-ts-image-container" user={false}>
         {showAvatar && (
           <Image
+            animated={animated}
             className="rsc-ts-image"
             style={avatarStyle}
             showAvatar={showAvatar}
@@ -26,6 +27,7 @@ function TextLoadingStep(props) {
         )}
       </ImageContainer>
       <Bubble
+        animated={animated}
         className="rsc-ts-bubble"
         style={bubbleStyle}
         user={false}
@@ -42,11 +44,13 @@ function TextLoadingStep(props) {
 TextLoadingStep.propTypes = {
   avatarStyle: PropTypes.objectOf(PropTypes.any).isRequired,
   bubbleStyle: PropTypes.objectOf(PropTypes.any).isRequired,
-  avatar: PropTypes.string
+  avatar: PropTypes.string,
+  animated: PropTypes.bool
 };
 
 TextLoadingStep.defaultProps = {
-  avatar: undefined
+  avatar: undefined,
+  animated: true
 };
 
 export default TextLoadingStep;
