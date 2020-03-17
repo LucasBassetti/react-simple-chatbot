@@ -126,6 +126,7 @@ class ChatBot extends Component {
       }
 
       renderedSteps = this.parseRenderedSteps(steps.map(step => this.assignDefaultSetting(step)));
+      renderedSteps[0].animated = false;
       const renderedNum = renderedSteps.length;
       currentStep = renderedSteps[renderedNum - 1];
       previousStep = renderedSteps.length > 1 ? renderedSteps[renderedNum - 2] : null;
