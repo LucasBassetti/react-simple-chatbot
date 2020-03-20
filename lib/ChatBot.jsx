@@ -94,13 +94,13 @@ class ChatBot extends Component {
       let currentStep = null;
       let previousStep = null;
 
-      const { botDelay, customDelay } = this.props;
+      const { botDelay, customDelay, readOnly } = this.props;
 
       this.setState({ isStepFetchingInProgress: true });
       const startTime = Date.now();
       const { sessionId } = this.state;
 
-      steps = await getStepsFromBackend(nextStepUrl, undefined, undefined, sessionId);
+      steps = await getStepsFromBackend(nextStepUrl, undefined, undefined, sessionId, readOnly);
       if (steps.length === 0) {
         this.setState(() => {
           throw Error('Error: Could not find any steps');
@@ -662,9 +662,9 @@ class ChatBot extends Component {
   };
 
   getStepsFromApi = async (stepId, value) => {
-    const { nextStepUrl, parseStep } = this.props;
+    const { nextStepUrl, parseStep, readOnly } = this.props;
     const { sessionId } = this.state;
-    const newSteps = await getStepsFromBackend(nextStepUrl, stepId, value, sessionId);
+    const newSteps = await getStepsFromBackend(nextStepUrl, stepId, value, sessionId, readOnly);
 
     const completeSteps = [];
 

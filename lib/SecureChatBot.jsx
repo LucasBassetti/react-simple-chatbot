@@ -493,10 +493,10 @@ class SecureChatBot extends Component {
   };
 
   getStepFromApi = async (stepId, value) => {
-    const { nextStepUrl, parseStep } = this.props;
+    const { nextStepUrl, parseStep, readOnly } = this.props;
     const { sessionId } = this.state;
     this.setState({ isStepFetchingInProgress: true });
-    const step = await getStepsFromBackend(nextStepUrl, stepId, value, sessionId);
+    const step = await getStepsFromBackend(nextStepUrl, stepId, value, sessionId, readOnly);
     this.setState({ isStepFetchingInProgress: false });
     const parsedStep = parseStep ? parseStep(step) : step;
     const completeStep = this.assignDefaultSetting(schema.parse(parsedStep));

@@ -1937,7 +1937,7 @@ describe('ChatBot', () => {
       axiosMock = new MockAdapter(axios);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined, readOnly : false } })
         .replyOnce(200, [
           {
             id: '1',
@@ -1946,7 +1946,8 @@ describe('ChatBot', () => {
           }
         ]);
 
-      axiosMock.onGet(nextStepUrl, { params: { stepId: '2', value: undefined } }).replyOnce(200, [
+      axiosMock.onGet(nextStepUrl, { params: { stepId: '2', value: undefined, readOnly : false  } })
+        .replyOnce(200, [
         {
           id: '2',
           message: 'This is the second text',
@@ -1955,7 +1956,7 @@ describe('ChatBot', () => {
       ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{options}', value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: undefined, readOnly : false  } })
         .reply(200, [
           {
             id: '{options}',
@@ -1967,7 +1968,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{options}', value: '"Option Value 1"' } })
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: '"Option Value 1"', readOnly : false  } })
         .reply(200, [
           {
             id: '{options}',
@@ -1978,7 +1979,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: 'update-options', value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: 'update-options', value: undefined, readOnly : false  } })
         .reply(200, [
           {
             id: '{options}',
@@ -1991,7 +1992,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{options}', value: '"New Value 1"' } })
+        .onGet(nextStepUrl, { params: { stepId: '{options}', value: '"New Value 1"', readOnly : false  } })
         .replyOnce(200, [
           {
             id: '{options}',
@@ -2002,7 +2003,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{input}', value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: undefined, readOnly : false  } })
         .replyOnce(200, [
           {
             id: '{input}',
@@ -2011,7 +2012,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Go to update"' } })
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Go to update"', readOnly : false  } })
         .replyOnce(200, [
           {
             id: '{input}',
@@ -2022,7 +2023,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: 'update-input', value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: 'update-input', value: undefined, readOnly : false  } })
         .replyOnce(200, [
           {
             id: '{input}',
@@ -2032,7 +2033,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Update Input"' } })
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Update Input"', readOnly : false  } })
         .replyOnce(200, [
           {
             id: '{input}',
@@ -2043,7 +2044,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: 'chat-end', value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: 'chat-end', value: undefined, readOnly : false  } })
         .replyOnce(200, [
           {
             id: 'chat-end',
@@ -2231,7 +2232,7 @@ describe('ChatBot', () => {
       );
       axiosMock.reset();
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined, readOnly: false } })
         .replyOnce(200, [
           {
             id: '1',
@@ -2245,7 +2246,8 @@ describe('ChatBot', () => {
           }
         ]);
 
-      axiosMock.onGet(nextStepUrl, { params: { stepId: '{input}', value: '0' } }).replyOnce(200, [
+      axiosMock.onGet(nextStepUrl, { params: { stepId: '{input}', value: '0', readOnly: false } })
+        .replyOnce(200, [
         {
           id: '{input}',
           user: true,
@@ -2299,7 +2301,7 @@ describe('ChatBot', () => {
         </ErrorBoundary>
       );
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined, readOnly: false } })
         .replyOnce(200, []);
 
       const wrapper = mount(chatBot);
@@ -2315,7 +2317,7 @@ describe('ChatBot', () => {
       );
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined, readOnly: false } })
         .replyOnce(200, [
           {
             id: '1',
@@ -2329,7 +2331,8 @@ describe('ChatBot', () => {
           }
         ]);
 
-      axiosMock.onGet(nextStepUrl, { params: { stepId: '3', value: undefined } }).replyOnce(200, [
+      axiosMock.onGet(nextStepUrl, { params: { stepId: '3', value: undefined, readOnly: false } })
+        .replyOnce(200, [
         {
           id: '3',
           message: "Third message, which wasn't rendered before",
@@ -2360,7 +2363,7 @@ describe('ChatBot', () => {
       );
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined, readOnly: false} })
         .replyOnce(200, [
           {
             id: '1',
@@ -2403,7 +2406,7 @@ describe('ChatBot', () => {
       );
       axiosMock.reset();
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined, readOnly: false } })
         .replyOnce(200, [
           {
             id: '1',
@@ -2417,7 +2420,7 @@ describe('ChatBot', () => {
         ]);
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Some Input"' } })
+        .onGet(nextStepUrl, { params: { stepId: '{input}', value: '"Some Input"', readOnly: false } })
         .replyOnce(200, [
           {
             id: '{input}',
@@ -2451,7 +2454,7 @@ describe('ChatBot', () => {
       );
 
       axiosMock
-        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined, readOnly: false } })
         .replyOnce(200, [
           {
             id: '1',
