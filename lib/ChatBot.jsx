@@ -306,7 +306,7 @@ class ChatBot extends Component {
   };
 
   saveStepValue = async (stepId, value, label) => {
-    if (!value) {
+    if (value == null) {
       throw new Error('Value is required parameter');
     }
 
