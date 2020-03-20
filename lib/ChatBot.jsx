@@ -102,8 +102,9 @@ class ChatBot extends Component {
 
       steps = await getStepsFromBackend(nextStepUrl, undefined, undefined, sessionId);
       if (steps.length === 0) {
-        this.setState({ error: true });
-        console.error('Error: Could not find any steps');
+        this.setState(() => {
+          throw Error('Error: Could not find any steps');
+        });
         return;
       }
       const firstStep = steps[0];
@@ -122,7 +123,9 @@ class ChatBot extends Component {
       }
 
       if (steps.length === 0) {
-        throw new Error('Steps not found');
+        this.setState(() => {
+          throw new Error('Steps not found');
+        });
       }
 
       renderedSteps = this.parseRenderedSteps(steps.map(step => this.assignDefaultSetting(step)));
@@ -154,7 +157,9 @@ class ChatBot extends Component {
       for (let i = 0, len = steps.length; i < len; i += 1) {
         const step = parseStep ? parseStep(steps[i]) : steps[i];
         if (chatSteps[step.id]) {
-          throw new Error(`There are duplicate steps: id=${step.id}`);
+          this.setState(() => {
+            throw new Error(`There are duplicate steps: id=${step.id}`);
+          });
         }
         chatSteps[step.id] = this.assignDefaultSetting(schema.parse(step));
       }
@@ -307,7 +312,9 @@ class ChatBot extends Component {
 
   saveStepValue = async (stepId, value, label) => {
     if (value == null) {
-      throw new Error('Value is required parameter');
+      this.setState(() => {
+        throw new Error('Value is required parameter');
+      });
     }
 
     const { renderedSteps, currentStep } = this.state;

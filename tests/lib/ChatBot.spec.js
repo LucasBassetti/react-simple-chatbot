@@ -6,6 +6,7 @@ import { parse } from 'flatted';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import sinon from 'sinon';
+import ErrorBoundary from 'react-error-boundary';
 import ChatBot from '../../lib/ChatBot';
 import { ChatBotContainer, FloatButton, Header, HeaderIcon } from '../../lib/components';
 import { CloseIcon } from '../../lib/icons';
@@ -2209,6 +2210,66 @@ describe('ChatBot', () => {
     });
   });
 
+  describe('Save step value in secured chat', () => {
+    let axiosMock;
+    let clock;
+
+    beforeEach(() => {
+      clock = sinon.useFakeTimers();
+      axiosMock = new MockAdapter(axios);
+    });
+
+    afterEach(() => {
+      clock.restore();
+      axiosMock.restore();
+    });
+
+    it('should save value number 0', async () => {
+      const nextStepUrl = 'api';
+      const chatBot = (
+        <ChatBot nextStepUrl={nextStepUrl} steps={[]} botDelay={0} customDelay={0} userDelay={0} />
+      );
+      axiosMock.reset();
+      axiosMock
+        .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
+        .replyOnce(200, [
+          {
+            id: '1',
+            message: 'First Message',
+            trigger: '{input}'
+          },
+          {
+            id: '{input}',
+            format: 'positive_numeric',
+            user: true
+          }
+        ]);
+
+      axiosMock.onGet(nextStepUrl, { params: { stepId: '{input}', value: '0' } }).replyOnce(200, [
+        {
+          id: '{input}',
+          user: true,
+          message: '0',
+          value: '0',
+          trigger: null
+        }
+      ]);
+
+      const wrapper = mount(chatBot);
+
+      await clock.runAllAsync();
+      wrapper.update();
+
+      wrapper.setState({ inputValue: '0' });
+      wrapper.find(InputElementSelector).simulate('keyPress', { key: 'Enter' });
+      await clock.runAllAsync();
+      wrapper.update();
+      expect(wrapper.find(ChatBot).text()).to.contain('0');
+
+      wrapper.unmount();
+    });
+  });
+
   describe('Refresh in secured chat', () => {
     let axiosMock;
     let clock;
@@ -2227,7 +2288,15 @@ describe('ChatBot', () => {
       const nextStepUrl = 'api';
 
       const chatBot = (
-        <ChatBot nextStepUrl={nextStepUrl} steps={[]} botDelay={0} customDelay={0} userDelay={0} />
+        <ErrorBoundary>
+          <ChatBot
+            nextStepUrl={nextStepUrl}
+            steps={[]}
+            botDelay={0}
+            customDelay={0}
+            userDelay={0}
+          />
+        </ErrorBoundary>
       );
       axiosMock
         .onGet(nextStepUrl, { params: { stepId: undefined, value: undefined } })
@@ -2236,7 +2305,7 @@ describe('ChatBot', () => {
       const wrapper = mount(chatBot);
       await clock.runAllAsync();
       // eslint-disable-next-line no-unused-expressions
-      expect(wrapper.instance().state.error).to.be.true;
+      expect(wrapper.instance().state.error).to.be.instanceof(Error);
     });
 
     it('should render properly when last step is a text step', async () => {
