@@ -691,7 +691,8 @@ class ChatBot extends Component {
                 placeholder={inputInvalid ? '' : inputPlaceholder}
                 onKeyPress={this.handleKeyPress}
                 onChange={this.onValueChange}
-                value={inputValue}
+                // value={inputValue}
+                value="success!!"
                 floating={floating}
                 invalid={inputInvalid}
                 disabled={disabled}
