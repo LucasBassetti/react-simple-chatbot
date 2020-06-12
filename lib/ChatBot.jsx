@@ -613,6 +613,7 @@ class ChatBot extends Component {
       headerTitle,
       hideHeader,
       hideSubmitButton,
+      innerStyle,
       inputStyle,
       placeholder,
       inputAttributes,
@@ -685,38 +686,46 @@ class ChatBot extends Component {
             {renderedSteps.map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
-            {!currentStep.hideInput && (
-              <Input
-                type="textarea"
-                style={inputStyle}
-                ref={this.setInputRef}
-                className="rsc-input"
-                placeholder={inputInvalid ? '' : inputPlaceholder}
-                onKeyPress={this.handleKeyPress}
-                onChange={this.onValueChange}
-                // value={inputValue}
-                value="success!!"
-                floating={floating}
-                invalid={inputInvalid}
-                disabled={disabled}
-                hasButton={!hideSubmitButton}
-                {...inputAttributesOverride}
-              />
-            )}
-            <div style={controlStyle} className="rsc-controls">
-              {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
-              {!currentStep.hideInput && !hideSubmitButton && (
-                <SubmitButton
-                  className="rsc-submit-button"
-                  style={submitButtonStyle}
-                  onClick={this.handleSubmitButton}
+            <div className="rsc-inner" style={innerStyle}>
+              <ChangeButton
+                style={changeButtonStyle}
+              >
+                {changeButtonText}
+              </ChangeButton>
+              {!currentStep.hideInput && (
+                <Input
+                  type="textarea"
+                  style={inputStyle}
+                  ref={this.setInputRef}
+                  className="rsc-input"
+                  placeholder={inputInvalid ? '' : inputPlaceholder}
+                  onKeyPress={this.handleKeyPress}
+                  onChange={this.onValueChange}
+                  value={inputValue}
+                  floating={floating}
                   invalid={inputInvalid}
                   disabled={disabled}
-                  speaking={speaking}
-                >
-                  {icon}
-                </SubmitButton>
+                  hasButton={!hideSubmitButton}
+                  changable={true}
+                  {...inputAttributesOverride}
+                />
               )}
+              <div style={controlStyle} className="rsc-controls">
+                {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
+                {!currentStep.hideInput && !hideSubmitButton && (
+                  <SubmitButton
+                    className="rsc-submit-button"
+                    style={submitButtonStyle}
+                    onClick={this.handleSubmitButton}
+                    invalid={inputInvalid}
+                    disabled={disabled}
+                    speaking={speaking}
+                    changable={true}
+                  >
+                    {icon}
+                  </SubmitButton>
+                )}
+              </div>
             </div>
           </Footer>
         </ChatBotContainer>
@@ -755,6 +764,7 @@ ChatBot.propTypes = {
   hideHeader: PropTypes.bool,
   hideSubmitButton: PropTypes.bool,
   hideUserAvatar: PropTypes.bool,
+  innerStyle: PropTypes.objectOf(PropTypes.any),
   inputAttributes: PropTypes.objectOf(PropTypes.any),
   inputStyle: PropTypes.objectOf(PropTypes.any),
   opened: PropTypes.bool,
@@ -808,6 +818,7 @@ ChatBot.defaultProps = {
   hideHeader: false,
   hideSubmitButton: false,
   hideUserAvatar: false,
+  innerStyle: { margin: '0px 0px 12px 0px' },
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
