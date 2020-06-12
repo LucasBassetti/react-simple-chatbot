@@ -688,11 +688,7 @@ class ChatBot extends Component {
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             <div className="rsc-inner" style={innerStyle}>
-              <ChangeButton
-                style={changeButtonStyle}
-              >
-                {changeButtonText}
-              </ChangeButton>
+              <ChangeButton style={changeButtonStyle}>{changeButtonText}</ChangeButton>
               {!currentStep.hideInput && (
                 <Input
                   type="textarea"
