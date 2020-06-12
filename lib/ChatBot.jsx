@@ -599,6 +599,7 @@ class ChatBot extends Component {
       recognitionEnable
     } = this.state;
     const {
+      changable,
       className,
       contentStyle,
       extraControl,
@@ -706,7 +707,7 @@ class ChatBot extends Component {
                   invalid={inputInvalid}
                   disabled={disabled}
                   hasButton={!hideSubmitButton}
-                  changable={true}
+                  changable={changable}
                   {...inputAttributesOverride}
                 />
               )}
@@ -720,7 +721,7 @@ class ChatBot extends Component {
                     invalid={inputInvalid}
                     disabled={disabled}
                     speaking={speaking}
-                    changable={true}
+                    changable={changable}
                   >
                     {icon}
                   </SubmitButton>
@@ -742,6 +743,7 @@ ChatBot.propTypes = {
   bubbleStyle: PropTypes.objectOf(PropTypes.any),
   cache: PropTypes.bool,
   cacheName: PropTypes.string,
+  changable: PropTypes.bool,
   className: PropTypes.string,
   contentStyle: PropTypes.objectOf(PropTypes.any),
   customDelay: PropTypes.number,
@@ -796,6 +798,7 @@ ChatBot.defaultProps = {
   bubbleStyle: {},
   cache: false,
   cacheName: 'rsc_cache',
+  changable: false,
   className: '',
   contentStyle: {},
   customStyle: {},
