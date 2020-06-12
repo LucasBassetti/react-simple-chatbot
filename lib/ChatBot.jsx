@@ -14,7 +14,8 @@ import {
   FloatingIcon,
   Footer,
   Input,
-  SubmitButton
+  SubmitButton,
+  ChangeButton
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
@@ -602,6 +603,8 @@ class ChatBot extends Component {
       contentStyle,
       extraControl,
       controlStyle,
+      changeButtonStyle,
+      changeButtonText,
       floating,
       floatingIcon,
       floatingStyle,
@@ -735,6 +738,8 @@ ChatBot.propTypes = {
   customDelay: PropTypes.number,
   customStyle: PropTypes.objectOf(PropTypes.any),
   controlStyle: PropTypes.objectOf(PropTypes.any),
+  changeButtonStyle: PropTypes.objectOf(PropTypes.any),
+  changeButtonText: PropTypes.string,
   enableMobileAutoFocus: PropTypes.bool,
   enableSmoothScroll: PropTypes.bool,
   extraControl: PropTypes.objectOf(PropTypes.element),
@@ -785,6 +790,8 @@ ChatBot.defaultProps = {
   contentStyle: {},
   customStyle: {},
   controlStyle: { position: 'absolute', right: '0', top: '0' },
+  changeButtonStyle: {},
+  changeButtonText: '選択肢',
   customDelay: 1000,
   enableMobileAutoFocus: false,
   enableSmoothScroll: false,
