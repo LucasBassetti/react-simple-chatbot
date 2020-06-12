@@ -10,6 +10,8 @@ const Input = styled.input`
       : ''};
   border: 0;
   border-radius: 0;
+  border-top-left-radius: ${props => (props.changable ? ' 10px' : '0')};
+  border-top-right-radius: ${props => (props.changable ? ' 10px' : '0')};
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   border-top: ${props => (props.invalid ? '0' : '1px solid #eee')};
@@ -17,10 +19,13 @@ const Input = styled.input`
   box-sizing: border-box;
   color: ${props => (props.invalid ? '#E53935' : '')};
   font-size: 16px;
+  min-height: 32px;
   opacity: ${props => (props.disabled && !props.invalid ? '.5' : '1')};
   outline: none;
-  padding: ${props => (props.hasButton ? '16px 52px 16px 10px' : '16px 10px')};
-  width: 100%;
+  padding: ${props => (props.changable ? '10px 10px 10px 10px' : 
+                        props.hasButton ? '16px 52px 16px 10px': '16px 10px')};
+  margin: ${props => (props.changable ? '0px 10px 0px 70px' : '0px')};
+  width: ${props => (props.changable ? 'calc(100% - 80px)' : '100%')};
   -webkit-appearance: none;
 
   &:disabled {
