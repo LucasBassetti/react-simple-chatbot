@@ -614,7 +614,6 @@ class ChatBot extends Component {
       headerTitle,
       hideHeader,
       hideSubmitButton,
-      innerStyle,
       inputStyle,
       placeholder,
       inputAttributes,
@@ -687,8 +686,10 @@ class ChatBot extends Component {
             {renderedSteps.map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
-            <div className="rsc-inner" style={innerStyle}>
-              <ChangeButton style={changeButtonStyle}>{changeButtonText}</ChangeButton>
+            <div className="rsc-inner" style={{ margin: changable ? '0px 0px 12px 0px' : '0px' }}>
+              {changable && (
+                <ChangeButton style={changeButtonStyle}>{changeButtonText}</ChangeButton>
+              )}
               {!currentStep.hideInput && (
                 <Input
                   type="textarea"
@@ -762,7 +763,6 @@ ChatBot.propTypes = {
   hideHeader: PropTypes.bool,
   hideSubmitButton: PropTypes.bool,
   hideUserAvatar: PropTypes.bool,
-  innerStyle: PropTypes.objectOf(PropTypes.any),
   inputAttributes: PropTypes.objectOf(PropTypes.any),
   inputStyle: PropTypes.objectOf(PropTypes.any),
   opened: PropTypes.bool,
@@ -817,7 +817,6 @@ ChatBot.defaultProps = {
   hideHeader: false,
   hideSubmitButton: false,
   hideUserAvatar: false,
-  innerStyle: { margin: '0px 0px 12px 0px' },
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
