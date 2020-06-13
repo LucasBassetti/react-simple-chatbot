@@ -24,8 +24,8 @@ const Input = styled.input`
   outline: none;
   padding: ${props => (props.changable ? '10px 10px 10px 10px' : 
                         props.hasButton ? '16px 52px 16px 10px': '16px 10px')};
-  margin: ${props => (props.changable ? '0px 10px 0px 70px' : '0px')};
-  width: ${props => (props.changable ? 'calc(100% - 80px)' : '100%')};
+  margin: ${props => (props.changable ? '0px 0px 0px 70px' : '0px')};
+  width: ${props => (props.changable ? 'calc(100% - 70px)' : '100%')};
   -webkit-appearance: none;
 
   &:disabled {

@@ -686,7 +686,7 @@ class ChatBot extends Component {
             {renderedSteps.map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
-            <div className="rsc-inner" style={{ margin: changable ? '0px 0px 12px 0px' : '0px' }}>
+            <div className="rsc-inner" style={{ margin: changable ? '0px 0px 10px 0px' : '0px' }}>
               {changable && (
                 <ChangeButton style={changeButtonStyle}>{changeButtonText}</ChangeButton>
               )}
@@ -798,7 +798,7 @@ ChatBot.defaultProps = {
   className: '',
   contentStyle: {},
   customStyle: {},
-  controlStyle: { position: 'absolute', right: '0', top: '0' },
+  controlStyle: { position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)' },
   changeButtonStyle: {},
   changeButtonText: '選択肢',
   customDelay: 1000,

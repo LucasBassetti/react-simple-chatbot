@@ -20,7 +20,7 @@ const SubmitButton = styled.button`
   fill: ${fillFunc};
   opacity: ${props => (props.disabled && !props.invalid ? '.5' : '1')};
   outline: none;
-  padding: ${props => (props.changable ? '10px 18px 16px 16px' : '14px 16px 12px 16px')};
+  padding: ${props => (props.changable ? '10px 10px 10px 10px' : '14px 16px 12px 16px')};
   &:before {
     content: '';
     position: absolute;
