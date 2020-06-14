@@ -12,6 +12,7 @@ const ChangeButton = styled.button`
   top: 50%;
   left: 5px;
   min-width: 60px;
+  outline: 0;
   transform: translateY(-50%);
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);

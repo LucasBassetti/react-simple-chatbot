@@ -6,6 +6,7 @@ const InputOptionElement = styled.button`
   border-radius: 10px;
   cursor: pointer;
   height: 40px;
+  outline: 0;
   width: 60px;
 
   &:hover {
