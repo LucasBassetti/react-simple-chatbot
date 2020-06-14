@@ -445,7 +445,6 @@ class ChatBot extends Component {
 
   handleChangeButtton = () => {
     const { textMode } = this.state;
-    console.log('textMode', textMode);
     this.setState({ textMode: !textMode });
   };
 
