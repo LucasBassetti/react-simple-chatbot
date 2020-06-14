@@ -16,8 +16,7 @@ import {
   Input,
   SubmitButton,
   ChangeButton,
-  InputOption,
-  InputOptionElement
+  InputOption
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
@@ -626,6 +625,7 @@ class ChatBot extends Component {
       inputStyle,
       placeholder,
       inputAttributes,
+      inputOptionElemetns,
       recognitionPlaceholder,
       style,
       submitButtonStyle,
@@ -661,12 +661,6 @@ class ChatBot extends Component {
       : currentStep.placeholder || placeholder;
 
     const inputAttributesOverride = currentStep.inputAttributes || inputAttributes;
-
-    const optionElemetns = [
-      <InputOptionElement>test1</InputOptionElement>,
-      <InputOptionElement>test2</InputOptionElement>,
-      <InputOptionElement>test3</InputOptionElement>
-    ];
 
     return (
       <div className={`rsc ${className}`}>
@@ -744,7 +738,9 @@ class ChatBot extends Component {
             )}
 
             {/* non text mode */}
-            {!textMode && <InputOption className="rsc-input-option">{optionElemetns}</InputOption>}
+            {!textMode && (
+              <InputOption className="rsc-input-option">{inputOptionElemetns}</InputOption>
+            )}
           </Footer>
         </ChatBotContainer>
       </div>
@@ -784,6 +780,7 @@ ChatBot.propTypes = {
   hideSubmitButton: PropTypes.bool,
   hideUserAvatar: PropTypes.bool,
   inputAttributes: PropTypes.objectOf(PropTypes.any),
+  inputOptionElemetns: PropTypes.arrayOf(PropTypes.element),
   inputStyle: PropTypes.objectOf(PropTypes.any),
   opened: PropTypes.bool,
   toggleFloating: PropTypes.func,
@@ -837,6 +834,7 @@ ChatBot.defaultProps = {
   hideHeader: false,
   hideSubmitButton: false,
   hideUserAvatar: false,
+  inputOptionElemetns: [],
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
