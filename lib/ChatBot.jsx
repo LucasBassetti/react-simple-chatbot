@@ -695,7 +695,7 @@ class ChatBot extends Component {
           <Footer className="rsc-footer" style={footerStyle}>
             {changable && (
               <ChangeButton style={changeButtonStyle} onClick={this.handleChangeButtton}>
-                {changeButtonText}
+                {textMode ? changeButtonText[0] : changeButtonText[1]}
               </ChangeButton>
             )}
             {textMode && !currentStep.hideInput && (
@@ -756,7 +756,7 @@ ChatBot.propTypes = {
   customStyle: PropTypes.objectOf(PropTypes.any),
   controlStyle: PropTypes.objectOf(PropTypes.any),
   changeButtonStyle: PropTypes.objectOf(PropTypes.any),
-  changeButtonText: PropTypes.string,
+  changeButtonText: PropTypes.array,
   enableMobileAutoFocus: PropTypes.bool,
   enableSmoothScroll: PropTypes.bool,
   extraControl: PropTypes.objectOf(PropTypes.element),
@@ -809,7 +809,7 @@ ChatBot.defaultProps = {
   customStyle: {},
   controlStyle: { position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)' },
   changeButtonStyle: {},
-  changeButtonText: '選択肢',
+  changeButtonText: ['選択肢', '自由入力'],
   customDelay: 1000,
   enableMobileAutoFocus: false,
   enableSmoothScroll: false,
