@@ -24,11 +24,9 @@ const pulse = color => keyframes`
 
 const slideIn = keyframes`
   0% {
-    opacity: 0;
-    transform: translateX(-64px);
+    transform: translateX(-60px);
   }
   100% {
-    opacity: 1;
     transform: translateX(0);
   }
 `;
