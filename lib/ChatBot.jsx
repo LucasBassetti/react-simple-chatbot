@@ -767,7 +767,7 @@ ChatBot.propTypes = {
   customStyle: PropTypes.objectOf(PropTypes.any),
   controlStyle: PropTypes.objectOf(PropTypes.any),
   changeButtonStyle: PropTypes.objectOf(PropTypes.any),
-  changeButtonText: PropTypes.array,
+  changeButtonText: PropTypes.arrayOf(PropTypes.string),
   enableMobileAutoFocus: PropTypes.bool,
   enableSmoothScroll: PropTypes.bool,
   extraControl: PropTypes.objectOf(PropTypes.element),
