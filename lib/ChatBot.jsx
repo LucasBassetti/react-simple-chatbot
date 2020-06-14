@@ -602,7 +602,8 @@ class ChatBot extends Component {
       opened,
       renderedSteps,
       speaking,
-      recognitionEnable
+      recognitionEnable,
+      textMode
     } = this.state;
     const {
       changable,
@@ -697,7 +698,7 @@ class ChatBot extends Component {
                 {changeButtonText}
               </ChangeButton>
             )}
-            {!currentStep.hideInput && (
+            {textMode && !currentStep.hideInput && (
               <Input
                 type="textarea"
                 style={inputStyle}
@@ -715,22 +716,24 @@ class ChatBot extends Component {
                 {...inputAttributesOverride}
               />
             )}
-            <div style={controlStyle} className="rsc-controls">
-              {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
-              {!currentStep.hideInput && !hideSubmitButton && (
-                <SubmitButton
-                  className="rsc-submit-button"
-                  style={submitButtonStyle}
-                  onClick={this.handleSubmitButton}
-                  invalid={inputInvalid}
-                  disabled={disabled}
-                  speaking={speaking}
-                  changable={changable}
-                >
-                  {icon}
-                </SubmitButton>
-              )}
-            </div>
+            {textMode && (
+              <div style={controlStyle} className="rsc-controls">
+                {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
+                {!currentStep.hideInput && !hideSubmitButton && (
+                  <SubmitButton
+                    className="rsc-submit-button"
+                    style={submitButtonStyle}
+                    onClick={this.handleSubmitButton}
+                    invalid={inputInvalid}
+                    disabled={disabled}
+                    speaking={speaking}
+                    changable={changable}
+                  >
+                    {icon}
+                  </SubmitButton>
+                )}
+              </div>
+            )}
           </Footer>
         </ChatBotContainer>
       </div>
