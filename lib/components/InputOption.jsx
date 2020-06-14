@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const InputOption = styled.div`
-  background-color: trasparent;
+  background-color: transparent;
   height: 50px;
   margin: 0 0 0 70px;
 `;
