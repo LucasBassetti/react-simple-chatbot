@@ -55,7 +55,7 @@ class ChatBot extends Component {
       speaking: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
       defaultUserSettings: {},
-      textMode: true
+      textMode: false
     };
 
     this.speak = speakFn(props.speechSynthesis);
