@@ -15,7 +15,9 @@ import {
   Footer,
   Input,
   SubmitButton,
-  ChangeButton
+  ChangeButton,
+  InputOption,
+  InputOptionElement
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
@@ -733,6 +735,13 @@ class ChatBot extends Component {
                   </SubmitButton>
                 )}
               </div>
+            )}
+
+            {/* non text mode */}
+            {!textMode && (
+              <InputOption className="rsc-input-option">
+                <InputOptionElement>test</InputOptionElement>
+              </InputOption>
             )}
           </Footer>
         </ChatBotContainer>
