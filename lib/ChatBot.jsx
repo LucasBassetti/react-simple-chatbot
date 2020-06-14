@@ -443,6 +443,12 @@ class ChatBot extends Component {
     this.submitUserMessage();
   };
 
+  handleChangeButtton = () => {
+    const { textMode } = this.state;
+    console.log('textMode', textMode);
+    this.setState({ textMode: !textMode });
+  };
+
   submitUserMessage = () => {
     const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
     let { currentStep } = this.state;
@@ -688,7 +694,9 @@ class ChatBot extends Component {
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {changable && (
-              <ChangeButton style={changeButtonStyle}>{changeButtonText}</ChangeButton>
+              <ChangeButton style={changeButtonStyle} onClick={this.handleChangeButtton}>
+                {changeButtonText}
+              </ChangeButton>
             )}
             {!currentStep.hideInput && (
               <Input
