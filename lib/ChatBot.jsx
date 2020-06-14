@@ -625,7 +625,7 @@ class ChatBot extends Component {
       inputStyle,
       placeholder,
       inputAttributes,
-      inputOptionElemetns,
+      inputOptionElements,
       recognitionPlaceholder,
       style,
       submitButtonStyle,
@@ -739,7 +739,7 @@ class ChatBot extends Component {
 
             {/* non text mode */}
             {!textMode && (
-              <InputOption className="rsc-input-option">{inputOptionElemetns}</InputOption>
+              <InputOption className="rsc-input-option">{inputOptionElements}</InputOption>
             )}
           </Footer>
         </ChatBotContainer>
@@ -780,7 +780,7 @@ ChatBot.propTypes = {
   hideSubmitButton: PropTypes.bool,
   hideUserAvatar: PropTypes.bool,
   inputAttributes: PropTypes.objectOf(PropTypes.any),
-  inputOptionElemetns: PropTypes.arrayOf(PropTypes.element),
+  inputOptionElements: PropTypes.arrayOf(PropTypes.element),
   inputStyle: PropTypes.objectOf(PropTypes.any),
   opened: PropTypes.bool,
   toggleFloating: PropTypes.func,
@@ -834,7 +834,7 @@ ChatBot.defaultProps = {
   hideHeader: false,
   hideSubmitButton: false,
   hideUserAvatar: false,
-  inputOptionElemetns: [],
+  inputOptionElements: [],
   inputStyle: {},
   opened: undefined,
   placeholder: 'Type the message ...',
