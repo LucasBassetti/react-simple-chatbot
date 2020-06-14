@@ -662,6 +662,12 @@ class ChatBot extends Component {
 
     const inputAttributesOverride = currentStep.inputAttributes || inputAttributes;
 
+    const optionElemetns = [
+      <InputOptionElement>test1</InputOptionElement>,
+      <InputOptionElement>test2</InputOptionElement>,
+      <InputOptionElement>test3</InputOptionElement>
+    ];
+
     return (
       <div className={`rsc ${className}`}>
         {floating && (
@@ -738,11 +744,7 @@ class ChatBot extends Component {
             )}
 
             {/* non text mode */}
-            {!textMode && (
-              <InputOption className="rsc-input-option">
-                <InputOptionElement>test</InputOptionElement>
-              </InputOption>
-            )}
+            {!textMode && <InputOption className="rsc-input-option">{optionElemetns}</InputOption>}
           </Footer>
         </ChatBotContainer>
       </div>
