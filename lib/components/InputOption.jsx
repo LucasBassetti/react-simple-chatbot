@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 const InputOption = styled.div`
+  align-items: center;
   background-color: transparent;
   display: flex;
-  align-items: center;
   height: 50px;
+  justify-content: space-around;
   margin: 0 0 0 70px;
   position: relative;
 `;
