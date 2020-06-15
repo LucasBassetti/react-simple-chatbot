@@ -1602,8 +1602,7 @@
           t || (t = e.slice(0));
           return Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } }));
         })([
-          '\n  align-items: center;\n  background-color: transparent;\n  display: flex;\n  height: 50px;\n  justify-content: space-around;\n  margin: 0 0 0 70px;\n  position: relative;\n  animation: ',
-          ' 1s;\n'
+          '\n  align-items: center;\n  background-color: transparent;\n  display: flex;\n  height: 50px;\n  justify-content: space-around;\n  margin: 0 0 0 70px;\n  position: relative;\n'
         ]);
         return (
           (rt = function() {
@@ -1612,13 +1611,14 @@
           e
         );
       }
-      var ot = l.a.div(rt(), x);
+      var ot = l.a.div(rt());
       function it() {
         var e = (function(e, t) {
           t || (t = e.slice(0));
           return Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } }));
         })([
-          '\n  background-color: #ddd;\n  border: 0;\n  border-radius: 10px;\n  cursor: pointer;\n  height: 40px;\n  outline: 0;\n  width: 60px;\n\n  &:hover {\n    opacity: 0.7;\n  }\n'
+          '\n  background-color: #ddd;\n  border: 0;\n  border-radius: 10px;\n  cursor: pointer;\n  height: 40px;\n  outline: 0;\n  width: 60px;\n  animation: ',
+          ' 1s;\n  &:hover {\n    opacity: 0.7;\n  }\n'
         ]);
         return (
           (it = function() {
@@ -1627,7 +1627,7 @@
           e
         );
       }
-      var at = l.a.button(it());
+      var at = l.a.button(it(), x);
       function st() {
         return (st =
           Object.assign ||
