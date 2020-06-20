@@ -632,6 +632,7 @@ class ChatBot extends Component {
       inputOptionElements,
       recognitionPlaceholder,
       secondInputOptionContainerStyle,
+      secondInputOptionElements,
       style,
       submitButtonStyle,
       width,
@@ -750,7 +751,7 @@ class ChatBot extends Component {
                     className="rsc-second-input-option"
                     style={secondInputOptionContainerStyle}
                   >
-                    <InputOptionElement>aaa</InputOptionElement>
+                    {secondInputOptionElements}
                   </SecondInputOptionContainer>
                 )}
                 {inputOptionElements}
@@ -806,6 +807,7 @@ ChatBot.propTypes = {
   recognitionLang: PropTypes.string,
   recognitionPlaceholder: PropTypes.string,
   secondInputOptionContainerStyle: PropTypes.objectOf(PropTypes.any),
+  secondInputOptionElements: PropTypes.arrayOf(PropTypes.element),
   speechSynthesis: PropTypes.shape({
     enable: PropTypes.bool,
     lang: PropTypes.string,
@@ -863,6 +865,7 @@ ChatBot.defaultProps = {
   recognitionLang: 'en',
   recognitionPlaceholder: 'Listening ...',
   secondInputOptionContainerStyle: {},
+  secondInputOptionElements: [],
   speechSynthesis: {
     enable: false,
     lang: 'en',
