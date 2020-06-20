@@ -623,6 +623,7 @@ class ChatBot extends Component {
       headerComponent,
       headerTitle,
       hideHeader,
+      hideSecondInputOption,
       hideSubmitButton,
       inputOptionContainerStyle,
       inputStyle,
@@ -744,12 +745,14 @@ class ChatBot extends Component {
             {/* non text mode */}
             {!textMode && (
               <InputOption className="rsc-input-option" style={inputOptionContainerStyle}>
-                <SecondInputOptionContainer
-                  className="rsc-second-input-option"
-                  style={secondInputOptionContainerStyle}
-                >
-                  <InputOptionElement>aaa</InputOptionElement>
-                </SecondInputOptionContainer>
+                {!hideSecondInputOption && (
+                  <SecondInputOptionContainer
+                    className="rsc-second-input-option"
+                    style={secondInputOptionContainerStyle}
+                  >
+                    <InputOptionElement>aaa</InputOptionElement>
+                  </SecondInputOptionContainer>
+                )}
                 {inputOptionElements}
               </InputOption>
             )}
@@ -789,6 +792,7 @@ ChatBot.propTypes = {
   height: PropTypes.string,
   hideBotAvatar: PropTypes.bool,
   hideHeader: PropTypes.bool,
+  hideSecondInputOption: PropTypes.bool,
   hideSubmitButton: PropTypes.bool,
   hideUserAvatar: PropTypes.bool,
   inputAttributes: PropTypes.objectOf(PropTypes.any),
@@ -846,6 +850,7 @@ ChatBot.defaultProps = {
   height: '520px',
   hideBotAvatar: false,
   hideHeader: false,
+  hideSecondInputOption: true,
   hideSubmitButton: false,
   hideUserAvatar: false,
   inputOptionContainerStyle: {},
