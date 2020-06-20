@@ -17,8 +17,7 @@ import {
   SubmitButton,
   ChangeButton,
   InputOption,
-  SecondInputOptionContainer,
-  InputOptionElement
+  SecondInputOptionContainer
 } from './components';
 import Recognition from './recognition';
 import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
