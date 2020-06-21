@@ -711,7 +711,7 @@ class ChatBot extends Component {
           >
             {renderedSteps.map(this.renderStep)}
           </Content>
-          <Footer className="rsc-footer" style={footerStyle}>
+          <Footer className="rsc-footer" style={footerStyle} ref={this.secondInputOptionContainer}>
             {changable && (
               <ChangeButton
                 className="rsc-change-button"
@@ -765,7 +765,6 @@ class ChatBot extends Component {
                   <SecondInputOptionContainer
                     className="rsc-second-input-option"
                     style={secondInputOptionContainerStyle}
-                    ref={this.secondInputOptionContainer}
                   >
                     {secondInputOptionElements}
                   </SecondInputOptionContainer>
