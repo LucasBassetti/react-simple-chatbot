@@ -2550,7 +2550,7 @@
                     ),
                     o.a.createElement(
                       He,
-                      { className: 'rsc-footer', style: j },
+                      { className: 'rsc-footer', style: j, ref: this.secondInputOptionContainer },
                       b &&
                         o.a.createElement(
                           nt,
@@ -2612,11 +2612,7 @@
                           !P &&
                             o.a.createElement(
                               ut,
-                              {
-                                className: 'rsc-second-input-option',
-                                style: T,
-                                ref: this.secondInputOptionContainer
-                              },
+                              { className: 'rsc-second-input-option', style: T },
                               A
                             ),
                           M
