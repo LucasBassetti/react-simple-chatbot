@@ -701,7 +701,7 @@ class ChatBot extends Component {
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {changable && (
-              <ChangeButton style={changeButtonStyle} onClick={this.handleChangeButtton}>
+              <ChangeButton className="rsc-change-button" style={changeButtonStyle} onClick={this.handleChangeButtton}>
                 {textMode ? changeButtonText[0] : changeButtonText[1]}
               </ChangeButton>
             )}
