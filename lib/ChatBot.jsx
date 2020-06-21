@@ -59,6 +59,7 @@ class ChatBot extends Component {
     };
 
     this.speak = speakFn(props.speechSynthesis);
+    this.secondInputOptionContainer = React.createRef();
   }
 
   componentDidMount() {
@@ -126,6 +127,13 @@ class ChatBot extends Component {
     if (this.content) {
       this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
       window.addEventListener('resize', this.onResize);
+    }
+
+    if (this.secondInputOptionContainer.current) {
+      this.secondInputOptionContainer.current.addEventListener(
+        'secondInputOptionClicked',
+        this.handleSecondInputOption
+      );
     }
 
     const { currentStep, previousStep, previousSteps, renderedSteps } = storage.getData(
@@ -450,6 +458,10 @@ class ChatBot extends Component {
     this.setState({ textMode: !textMode });
   };
 
+  handleSecondInputOption = event => {
+    this.triggerNextStep({ value: event.detail.value, trigger: event.detail.trigger });
+  };
+
   submitUserMessage = () => {
     const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
     let { currentStep } = this.state;
@@ -753,6 +765,7 @@ class ChatBot extends Component {
                   <SecondInputOptionContainer
                     className="rsc-second-input-option"
                     style={secondInputOptionContainerStyle}
+                    ref={this.secondInputOptionContainer}
                   >
                     {secondInputOptionElements}
                   </SecondInputOptionContainer>
