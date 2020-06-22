@@ -173,6 +173,12 @@ class ChatBot extends Component {
         opened
       };
     }
+    if (
+      state.steps.check &&
+      state.steps.check.metadata.secondChoice !== props.steps[2].metadata.secondChoice
+    ) {
+      state.steps.check.metadata.secondChoice = props.steps[2].metadata.secondChoice;
+    }
     return state;
   }
 
@@ -576,6 +582,7 @@ class ChatBot extends Component {
     }
 
     if (options) {
+      console.log('options step', this.state);
       return (
         <OptionsStep
           key={index}
