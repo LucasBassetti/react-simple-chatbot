@@ -154,7 +154,7 @@ class ChatBot extends Component {
         });
       }
     );
-
+    console.log('componentDidMount');
     this.setState({
       currentStep,
       defaultUserSettings,
@@ -166,6 +166,8 @@ class ChatBot extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
+    console.log('props on chatbot', props.steps);
+    console.log('state on chatbot', state);
     const { opened, toggleFloating } = props;
     if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
       return {
@@ -465,6 +467,7 @@ class ChatBot extends Component {
   };
 
   handleSecondInputOption = event => {
+    console.log('handleSecondInput', this.state);
     this.triggerNextStep({ value: event.detail.value, trigger: event.detail.trigger });
   };
 
@@ -565,6 +568,7 @@ class ChatBot extends Component {
     const { options, component, asMessage } = step;
     const steps = this.generateRenderedStepsById();
     const previousStep = index > 0 ? renderedSteps[index - 1] : {};
+    console.log('render step', this.state);
 
     if (component && !asMessage) {
       return (
