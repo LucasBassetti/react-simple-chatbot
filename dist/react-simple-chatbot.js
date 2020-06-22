@@ -396,7 +396,7 @@
                   : typeof e;
               })(e);
       }
-      function P(e, t) {
+      function C(e, t) {
         for (var n = 0; n < t.length; n++) {
           var r = t[n];
           (r.enumerable = r.enumerable || !1),
@@ -405,21 +405,21 @@
             Object.defineProperty(e, r.key, r);
         }
       }
-      function C(e) {
-        return (C = Object.setPrototypeOf
+      function P(e) {
+        return (P = Object.setPrototypeOf
           ? Object.getPrototypeOf
           : function(e) {
               return e.__proto__ || Object.getPrototypeOf(e);
             })(e);
       }
-      function q(e, t) {
-        return (q =
+      function I(e, t) {
+        return (I =
           Object.setPrototypeOf ||
           function(e, t) {
             return (e.__proto__ = t), e;
           })(e, t);
       }
-      function I(e) {
+      function q(e) {
         if (void 0 === e)
           throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
         return e;
@@ -437,7 +437,7 @@
           e
         );
       }
-      var R = (function(e) {
+      var M = (function(e) {
         function t() {
           var e, n, r, i;
           !(function(e, t) {
@@ -446,10 +446,10 @@
           for (var a = arguments.length, s = new Array(a), u = 0; u < a; u++) s[u] = arguments[u];
           return (
             (r = this),
-            (i = (e = C(t)).call.apply(e, [this].concat(s))),
-            (n = !i || ('object' !== z(i) && 'function' != typeof i) ? I(r) : i),
-            N(I(I(n)), 'state', { loading: !0 }),
-            N(I(I(n)), 'renderComponent', function() {
+            (i = (e = P(t)).call.apply(e, [this].concat(s))),
+            (n = !i || ('object' !== z(i) && 'function' != typeof i) ? q(r) : i),
+            N(q(q(n)), 'state', { loading: !0 }),
+            N(q(q(n)), 'renderComponent', function() {
               var e = n.props,
                 t = e.step,
                 r = e.steps,
@@ -474,7 +474,7 @@
             (e.prototype = Object.create(t && t.prototype, {
               constructor: { value: e, writable: !0, configurable: !0 }
             })),
-              t && q(e, t);
+              t && I(e, t);
           })(t, r['Component']),
           (n = t),
           (i = [
@@ -508,12 +508,12 @@
                 );
               }
             }
-          ]) && P(n.prototype, i),
-          a && P(n, a),
+          ]) && C(n.prototype, i),
+          a && C(n, a),
           t
         );
       })();
-      (R.propTypes = {
+      (M.propTypes = {
         previousStep: a.a.objectOf(a.a.any).isRequired,
         previousValue: a.a.oneOfType([a.a.string, a.a.bool, a.a.number, a.a.object, a.a.array]),
         speak: a.a.func,
@@ -522,8 +522,8 @@
         style: a.a.objectOf(a.a.any).isRequired,
         triggerNextStep: a.a.func.isRequired
       }),
-        (R.defaultProps = { previousValue: '', speak: function() {} });
-      var M = R;
+        (M.defaultProps = { previousValue: '', speak: function() {} });
+      var R = M;
       function B() {
         var e = (function(e, t) {
           t || (t = e.slice(0));
@@ -1291,7 +1291,7 @@
       );
       Ee.defaultProps = { theme: A };
       var ze = Ee;
-      function Pe() {
+      function Ce() {
         var e = (function(e, t) {
           t || (t = e.slice(0));
           return Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } }));
@@ -1302,14 +1302,14 @@
           ';\n  }\n'
         ]);
         return (
-          (Pe = function() {
+          (Ce = function() {
             return e;
           }),
           e
         );
       }
-      var Ce = l.a.div(
-        Pe(),
+      var Pe = l.a.div(
+        Ce(),
         function(e) {
           return e.height;
         },
@@ -1320,7 +1320,7 @@
           return e.floating ? 'calc(100% - 112px)' : '';
         }
       );
-      function qe() {
+      function Ie() {
         var e = (function(e, t) {
           t || (t = e.slice(0));
           return Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } }));
@@ -1331,14 +1331,14 @@
           ';\n  height: 56px;\n  justify-content: space-between;\n  padding: 0 10px;\n'
         ]);
         return (
-          (qe = function() {
+          (Ie = function() {
             return e;
           }),
           e
         );
       }
-      var Ie = l.a.div(
-        qe(),
+      var qe = l.a.div(
+        Ie(),
         function(e) {
           return e.theme.headerBgColor;
         },
@@ -1349,25 +1349,25 @@
           return e.theme.headerFontColor;
         }
       );
-      Ie.defaultProps = { theme: A };
-      var Ne = Ie;
-      function Re() {
+      qe.defaultProps = { theme: A };
+      var Ne = qe;
+      function Me() {
         var e = (function(e, t) {
           t || (t = e.slice(0));
           return Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } }));
         })(['\n  margin: 0;\n  font-size: ', ';\n']);
         return (
-          (Re = function() {
+          (Me = function() {
             return e;
           }),
           e
         );
       }
-      var Me = l.a.h2(Re(), function(e) {
+      var Re = l.a.h2(Me(), function(e) {
         return e.theme.headerFontSize;
       });
-      Me.defaultProps = { theme: A };
-      var Be = Me;
+      Re.defaultProps = { theme: A };
+      var Be = Re;
       function Te() {
         var e = (function(e, t) {
           t || (t = e.slice(0));
@@ -1925,19 +1925,19 @@
               return e.__proto__ || Object.getPrototypeOf(e);
             })(e);
       }
-      function Pt(e, t) {
-        return (Pt =
+      function Ct(e, t) {
+        return (Ct =
           Object.setPrototypeOf ||
           function(e, t) {
             return (e.__proto__ = t), e;
           })(e, t);
       }
-      function Ct(e) {
+      function Pt(e) {
         if (void 0 === e)
           throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
         return e;
       }
-      function qt(e, t, n) {
+      function It(e, t, n) {
         return (
           t in e
             ? Object.defineProperty(e, t, {
@@ -1950,7 +1950,7 @@
           e
         );
       }
-      var It = (function(e) {
+      var qt = (function(e) {
         function t(e) {
           var n, r, i;
           return (
@@ -1959,40 +1959,40 @@
             })(this, t),
             (r = this),
             (i = zt(t).call(this, e)),
-            (n = !i || ('object' !== jt(i) && 'function' != typeof i) ? Ct(r) : i),
-            qt(Ct(Ct(n)), 'onNodeInserted', function(e) {
+            (n = !i || ('object' !== jt(i) && 'function' != typeof i) ? Pt(r) : i),
+            It(Pt(Pt(n)), 'onNodeInserted', function(e) {
               var t = e.currentTarget;
               n.props.enableSmoothScroll && n.supportsScrollBehavior
                 ? t.scroll({ top: t.scrollHeight, left: 0, behavior: 'smooth' })
                 : (t.scrollTop = t.scrollHeight);
             }),
-            qt(Ct(Ct(n)), 'onResize', function() {
+            It(Pt(Pt(n)), 'onResize', function() {
               n.content.scrollTop = n.content.scrollHeight;
             }),
-            qt(Ct(Ct(n)), 'onRecognitionChange', function(e) {
+            It(Pt(Pt(n)), 'onRecognitionChange', function(e) {
               n.setState({ inputValue: e });
             }),
-            qt(Ct(Ct(n)), 'onRecognitionEnd', function() {
+            It(Pt(Pt(n)), 'onRecognitionEnd', function() {
               n.setState({ speaking: !1 }), n.handleSubmitButton();
             }),
-            qt(Ct(Ct(n)), 'onRecognitionStop', function() {
+            It(Pt(Pt(n)), 'onRecognitionStop', function() {
               n.setState({ speaking: !1 });
             }),
-            qt(Ct(Ct(n)), 'onValueChange', function(e) {
+            It(Pt(Pt(n)), 'onValueChange', function(e) {
               n.setState({ inputValue: e.target.value });
             }),
-            qt(Ct(Ct(n)), 'getTriggeredStep', function(e, t) {
+            It(Pt(Pt(n)), 'getTriggeredStep', function(e, t) {
               var r = n.generateRenderedStepsById();
               return 'function' == typeof e ? e({ value: t, steps: r }) : e;
             }),
-            qt(Ct(Ct(n)), 'getStepMessage', function(e) {
+            It(Pt(Pt(n)), 'getStepMessage', function(e) {
               var t = n.state.previousSteps,
                 r = t.length > 0 ? t.length - 1 : 0,
                 o = n.generateRenderedStepsById(),
                 i = t[r].value;
               return 'function' == typeof e ? e({ previousValue: i, steps: o }) : e;
             }),
-            qt(Ct(Ct(n)), 'generateRenderedStepsById', function() {
+            It(Pt(Pt(n)), 'generateRenderedStepsById', function() {
               for (var e = n.state.previousSteps, t = {}, r = 0, o = e.length; r < o; r += 1) {
                 var i = e[r],
                   a = i.id,
@@ -2003,7 +2003,7 @@
               }
               return t;
             }),
-            qt(Ct(Ct(n)), 'triggerNextStep', function(e) {
+            It(Pt(Pt(n)), 'triggerNextStep', function(e) {
               var t = n.props.enableMobileAutoFocus,
                 r = n.state,
                 o = r.defaultUserSettings,
@@ -2064,7 +2064,7 @@
                   je(x, { currentStep: l, previousStep: p, previousSteps: i, renderedSteps: a });
                 }, 300);
             }),
-            qt(Ct(Ct(n)), 'handleEnd', function() {
+            It(Pt(Pt(n)), 'handleEnd', function() {
               var e = n.props.handleEnd;
               if (e) {
                 for (
@@ -2098,11 +2098,11 @@
                 });
               }
             }),
-            qt(Ct(Ct(n)), 'isInputValueEmpty', function() {
+            It(Pt(Pt(n)), 'isInputValueEmpty', function() {
               var e = n.state.inputValue;
               return !e || 0 === e.length;
             }),
-            qt(Ct(Ct(n)), 'isLastPosition', function(e) {
+            It(Pt(Pt(n)), 'isLastPosition', function(e) {
               var t = n.state.renderedSteps,
                 r = t.length,
                 o = t
@@ -2114,7 +2114,7 @@
               var i = t[o + 1];
               return (!i.message && !i.asMessage) || e.user !== i.user;
             }),
-            qt(Ct(Ct(n)), 'isFirstPosition', function(e) {
+            It(Pt(Pt(n)), 'isFirstPosition', function(e) {
               var t = n.state.renderedSteps,
                 r = t
                   .map(function(e) {
@@ -2125,10 +2125,10 @@
               var o = t[r - 1];
               return (!o.message && !o.asMessage) || e.user !== o.user;
             }),
-            qt(Ct(Ct(n)), 'handleKeyPress', function(e) {
+            It(Pt(Pt(n)), 'handleKeyPress', function(e) {
               'Enter' === e.key && n.submitUserMessage();
             }),
-            qt(Ct(Ct(n)), 'handleSubmitButton', function() {
+            It(Pt(Pt(n)), 'handleSubmitButton', function() {
               var e = n.state,
                 t = e.speaking,
                 r = e.recognitionEnable;
@@ -2136,14 +2136,15 @@
                 return n.recognition.speak(), void (t || n.setState({ speaking: !0 }));
               n.submitUserMessage();
             }),
-            qt(Ct(Ct(n)), 'handleChangeButtton', function() {
+            It(Pt(Pt(n)), 'handleChangeButtton', function() {
               var e = n.state.textMode;
               n.setState({ textMode: !e });
             }),
-            qt(Ct(Ct(n)), 'handleSecondInputOption', function(e) {
-              n.triggerNextStep({ value: e.detail.value, trigger: e.detail.trigger });
+            It(Pt(Pt(n)), 'handleSecondInputOption', function(e) {
+              console.log('handleSecondInput', n.state),
+                n.triggerNextStep({ value: e.detail.value, trigger: e.detail.trigger });
             }),
-            qt(Ct(Ct(n)), 'submitUserMessage', function() {
+            It(Pt(Pt(n)), 'submitUserMessage', function() {
               var e = n.state,
                 t = e.defaultUserSettings,
                 r = e.inputValue,
@@ -2167,7 +2168,7 @@
                   }
                 ));
             }),
-            qt(Ct(Ct(n)), 'checkInvalidInput', function() {
+            It(Pt(Pt(n)), 'checkInvalidInput', function() {
               var e = n.props.enableMobileAutoFocus,
                 t = n.state,
                 r = t.currentStep,
@@ -2189,11 +2190,11 @@
                 !0)
               );
             }),
-            qt(Ct(Ct(n)), 'toggleChatBot', function(e) {
+            It(Pt(Pt(n)), 'toggleChatBot', function(e) {
               var t = n.props.toggleFloating;
               t ? t({ opened: e }) : n.setState({ opened: e });
             }),
-            qt(Ct(Ct(n)), 'renderStep', function(e, t) {
+            It(Pt(Pt(n)), 'renderStep', function(e, t) {
               var r = n.state.renderedSteps,
                 i = n.props,
                 a = i.avatarStyle,
@@ -2208,41 +2209,45 @@
                 h = e.asMessage,
                 g = n.generateRenderedStepsById(),
                 y = t > 0 ? r[t - 1] : {};
-              return b && !h
-                ? o.a.createElement(M, {
-                    key: t,
-                    speak: n.speak,
-                    step: e,
-                    steps: g,
-                    style: c,
-                    previousStep: y,
-                    previousValue: y.value,
-                    triggerNextStep: n.triggerNextStep
-                  })
-                : d
-                ? o.a.createElement(G, {
-                    key: t,
-                    step: e,
-                    previousValue: y.value,
-                    triggerNextStep: n.triggerNextStep,
-                    bubbleOptionStyle: u
-                  })
-                : o.a.createElement(he, {
-                    key: t,
-                    step: e,
-                    steps: g,
-                    speak: n.speak,
-                    previousStep: y,
-                    previousValue: y.value,
-                    triggerNextStep: n.triggerNextStep,
-                    avatarStyle: a,
-                    bubbleStyle: s,
-                    hideBotAvatar: l,
-                    hideUserAvatar: p,
-                    speechSynthesis: f,
-                    isFirst: n.isFirstPosition(e),
-                    isLast: n.isLastPosition(e)
-                  });
+              return (
+                console.log('render step', n.state),
+                b && !h
+                  ? o.a.createElement(R, {
+                      key: t,
+                      speak: n.speak,
+                      step: e,
+                      steps: g,
+                      style: c,
+                      previousStep: y,
+                      previousValue: y.value,
+                      triggerNextStep: n.triggerNextStep
+                    })
+                  : d
+                  ? (console.log('options step', n.state),
+                    o.a.createElement(G, {
+                      key: t,
+                      step: e,
+                      previousValue: y.value,
+                      triggerNextStep: n.triggerNextStep,
+                      bubbleOptionStyle: u
+                    }))
+                  : o.a.createElement(he, {
+                      key: t,
+                      step: e,
+                      steps: g,
+                      speak: n.speak,
+                      previousStep: y,
+                      previousValue: y.value,
+                      triggerNextStep: n.triggerNextStep,
+                      avatarStyle: a,
+                      bubbleStyle: s,
+                      hideBotAvatar: l,
+                      hideUserAvatar: p,
+                      speechSynthesis: f,
+                      isFirst: n.isFirstPosition(e),
+                      isLast: n.isLastPosition(e)
+                    })
+              );
             }),
             (n.content = null),
             (n.input = null),
@@ -2281,13 +2286,14 @@
             (e.prototype = Object.create(t && t.prototype, {
               constructor: { value: e, writable: !0, configurable: !0 }
             })),
-              t && Pt(e, t);
+              t && Ct(e, t);
           })(t, r['Component']),
           (n = t),
           (a = [
             {
               key: 'getDerivedStateFromProps',
               value: function(e, t) {
+                console.log('props on chatbot', e.steps), console.log('state on chatbot', t);
                 var n = e.opened;
                 return void 0 !== e.toggleFloating && void 0 !== n && n !== t.opened
                   ? (function(e) {
@@ -2301,12 +2307,15 @@
                             })
                           )),
                           r.forEach(function(t) {
-                            qt(e, t, n[t]);
+                            It(e, t, n[t]);
                           });
                       }
                       return e;
                     })({}, t, { opened: n })
-                  : t;
+                  : (t.steps.check &&
+                      t.steps.check.metadata.secondChoice !== e.steps[2].metadata.secondChoice &&
+                      (t.steps.check.metadata.secondChoice = e.steps[2].metadata.secondChoice),
+                    t);
               }
             }
           ]),
@@ -2421,14 +2430,15 @@
                   j = O.previousStep,
                   k = O.previousSteps,
                   E = O.renderedSteps;
-                this.setState({
-                  currentStep: w,
-                  defaultUserSettings: f,
-                  previousStep: j,
-                  previousSteps: k,
-                  renderedSteps: E,
-                  steps: l
-                });
+                console.log('componentDidMount'),
+                  this.setState({
+                    currentStep: w,
+                    defaultUserSettings: f,
+                    previousStep: j,
+                    previousSteps: k,
+                    renderedSteps: E,
+                    steps: l
+                  });
               }
             },
             {
@@ -2469,13 +2479,13 @@
                   k = d.headerComponent,
                   E = d.headerTitle,
                   z = d.hideHeader,
-                  P = d.hideSecondInputOption,
-                  C = d.hideSubmitButton,
-                  q = d.inputOptionContainerStyle,
-                  I = d.inputStyle,
+                  C = d.hideSecondInputOption,
+                  P = d.hideSubmitButton,
+                  I = d.inputOptionContainerStyle,
+                  q = d.inputStyle,
                   N = d.placeholder,
-                  R = d.inputAttributes,
-                  M = d.inputOptionElements,
+                  M = d.inputAttributes,
+                  R = d.inputOptionElements,
                   B = d.recognitionPlaceholder,
                   T = d.secondInputOptionContainerStyle,
                   A = d.secondInputOptionElements,
@@ -2507,7 +2517,7 @@
                       ? o.a.createElement(St, null)
                       : o.a.createElement(vt, null),
                   H = l ? B : r.placeholder || N,
-                  Y = r.inputAttributes || R;
+                  Y = r.inputAttributes || M;
                 return o.a.createElement(
                   'div',
                   { className: 'rsc '.concat(h) },
@@ -2537,7 +2547,7 @@
                     },
                     !z && D,
                     o.a.createElement(
-                      Ce,
+                      Pe,
                       {
                         className: 'rsc-content',
                         ref: this.setContentRef,
@@ -2568,7 +2578,7 @@
                           kt(
                             {
                               type: 'textarea',
-                              style: I,
+                              style: q,
                               ref: this.setInputRef,
                               className: 'rsc-input',
                               placeholder: a ? '' : H,
@@ -2578,7 +2588,7 @@
                               floating: x,
                               invalid: a,
                               disabled: i,
-                              hasButton: !C,
+                              hasButton: !P,
                               changable: b
                             },
                             Y
@@ -2590,7 +2600,7 @@
                           { style: v, className: 'rsc-controls' },
                           !r.hideInput && !r.hideExtraControl && e,
                           !r.hideInput &&
-                            !C &&
+                            !P &&
                             o.a.createElement(
                               Qe,
                               {
@@ -2608,14 +2618,14 @@
                       !f &&
                         o.a.createElement(
                           ot,
-                          { className: 'rsc-input-option', style: q },
-                          !P &&
+                          { className: 'rsc-input-option', style: I },
+                          !C &&
                             o.a.createElement(
                               ut,
                               { className: 'rsc-second-input-option', style: T },
                               A
                             ),
-                          M
+                          R
                         )
                     )
                   )
@@ -2627,7 +2637,7 @@
           t
         );
       })();
-      (It.propTypes = {
+      (qt.propTypes = {
         avatarStyle: a.a.objectOf(a.a.any),
         botAvatar: a.a.string,
         botDelay: a.a.number,
@@ -2684,7 +2694,7 @@
         userDelay: a.a.number,
         width: a.a.string
       }),
-        (It.defaultProps = {
+        (qt.defaultProps = {
           avatarStyle: {},
           botDelay: 1e3,
           bubbleOptionStyle: {},
@@ -2742,7 +2752,7 @@
           userAvatar:
             "data:image/svg+xml,%3csvg viewBox='-208.5 21 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3ccircle cx='-158.5' cy='71' fill='%23F5EEE5' r='50'/%3e%3cdefs%3e%3ccircle cx='-158.5' cy='71' id='a' r='50'/%3e%3c/defs%3e%3cclipPath id='b'%3e%3cuse overflow='visible' xlink:href='%23a'/%3e%3c/clipPath%3e%3cpath clip-path='url(%23b)' d='M-108.5 121v-14s-21.2-4.9-28-6.7c-2.5-.7-7-3.3-7-12V82h-30v6.3c0 8.7-4.5 11.3-7 12-6.8 1.9-28.1 7.3-28.1 6.7v14h100.1z' fill='%23E6C19C'/%3e%3cg clip-path='url(%23b)'%3e%3cdefs%3e%3cpath d='M-108.5 121v-14s-21.2-4.9-28-6.7c-2.5-.7-7-3.3-7-12V82h-30v6.3c0 8.7-4.5 11.3-7 12-6.8 1.9-28.1 7.3-28.1 6.7v14h100.1z' id='c'/%3e%3c/defs%3e%3cclipPath id='d'%3e%3cuse overflow='visible' xlink:href='%23c'/%3e%3c/clipPath%3e%3cpath clip-path='url(%23d)' d='M-158.5 100.1c12.7 0 23-18.6 23-34.4 0-16.2-10.3-24.7-23-24.7s-23 8.5-23 24.7c0 15.8 10.3 34.4 23 34.4z' fill='%23D4B08C'/%3e%3c/g%3e%3cpath d='M-158.5 96c12.7 0 23-16.3 23-31 0-15.1-10.3-23-23-23s-23 7.9-23 23c0 14.7 10.3 31 23 31z' fill='%23F2CEA5'/%3e%3c/svg%3e"
         });
-      var Nt = It;
+      var Nt = qt;
       n.d(t, 'Loading', function() {
         return j;
       }),
