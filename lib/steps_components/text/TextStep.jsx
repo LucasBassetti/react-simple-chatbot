@@ -61,9 +61,11 @@ class TextStep extends Component {
       hideUserAvatar
     } = this.props;
     const { loading } = this.state;
-    const { avatar, user } = step;
+    const { avatar, user, botName } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
+
+    const imageAltText = user ? "Your avatar" : `${botName}'s avatar`;
 
     return (
       <TextStepContainer className={`rsc-ts ${user ? 'rsc-ts-user' : 'rsc-ts-bot'}`} user={user}>
@@ -75,7 +77,7 @@ class TextStep extends Component {
               showAvatar={showAvatar}
               user={user}
               src={avatar}
-              alt="avatar"
+              alt={imageAltText}
             />
           )}
         </ImageContainer>
