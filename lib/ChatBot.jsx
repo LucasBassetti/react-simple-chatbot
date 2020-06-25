@@ -67,6 +67,7 @@ class ChatBot extends Component {
     const {
       botDelay,
       botAvatar,
+      botName,
       cache,
       cacheName,
       customDelay,
@@ -76,7 +77,7 @@ class ChatBot extends Component {
     } = this.props;
     const chatSteps = {};
 
-    const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
+    const defaultBotSettings = { delay: botDelay, avatar: botAvatar, botName };
     const defaultUserSettings = {
       delay: userDelay,
       avatar: userAvatar,
@@ -793,6 +794,7 @@ class ChatBot extends Component {
 ChatBot.propTypes = {
   avatarStyle: PropTypes.objectOf(PropTypes.any),
   botAvatar: PropTypes.string,
+  botName: PropTypes.string,
   botDelay: PropTypes.number,
   bubbleOptionStyle: PropTypes.objectOf(PropTypes.any),
   bubbleStyle: PropTypes.objectOf(PropTypes.any),
@@ -853,6 +855,7 @@ ChatBot.propTypes = {
 ChatBot.defaultProps = {
   avatarStyle: {},
   botDelay: 1000,
+  botName: 'The bot',
   bubbleOptionStyle: {},
   bubbleStyle: {},
   cache: false,
