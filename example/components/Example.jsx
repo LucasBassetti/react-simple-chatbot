@@ -5,19 +5,19 @@ import ChatBot from '../../lib/index';
 const otherFontTheme = {
   background: '#f5f8fb',
   fontFamily: 'Helvetica Neue',
-  headerBgColor: '#6e48aa',
+  headerBgColor: '#F16A22',
   headerFontColor: '#fff',
   headerFontSize: '16px',
-  botBubbleColor: '#6E48AA',
+  botBubbleColor: '#F16A22',
   botFontColor: '#fff',
   userBubbleColor: '#fff',
-  userFontColor: '#4a4a4a'
+  userFontColor: '#333333'
 };
 
 const steps = [
   {
     id: '1',
-    message: 'Hello World',
+    message: 'Hello, need some help?',
     end: true
   }
 ];
