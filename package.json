@@ -8,6 +8,7 @@
     "prepublish": "npm run build",
     "prepush": "npm run lint && npm run test:coverage",
     "start": "./node_modules/.bin/webpack-dev-server --inline --content-base build/",
+    "start:dev": "webpack-dev-server",
     "prettier-watch": "onchange '**/*.js' '**/*.jsx' -- prettier --write {{changed}}",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "test": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --require @babel/register",
@@ -85,17 +86,19 @@
   "dependencies": {
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "flatted": "^2.0.0",
+    "nodemon": "^2.0.5",
+    "nodemon-webpack-plugin": "^4.3.2",
     "onchange": "^5.2.0",
     "prettier": "^1.16.4",
-    "flatted": "^2.0.0",
     "prop-types": "^15.6.0",
     "random-id": "0.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1"
   },
   "peerDependencies": {
-    "styled-components": "^4.0.0",
     "react": "^16.3.0",
-    "react-dom": "^16.3.0"
+    "react-dom": "^16.3.0",
+    "styled-components": "^4.0.0"
   }
 }

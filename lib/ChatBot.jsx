@@ -31,13 +31,9 @@ class ChatBot extends Component {
 
     this.supportsScrollBehavior = false;
 
-    this.setContentRef = element => {
-      this.content = element;
-    };
+    this.setContentRef = React.createRef();
 
-    this.setInputRef = element => {
-      this.input = element;
-    };
+    this.setInputRef = React.createRef();
 
     this.state = {
       renderedSteps: [],
