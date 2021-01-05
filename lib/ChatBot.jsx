@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Random from 'random-id';
-import { CustomStep, OptionsStep, TextStep } from './steps_components';
-import schema from './schemas/schema';
 import * as storage from './storage';
+
 import {
   ChatBotContainer,
   Content,
-  Header,
-  HeaderTitle,
-  HeaderIcon,
   FloatButton,
   FloatingIcon,
   Footer,
+  Header,
+  HeaderIcon,
+  HeaderTitle,
   Input,
+  Label,
   SubmitButton
 } from './components';
+import { ChatIcon, CloseIcon, MicIcon, SubmitIcon } from './icons';
+import { CustomStep, OptionsStep, TextStep } from './steps_components';
+import React, { Component } from 'react';
+
+import PropTypes from 'prop-types';
+import Random from 'random-id';
 import Recognition from './recognition';
-import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
+import schema from './schemas/schema';
 import { speakFn } from './speechSynthesis';
 
 class ChatBot extends Component {
@@ -684,21 +687,24 @@ class ChatBot extends Component {
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
-              <Input
-                type="textarea"
-                style={inputStyle}
-                ref={this.setInputRef}
-                className="rsc-input"
-                placeholder={inputInvalid ? '' : inputPlaceholder}
-                onKeyPress={this.handleKeyPress}
-                onChange={this.onValueChange}
-                value={inputValue}
-                floating={floating}
-                invalid={inputInvalid}
-                disabled={disabled}
-                hasButton={!hideSubmitButton}
-                {...inputAttributesOverride}
-              />
+              <Label>
+                Your Message
+                <Input
+                  type="textarea"
+                  style={inputStyle}
+                  ref={this.setInputRef}
+                  className="rsc-input"
+                  placeholder={inputInvalid ? '' : inputPlaceholder}
+                  onKeyPress={this.handleKeyPress}
+                  onChange={this.onValueChange}
+                  value={inputValue}
+                  floating={floating}
+                  invalid={inputInvalid}
+                  disabled={disabled}
+                  hasButton={!hideSubmitButton}
+                  {...inputAttributesOverride}
+                />
+              </Label>
             )}
             <div style={controlStyle} className="rsc-controls">
               {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
