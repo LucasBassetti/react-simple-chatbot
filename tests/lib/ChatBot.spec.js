@@ -11,6 +11,7 @@ import {
 } from '../../lib/components';
 import { CloseIcon } from '../../lib/icons';
 import { TextStep } from '../../lib/steps_components';
+import { isStorageAvailable } from '../../lib/storage';
 
 import { parse } from 'flatted';
 
@@ -206,9 +207,13 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
     });
 
-    it('should cache the steps', () => {
-      const data = parse(localStorage.getItem('rsc_cache'));
-      expect(data.renderedSteps.length).to.be.equal(2);
+    it('should check localStorage availability and cache the steps', () => {
+      const data = localStorage.getItem('rsc_cache');
+      if (isStorageAvailable()) {
+        expect(parse(data).renderedSteps.length).to.be.equal(2);
+      } else {
+        expect(data).to.be.equal(undefined);
+      }
     });
   });
 
