@@ -1,22 +1,28 @@
 const path = require('path');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: path.resolve(__dirname, 'example/main.jsx'),
+  entry: path.resolve(__dirname, 'example/index.jsx'),
   output: {
     path: path.resolve(__dirname, 'example'),
     publicPath: '/',
     filename: 'bundle.js'
   },
   devServer: {
-    contentBase: path.join(__dirname, 'example'),
+    static: path.join(__dirname, 'example'),
     host: '0.0.0.0',
-    disableHostCheck: true
+    historyApiFallback: true,
   },
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  plugins: [],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'example/index.html'
+    })
+  ],
   devtool: 'source-map',
   module: {
     rules: [

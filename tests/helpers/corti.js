@@ -4,6 +4,9 @@
 //! author  : Tal Ater @TalAter
 //! license : MIT
 //! https://github.com/TalAter/SpeechKITT/test/corti.js
+//!
+//! Modified by davedotdev 04/03/2022 for sending events due to deprecattion of initCustomEvent.
+
 
 // Holds the browser's implementation
 const _productionVersion = false;
@@ -88,8 +91,9 @@ const newSpeechRecognition = function () {
     }
     _self._started = true;
     // Create and dispatch an event
-    const event = document.createEvent('CustomEvent');
-    event.initCustomEvent('start', false, false, null);
+    // const event = document.createEvent('CustomEvent');
+    // event.initCustomEvent('start', false, false, null);
+    const event = new CustomEvent('start', null);
     _listeners.dispatchEvent(event);
   };
 
@@ -99,8 +103,9 @@ const newSpeechRecognition = function () {
     }
     _self._started = false;
     // Create and dispatch an event
-    const event = document.createEvent('CustomEvent');
-    event.initCustomEvent('end', false, false, null);
+    // const event = document.createEvent('CustomEvent');
+    // event.initCustomEvent('end', false, false, null);
+    const event = new CustomEvent('end', null);
     _listeners.dispatchEvent(event);
   };
 
@@ -141,8 +146,9 @@ const newSpeechRecognition = function () {
     }
 
     // Create the event
-    const event = document.createEvent('CustomEvent');
-    event.initCustomEvent('result', false, false, { sentence });
+    // const event = document.createEvent('CustomEvent');
+    // event.initCustomEvent('result', false, false, { sentence });
+    const event = new CustomEvent('result', { sentence });
     event.resultIndex = 0;
     event.results = {
       item: itemFunction,
