@@ -704,6 +704,7 @@ class ChatBot extends Component {
               {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
               {!currentStep.hideInput && !hideSubmitButton && (
                 <SubmitButton
+                  aria-label="Submit button"
                   className="rsc-submit-button"
                   style={submitButtonStyle}
                   onClick={this.handleSubmitButton}
