@@ -208,6 +208,10 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   };
 
+  onFocus = event => {
+    this.setState({ inputValue: event.target.value });
+  };
+
   getTriggeredStep = (trigger, value) => {
     const steps = this.generateRenderedStepsById();
     return typeof trigger === 'function' ? trigger({ value, steps }) : trigger;
@@ -692,6 +696,7 @@ class ChatBot extends Component {
                 placeholder={inputInvalid ? '' : inputPlaceholder}
                 onKeyPress={this.handleKeyPress}
                 onChange={this.onValueChange}
+                onFocus={this.onFocus}
                 value={inputValue}
                 floating={floating}
                 invalid={inputInvalid}
