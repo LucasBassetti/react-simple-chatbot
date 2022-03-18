@@ -1,7 +1,10 @@
-import { invalidInput } from '../common/animations';
 import styled, { css } from 'styled-components';
 
-const Input = styled.input`
+import { invalidInput } from '../common/animations';
+
+const Input = styled.input.attrs({
+  id: 'message'
+})`
   animation: ${props =>
     props.invalid
       ? css`
