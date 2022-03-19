@@ -1,19 +1,19 @@
 {
-  "name": "react-simple-chatbot",
+  "name": "@dgg32/react-simple-chatbot",
   "version": "0.6.1",
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint lib/*.jsx",
+    "lint": "eslint lib/*.jsx",
     "prepublish": "npm run build",
     "prepush": "npm run lint && npm run test:coverage",
-    "start": "./node_modules/.bin/webpack-dev-server --inline --content-base build/",
+    "start": "webpack-dev-server --inline --content-base build/",
     "prettier-watch": "onchange '**/*.js' '**/*.jsx' -- prettier --write {{changed}}",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "test": "./node_modules/.bin/mocha tests/helpers/setup.js tests/**/*.spec.js --require @babel/register",
+    "test": "mocha tests/helpers/setup.js tests/**/*.spec.js --require @babel/register",
     "test:watch": "npm test -- --watch",
     "test:coverage": "nyc npm test",
-    "build": "./node_modules/.bin/webpack --config webpack.config.prod.js -p",
+    "build": "webpack --config webpack.config.prod.js -p",
     "analyze": "BUNDLE_ANALYZE=true ./node_modules/.bin/webpack --config webpack.config.prod.js -p"
   },
   "files": [
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LucasBassetti/react-simple-chatbot"
+    "url": "git+https://github.com/LucasBassetti/react-simple-chatbot.git"
   },
   "keywords": [
     "react",
@@ -97,5 +97,11 @@
     "styled-components": "^4.0.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0"
-  }
+  },
+  "directories": {
+    "example": "example",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "author": "LucasBassetti, dgg32"
 }
