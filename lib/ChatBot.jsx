@@ -656,7 +656,7 @@ class ChatBot extends Component {
           <FloatButton
             className="rsc-float-button"
             style={floatingStyle}
-            opened={opened}
+            $opened={opened}
             onClick={() => this.toggleChatBot(true)}
           >
             {typeof floatingIcon === 'string' ? <FloatingIcon src={floatingIcon} /> : floatingIcon}
@@ -664,9 +664,9 @@ class ChatBot extends Component {
         )}
         <ChatBotContainer
           className="rsc-container"
-          floating={floating}
-          floatingStyle={floatingStyle}
-          opened={opened}
+          $floating={floating}
+          $floatingStyle={floatingStyle}
+          $opened={opened}
           style={style}
           width={width}
           height={height}
@@ -675,10 +675,10 @@ class ChatBot extends Component {
           <Content
             className="rsc-content"
             ref={this.setContentRef}
-            floating={floating}
+            $floating={floating}
             style={contentStyle}
             height={height}
-            hideInput={currentStep.hideInput}
+            $hideInput={currentStep.hideInput}
           >
             {renderedSteps.map(this.renderStep)}
           </Content>
@@ -693,10 +693,10 @@ class ChatBot extends Component {
                 onKeyPress={this.handleKeyPress}
                 onChange={this.onValueChange}
                 value={inputValue}
-                floating={floating}
-                invalid={inputInvalid}
+                $floating={floating}
+                $invalid={inputInvalid}
                 disabled={disabled}
-                hasButton={!hideSubmitButton}
+                $hasButton={!hideSubmitButton}
                 {...inputAttributesOverride}
               />
             )}
@@ -707,9 +707,9 @@ class ChatBot extends Component {
                   className="rsc-submit-button"
                   style={submitButtonStyle}
                   onClick={this.handleSubmitButton}
-                  invalid={inputInvalid}
+                  $invalid={inputInvalid}
                   disabled={disabled}
-                  speaking={speaking}
+                  $speaking={speaking}
                 >
                   {icon}
                 </SubmitButton>

@@ -13,7 +13,7 @@ const FloatButton = styled.a`
   justify-content: center;
   position: fixed;
   right: 32px;
-  transform: ${props => (props.opened ? 'scale(0)' : 'scale(1)')};
+  transform: ${props => (props.$opened ? 'scale(0)' : 'scale(1)')};
   transition: transform 0.3s ease;
   width: 56px;
   z-index: 999;
