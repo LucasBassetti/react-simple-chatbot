@@ -197,7 +197,7 @@ class ChatBot extends Component {
 
   onRecognitionEnd = () => {
     this.setState({ speaking: false });
-    this.handleSubmitButton();
+    if (!this.isInputValueEmpty()) this.handleSubmitButton();
   };
 
   onRecognitionStop = () => {
