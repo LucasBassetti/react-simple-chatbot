@@ -1,31 +1,30 @@
 /* eslint-disable */
 import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 
 configure({ adapter: new Adapter() });
 
-const jsdom = require('jsdom').jsdom;
+const { JSDOM } = require('jsdom');
 
-const exposedProperties = ['window', 'navigator', 'document'];
-const storage = {};
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {url: 'http://localhost'});
+const { window } = jsdom;
 
-global.document = jsdom('');
-global.window = document.defaultView;
-global.localStorage = {
-  getItem(key) {
-    return storage[key];
-  },
-  setItem(key, item) {
-    storage[key] = item;
-  },
-};
-Object.keys(document.defaultView).forEach((property) => {
-  if (typeof global[property] === 'undefined') {
-    exposedProperties.push(property);
-    global[property] = document.defaultView[property];
-  }
-});
+function copyProps(src, target) {
+  Object.defineProperties(target, {
+    ...Object.getOwnPropertyDescriptors(src),
+    ...Object.getOwnPropertyDescriptors(target),
+  });
+}
 
+global.window = window;
+global.document = window.document;
 global.navigator = {
   userAgent: 'node.js',
 };
+global.requestAnimationFrame = function (callback) {
+  return setTimeout(callback, 0);
+};
+global.cancelAnimationFrame = function (id) {
+  clearTimeout(id);
+};
+copyProps(window, global);

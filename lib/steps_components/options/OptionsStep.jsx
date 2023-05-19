@@ -22,7 +22,7 @@ class OptionsStep extends Component {
         <OptionElement
           className="rsc-os-option-element"
           style={bubbleOptionStyle}
-          user={user}
+          $user={user}
           onClick={() => this.onOptionClick({ value })}
         >
           {label}

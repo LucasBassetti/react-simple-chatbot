@@ -201,9 +201,9 @@ describe('ChatBot', () => {
     });
 
     it('should opened the chat when click on floating button', () => {
-      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
+      expect(wrapper.find(ChatBotContainer).props().$opened).to.be.equal(false);
       wrapper.find(FloatButton).simulate('click');
-      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+      expect(wrapper.find(ChatBotContainer).props().$opened).to.be.equal(true);
     });
 
     it('should cache the steps', () => {
@@ -264,25 +264,25 @@ describe('ChatBot', () => {
     });
 
     it('should be rendered with a opened equal true', () => {
-      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+      expect(wrapper.find(ChatBotContainer).props().$opened).to.be.equal(true);
     });
 
     it('should close the chat when click on close button', () => {
-      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+      expect(wrapper.find(ChatBotContainer).props().$opened).to.be.equal(true);
       wrapper.find(HeaderIcon).simulate('click');
-      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
+      expect(wrapper.find(ChatBotContainer).props().$opened).to.be.equal(false);
     });
 
     it('should opened the chat when click on floating button', () => {
-      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(false);
+      expect(wrapper.find(ChatBotContainer).props().$opened).to.be.equal(false);
       wrapper.find(FloatButton).simulate('click');
-      expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
+      expect(wrapper.find(ChatBotContainer).props().$opened).to.be.equal(true);
     });
 
     it('should modify the transform-origin style in chatbot container', () => {
-      expect(wrapper.find(ChatBotContainer).prop('floatingStyle').left).to.be.equal('32px');
-      expect(wrapper.find(ChatBotContainer).prop('floatingStyle').right).to.be.equal('initial');
-      expect(wrapper.find(ChatBotContainer).prop('floatingStyle').transformOrigin).to.be.equal('bottom left');
+      expect(wrapper.find(ChatBotContainer).prop('$floatingStyle').left).to.be.equal('32px');
+      expect(wrapper.find(ChatBotContainer).prop('$floatingStyle').right).to.be.equal('initial');
+      expect(wrapper.find(ChatBotContainer).prop('$floatingStyle').transformOrigin).to.be.equal('bottom left');
     });
   });
 
