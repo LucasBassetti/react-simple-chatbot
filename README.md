@@ -1,3 +1,8 @@
+> [!WARNING]  
+> React Simple Chatbot is no longer maintained. I recommend using [react-chatbotify](https://github.com/tjtanjin/react-chatbotify) as an alternative.
+
+
+
 # React Simple Chatbot
 
 <a href="https://travis-ci.org/LucasBassetti/react-simple-chatbot"><img src="https://travis-ci.org/LucasBassetti/react-simple-chatbot.svg?branch=master" alt="Travis CI" /></a> <a href="https://badge.fury.io/js/react-simple-chatbot"><img src="https://badge.fury.io/js/react-simple-chatbot.svg" alt="npm version"></a>
