@@ -68,14 +68,14 @@ class TextStep extends Component {
     const imageAltText = user ? "Your avatar" : `${botName}'s avatar`;
 
     return (
-      <TextStepContainer className={`rsc-ts ${user ? 'rsc-ts-user' : 'rsc-ts-bot'}`} user={user}>
-        <ImageContainer className="rsc-ts-image-container" user={user}>
+      <TextStepContainer className={`rsc-ts ${user ? 'rsc-ts-user' : 'rsc-ts-bot'}`} $user={user}>
+        <ImageContainer className="rsc-ts-image-container" $user={user}>
           {isFirst && showAvatar && (
             <Image
               className="rsc-ts-image"
               style={avatarStyle}
-              showAvatar={showAvatar}
-              user={user}
+              $showAvatar={showAvatar}
+              $user={user}
               src={avatar}
               alt={imageAltText}
             />
@@ -84,10 +84,10 @@ class TextStep extends Component {
         <Bubble
           className="rsc-ts-bubble"
           style={bubbleStyle}
-          user={user}
-          showAvatar={showAvatar}
-          isFirst={isFirst}
-          isLast={isLast}
+          $user={user}
+          $showAvatar={showAvatar}
+          $isFirst={isFirst}
+          $isLast={isLast}
         >
           {loading ? <Loading /> : this.renderMessage()}
         </Bubble>

@@ -1,7 +1,7 @@
 {
-  "extends": ["airbnb", "plugin:prettier/recommended", "prettier/react"],
+  "extends": ["airbnb", "plugin:prettier/recommended"],
   "plugins": ["prettier"],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "globals": {
     "window": true,
     "Audio": true,
@@ -16,6 +16,8 @@
     "guard-for-in": 0,
     "no-restricted-syntax": 0,
     "no-param-reassign": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/forbid-prop-types": 0,
     "react/no-will-update-set-state": 0,
     "new-cap": 0
   }
