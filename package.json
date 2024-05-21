@@ -70,6 +70,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "file-loader": "^5.0.2",
     "husky": "^0.13.3",
     "jsdom": "^9.12.0",
     "mocha": "^5.2.0",
