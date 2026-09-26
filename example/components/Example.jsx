@@ -14,19 +14,30 @@ const otherFontTheme = {
   userFontColor: '#4a4a4a'
 };
 
+const Summary = ({ steps }) => (
+  <div>
+    <strong>{steps.name.value}</strong> likes <strong>{steps.fruit.value}</strong>
+  </div>
+);
+
 const steps = [
+  { id: '1', message: 'Hello! What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: '3' },
+  { id: '3', message: 'Hi {previousValue}! Which fruit do you like?', trigger: 'fruit' },
   {
-    id: '1',
-    message: 'Hello World',
-    end: true
-  }
+    id: 'fruit',
+    options: [
+      { label: 'Apple', trigger: 'summary' },
+      { label: 'Banana', trigger: 'summary' }
+    ]
+  },
+  { id: 'summary', component: <Summary />, asMessage: true, trigger: 'end' },
+  { id: 'end', message: 'Thanks!', end: true }
 ];
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
-    <React.StrictMode>
-      <ChatBot steps={steps} />
-    </React.StrictMode>
+    <ChatBot steps={steps} />
   </ThemeProvider>
 );
 
