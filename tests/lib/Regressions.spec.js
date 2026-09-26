@@ -4,6 +4,7 @@ import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import ChatBot from '../../lib/ChatBot';
+import newSpeechRecognition from '../helpers/corti';
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -195,5 +196,88 @@ describe('ChatBot regressions', () => {
     });
     await flush();
     expect(bubbles()).to.deep.equal(['hello']);
+  });
+
+  it('should keep the value of a first custom step', async () => {
+    const Ask = ({ triggerNextStep }) => (
+      <button type="button" className="ask" onClick={() => triggerNextStep({ value: 'blue' })}>
+        ok
+      </button>
+    );
+    await render(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          { id: '1', component: <Ask />, waitAction: true, trigger: '2' },
+          { id: '2', message: ({ steps }) => `value=${steps['1'].value}`, end: true }
+        ]}
+      />
+    );
+    await act(async () => {
+      container.querySelector('.ask').click();
+    });
+    await flush();
+    expect(bubbles()).to.deep.equal(['value=blue']);
+  });
+
+  it('should keep working when the steps prop becomes invalid', async () => {
+    const steps = [
+      { id: '1', message: 'hello', trigger: '2' },
+      { id: '2', message: 'bye', end: true }
+    ];
+    const error = spy(console, 'error');
+    try {
+      await render(<ChatBot botDelay={50} userDelay={0} customDelay={0} steps={steps} />);
+      await render(
+        <ChatBot
+          botDelay={50}
+          userDelay={0}
+          customDelay={0}
+          steps={[{ id: '1', message: 'hello', trigger: 'missing' }]}
+        />
+      );
+      await flush();
+    } finally {
+      error.restore();
+    }
+    expect(bubbles()).to.deep.equal(['hello', 'bye']);
+  });
+
+  it('should submit the recognized text when the recognition ends', async () => {
+    let recognition;
+    window.webkitSpeechRecognition = function FakeRecognition() {
+      recognition = new newSpeechRecognition();
+      return recognition;
+    };
+    try {
+      await render(
+        <ChatBot
+          recognitionEnable
+          botDelay={0}
+          userDelay={0}
+          customDelay={0}
+          steps={[
+            { id: '1', message: 'say something', trigger: '2' },
+            { id: '2', user: true, trigger: '3' },
+            { id: '3', message: 'done', end: true }
+          ]}
+        />
+      );
+      await act(async () => {
+        container.querySelector('.rsc-submit-button').click();
+      });
+      await act(async () => {
+        recognition.say('hello');
+      });
+      await act(async () => {
+        recognition.abort();
+      });
+      await flush();
+    } finally {
+      delete window.webkitSpeechRecognition;
+    }
+    expect(bubbles()).to.deep.equal(['say something', 'hello', 'done']);
   });
 });

@@ -37,7 +37,7 @@ export interface UserStep extends BaseStep {
   trigger?: Trigger;
   hideExtraControl?: boolean;
   /** Return true when the value is valid, or the error message to show */
-  validator?: (value: string) => true | string;
+  validator?: (value: string) => boolean | string;
 }
 
 export interface Option {

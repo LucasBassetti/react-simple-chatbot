@@ -21,6 +21,20 @@ import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
 import { speakFn } from './speechSynthesis';
 
+// props used to build the steps, the steps are built again when they change
+const STEPS_PROPS = [
+  'steps',
+  'botAvatar',
+  'botDelay',
+  'botName',
+  'customDelay',
+  'userAvatar',
+  'userDelay'
+];
+
+const pickStepsProps = props =>
+  STEPS_PROPS.reduce((picked, key) => Object.assign(picked, { [key]: props[key] }), {});
+
 class ChatBot extends Component {
   /* istanbul ignore next */
   constructor(props) {
@@ -72,14 +86,14 @@ class ChatBot extends Component {
     const { cache, cacheName, enableMobileAutoFocus } = this.props;
     const { chatSteps, defaultUserSettings } = this.buildSteps();
 
-    const firstChatStep = chatSteps[steps[0].id];
+    this.builtStepsProps = pickStepsProps(this.props);
 
-    if (typeof firstChatStep.message === 'function') {
-      firstChatStep.message = firstChatStep.message({ previousValue: undefined, steps: {} });
+    // copy the parsed step (with defaults), so the step definition is not changed
+    const firstStep = Object.assign({}, chatSteps[steps[0].id]);
+
+    if (typeof firstStep.message === 'function') {
+      firstStep.message = firstStep.message({ previousValue: undefined, steps: {} });
     }
-
-    // use the parsed step (with defaults), but not the same object that is rendered
-    const firstStep = Object.assign({}, firstChatStep);
 
     const { recognitionEnable } = this.state;
     const { recognitionLang } = this.props;
@@ -113,7 +127,8 @@ class ChatBot extends Component {
       () => {
         // focus input if last step cached is a user step
         this.setState({ disabled: false }, () => {
-          if (enableMobileAutoFocus || !isMobile()) {
+          const { opened } = this.state;
+          if (opened && (enableMobileAutoFocus || !isMobile())) {
             if (this.input) {
               this.input.focus();
             }
@@ -132,7 +147,7 @@ class ChatBot extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { renderedSteps } = this.state;
 
     // a new message always brings the conversation to the bottom
@@ -141,23 +156,6 @@ class ChatBot extends Component {
       this.scrollToBottom();
     }
     this.renderedStepsCount = renderedSteps.length;
-
-    const stepsProps = [
-      'steps',
-      'botAvatar',
-      'botDelay',
-      'botName',
-      'customDelay',
-      'userAvatar',
-      'userDelay'
-    ];
-
-    // steps that were not rendered yet use the new definitions
-    if (stepsProps.some(key => prevProps[key] !== this.props[key])) {
-      const { chatSteps, defaultUserSettings } = this.buildSteps();
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ steps: chatSteps, defaultUserSettings });
-    }
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -221,6 +219,30 @@ class ChatBot extends Component {
     return { chatSteps, defaultUserSettings };
   };
 
+  // build the steps again if the props changed since they were built, so the
+  // steps that were not rendered yet use the new definitions
+  getLatestSteps = () => {
+    const { steps, defaultUserSettings } = this.state;
+    const changed = STEPS_PROPS.some(key => this.builtStepsProps[key] !== this.props[key]);
+
+    if (!changed) {
+      return { steps, defaultUserSettings };
+    }
+
+    this.builtStepsProps = pickStepsProps(this.props);
+
+    try {
+      const { chatSteps, defaultUserSettings: newDefaultUserSettings } = this.buildSteps();
+      this.setState({ steps: chatSteps, defaultUserSettings: newDefaultUserSettings });
+      return { steps: chatSteps, defaultUserSettings: newDefaultUserSettings };
+    } catch (error) {
+      // keep the conversation working with the last valid steps
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return { steps, defaultUserSettings };
+    }
+  };
+
   onNodeInserted = () => {
     if (this.stickToBottom) {
       this.scrollToBottom();
@@ -273,11 +295,12 @@ class ChatBot extends Component {
   };
 
   onRecognitionEnd = () => {
-    this.setState({ speaking: false });
-    // submitting an empty value would start the recognition again forever
-    if (!this.isInputValueEmpty()) {
-      this.handleSubmitButton();
-    }
+    this.setState({ speaking: false }, () => {
+      // submitting an empty value would start the recognition again forever
+      if (!this.isInputValueEmpty()) {
+        this.submitUserMessage();
+      }
+    });
   };
 
   onRecognitionStop = () => {
@@ -321,7 +344,8 @@ class ChatBot extends Component {
 
   triggerNextStep = data => {
     const { enableMobileAutoFocus } = this.props;
-    const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
+    const { previousSteps, renderedSteps } = this.state;
+    const { defaultUserSettings, steps } = this.getLatestSteps();
 
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
@@ -527,7 +551,8 @@ class ChatBot extends Component {
   };
 
   submitUserMessage = () => {
-    const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
+    const { inputValue, previousSteps, renderedSteps } = this.state;
+    const { defaultUserSettings } = this.getLatestSteps();
     let { currentStep } = this.state;
 
     const isInvalid = currentStep.validator && this.checkInvalidInput();
