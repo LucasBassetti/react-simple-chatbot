@@ -9,6 +9,11 @@ class OptionsStep extends Component {
   onOptionClick = ({ value }) => {
     const { triggerNextStep } = this.props;
 
+    // ignore double clicks, the step is replaced by the chosen option
+    if (this.clicked) {
+      return;
+    }
+    this.clicked = true;
     triggerNextStep({ value });
   };
 
@@ -20,6 +25,7 @@ class OptionsStep extends Component {
     return (
       <Option key={value} className="rsc-os-option">
         <OptionElement
+          type="button"
           className="rsc-os-option-element"
           style={bubbleOptionStyle}
           user={user}
@@ -38,7 +44,9 @@ class OptionsStep extends Component {
     return (
       <OptionsStepContainer className="rsc-os">
         <Options className="rsc-os-options">
-          {Object.keys(options).map(key => options[key]).map(this.renderOption)}
+          {Object.keys(options)
+            .map(key => options[key])
+            .map(this.renderOption)}
         </Options>
       </OptionsStepContainer>
     );

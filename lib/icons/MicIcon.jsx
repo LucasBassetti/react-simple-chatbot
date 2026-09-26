@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const MicIcon = ({ size }) => (
+const MicIcon = ({ size = 20 }) => (
   <svg
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -18,10 +18,6 @@ const MicIcon = ({ size }) => (
 
 MicIcon.propTypes = {
   size: PropTypes.number
-};
-
-MicIcon.defaultProps = {
-  size: 20
 };
 
 export default MicIcon;

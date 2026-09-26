@@ -206,9 +206,12 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
     });
 
-    it('should cache the steps', () => {
-      const data = parse(localStorage.getItem('rsc_cache'));
-      expect(data.renderedSteps.length).to.be.equal(2);
+    it('should start the conversation and cache the steps once opened', done => {
+      setTimeout(() => {
+        const data = parse(localStorage.getItem('rsc_cache'));
+        expect(data.renderedSteps.length).to.be.equal(2);
+        done();
+      }, 500);
     });
   });
 
@@ -408,14 +411,13 @@ describe('ChatBot', () => {
       expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(1);
     });
 
-    it('the extra control should be hidden', () => {
-      console.log("Setting input value");
+    it('the extra control should be hidden', done => {
       wrapper.setState({ inputValue: 'test' });
-      console.log("Simulate key press");
       wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
       setTimeout(() => {
-        console.log("testing hidden");
-        expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(0);  
+        wrapper.update();
+        expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(0);
+        done();
       }, 500);
     });
 

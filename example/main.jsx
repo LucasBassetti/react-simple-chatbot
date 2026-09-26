@@ -1,5 +1,9 @@
-import React from 'react';
-import { render } from 'react-dom';
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import Example from './components/Example';
 
-render(<Example />, document.getElementById('root'));
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Example />
+  </StrictMode>
+);

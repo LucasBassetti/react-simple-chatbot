@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import defaultTheme from '../theme';
+import withConfig from '../common/withConfig';
 
-const ChatBotContainer = styled.div`
+const ChatBotContainer = styled.div.withConfig(withConfig)`
   background: ${({ theme }) => theme.background};
   border-radius: 10px;
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);

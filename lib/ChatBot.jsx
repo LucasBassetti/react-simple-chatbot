@@ -21,6 +21,20 @@ import { ChatIcon, CloseIcon, SubmitIcon, MicIcon } from './icons';
 import { isMobile } from './utils';
 import { speakFn } from './speechSynthesis';
 
+// props used to build the steps, the steps are built again when they change
+const STEPS_PROPS = [
+  'steps',
+  'botAvatar',
+  'botDelay',
+  'botName',
+  'customDelay',
+  'userAvatar',
+  'userDelay'
+];
+
+const pickStepsProps = props =>
+  STEPS_PROPS.reduce((picked, key) => Object.assign(picked, { [key]: props[key] }), {});
+
 class ChatBot extends Component {
   /* istanbul ignore next */
   constructor(props) {
@@ -30,6 +44,10 @@ class ChatBot extends Component {
     this.input = null;
 
     this.supportsScrollBehavior = false;
+    // keep the last message visible, unless the user scrolled up to read
+    this.stickToBottom = true;
+    this.distanceToBottom = 0;
+    this.renderedStepsCount = 0;
 
     this.setContentRef = element => {
       this.content = element;
@@ -47,6 +65,8 @@ class ChatBot extends Component {
       steps: {},
       disabled: true,
       opened: props.opened || !props.floating,
+      // a closed floating chatbot starts the conversation when it is opened
+      started: props.opened || !props.floating,
       inputValue: '',
       inputInvalid: false,
       speaking: false,
@@ -54,22 +74,111 @@ class ChatBot extends Component {
       defaultUserSettings: {}
     };
 
-    this.speak = speakFn(props.speechSynthesis);
+    // read the props on every call, so speechSynthesis can change after mount
+    this.speak = (step, previousValue) => {
+      const { speechSynthesis } = this.props;
+      speakFn(speechSynthesis)(step, previousValue);
+    };
   }
 
   componentDidMount() {
     const { steps } = this.props;
-    const {
-      botDelay,
-      botAvatar,
-      botName,
-      cache,
-      cacheName,
-      customDelay,
-      enableMobileAutoFocus,
-      userAvatar,
-      userDelay
-    } = this.props;
+    const { cache, cacheName, enableMobileAutoFocus } = this.props;
+    const { chatSteps, defaultUserSettings } = this.buildSteps();
+
+    this.builtStepsProps = pickStepsProps(this.props);
+
+    // copy the parsed step (with defaults), so the step definition is not changed
+    const firstStep = Object.assign({}, chatSteps[steps[0].id]);
+
+    if (typeof firstStep.message === 'function') {
+      firstStep.message = firstStep.message({ previousValue: undefined, steps: {} });
+    }
+
+    const { recognitionEnable } = this.state;
+    const { recognitionLang } = this.props;
+
+    if (recognitionEnable) {
+      this.recognition = new Recognition(
+        this.onRecognitionChange,
+        this.onRecognitionEnd,
+        this.onRecognitionStop,
+        recognitionLang
+      );
+    }
+
+    this.supportsScrollBehavior = 'scrollBehavior' in document.documentElement.style;
+
+    if (this.content) {
+      if (typeof MutationObserver !== 'undefined') {
+        this.contentObserver = new MutationObserver(this.onNodeInserted);
+        this.contentObserver.observe(this.content, { childList: true, subtree: true });
+      }
+      window.addEventListener('resize', this.onResize);
+    }
+
+    const { currentStep, previousStep, previousSteps, renderedSteps } = storage.getData(
+      {
+        cacheName,
+        cache,
+        firstStep,
+        steps: chatSteps
+      },
+      () => {
+        // focus input if last step cached is a user step
+        this.setState({ disabled: false }, () => {
+          const { opened } = this.state;
+          if (opened && (enableMobileAutoFocus || !isMobile())) {
+            if (this.input) {
+              this.input.focus();
+            }
+          }
+        });
+      }
+    );
+
+    this.setState({
+      currentStep,
+      defaultUserSettings,
+      previousStep,
+      previousSteps,
+      renderedSteps,
+      steps: chatSteps
+    });
+  }
+
+  componentDidUpdate() {
+    const { renderedSteps } = this.state;
+
+    // a new message always brings the conversation to the bottom
+    if (renderedSteps.length > this.renderedStepsCount) {
+      this.stickToBottom = true;
+      this.scrollToBottom();
+    }
+    this.renderedStepsCount = renderedSteps.length;
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { opened, toggleFloating } = props;
+    if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
+      return {
+        opened,
+        started: state.started || opened
+      };
+    }
+    return null;
+  }
+
+  componentWillUnmount() {
+    if (this.contentObserver) {
+      this.contentObserver.disconnect();
+      this.contentObserver = null;
+    }
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  buildSteps = () => {
+    const { botAvatar, botDelay, botName, customDelay, steps, userAvatar, userDelay } = this.props;
     const chatSteps = {};
 
     const defaultBotSettings = { delay: botDelay, avatar: botAvatar, botName };
@@ -93,88 +202,76 @@ class ChatBot extends Component {
         settings = defaultCustomSettings;
       }
 
-      chatSteps[step.id] = Object.assign({}, settings, schema.parse(step));
+      const chatStep = Object.assign({}, settings, schema.parse(step));
+
+      if (Array.isArray(chatStep.options)) {
+        // options without value are selected by their label
+        chatStep.options = chatStep.options.map(option =>
+          option.value === undefined ? Object.assign({}, option, { value: option.label }) : option
+        );
+      }
+
+      chatSteps[step.id] = chatStep;
     }
 
     schema.checkInvalidIds(chatSteps);
 
-    const firstStep = steps[0];
+    return { chatSteps, defaultUserSettings };
+  };
 
-    if (firstStep.message) {
-      const { message } = firstStep;
-      firstStep.message = typeof message === 'function' ? message() : message;
-      chatSteps[firstStep.id].message = firstStep.message;
+  // build the steps again if the props changed since they were built, so the
+  // steps that were not rendered yet use the new definitions
+  getLatestSteps = () => {
+    const { steps, defaultUserSettings } = this.state;
+    const changed = STEPS_PROPS.some(key => this.builtStepsProps[key] !== this.props[key]);
+
+    if (!changed) {
+      return { steps, defaultUserSettings };
     }
 
-    const { recognitionEnable } = this.state;
-    const { recognitionLang } = this.props;
+    this.builtStepsProps = pickStepsProps(this.props);
 
-    if (recognitionEnable) {
-      this.recognition = new Recognition(
-        this.onRecognitionChange,
-        this.onRecognitionEnd,
-        this.onRecognitionStop,
-        recognitionLang
-      );
+    try {
+      const { chatSteps, defaultUserSettings: newDefaultUserSettings } = this.buildSteps();
+      this.setState({ steps: chatSteps, defaultUserSettings: newDefaultUserSettings });
+      return { steps: chatSteps, defaultUserSettings: newDefaultUserSettings };
+    } catch (error) {
+      // keep the conversation working with the last valid steps
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return { steps, defaultUserSettings };
+    }
+  };
+
+  onNodeInserted = () => {
+    if (this.stickToBottom) {
+      this.scrollToBottom();
+    }
+  };
+
+  onContentScroll = () => {
+    const target = this.content;
+    if (!target) {
+      return;
     }
 
-    this.supportsScrollBehavior = 'scrollBehavior' in document.documentElement.style;
-
-    if (this.content) {
-      this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
-      window.addEventListener('resize', this.onResize);
+    const distance = target.scrollHeight - target.scrollTop - target.clientHeight;
+    if (distance <= 40) {
+      this.stickToBottom = true;
+    } else if (distance > this.distanceToBottom) {
+      // moving away from the bottom, so it was the user (smooth scroll only goes down)
+      this.stickToBottom = false;
     }
+    this.distanceToBottom = distance;
+  };
 
-    const { currentStep, previousStep, previousSteps, renderedSteps } = storage.getData(
-      {
-        cacheName,
-        cache,
-        firstStep,
-        steps: chatSteps
-      },
-      () => {
-        // focus input if last step cached is a user step
-        this.setState({ disabled: false }, () => {
-          if (enableMobileAutoFocus || !isMobile()) {
-            if (this.input) {
-              this.input.focus();
-            }
-          }
-        });
-      }
-    );
-
-    this.setState({
-      currentStep,
-      defaultUserSettings,
-      previousStep,
-      previousSteps,
-      renderedSteps,
-      steps: chatSteps
-    });
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    const { opened, toggleFloating } = props;
-    if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
-      return {
-        ...state,
-        opened
-      };
-    }
-    return state;
-  }
-
-  componentWillUnmount() {
-    if (this.content) {
-      this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted);
-      window.removeEventListener('resize', this.onResize);
-    }
-  }
-
-  onNodeInserted = event => {
-    const { currentTarget: target } = event;
+  scrollToBottom = () => {
     const { enableSmoothScroll } = this.props;
+    const target = this.content;
+
+    if (!target) {
+      return;
+    }
 
     if (enableSmoothScroll && this.supportsScrollBehavior) {
       target.scroll({
@@ -188,7 +285,9 @@ class ChatBot extends Component {
   };
 
   onResize = () => {
-    this.content.scrollTop = this.content.scrollHeight;
+    if (this.content && this.stickToBottom) {
+      this.content.scrollTop = this.content.scrollHeight;
+    }
   };
 
   onRecognitionChange = value => {
@@ -196,8 +295,12 @@ class ChatBot extends Component {
   };
 
   onRecognitionEnd = () => {
-    this.setState({ speaking: false });
-    this.handleSubmitButton();
+    this.setState({ speaking: false }, () => {
+      // submitting an empty value would start the recognition again forever
+      if (!this.isInputValueEmpty()) {
+        this.submitUserMessage();
+      }
+    });
   };
 
   onRecognitionStop = () => {
@@ -241,7 +344,8 @@ class ChatBot extends Component {
 
   triggerNextStep = data => {
     const { enableMobileAutoFocus } = this.props;
-    const { defaultUserSettings, previousSteps, renderedSteps, steps } = this.state;
+    const { previousSteps, renderedSteps } = this.state;
+    const { defaultUserSettings, steps } = this.getLatestSteps();
 
     let { currentStep, previousStep } = this.state;
     const isEnd = currentStep.end;
@@ -263,6 +367,9 @@ class ChatBot extends Component {
       this.handleEnd();
     } else if (currentStep.options && data) {
       const option = currentStep.options.filter(o => o.value === data.value)[0];
+      if (!option) {
+        return;
+      }
       const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
       delete currentStep.options;
 
@@ -298,9 +405,10 @@ class ChatBot extends Component {
         nextStep = Object.assign({}, steps[updateStep.update]);
 
         if (nextStep.options) {
-          for (let i = 0, len = nextStep.options.length; i < len; i += 1) {
-            nextStep.options[i].trigger = updateStep.trigger;
-          }
+          // copy the options so the original step keeps its own triggers
+          nextStep.options = nextStep.options.map(option =>
+            Object.assign({}, option, { trigger: updateStep.trigger })
+          );
         } else {
           nextStep.trigger = updateStep.trigger;
         }
@@ -443,7 +551,8 @@ class ChatBot extends Component {
   };
 
   submitUserMessage = () => {
-    const { defaultUserSettings, inputValue, previousSteps, renderedSteps } = this.state;
+    const { inputValue, previousSteps, renderedSteps } = this.state;
+    const { defaultUserSettings } = this.getLatestSteps();
     let { currentStep } = this.state;
 
     const isInvalid = currentStep.validator && this.checkInvalidInput();
@@ -515,13 +624,20 @@ class ChatBot extends Component {
     return false;
   };
 
+  handleButtonKeyDown = (event, opened) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggleChatBot(opened);
+    }
+  };
+
   toggleChatBot = opened => {
     const { toggleFloating } = this.props;
 
     if (toggleFloating) {
       toggleFloating({ opened });
     } else {
-      this.setState({ opened });
+      this.setState(state => ({ opened, started: state.started || opened }));
     }
   };
 
@@ -595,6 +711,7 @@ class ChatBot extends Component {
       inputValue,
       opened,
       renderedSteps,
+      started,
       speaking,
       recognitionEnable
     } = this.state;
@@ -625,7 +742,14 @@ class ChatBot extends Component {
       <Header className="rsc-header">
         <HeaderTitle className="rsc-header-title">{headerTitle}</HeaderTitle>
         {floating && (
-          <HeaderIcon className="rsc-header-close-button" onClick={() => this.toggleChatBot(false)}>
+          <HeaderIcon
+            className="rsc-header-close-button"
+            role="button"
+            tabIndex={0}
+            aria-label="Close chat"
+            onClick={() => this.toggleChatBot(false)}
+            onKeyDown={event => this.handleButtonKeyDown(event, false)}
+          >
             <CloseIcon />
           </HeaderIcon>
         )}
@@ -641,8 +765,12 @@ class ChatBot extends Component {
       });
     }
 
-    const icon =
-      (this.isInputValueEmpty() || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
+    const showMic = (this.isInputValueEmpty() || speaking) && recognitionEnable;
+    const icon = showMic ? <MicIcon /> : <SubmitIcon />;
+    let submitLabel = 'Send message';
+    if (showMic) {
+      submitLabel = speaking ? 'Stop voice input' : 'Start voice input';
+    }
 
     const inputPlaceholder = speaking
       ? recognitionPlaceholder
@@ -657,7 +785,12 @@ class ChatBot extends Component {
             className="rsc-float-button"
             style={floatingStyle}
             opened={opened}
+            role="button"
+            tabIndex={opened ? -1 : 0}
+            aria-label="Open chat"
+            aria-hidden={opened}
             onClick={() => this.toggleChatBot(true)}
+            onKeyDown={event => this.handleButtonKeyDown(event, true)}
           >
             {typeof floatingIcon === 'string' ? <FloatingIcon src={floatingIcon} /> : floatingIcon}
           </FloatButton>
@@ -675,17 +808,19 @@ class ChatBot extends Component {
           <Content
             className="rsc-content"
             ref={this.setContentRef}
+            onScroll={this.onContentScroll}
             floating={floating}
             style={contentStyle}
             height={height}
             hideInput={currentStep.hideInput}
           >
-            {renderedSteps.map(this.renderStep)}
+            {started && renderedSteps.map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
               <Input
-                type="textarea"
+                type="text"
+                aria-label={inputPlaceholder || 'Type the message'}
                 style={inputStyle}
                 ref={this.setInputRef}
                 className="rsc-input"
@@ -704,6 +839,8 @@ class ChatBot extends Component {
               {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
               {!currentStep.hideInput && !hideSubmitButton && (
                 <SubmitButton
+                  type="button"
+                  aria-label={submitLabel}
                   className="rsc-submit-button"
                   style={submitButtonStyle}
                   onClick={this.handleSubmitButton}
@@ -738,7 +875,7 @@ ChatBot.propTypes = {
   controlStyle: PropTypes.objectOf(PropTypes.any),
   enableMobileAutoFocus: PropTypes.bool,
   enableSmoothScroll: PropTypes.bool,
-  extraControl: PropTypes.objectOf(PropTypes.element),
+  extraControl: PropTypes.element,
   floating: PropTypes.bool,
   floatingIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   floatingStyle: PropTypes.objectOf(PropTypes.any),

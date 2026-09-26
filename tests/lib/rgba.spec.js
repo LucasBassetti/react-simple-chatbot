@@ -15,4 +15,10 @@ describe('rgba', () => {
     const color = rgba('#fff', 1);
     expect(color).to.be.equal('rgba(255, 255, 255, 1)');
   });
+  it('should not throw with non hex colors', () => {
+    expect(rgba('rebeccapurple', 0.4)).to.be.equal(
+      'color-mix(in srgb, rebeccapurple 40%, transparent)'
+    );
+    expect(rgba('rgb(0, 0, 0)', 0)).to.be.equal('color-mix(in srgb, rgb(0, 0, 0) 0%, transparent)');
+  });
 });

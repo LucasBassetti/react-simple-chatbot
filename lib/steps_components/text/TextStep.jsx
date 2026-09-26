@@ -13,19 +13,37 @@ class TextStep extends Component {
   };
 
   componentDidMount() {
-    const { step, speak, previousValue, triggerNextStep } = this.props;
+    const { step, speak, previousValue } = this.props;
     const { component, delay, waitAction } = step;
     const isComponentWatingUser = component && waitAction;
 
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!isComponentWatingUser && !step.rendered) {
-          triggerNextStep();
+          this.triggerNextStep();
         }
-        speak(step, previousValue);
+        // cached steps were already spoken
+        if (!step.rendered) {
+          speak(step, previousValue);
+        }
       });
     }, delay);
   }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  // a step can only trigger the next step once, even if the component is
+  // mounted twice (React.StrictMode) or calls triggerNextStep more than once
+  triggerNextStep = data => {
+    const { triggerNextStep } = this.props;
+    if (this.triggered) {
+      return;
+    }
+    this.triggered = true;
+    triggerNextStep(data);
+  };
 
   getMessage = () => {
     const { previousValue, step } = this.props;
@@ -35,15 +53,19 @@ class TextStep extends Component {
   };
 
   renderMessage = () => {
-    const { step, steps, previousStep, triggerNextStep } = this.props;
+    const { step, steps, previousStep } = this.props;
     const { component } = step;
 
     if (component) {
+      // DOM elements (e.g. <div />) don't accept the step props
+      if (typeof component.type === 'string') {
+        return component;
+      }
       return React.cloneElement(component, {
         step,
         steps,
         previousStep,
-        triggerNextStep
+        triggerNextStep: this.triggerNextStep
       });
     }
 
@@ -51,21 +73,14 @@ class TextStep extends Component {
   };
 
   render() {
-    const {
-      step,
-      isFirst,
-      isLast,
-      avatarStyle,
-      bubbleStyle,
-      hideBotAvatar,
-      hideUserAvatar
-    } = this.props;
+    const { step, isFirst, isLast, avatarStyle, bubbleStyle, hideBotAvatar, hideUserAvatar } =
+      this.props;
     const { loading } = this.state;
     const { avatar, user, botName } = step;
 
     const showAvatar = user ? !hideUserAvatar : !hideBotAvatar;
 
-    const imageAltText = user ? "Your avatar" : `${botName}'s avatar`;
+    const imageAltText = user ? 'Your avatar' : `${botName}'s avatar`;
 
     return (
       <TextStepContainer className={`rsc-ts ${user ? 'rsc-ts-user' : 'rsc-ts-bot'}`} user={user}>

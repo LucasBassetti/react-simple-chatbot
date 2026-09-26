@@ -1,8 +1,4 @@
-const presets = ['@babel/env', '@babel/preset-react'];
-const plugins = [
-  '@babel/plugin-transform-arrow-functions',
-  '@babel/plugin-proposal-class-properties',
-  '@babel/plugin-transform-object-assign'
-];
-
-module.exports = { presets, plugins };
+module.exports = {
+  // the published bundle is ES5, so older bundlers (webpack 4) and browsers can parse it
+  presets: [['@babel/preset-env', { targets: 'ie 11' }], '@babel/preset-react']
+};

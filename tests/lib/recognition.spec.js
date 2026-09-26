@@ -37,15 +37,26 @@ describe('Recognition', () => {
       expect(onEnd.called).to.be.equal(false);
     });
 
-    it('should call end after 1s', () => {
+    it('should call onEnd when the browser ends recognition', () => {
       const onChange = spy();
       const onEnd = spy();
       const recognition = new Recognition(onChange, onEnd);
       recognition.speak();
       recognition.recognition.say('hi, this is a test');
-      setTimeout(() => {
-        expect(onEnd.called).to.be.equal(true);
-      }, 1000);
+      recognition.recognition.abort();
+      expect(onEnd.called).to.be.equal(true);
+    });
+
+    it('should use the callbacks of each instance', () => {
+      const firstOnChange = spy();
+      const secondOnChange = spy();
+      // eslint-disable-next-line no-new
+      new Recognition(firstOnChange);
+      const second = new Recognition(secondOnChange);
+      second.speak();
+      second.recognition.say('hi');
+      expect(firstOnChange.called).to.be.equal(false);
+      expect(secondOnChange.called).to.be.equal(true);
     });
   });
 });

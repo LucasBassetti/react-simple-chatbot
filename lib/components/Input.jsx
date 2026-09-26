@@ -1,7 +1,8 @@
-import { invalidInput } from '../common/animations';
 import styled, { css } from 'styled-components';
+import { invalidInput } from '../common/animations';
+import withConfig from '../common/withConfig';
 
-const Input = styled.input`
+const Input = styled.input.withConfig(withConfig)`
   animation: ${props =>
     props.invalid
       ? css`

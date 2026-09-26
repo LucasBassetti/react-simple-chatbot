@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { scale } from '../../common/animations';
 import defaultTheme from '../../theme';
+import withConfig from '../../common/withConfig';
 
-const Bubble = styled.div`
+const Bubble = styled.div.withConfig(withConfig)`
   animation: ${scale} 0.3s ease forwards;
   background: ${props => (props.user ? props.theme.userBubbleColor : props.theme.botBubbleColor)};
   border-radius: ${props => {

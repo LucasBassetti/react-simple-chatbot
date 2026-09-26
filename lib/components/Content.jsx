@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import withConfig from '../common/withConfig';
 
-const Content = styled.div`
+const Content = styled.div.withConfig(withConfig)`
   height: calc(${props => props.height} - ${props => (props.hideInput ? '56px' : '112px')});
   overflow-y: scroll;
   margin-top: 2px;

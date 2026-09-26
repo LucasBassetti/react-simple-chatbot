@@ -9,20 +9,22 @@ module.exports = {
     filename: 'bundle.js'
   },
   devServer: {
-    contentBase: path.join(__dirname, 'example'),
-    host: '0.0.0.0',
-    disableHostCheck: true
+    static: path.join(__dirname, 'example'),
+    host: 'localhost',
+    port: 8080,
+    open: false
   },
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  plugins: [],
   devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
+        // package.json sets "type": "commonjs", but the sources use ES modules
+        type: 'javascript/auto',
         use: {
           loader: 'babel-loader'
         }
