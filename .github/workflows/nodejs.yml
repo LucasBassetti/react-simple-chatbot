@@ -23,4 +23,5 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test:coverage
+      - run: npm run test:types
       - run: npm run build
