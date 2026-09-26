@@ -7,7 +7,7 @@
 
 <a href="https://github.com/LucasBassetti/react-simple-chatbot/actions/workflows/nodejs.yml"><img src="https://github.com/LucasBassetti/react-simple-chatbot/actions/workflows/nodejs.yml/badge.svg" alt="Node CI" /></a> <a href="https://badge.fury.io/js/react-simple-chatbot"><img src="https://badge.fury.io/js/react-simple-chatbot.svg" alt="npm version"></a>
   <img src="https://codecov.io/gh/LucasBassetti/react-simple-chatbot/branch/master/graph/badge.svg" alt="Codecov" />
-</a> <a href="https://beerpay.io/LucasBassetti/react-simple-chatbot"><img src="https://beerpay.io/LucasBassetti/react-simple-chatbot/badge.svg?style=flat" /></a>
+</a>
 
 A simple chatbot component to create conversation chats
 
