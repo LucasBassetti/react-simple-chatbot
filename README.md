@@ -1,8 +1,3 @@
-> [!WARNING]  
-> React Simple Chatbot is no longer maintained. I recommend using [react-chatbotify](https://github.com/tjtanjin/react-chatbotify) as an alternative.
-
-
-
 # React Simple Chatbot
 
 <a href="https://github.com/LucasBassetti/react-simple-chatbot/actions/workflows/nodejs.yml"><img src="https://github.com/LucasBassetti/react-simple-chatbot/actions/workflows/nodejs.yml/badge.svg" alt="Node CI" /></a> <a href="https://badge.fury.io/js/react-simple-chatbot"><img src="https://badge.fury.io/js/react-simple-chatbot.svg" alt="npm version"></a>
