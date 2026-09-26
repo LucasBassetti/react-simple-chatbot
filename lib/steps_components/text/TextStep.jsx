@@ -22,7 +22,10 @@ class TextStep extends Component {
         if (!isComponentWatingUser && !step.rendered) {
           this.triggerNextStep();
         }
-        speak(step, previousValue);
+        // cached steps were already spoken
+        if (!step.rendered) {
+          speak(step, previousValue);
+        }
       });
     }, delay);
   }
@@ -54,6 +57,10 @@ class TextStep extends Component {
     const { component } = step;
 
     if (component) {
+      // DOM elements (e.g. <div />) don't accept the step props
+      if (typeof component.type === 'string') {
+        return component;
+      }
       return React.cloneElement(component, {
         step,
         steps,

@@ -54,57 +54,26 @@ class ChatBot extends Component {
       defaultUserSettings: {}
     };
 
-    this.speak = speakFn(props.speechSynthesis);
+    // read the props on every call, so speechSynthesis can change after mount
+    this.speak = (step, previousValue) => {
+      const { speechSynthesis } = this.props;
+      speakFn(speechSynthesis)(step, previousValue);
+    };
   }
 
   componentDidMount() {
     const { steps } = this.props;
-    const {
-      botDelay,
-      botAvatar,
-      botName,
-      cache,
-      cacheName,
-      customDelay,
-      enableMobileAutoFocus,
-      userAvatar,
-      userDelay
-    } = this.props;
-    const chatSteps = {};
+    const { cache, cacheName, enableMobileAutoFocus } = this.props;
+    const { chatSteps, defaultUserSettings } = this.buildSteps();
 
-    const defaultBotSettings = { delay: botDelay, avatar: botAvatar, botName };
-    const defaultUserSettings = {
-      delay: userDelay,
-      avatar: userAvatar,
-      hideInput: false,
-      hideExtraControl: false
-    };
-    const defaultCustomSettings = { delay: customDelay };
+    const firstChatStep = chatSteps[steps[0].id];
 
-    for (let i = 0, len = steps.length; i < len; i += 1) {
-      const step = steps[i];
-      let settings = {};
-
-      if (step.user) {
-        settings = defaultUserSettings;
-      } else if (step.message || step.asMessage) {
-        settings = defaultBotSettings;
-      } else if (step.component) {
-        settings = defaultCustomSettings;
-      }
-
-      chatSteps[step.id] = Object.assign({}, settings, schema.parse(step));
+    if (typeof firstChatStep.message === 'function') {
+      firstChatStep.message = firstChatStep.message({ previousValue: undefined, steps: {} });
     }
 
-    schema.checkInvalidIds(chatSteps);
-
-    const firstStep = steps[0];
-
-    if (firstStep.message) {
-      const { message } = firstStep;
-      firstStep.message = typeof message === 'function' ? message() : message;
-      chatSteps[firstStep.id].message = firstStep.message;
-    }
+    // use the parsed step (with defaults), but not the same object that is rendered
+    const firstStep = Object.assign({}, firstChatStep);
 
     const { recognitionEnable } = this.state;
     const { recognitionLang } = this.props;
@@ -157,6 +126,25 @@ class ChatBot extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const stepsProps = [
+      'steps',
+      'botAvatar',
+      'botDelay',
+      'botName',
+      'customDelay',
+      'userAvatar',
+      'userDelay'
+    ];
+
+    // steps that were not rendered yet use the new definitions
+    if (stepsProps.some(key => prevProps[key] !== this.props[key])) {
+      const { chatSteps, defaultUserSettings } = this.buildSteps();
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ steps: chatSteps, defaultUserSettings });
+    }
+  }
+
   static getDerivedStateFromProps(props, state) {
     const { opened, toggleFloating } = props;
     if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
@@ -175,6 +163,48 @@ class ChatBot extends Component {
     }
     window.removeEventListener('resize', this.onResize);
   }
+
+  buildSteps = () => {
+    const { botAvatar, botDelay, botName, customDelay, steps, userAvatar, userDelay } = this.props;
+    const chatSteps = {};
+
+    const defaultBotSettings = { delay: botDelay, avatar: botAvatar, botName };
+    const defaultUserSettings = {
+      delay: userDelay,
+      avatar: userAvatar,
+      hideInput: false,
+      hideExtraControl: false
+    };
+    const defaultCustomSettings = { delay: customDelay };
+
+    for (let i = 0, len = steps.length; i < len; i += 1) {
+      const step = steps[i];
+      let settings = {};
+
+      if (step.user) {
+        settings = defaultUserSettings;
+      } else if (step.message || step.asMessage) {
+        settings = defaultBotSettings;
+      } else if (step.component) {
+        settings = defaultCustomSettings;
+      }
+
+      const chatStep = Object.assign({}, settings, schema.parse(step));
+
+      if (Array.isArray(chatStep.options)) {
+        // options without value are selected by their label
+        chatStep.options = chatStep.options.map(option =>
+          option.value === undefined ? Object.assign({}, option, { value: option.label }) : option
+        );
+      }
+
+      chatSteps[step.id] = chatStep;
+    }
+
+    schema.checkInvalidIds(chatSteps);
+
+    return { chatSteps, defaultUserSettings };
+  };
 
   onNodeInserted = () => {
     const { enableSmoothScroll } = this.props;
@@ -276,6 +306,9 @@ class ChatBot extends Component {
       this.handleEnd();
     } else if (currentStep.options && data) {
       const option = currentStep.options.filter(o => o.value === data.value)[0];
+      if (!option) {
+        return;
+      }
       const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
       delete currentStep.options;
 

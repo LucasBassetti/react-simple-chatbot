@@ -17,7 +17,10 @@ class CustomStep extends Component {
         if (!waitAction && !step.rendered) {
           this.triggerNextStep();
         }
-        speak(step, previousValue);
+        // cached steps were already spoken
+        if (!step.rendered) {
+          speak(step, previousValue);
+        }
       });
     }, delay);
   }
@@ -40,6 +43,11 @@ class CustomStep extends Component {
   renderComponent = () => {
     const { step, steps, previousStep } = this.props;
     const { component } = step;
+
+    // DOM elements (e.g. <div />) don't accept the step props
+    if (typeof component.type === 'string') {
+      return component;
+    }
 
     return React.cloneElement(component, {
       step,
