@@ -17,4 +17,4 @@ For deployment, run `npm run build`.
 
 ## License
 
-Mit - [Lucas Bassetti](https://lucasbassetti.com.br/)
+Mit - [Lucas Bassetti](https://lucasbassetti.com/)

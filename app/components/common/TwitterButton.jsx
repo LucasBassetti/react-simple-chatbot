@@ -16,7 +16,7 @@ class TwitterButton extends Component {
         className="twitter-share-button"
         data-text="Simple chatbot / conversational-ui React component"
         data-size={this.props.dataSize}
-        data-url="https://lucasbassetti.com.br/react-simple-chatbot"
+        data-url="https://lucasbassetti.github.io/react-simple-chatbot"
         data-via="LucasBassetti"
       >
         Tweet
