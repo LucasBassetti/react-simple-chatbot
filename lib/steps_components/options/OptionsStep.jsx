@@ -25,6 +25,7 @@ class OptionsStep extends Component {
     return (
       <Option key={value} className="rsc-os-option">
         <OptionElement
+          type="button"
           className="rsc-os-option-element"
           style={bubbleOptionStyle}
           user={user}

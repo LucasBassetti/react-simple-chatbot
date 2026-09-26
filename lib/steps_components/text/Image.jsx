@@ -11,7 +11,8 @@ const Image = styled.img.withConfig(withConfig)`
   padding: 3px;
   transform: scale(0);
   transform-origin: ${props => (props.user ? 'bottom left' : 'bottom right')};
-  width: 40;
+  object-fit: cover;
+  width: 40px;
 `;
 
 export default Image;

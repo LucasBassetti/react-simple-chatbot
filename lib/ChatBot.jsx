@@ -30,6 +30,10 @@ class ChatBot extends Component {
     this.input = null;
 
     this.supportsScrollBehavior = false;
+    // keep the last message visible, unless the user scrolled up to read
+    this.stickToBottom = true;
+    this.distanceToBottom = 0;
+    this.renderedStepsCount = 0;
 
     this.setContentRef = element => {
       this.content = element;
@@ -127,6 +131,15 @@ class ChatBot extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { renderedSteps } = this.state;
+
+    // a new message always brings the conversation to the bottom
+    if (renderedSteps.length > this.renderedStepsCount) {
+      this.stickToBottom = true;
+      this.scrollToBottom();
+    }
+    this.renderedStepsCount = renderedSteps.length;
+
     const stepsProps = [
       'steps',
       'botAvatar',
@@ -207,6 +220,28 @@ class ChatBot extends Component {
   };
 
   onNodeInserted = () => {
+    if (this.stickToBottom) {
+      this.scrollToBottom();
+    }
+  };
+
+  onContentScroll = () => {
+    const target = this.content;
+    if (!target) {
+      return;
+    }
+
+    const distance = target.scrollHeight - target.scrollTop - target.clientHeight;
+    if (distance <= 40) {
+      this.stickToBottom = true;
+    } else if (distance > this.distanceToBottom) {
+      // moving away from the bottom, so it was the user (smooth scroll only goes down)
+      this.stickToBottom = false;
+    }
+    this.distanceToBottom = distance;
+  };
+
+  scrollToBottom = () => {
     const { enableSmoothScroll } = this.props;
     const target = this.content;
 
@@ -226,7 +261,7 @@ class ChatBot extends Component {
   };
 
   onResize = () => {
-    if (this.content) {
+    if (this.content && this.stickToBottom) {
       this.content.scrollTop = this.content.scrollHeight;
     }
   };
@@ -562,6 +597,13 @@ class ChatBot extends Component {
     return false;
   };
 
+  handleButtonKeyDown = (event, opened) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggleChatBot(opened);
+    }
+  };
+
   toggleChatBot = opened => {
     const { toggleFloating } = this.props;
 
@@ -672,7 +714,14 @@ class ChatBot extends Component {
       <Header className="rsc-header">
         <HeaderTitle className="rsc-header-title">{headerTitle}</HeaderTitle>
         {floating && (
-          <HeaderIcon className="rsc-header-close-button" onClick={() => this.toggleChatBot(false)}>
+          <HeaderIcon
+            className="rsc-header-close-button"
+            role="button"
+            tabIndex={0}
+            aria-label="Close chat"
+            onClick={() => this.toggleChatBot(false)}
+            onKeyDown={event => this.handleButtonKeyDown(event, false)}
+          >
             <CloseIcon />
           </HeaderIcon>
         )}
@@ -688,8 +737,12 @@ class ChatBot extends Component {
       });
     }
 
-    const icon =
-      (this.isInputValueEmpty() || speaking) && recognitionEnable ? <MicIcon /> : <SubmitIcon />;
+    const showMic = (this.isInputValueEmpty() || speaking) && recognitionEnable;
+    const icon = showMic ? <MicIcon /> : <SubmitIcon />;
+    let submitLabel = 'Send message';
+    if (showMic) {
+      submitLabel = speaking ? 'Stop voice input' : 'Start voice input';
+    }
 
     const inputPlaceholder = speaking
       ? recognitionPlaceholder
@@ -704,7 +757,12 @@ class ChatBot extends Component {
             className="rsc-float-button"
             style={floatingStyle}
             opened={opened}
+            role="button"
+            tabIndex={opened ? -1 : 0}
+            aria-label="Open chat"
+            aria-hidden={opened}
             onClick={() => this.toggleChatBot(true)}
+            onKeyDown={event => this.handleButtonKeyDown(event, true)}
           >
             {typeof floatingIcon === 'string' ? <FloatingIcon src={floatingIcon} /> : floatingIcon}
           </FloatButton>
@@ -722,6 +780,7 @@ class ChatBot extends Component {
           <Content
             className="rsc-content"
             ref={this.setContentRef}
+            onScroll={this.onContentScroll}
             floating={floating}
             style={contentStyle}
             height={height}
@@ -732,7 +791,8 @@ class ChatBot extends Component {
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
               <Input
-                type="textarea"
+                type="text"
+                aria-label={inputPlaceholder || 'Type the message'}
                 style={inputStyle}
                 ref={this.setInputRef}
                 className="rsc-input"
@@ -751,6 +811,8 @@ class ChatBot extends Component {
               {!currentStep.hideInput && !currentStep.hideExtraControl && customControl}
               {!currentStep.hideInput && !hideSubmitButton && (
                 <SubmitButton
+                  type="button"
+                  aria-label={submitLabel}
                   className="rsc-submit-button"
                   style={submitButtonStyle}
                   onClick={this.handleSubmitButton}

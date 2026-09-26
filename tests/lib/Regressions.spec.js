@@ -125,4 +125,56 @@ describe('ChatBot regressions', () => {
     );
     expect(unknownPropWarnings).to.have.length(0);
   });
+
+  it('should keep the last message visible unless the user scrolled up', async () => {
+    await render(
+      <ChatBot
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[
+          { id: '1', message: 'hello', trigger: '2' },
+          { id: '2', user: true, trigger: '3' },
+          { id: '3', message: 'bye', end: true }
+        ]}
+      />
+    );
+
+    const content = container.querySelector('.rsc-content');
+    Object.defineProperty(content, 'scrollHeight', { value: 1000, configurable: true });
+    Object.defineProperty(content, 'clientHeight', { value: 100, configurable: true });
+    const mutate = async () => {
+      await act(async () => {
+        content.firstChild.appendChild(document.createElement('span'));
+        await wait(0);
+      });
+    };
+
+    await mutate();
+    expect(content.scrollTop).to.equal(1000);
+
+    // the user scrolls up to read
+    await act(async () => {
+      content.scrollTop = 200;
+      content.dispatchEvent(new window.Event('scroll'));
+    });
+    await mutate();
+    expect(content.scrollTop).to.equal(200);
+
+    // a new message scrolls to the bottom again
+    const input = container.querySelector('input.rsc-input');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')
+      .set;
+    await act(async () => {
+      setValue.call(input, 'hi');
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    await act(async () => {
+      input.dispatchEvent(
+        new window.KeyboardEvent('keypress', { key: 'Enter', charCode: 13, bubbles: true })
+      );
+    });
+    await flush();
+    expect(content.scrollTop).to.equal(1000);
+  });
 });
