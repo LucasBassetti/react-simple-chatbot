@@ -13,19 +13,34 @@ class TextStep extends Component {
   };
 
   componentDidMount() {
-    const { step, speak, previousValue, triggerNextStep } = this.props;
+    const { step, speak, previousValue } = this.props;
     const { component, delay, waitAction } = step;
     const isComponentWatingUser = component && waitAction;
 
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!isComponentWatingUser && !step.rendered) {
-          triggerNextStep();
+          this.triggerNextStep();
         }
         speak(step, previousValue);
       });
     }, delay);
   }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  // a step can only trigger the next step once, even if the component is
+  // mounted twice (React.StrictMode) or calls triggerNextStep more than once
+  triggerNextStep = data => {
+    const { triggerNextStep } = this.props;
+    if (this.triggered) {
+      return;
+    }
+    this.triggered = true;
+    triggerNextStep(data);
+  };
 
   getMessage = () => {
     const { previousValue, step } = this.props;
@@ -35,7 +50,7 @@ class TextStep extends Component {
   };
 
   renderMessage = () => {
-    const { step, steps, previousStep, triggerNextStep } = this.props;
+    const { step, steps, previousStep } = this.props;
     const { component } = step;
 
     if (component) {
@@ -43,7 +58,7 @@ class TextStep extends Component {
         step,
         steps,
         previousStep,
-        triggerNextStep
+        triggerNextStep: this.triggerNextStep
       });
     }
 

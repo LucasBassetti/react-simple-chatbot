@@ -9,28 +9,43 @@ class CustomStep extends Component {
   };
 
   componentDidMount() {
-    const { speak, step, previousValue, triggerNextStep } = this.props;
+    const { speak, step, previousValue } = this.props;
     const { delay, waitAction } = step;
 
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.setState({ loading: false }, () => {
         if (!waitAction && !step.rendered) {
-          triggerNextStep();
+          this.triggerNextStep();
         }
         speak(step, previousValue);
       });
     }, delay);
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  // a step can only trigger the next step once, even if the component is
+  // mounted twice (React.StrictMode) or calls triggerNextStep more than once
+  triggerNextStep = data => {
+    const { triggerNextStep } = this.props;
+    if (this.triggered) {
+      return;
+    }
+    this.triggered = true;
+    triggerNextStep(data);
+  };
+
   renderComponent = () => {
-    const { step, steps, previousStep, triggerNextStep } = this.props;
+    const { step, steps, previousStep } = this.props;
     const { component } = step;
 
     return React.cloneElement(component, {
       step,
       steps,
       previousStep,
-      triggerNextStep
+      triggerNextStep: this.triggerNextStep
     });
   };
 

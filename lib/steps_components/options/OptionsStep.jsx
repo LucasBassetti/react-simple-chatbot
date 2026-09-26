@@ -9,6 +9,11 @@ class OptionsStep extends Component {
   onOptionClick = ({ value }) => {
     const { triggerNextStep } = this.props;
 
+    // ignore double clicks, the step is replaced by the chosen option
+    if (this.clicked) {
+      return;
+    }
+    this.clicked = true;
     triggerNextStep({ value });
   };
 
