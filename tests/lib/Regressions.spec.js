@@ -177,4 +177,23 @@ describe('ChatBot regressions', () => {
     await flush();
     expect(content.scrollTop).to.equal(1000);
   });
+
+  it('should start a closed floating chatbot only when it is opened', async () => {
+    await render(
+      <ChatBot
+        floating
+        botDelay={0}
+        userDelay={0}
+        customDelay={0}
+        steps={[{ id: '1', message: 'hello', end: true }]}
+      />
+    );
+    expect(bubbles()).to.deep.equal([]);
+
+    await act(async () => {
+      container.querySelector('.rsc-float-button').click();
+    });
+    await flush();
+    expect(bubbles()).to.deep.equal(['hello']);
+  });
 });

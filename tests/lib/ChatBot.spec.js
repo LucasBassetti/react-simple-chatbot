@@ -206,9 +206,12 @@ describe('ChatBot', () => {
       expect(wrapper.find(ChatBotContainer).props().opened).to.be.equal(true);
     });
 
-    it('should cache the steps', () => {
-      const data = parse(localStorage.getItem('rsc_cache'));
-      expect(data.renderedSteps.length).to.be.equal(2);
+    it('should start the conversation and cache the steps once opened', done => {
+      setTimeout(() => {
+        const data = parse(localStorage.getItem('rsc_cache'));
+        expect(data.renderedSteps.length).to.be.equal(2);
+        done();
+      }, 500);
     });
   });
 

@@ -51,6 +51,8 @@ class ChatBot extends Component {
       steps: {},
       disabled: true,
       opened: props.opened || !props.floating,
+      // a closed floating chatbot starts the conversation when it is opened
+      started: props.opened || !props.floating,
       inputValue: '',
       inputInvalid: false,
       speaking: false,
@@ -162,11 +164,11 @@ class ChatBot extends Component {
     const { opened, toggleFloating } = props;
     if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
       return {
-        ...state,
-        opened
+        opened,
+        started: state.started || opened
       };
     }
-    return state;
+    return null;
   }
 
   componentWillUnmount() {
@@ -610,7 +612,7 @@ class ChatBot extends Component {
     if (toggleFloating) {
       toggleFloating({ opened });
     } else {
-      this.setState({ opened });
+      this.setState(state => ({ opened, started: state.started || opened }));
     }
   };
 
@@ -684,6 +686,7 @@ class ChatBot extends Component {
       inputValue,
       opened,
       renderedSteps,
+      started,
       speaking,
       recognitionEnable
     } = this.state;
@@ -786,7 +789,7 @@ class ChatBot extends Component {
             height={height}
             hideInput={currentStep.hideInput}
           >
-            {renderedSteps.map(this.renderStep)}
+            {started && renderedSteps.map(this.renderStep)}
           </Content>
           <Footer className="rsc-footer" style={footerStyle}>
             {!currentStep.hideInput && (
