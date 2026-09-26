@@ -7,7 +7,7 @@
   "type": "commonjs",
   "scripts": {
     "lint": "eslint lib --ext .js,.jsx",
-    "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
     "start": "webpack serve --config webpack.config.js",
     "test": "mocha --require @babel/register tests/helpers/setup.js \"tests/**/*.spec.js\"",
     "test:watch": "npm test -- --watch",
@@ -96,9 +96,6 @@
     "react": ">=16.3.0",
     "react-dom": ">=16.3.0",
     "styled-components": ">=4.0.0"
-  },
-  "engines": {
-    "node": ">=20"
   },
   "overrides": {
     "cheerio": "1.0.0-rc.12"

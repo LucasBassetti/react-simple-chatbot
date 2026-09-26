@@ -3,6 +3,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   mode: 'production',
+  target: ['web', 'es5'],
   devtool: 'source-map',
   entry: path.resolve(__dirname, 'lib/index'),
   externals: {
@@ -37,7 +38,8 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
+        // flatted ships modern syntax, transpile it with the library
+        exclude: /node_modules\/(?!flatted)/,
         // package.json sets "type": "commonjs", but the sources use ES modules
         type: 'javascript/auto',
         use: {
