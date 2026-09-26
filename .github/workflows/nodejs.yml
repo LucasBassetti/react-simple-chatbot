@@ -25,3 +25,16 @@ jobs:
       - run: npm run test:coverage
       - run: npm run test:types
       - run: npm run build
+
+  react-19:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save --legacy-peer-deps react@19 react-dom@19
+      - run: npm run test:dom

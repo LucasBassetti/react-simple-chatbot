@@ -14,7 +14,8 @@
     "test:coverage": "nyc npm test",
     "build": "webpack --config webpack.config.prod.js",
     "analyze": "BUNDLE_ANALYZE=true webpack --config webpack.config.prod.js",
-    "test:types": "tsc -p tests/types"
+    "test:types": "tsc -p tests/types",
+    "test:dom": "mocha --require @babel/register tests/helpers/setup-dom.js tests/lib/StrictMode.spec.js tests/lib/Regressions.spec.js"
   },
   "files": [
     "dist",
