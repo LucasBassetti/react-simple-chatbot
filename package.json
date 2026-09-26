@@ -1,6 +1,6 @@
 {
   "name": "react-simple-chatbot",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
   "types": "index.d.ts",
