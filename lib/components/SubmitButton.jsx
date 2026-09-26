@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import defaultTheme from '../theme';
 import { pulse } from '../common/animations';
+import withConfig from '../common/withConfig';
 
 const fillFunc = props => {
   const { speaking, invalid, theme } = props;
@@ -11,7 +12,7 @@ const fillFunc = props => {
   return invalid ? '#E53935' : '#4a4a4a';
 };
 
-const SubmitButton = styled.button`
+const SubmitButton = styled.button.withConfig(withConfig)`
   background-color: transparent;
   border: 0;
   border-bottom-right-radius: 10px;

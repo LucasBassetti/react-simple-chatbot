@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import withConfig from '../common/withConfig';
 
-const FloatButton = styled.a`
+const FloatButton = styled.a.withConfig(withConfig)`
   align-items: center;
   cursor: pointer;
   background: ${({ theme }) => theme.headerBgColor};
