@@ -121,7 +121,10 @@ class ChatBot extends Component {
     this.supportsScrollBehavior = 'scrollBehavior' in document.documentElement.style;
 
     if (this.content) {
-      this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
+      if (typeof MutationObserver !== 'undefined') {
+        this.contentObserver = new MutationObserver(this.onNodeInserted);
+        this.contentObserver.observe(this.content, { childList: true, subtree: true });
+      }
       window.addEventListener('resize', this.onResize);
     }
 
@@ -166,15 +169,20 @@ class ChatBot extends Component {
   }
 
   componentWillUnmount() {
-    if (this.content) {
-      this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted);
-      window.removeEventListener('resize', this.onResize);
+    if (this.contentObserver) {
+      this.contentObserver.disconnect();
+      this.contentObserver = null;
     }
+    window.removeEventListener('resize', this.onResize);
   }
 
-  onNodeInserted = event => {
-    const { currentTarget: target } = event;
+  onNodeInserted = () => {
     const { enableSmoothScroll } = this.props;
+    const target = this.content;
+
+    if (!target) {
+      return;
+    }
 
     if (enableSmoothScroll && this.supportsScrollBehavior) {
       target.scroll({
@@ -188,7 +196,9 @@ class ChatBot extends Component {
   };
 
   onResize = () => {
-    this.content.scrollTop = this.content.scrollHeight;
+    if (this.content) {
+      this.content.scrollTop = this.content.scrollHeight;
+    }
   };
 
   onRecognitionChange = value => {
@@ -197,7 +207,10 @@ class ChatBot extends Component {
 
   onRecognitionEnd = () => {
     this.setState({ speaking: false });
-    this.handleSubmitButton();
+    // submitting an empty value would start the recognition again forever
+    if (!this.isInputValueEmpty()) {
+      this.handleSubmitButton();
+    }
   };
 
   onRecognitionStop = () => {
@@ -298,9 +311,10 @@ class ChatBot extends Component {
         nextStep = Object.assign({}, steps[updateStep.update]);
 
         if (nextStep.options) {
-          for (let i = 0, len = nextStep.options.length; i < len; i += 1) {
-            nextStep.options[i].trigger = updateStep.trigger;
-          }
+          // copy the options so the original step keeps its own triggers
+          nextStep.options = nextStep.options.map(option =>
+            Object.assign({}, option, { trigger: updateStep.trigger })
+          );
         } else {
           nextStep.trigger = updateStep.trigger;
         }
@@ -738,7 +752,7 @@ ChatBot.propTypes = {
   controlStyle: PropTypes.objectOf(PropTypes.any),
   enableMobileAutoFocus: PropTypes.bool,
   enableSmoothScroll: PropTypes.bool,
-  extraControl: PropTypes.objectOf(PropTypes.element),
+  extraControl: PropTypes.element,
   floating: PropTypes.bool,
   floatingIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   floatingStyle: PropTypes.objectOf(PropTypes.any),

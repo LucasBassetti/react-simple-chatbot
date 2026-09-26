@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SubmitIcon = ({ size }) => (
+const SubmitIcon = ({ size = 20 }) => (
   <svg
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -19,10 +19,6 @@ const SubmitIcon = ({ size }) => (
 
 SubmitIcon.propTypes = {
   size: PropTypes.number
-};
-
-SubmitIcon.defaultProps = {
-  size: 20
 };
 
 export default SubmitIcon;
