@@ -16,7 +16,7 @@ const OptionElement = styled.button`
   }
   &:active,
   &:hover:focus {
-    outline:none;
+    outline: none;
   }
 `;
 

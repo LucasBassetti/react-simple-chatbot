@@ -38,7 +38,9 @@ class OptionsStep extends Component {
     return (
       <OptionsStepContainer className="rsc-os">
         <Options className="rsc-os-options">
-          {Object.keys(options).map(key => options[key]).map(this.renderOption)}
+          {Object.keys(options)
+            .map(key => options[key])
+            .map(this.renderOption)}
         </Options>
       </OptionsStepContainer>
     );
