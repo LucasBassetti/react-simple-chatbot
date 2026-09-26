@@ -408,14 +408,13 @@ describe('ChatBot', () => {
       expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(1);
     });
 
-    it('the extra control should be hidden', () => {
-      console.log("Setting input value");
+    it('the extra control should be hidden', done => {
       wrapper.setState({ inputValue: 'test' });
-      console.log("Simulate key press");
       wrapper.find('input.rsc-input').simulate('keyPress', { key: 'Enter' });
       setTimeout(() => {
-        console.log("testing hidden");
-        expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(0);  
+        wrapper.update();
+        expect(wrapper.find('div.rsc-controls button.my-button')).to.have.length(0);
+        done();
       }, 500);
     });
 
