@@ -5,8 +5,6 @@ import Header from './layout/Header';
 import Sidebar from './layout/Sidebar';
 import GithubIcon from './layout/GithubIcon';
 import menu from './menu';
-import TwitterButton from '../common/TwitterButton';
-import FacebookButton from '../common/FacebookButton';
 
 require('./Docs.css');
 
@@ -23,10 +21,6 @@ const Docs = (props) => {
   return (
     <div className="docs">
       <Sidebar handleLink={props.handleLink} />
-      <div className="social-buttons">
-        <FacebookButton dataSize="small" />
-        <TwitterButton dataSize="small" />
-      </div>
       <GithubIcon />
       <main>
         {

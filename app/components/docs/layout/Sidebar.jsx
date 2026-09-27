@@ -100,11 +100,12 @@ class Sidebar extends Component {
               onClick={() => this.toggleSidebar()}
             />
             <a
-              href="https://badge.fury.io/js/react-simple-chatbot"
+              href="https://www.npmjs.com/package/react-simple-chatbot"
               className="npm-release"
             >
               <img
-                src="https://camo.githubusercontent.com/fa9a3062cddf9bacb54d8f070d43c3bb01e76875/68747470733a2f2f62616467652e667572792e696f2f6a732f72656163742d73696d706c652d63686174626f742e737667" alt="npm version" data-canonical-src="https://badge.fury.io/js/react-simple-chatbot.svg"
+                src="https://img.shields.io/npm/v/react-simple-chatbot.svg"
+                alt="npm version"
                 style={{ maxWidth: '100%' }}
               />
             </a>

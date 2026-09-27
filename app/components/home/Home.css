@@ -31,16 +31,6 @@
   text-align: center;
 }
 
-.home .social-buttons {
-  display: flex;
-  align-items: center;
-  margin-top: 24px;
-}
-
-.home .fb-share-button {
-  margin-right: 12px;
-}
-
 .home .buttons {
   margin: 24px 0 24px 32px;
   text-align: center;

@@ -7,7 +7,7 @@ const GithubIcon = () => (
     <svg
       width="28"
       height="28"
-      viewBox="0 0 400 400"
+      viewBox="0 0 438.549 438.549"
       style={{
         position: 'absolute',
         top: 0,

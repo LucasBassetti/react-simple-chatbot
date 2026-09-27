@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ChatBot from 'react-simple-chatbot';
-import TwitterButton from '../common/TwitterButton';
-import FacebookButton from '../common/FacebookButton';
 
 require('./Home.css');
 
@@ -29,10 +27,6 @@ class Home extends Component {
         <div className="column">
           <h1 className="title">{title}</h1>
           <p className="description">{description}</p>
-          <div className="social-buttons">
-            <FacebookButton dataSize="large" />
-            <TwitterButton dataSize="large" />
-          </div>
           <div className="buttons">
             <iframe
               src={`${githubUrl}&type=star&count=true&size=large`}
