@@ -11,31 +11,33 @@ const Input = styled.input<InputProps>`
   animation: ${({ $invalid }) =>
     $invalid
       ? css`
-          ${invalidInput} .2s ease
+          ${invalidInput} 0.3s ease
         `
-      : ''};
+      : 'none'};
+  background: transparent;
   border: 0;
   border-radius: 0;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  border-top: ${({ $invalid }) => ($invalid ? '0' : '1px solid #eee')};
-  box-shadow: ${({ $invalid }) => ($invalid ? 'inset 0 0 2px #E53935' : 'none')};
+  box-shadow: none;
   box-sizing: border-box;
-  color: ${({ $invalid }) => ($invalid ? '#E53935' : '')};
-  font-size: 16px;
-  opacity: ${({ disabled, $invalid }) => (disabled && !$invalid ? '.5' : '1')};
+  color: ${({ $invalid }) => ($invalid ? '#dc2626' : '#1f2937')};
+  display: block;
+  font: inherit;
+  font-size: 15px;
+  height: 55px;
+  margin: 0;
+  opacity: ${({ disabled, $invalid }) => (disabled && !$invalid ? '0.6' : '1')};
   outline: none;
-  padding: ${({ $hasButton }) => ($hasButton ? '16px 52px 16px 10px' : '16px 10px')};
+  padding: ${({ $hasButton }) => ($hasButton ? '0 60px 0 16px' : '0 16px')};
   width: 100%;
   -webkit-appearance: none;
 
-  &:disabled {
-    background: #fff;
+  &::placeholder {
+    color: #9ca3af;
   }
 
-  @media screen and (max-width: 568px) {
-    border-bottom-left-radius: ${({ $floating }) => ($floating ? '0' : '10px')};
-    border-bottom-right-radius: ${({ $floating }) => ($floating ? '0' : '10px')};
+  &:disabled {
+    background: transparent;
+    cursor: not-allowed;
   }
 `;
 

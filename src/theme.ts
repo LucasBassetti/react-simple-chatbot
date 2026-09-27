@@ -2,7 +2,8 @@ import type { ChatBotTheme } from './types';
 
 const defaultTheme: ChatBotTheme = {
   background: '#f5f8fb',
-  fontFamily: 'monospace',
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   headerBgColor: '#6e48aa',
   headerFontColor: '#fff',
   headerFontSize: '16px',

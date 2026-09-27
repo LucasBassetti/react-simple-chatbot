@@ -8,10 +8,20 @@ import type { ChatStep, TriggerNextStepData } from '../../types';
 export interface OptionsStepProps {
   step: ChatStep;
   bubbleOptionStyle: CSSProperties;
+  /** aligns the options with the messages of the bot, next to its avatar */
+  hideBotAvatar?: boolean;
   triggerNextStep: (data?: TriggerNextStepData) => void;
 }
 
-const OptionsStep = ({ step, bubbleOptionStyle, triggerNextStep }: OptionsStepProps) => {
+// the column of the avatar (32px) and the gap next to it (8px)
+const AVATAR_OFFSET = 40;
+
+const OptionsStep = ({
+  step,
+  bubbleOptionStyle,
+  hideBotAvatar = false,
+  triggerNextStep
+}: OptionsStepProps) => {
   const clickedRef = useRef(false);
   const { options = [] } = step;
 
@@ -26,7 +36,7 @@ const OptionsStep = ({ step, bubbleOptionStyle, triggerNextStep }: OptionsStepPr
 
   return (
     <OptionsStepContainer className="rsc-os">
-      <Options className="rsc-os-options">
+      <Options className="rsc-os-options" $offset={hideBotAvatar ? 0 : AVATAR_OFFSET}>
         {options.map(({ value, label }) => (
           <Option key={String(value)} className="rsc-os-option">
             <OptionElement
