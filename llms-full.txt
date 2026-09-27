@@ -1718,9 +1718,9 @@ const steps: Step[] = [
 
 A step can only trigger the next step once. Later calls are ignored, even if React mounts the component twice in development with `StrictMode`. Disable your buttons after the first click so users know their choice was taken.
 
-Caution
+Note
 
-Falsy values such as `0`, `''` and `false` are not saved as the step value. Pass a string such as `'0'`, or an object, when the value can be falsy.
+Any value except `undefined` is saved, including `0`, `''` and `false`. Before 1.0.1 these falsy values were dropped.
 
 ## Load data before moving on
 
@@ -2987,17 +2987,19 @@ export default function App() {
 }
 ```
 
-| Key               | Default       | Used for                                                               |
-| ----------------- | ------------- | ---------------------------------------------------------------------- |
-| `background`      | `'#f5f8fb'`   | Background of the chat.                                                |
-| `fontFamily`      | `'monospace'` | Font of the whole chatbot.                                             |
-| `headerBgColor`   | `'#6e48aa'`   | Header, floating button, and the microphone animation while listening. |
-| `headerFontColor` | `'#fff'`      | Header text and icons, and the floating button icon.                   |
-| `headerFontSize`  | `'16px'`      | Header title.                                                          |
-| `botBubbleColor`  | `'#6E48AA'`   | Bot message bubbles and option buttons.                                |
-| `botFontColor`    | `'#fff'`      | Text of bot messages and option buttons.                               |
-| `userBubbleColor` | `'#fff'`      | User message bubbles.                                                  |
-| `userFontColor`   | `'#4a4a4a'`   | Text of user messages.                                                 |
+| Key               | Default         | Used for                                                               |
+| ----------------- | --------------- | ---------------------------------------------------------------------- |
+| `background`      | `'#f5f8fb'`     | Background of the chat.                                                |
+| `fontFamily`      | the system font | Font of the whole chatbot, including the input.                        |
+| `headerBgColor`   | `'#6e48aa'`     | Header, floating button, and the microphone animation while listening. |
+| `headerFontColor` | `'#fff'`        | Header text and icons, and the floating button icon.                   |
+| `headerFontSize`  | `'16px'`        | Header title.                                                          |
+| `botBubbleColor`  | `'#6E48AA'`     | Bot message bubbles and option buttons.                                |
+| `botFontColor`    | `'#fff'`        | Text of bot messages and option buttons.                               |
+| `userBubbleColor` | `'#fff'`        | User message bubbles.                                                  |
+| `userFontColor`   | `'#4a4a4a'`     | Text of user messages.                                                 |
+
+Since 1.0.1 the default font is the system font of the device (`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`). Set `fontFamily: 'monospace'` to keep the font of older versions.
 
 ### Partial themes
 
@@ -4030,11 +4032,40 @@ export interface ChatBotTheme {
 
 This page summarizes the recent releases. The [GitHub releases](https://github.com/LucasBassetti/react-simple-chatbot/releases) have the full notes for every version.
 
+## 1.0.1
+
+[Section titled “1.0.1”](#101)
+
+Latest Released on 2026-09-27.
+
+A refreshed look for the chatbot, with fixes for the message alignment, auto-scroll, voice input and cached conversations. The props, the theme keys and the `rsc-*` class names are unchanged.
+
+### New look
+
+[Section titled “New look”](#new-look)
+
+* The messages of a group stay aligned on any page, including pages with a CSS reset.
+* The default font is the system font instead of `monospace`, and the input uses it too. Set `fontFamily: 'monospace'` in a theme to keep the old font.
+* Bubbles with grouped corners, better spacing, long words that wrap, and a subtle entrance animation (off with reduced motion).
+* Outlined options and custom components aligned with the bot messages.
+* Animated typing dots, a round send button in the accent color, and focus rings for keyboard users.
+
+Apps with custom CSS that depends on the old spacing may need small adjustments.
+
+### Bug fixes
+
+[Section titled “Bug fixes”](#bug-fixes)
+
+* The chatbot keeps following new messages when they grow, and when many messages arrive during a smooth scroll.
+* `triggerNextStep` keeps `0`, `false` and `''` as the step value.
+* Voice input submits the final transcript, and keeps submitting automatically after the user stopped a recognition.
+* A restored cached conversation keeps the `validator` of the step waiting for the user.
+
 ## 1.0.0
 
 [Section titled “1.0.0”](#100)
 
-Latest Released on 2026-09-27.
+Released on 2026-09-27.
 
 React Simple Chatbot is rewritten in TypeScript with React function components and hooks. The steps and the props are the same as in 0.7.0.
 
