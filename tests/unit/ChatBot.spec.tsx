@@ -390,6 +390,28 @@ describe('ChatBot', () => {
       expect(localStorage.getItem('rsc_cache')).toBeNull();
     });
 
+    it('should keep the validator of the step waiting the user after a reload', async () => {
+      const validatedSteps: Step[] = [
+        { id: '1', message: 'age?', trigger: '2' },
+        {
+          id: '2',
+          user: true,
+          validator: value => (/^\d+$/.test(value) ? true : 'must be a number'),
+          trigger: '3'
+        },
+        { id: '3', message: 'ok {previousValue}', end: true }
+      ];
+      const first = renderChatBot({ cache: true, steps: validatedSteps });
+      await waitFor(() => expect(getInput(first.container).disabled).toBe(false));
+      await waitFor(() => expect(localStorage.getItem('rsc_cache')).not.toBeNull());
+      first.unmount();
+
+      const { container } = renderChatBot({ cache: true, steps: validatedSteps });
+      await waitFor(() => expect(getInput(container).disabled).toBe(false));
+      typeMessage(container, 'abc');
+      expect(getInput(container).value).toBe('must be a number');
+    });
+
     it('should ignore an invalid cache', async () => {
       const info = vi.spyOn(console, 'info').mockImplementation(() => {});
       localStorage.setItem('rsc_cache', 'invalid');
@@ -401,6 +423,53 @@ describe('ChatBot', () => {
   });
 
   describe('Custom steps', () => {
+    it.each([
+      ['0', 0],
+      ['false', false],
+      ['an empty string', '']
+    ])('should keep %s as the value of a step', async (_, value) => {
+      const Ask = ({ triggerNextStep }: CustomComponentProps) => (
+        <button type="button" onClick={() => triggerNextStep?.({ value })}>
+          ok
+        </button>
+      );
+      const handleEnd = vi.fn();
+      const { container } = renderChatBot({
+        handleEnd,
+        steps: [
+          { id: '1', component: <Ask />, waitAction: true, trigger: '2' },
+          {
+            id: '2',
+            message: ({ steps }) => `value=${JSON.stringify(steps['1'].value)}`,
+            end: true
+          }
+        ]
+      });
+      fireEvent.click(await screen.findByText('ok'));
+      await waitFor(() => expect(bubbles(container)).toEqual([`value=${JSON.stringify(value)}`]));
+      await waitFor(() => expect(handleEnd).toHaveBeenCalled());
+      expect(handleEnd.mock.calls[0][0].values).toEqual([value]);
+    });
+
+    it('should pass a falsy option value to the trigger function', async () => {
+      const trigger = vi.fn(({ value }: { value: unknown }) => (value === false ? 'no' : 'yes'));
+      const { container } = renderChatBot({
+        steps: [
+          {
+            id: '1',
+            options: [
+              { value: true, label: 'Yes', trigger },
+              { value: false, label: 'No', trigger }
+            ]
+          },
+          { id: 'yes', message: 'chose yes', end: true },
+          { id: 'no', message: 'chose no', end: true }
+        ]
+      });
+      fireEvent.click(await screen.findByText('No'));
+      await waitFor(() => expect(bubbles(container)).toEqual(['No', 'chose no']));
+      expect(trigger.mock.calls[0][0].value).toBe(false);
+    });
     it('should change the trigger from the component', async () => {
       const Ask = ({ triggerNextStep }: CustomComponentProps) => (
         <button

@@ -134,7 +134,7 @@ export const resolveMessage = (message: Message, previousSteps: ChatStep[]): str
 export const getHandleEndArgs = (previousSteps: ChatStep[]): HandleEndArgs => {
   const renderedSteps = previousSteps.map(toRenderedStep);
   const steps = getRenderedStepsById(previousSteps);
-  const values = previousSteps.filter(step => step.value).map(step => step.value);
+  const values = previousSteps.filter(step => step.value !== undefined).map(step => step.value);
 
   return { renderedSteps, steps, values };
 };

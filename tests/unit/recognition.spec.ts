@@ -77,6 +77,41 @@ describe('Recognition', () => {
       expect(secondOnChange).toHaveBeenCalled();
     });
 
+    it('should send the final transcript before ending', () => {
+      const onChange = vi.fn();
+      const onEnd = vi.fn();
+      const recognition = new Recognition(onChange, onEnd);
+      recognition.speak();
+      fake(recognition).onresult({
+        resultIndex: 0,
+        results: [Object.assign([{ transcript: 'hello wor' }], { isFinal: false })]
+      });
+      fake(recognition).onresult({
+        resultIndex: 0,
+        results: [Object.assign([{ transcript: 'hello world' }], { isFinal: true })]
+      });
+      expect(onChange).toHaveBeenLastCalledWith('hello world');
+      expect(onEnd).toHaveBeenCalledTimes(1);
+      expect(
+        onChange.mock.invocationCallOrder[onChange.mock.invocationCallOrder.length - 1]
+      ).toBeLessThan(onEnd.mock.invocationCallOrder[0]);
+    });
+
+    it('should end normally again after the user stopped it', () => {
+      const onEnd = vi.fn();
+      const onStop = vi.fn();
+      const recognition = new Recognition(vi.fn(), onEnd, onStop);
+      // the user stops the first recognition
+      recognition.speak();
+      recognition.speak();
+      expect(onStop).toHaveBeenCalledTimes(1);
+      // the browser ends the second one
+      recognition.speak();
+      fake(recognition).abort();
+      expect(onEnd).toHaveBeenCalledTimes(1);
+      expect(onStop).toHaveBeenCalledTimes(1);
+    });
+
     it('should change the lang', () => {
       const recognition = new Recognition().setLang('pt');
       expect(fake(recognition).lang).toBe('pt');

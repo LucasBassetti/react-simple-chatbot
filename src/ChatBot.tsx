@@ -228,7 +228,8 @@ const ChatBot = (rawProps: ChatBotProps) => {
         currentStep = updatedStep;
       };
 
-      if (data?.value) {
+      // 0, false and '' are values too, only undefined means no value
+      if (data?.value !== undefined) {
         updateCurrentStep({ value: data.value });
       }
       if (data?.hideInput) {

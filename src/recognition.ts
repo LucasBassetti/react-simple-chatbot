@@ -89,9 +89,12 @@ export default class Recognition {
    * Handler for recognition change event when its final
    */
   private onFinal(finalTranscript: string) {
+    const { onChange } = this.state;
     this.setState({
       inputValue: finalTranscript
     });
+    // the chatbot submits its input value when the recognition ends
+    onChange(finalTranscript);
     this.recognition?.stop();
   }
 
@@ -100,7 +103,8 @@ export default class Recognition {
    */
   private onEnd = () => {
     const { onStop, onEnd, force } = this.state;
-    this.setState({ speaking: false });
+    // force only applies to the recognition the user stopped
+    this.setState({ speaking: false, force: false });
     if (force) {
       onStop();
     } else {
