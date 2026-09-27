@@ -44,7 +44,7 @@ export default function App() {
 | Key | Default | Used for |
 | --- | --- | --- |
 | `background` | `'#f5f8fb'` | Background of the chat. |
-| `fontFamily` | `'monospace'` | Font of the whole chatbot. |
+| `fontFamily` | the system font | Font of the whole chatbot, including the input. |
 | `headerBgColor` | `'#6e48aa'` | Header, floating button, and the microphone animation while listening. |
 | `headerFontColor` | `'#fff'` | Header text and icons, and the floating button icon. |
 | `headerFontSize` | `'16px'` | Header title. |
@@ -52,6 +52,8 @@ export default function App() {
 | `botFontColor` | `'#fff'` | Text of bot messages and option buttons. |
 | `userBubbleColor` | `'#fff'` | User message bubbles. |
 | `userFontColor` | `'#4a4a4a'` | Text of user messages. |
+
+Since 1.0.1 the default font is the system font of the device (`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`). Set `fontFamily: 'monospace'` to keep the font of older versions.
 
 ### Partial themes
 
