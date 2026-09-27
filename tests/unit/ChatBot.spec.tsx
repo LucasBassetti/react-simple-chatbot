@@ -299,6 +299,41 @@ describe('ChatBot', () => {
   });
 
   describe('Extra control', () => {
+    it('should pass the state of the input to a component', async () => {
+      const CustomControl = ({ disabled, speaking, invalid }: Record<string, boolean>) => (
+        <span className="state">{`${disabled} ${speaking} ${invalid}`}</span>
+      );
+      const { container } = renderChatBot({
+        extraControl: <CustomControl />,
+        steps: [
+          { id: '1', user: true, trigger: '2' },
+          { id: '2', message: 'end', end: true }
+        ]
+      });
+      await waitFor(() =>
+        expect(container.querySelector('.state')?.textContent).toBe('false false false')
+      );
+    });
+
+    it('should only pass disabled to a DOM element', async () => {
+      const error = vi.spyOn(console, 'error');
+      try {
+        const { container } = renderChatBot({
+          extraControl: <button className="dom-control">extra</button>,
+          steps: [
+            { id: '1', user: true, trigger: '2' },
+            { id: '2', message: 'end', end: true }
+          ]
+        });
+        const control = container.querySelector('.dom-control') as HTMLButtonElement;
+        await waitFor(() => expect(control.disabled).toBe(false));
+        expect(control.getAttribute('speaking')).toBeNull();
+        expect(error).not.toHaveBeenCalled();
+      } finally {
+        error.mockRestore();
+      }
+    });
+
     it('should hide the extra control when the step asks it', async () => {
       const CustomControl = () => <button className="my-button">custom</button>;
       const { container } = renderChatBot({

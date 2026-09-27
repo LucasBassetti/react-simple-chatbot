@@ -545,8 +545,15 @@ const ChatBot = (rawProps: ChatBotProps) => {
     </Header>
   );
 
+  // DOM elements (e.g. <button />) only accept disabled
   const customControl =
-    extraControl && cloneElement(extraControl, { disabled, speaking, invalid: inputInvalid });
+    extraControl &&
+    cloneElement(
+      extraControl,
+      typeof extraControl.type === 'string'
+        ? { disabled }
+        : { disabled, speaking, invalid: inputInvalid }
+    );
 
   const showMic = (!inputValue || speaking) && recognitionEnable;
   let submitLabel = 'Send message';
