@@ -26,6 +26,8 @@ The library is written in TypeScript with React function components and hooks. U
 
 Implement your bug fix or feature, write tests to cover it and make sure all tests are passing (run a final `npm test` to make sure everything is correct). Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)'s master branch.
 
+The pull request title must follow [Conventional Commits](https://www.conventionalcommits.org): `<type>(<optional scope>): <summary>`, where the type is one of `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` or `revert`, e.g. `fix(cache): restore options without value`. Add `!` after the type for breaking changes (e.g. `feat!: drop React 17 support`). Fill the pull request template, it asks for the description, the related issue, how the change was tested and the breaking changes.
+
 ## Documentation
 
 Documentation is extremely important and takes a fair deal of time and effort to write and keep updated. Please submit any and all improvements you can make to the repository's docs.
