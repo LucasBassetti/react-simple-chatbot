@@ -3,39 +3,21 @@
   "version": "0.7.0",
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
-  "types": "index.d.ts",
+  "types": "dist/index.d.ts",
   "type": "commonjs",
   "scripts": {
-    "lint": "eslint lib --ext .js,.jsx",
+    "start": "vite example --config vite.config.mts",
+    "build": "vite build && tsc -p tsconfig.build.json",
     "prepare": "npm run build",
-    "start": "webpack serve --config webpack.config.js",
-    "test": "mocha --require @babel/register tests/helpers/setup.js \"tests/**/*.spec.js\"",
-    "test:watch": "npm test -- --watch",
-    "test:coverage": "nyc npm test",
-    "build": "webpack --config webpack.config.prod.js",
-    "analyze": "BUNDLE_ANALYZE=true webpack --config webpack.config.prod.js",
-    "test:types": "tsc -p tests/types",
-    "test:dom": "mocha --require @babel/register tests/helpers/setup-dom.js tests/lib/StrictMode.spec.js tests/lib/Regressions.spec.js"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "files": [
-    "dist",
-    "index.d.ts"
+    "dist"
   ],
-  "nyc": {
-    "function": 80,
-    "lines": 80,
-    "check-coverage": true,
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "tests/**"
-    ],
-    "extension": [
-      ".jsx"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/LucasBassetti/react-simple-chatbot"
@@ -52,52 +34,37 @@
   },
   "homepage": "https://github.com/LucasBassetti/react-simple-chatbot#readme",
   "devDependencies": {
-    "@babel/cli": "^7.29.7",
-    "@babel/core": "^7.29.7",
-    "@babel/eslint-parser": "^7.29.9",
-    "@babel/preset-env": "^7.29.7",
-    "@babel/preset-react": "^7.29.7",
-    "@babel/register": "^7.29.7",
-    "@cfaester/enzyme-adapter-react-18": "^0.8.0",
-    "@types/react": "^18.3.31",
-    "babel-loader": "^10.1.1",
-    "chai": "^4.5.0",
-    "codecov": "^3.8.2",
-    "enzyme": "^3.11.0",
-    "eslint": "^8.57.1",
-    "eslint-config-airbnb": "^19.0.4",
+    "@eslint/js": "^9.39.5",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.0.2",
+    "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "global-jsdom": "^29.0.0",
-    "jsdom": "^29.1.1",
-    "mocha": "^10.8.2",
-    "nyc": "^18.0.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.12.0",
+    "jsdom": "^30.1.1",
     "prettier": "^3.9.9",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sinon": "^22.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "styled-components": "^6.5.3",
-    "typescript": "^7.0.2",
-    "webpack": "^5.111.1",
-    "webpack-bundle-analyzer": "^5.4.0",
-    "webpack-cli": "^7.2.3",
-    "webpack-dev-server": "^6.0.0"
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
   },
   "dependencies": {
-    "flatted": "^3.3.1",
-    "prop-types": "^15.8.1",
-    "random-id": "0.0.2"
+    "flatted": "^3.3.1"
   },
   "peerDependencies": {
-    "react": ">=16.3.0",
-    "react-dom": ">=16.3.0",
-    "styled-components": ">=4.0.0"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "styled-components": ">=5.1.0"
   },
-  "overrides": {
-    "cheerio": "1.0.0-rc.12"
-  }
+  "module": "dist/react-simple-chatbot.mjs",
+  "sideEffects": false
 }

@@ -16,17 +16,17 @@ A simple chatbot component to create conversation chats
 npm install react-simple-chatbot styled-components
 ```
 
-It works with React 16.3 or newer (including React 18 and 19) and styled-components 4, 5 or 6. TypeScript declarations are included.
+It works with React 18 or 19 and styled-components 5.1 or newer. The library is written in TypeScript, so the types are included.
 
 ## Usage
 
 There are several examples on the [website](https://lucasbassetti.github.io/react-simple-chatbot/). Here is the first one to get you started:
 
-``` javascript
+```tsx
 import { createRoot } from 'react-dom/client';
-import ChatBot from 'react-simple-chatbot';
+import ChatBot, { type Step } from 'react-simple-chatbot';
 
-const steps = [
+const steps: Step[] = [
   {
     id: '0',
     message: 'Welcome to react chatbot!',
@@ -39,7 +39,7 @@ const steps = [
   },
 ];
 
-createRoot(document.getElementById('root')).render(<ChatBot steps={steps} />);
+createRoot(document.getElementById('root')!).render(<ChatBot steps={steps} />);
 ```
 
 ### Tips
@@ -47,6 +47,7 @@ createRoot(document.getElementById('root')).render(<ChatBot steps={steps} />);
 - **Restart the conversation**: render the chatbot with a new `key` (e.g. `<ChatBot key={conversationId} steps={steps} />`). If `cache` is enabled, also clear it with `localStorage.removeItem(cacheName)`.
 - **Change steps after mount**: updates to `steps`, the avatars, the delays and `botName` are used by the steps that were not rendered yet.
 - **Style the chatbot**: every element has a stable `rsc-*` class name (e.g. `.rsc-ts-bubble`, `.rsc-input`) that you can target with CSS, and the `*Style` props accept inline styles.
+- **Custom components**: the components of the steps receive `step`, `steps`, `previousStep` and `triggerNextStep`, typed as `CustomComponentProps`.
 
 ## React Simple Chatbot with AI
 

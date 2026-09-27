@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x, 24.x]
+        node-version: [22.x, 24.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -22,11 +22,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - run: npm run typecheck
       - run: npm run test:coverage
-      - run: npm run test:types
       - run: npm run build
 
-  react-19:
+  react-18:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,5 +36,5 @@ jobs:
           node-version: 24.x
           cache: npm
       - run: npm ci
-      - run: npm install --no-save --legacy-peer-deps react@19 react-dom@19
-      - run: npm run test:dom
+      - run: npm install --no-save react@18 react-dom@18
+      - run: npm test
