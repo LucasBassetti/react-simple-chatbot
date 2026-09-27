@@ -16,17 +16,17 @@ A simple chatbot component to create conversation chats
 npm install react-simple-chatbot styled-components
 ```
 
-It works with React 16.3 or newer (including React 18 and 19) and styled-components 4, 5 or 6. TypeScript declarations are included.
+It works with React 18 or 19 and styled-components 5.1 or newer. The library is written in TypeScript, so the types are included.
 
 ## Usage
 
 There are several examples on the [website](https://lucasbassetti.github.io/react-simple-chatbot/). Here is the first one to get you started:
 
-``` javascript
+```tsx
 import { createRoot } from 'react-dom/client';
-import ChatBot from 'react-simple-chatbot';
+import ChatBot, { type Step } from 'react-simple-chatbot';
 
-const steps = [
+const steps: Step[] = [
   {
     id: '0',
     message: 'Welcome to react chatbot!',
@@ -39,7 +39,7 @@ const steps = [
   },
 ];
 
-createRoot(document.getElementById('root')).render(<ChatBot steps={steps} />);
+createRoot(document.getElementById('root')!).render(<ChatBot steps={steps} />);
 ```
 
 ### Tips
@@ -47,27 +47,12 @@ createRoot(document.getElementById('root')).render(<ChatBot steps={steps} />);
 - **Restart the conversation**: render the chatbot with a new `key` (e.g. `<ChatBot key={conversationId} steps={steps} />`). If `cache` is enabled, also clear it with `localStorage.removeItem(cacheName)`.
 - **Change steps after mount**: updates to `steps`, the avatars, the delays and `botName` are used by the steps that were not rendered yet.
 - **Style the chatbot**: every element has a stable `rsc-*` class name (e.g. `.rsc-ts-bubble`, `.rsc-input`) that you can target with CSS, and the `*Style` props accept inline styles.
-
-## React Simple Chatbot with AI
-
-1. [CodeParrot AI](https://codeparrot.ai/oracle?owner=LucasBassetti&repo=react-simple-chatbot) - Bot will help you understand this repository better. You can ask for code examples, installation guide, debugging help and much more.
+- **Custom components**: the components of the steps receive `step`, `steps`, `previousStep` and `triggerNextStep`, typed as `CustomComponentProps`.
 
 ## React Simple Chatbot on media
 
 1. [webdesignerdepot](https://www.webdesignerdepot.com/2017/08/whats-new-for-designers-august-2017/)
-2. [blogduwebdesign](http://www.blogduwebdesign.com/webdesign/ressources-web-du-lundi-aout-164/2507)
-3. [codrops](https://tympanus.net/codrops/collective/collective-335/)
-
-## Build with `react-simple-chatbot`
-
-1. [Seth Loh Website](https://github.com/lackdaz/lackdaz.github.io) - Personal website of Seth Loh ([demo](https://www.sethloh.com))
-2. [Paul's Website](https://psheon.github.io/) - Personal website of Paul Jiang ([demo](https://psheon.github.io/archives/))
-3. [Cisco Partner Support API Chatbot](https://github.com/btotharye/cisco-pss-api-chatbot) - Code with screenshots to have your own Cisco Serial lookup chatbot.
-4. [Chatcompose](https://www.chatcompose.com/en.html) - Chatbot Platform for Conversational Marketing and Support.
-5. [Mixat](https://www.svt.se/mixat) - News Chatbot for tweenies. Also as app ([iOS](https://apps.apple.com/se/app/mixat-h%C3%A4r-f%C3%A5r-du-koll/id1239444432) or [Android](https://play.google.com/store/apps/details?id=se.svt.mixat))
-6. [CAMARADES BR](https://camaradesbrasil.bio.br/) - CAMARADES' brazilian research group
-
-Built something with `react-simple-chatbot`? Submit a PR and add it to this list!
+2. [codrops](https://tympanus.net/codrops/collective/collective-335/)
 
 ## How to Contribute
 

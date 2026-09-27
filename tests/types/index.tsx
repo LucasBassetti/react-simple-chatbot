@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ChatBot, { CustomComponentProps, Loading, Step } from '../..';
+import ChatBot, { CustomComponentProps, Loading, Step } from '../../src';
 
 const Review = ({ steps, triggerNextStep }: CustomComponentProps) => (
   <button type="button" onClick={() => triggerNextStep && triggerNextStep({ value: steps })}>

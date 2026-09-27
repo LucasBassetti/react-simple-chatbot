@@ -17,7 +17,16 @@ Pull requests are very welcome. Note that if you are going to propose drastic ch
 
 Fork the repository, clone it locally and create a branch for your proposed bug fix or new feature. Avoid working directly on the master branch.
 
+The library is written in TypeScript with React function components and hooks. Useful commands:
+
+- `npm start`: run the example (`example/`) with Vite at http://localhost:5173
+- `npm test` / `npm run test:coverage`: run the tests (Vitest + Testing Library)
+- `npm run lint` and `npm run typecheck`: check the code
+- `npm run build`: build `dist/` (ES module, UMD and type declarations)
+
 Implement your bug fix or feature, write tests to cover it and make sure all tests are passing (run a final `npm test` to make sure everything is correct). Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)'s master branch.
+
+The pull request title must follow [Conventional Commits](https://www.conventionalcommits.org): `<type>(<optional scope>): <summary>`, where the type is one of `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` or `revert`, e.g. `fix(cache): restore options without value`. Add `!` after the type for breaking changes (e.g. `feat!: drop React 17 support`). Fill the pull request template, it asks for the description, the related issue, how the change was tested and the breaking changes.
 
 ## Documentation
 
