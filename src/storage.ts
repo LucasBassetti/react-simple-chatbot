@@ -88,6 +88,11 @@ const getData = (params: GetDataParams, callback: () => void): ConversationData 
           }
         }
 
+        // functions are not cached, so the step waiting the user gets its validator back
+        if (data.currentStep.user && steps[id]?.validator) {
+          data.currentStep.validator = steps[id].validator;
+        }
+
         // execute callback function to enable input if last step is
         // waiting user type
         if (data.currentStep.user) {
