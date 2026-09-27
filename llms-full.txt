@@ -4235,13 +4235,14 @@ The site is built with [Astro Starlight](https://starlight.astro.build) and live
 
 2. Edit the pages and check them in the browser.
 
-3. Rebuild the published site. `npm run publish-site` builds the site and copies it to the root of the `gh-pages` branch, which GitHub Pages serves:
+3. Type-check and build the site. The build also validates the internal links:
 
    ```sh
-   npm run publish-site
+   npm run check
+   npm run build
    ```
 
-4. Commit both the changes in `website/` and the rebuilt files at the root of the branch, and open a pull request against `gh-pages`.
+4. Commit the changes in `website/` and open a pull request against `gh-pages`. After the merge, the Site workflow rebuilds the published site in the root of the branch, which GitHub Pages serves.
 
 # FAQ
 

@@ -6,8 +6,15 @@ on:
   push:
     branches: [gh-pages]
 
+permissions:
+  contents: write
+
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  check:
+  site:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,13 +29,19 @@ jobs:
           cache-dependency-path: website/package-lock.json
       - run: npm ci
       - run: npm run check
-      # builds the site (the links are validated), then fails if the committed
-      # site in the branch root is not the build of the sources
+      # builds the site (the internal links are validated) and copies it to the branch root
       - run: npm run publish-site
-      - name: Check the published site is up to date
+      # GitHub Pages serves the branch root, so after a merge the root is
+      # replaced with this build (pushes of this token don't start workflows)
+      - name: Commit the published site
+        if: github.event_name == 'push'
         run: |
           git add -A ..
-          git diff --cached --stat --exit-code -- .. || {
-            echo "::error::The site in the branch root is outdated. Run 'npm run publish-site' in website/ and commit the result."
-            exit 1
-          }
+          if git diff --cached --quiet; then
+            echo "The published site is up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: publish the site"
+          git push

@@ -23,13 +23,12 @@ Open http://localhost:4321/react-simple-chatbot/.
 
 ## Publishing
 
-Changes are published when they are merged into `gh-pages`, so a pull request must include the built site:
+GitHub Pages serves the branch root, and the **Site** workflow keeps it up to date:
 
-1. Edit the pages or the examples in `website/`.
-2. Run `npm run publish-site` in `website/`.
-3. Commit the changes in `website/` and in the root together.
+- On pull requests, it type-checks and builds the site (the internal links are validated).
+- After a merge into `gh-pages`, it builds the site again and commits the root if it changed.
 
-The **Site** workflow checks every pull request: it type-checks and builds the site, and fails if the root is not the build of `website/`.
+So a pull request only needs the changes in `website/`. Run `npm run publish-site` if you want to include the built root, or to preview it locally.
 
 ## Live examples
 
