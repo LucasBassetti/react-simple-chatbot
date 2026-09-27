@@ -1,0 +1,19 @@
+---
+import Playground from './Playground';
+
+// the llms.txt files render the pages without the React renderer
+let isPage = true;
+try {
+  isPage = Boolean(Astro.locals.starlightRoute);
+} catch {
+  isPage = false;
+}
+---
+
+{
+  isPage && (
+    <div class="not-content">
+      <Playground client:only="react" />
+    </div>
+  )
+}

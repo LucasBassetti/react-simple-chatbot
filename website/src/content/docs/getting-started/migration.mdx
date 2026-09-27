@@ -1,0 +1,144 @@
+---
+title: Migrating from 0.x to 1.0
+description: The breaking changes in React Simple Chatbot 1.0 and how to update your code.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Version 1.0 rewrites React Simple Chatbot in TypeScript with function components and hooks. The steps format and the props are the same as in 0.7.0, so most apps only need to update their dependencies. This page lists everything that can break and how to fix it.
+
+## Update the packages
+
+<Tabs syncKey="pkg">
+  <TabItem label="npm">
+
+```sh
+npm install react-simple-chatbot@^1.0.0 styled-components@latest
+```
+
+  </TabItem>
+  <TabItem label="yarn">
+
+```sh
+yarn add react-simple-chatbot@^1.0.0 styled-components@latest
+```
+
+  </TabItem>
+  <TabItem label="pnpm">
+
+```sh
+pnpm add react-simple-chatbot@^1.0.0 styled-components@latest
+```
+
+  </TabItem>
+  <TabItem label="bun">
+
+```sh
+bun add react-simple-chatbot@^1.0.0 styled-components@latest
+```
+
+  </TabItem>
+</Tabs>
+
+You only need to update styled-components if your version is older than 5.1.
+
+## Breaking changes
+
+### New peer dependency versions
+
+| Package | 0.x | 1.0 |
+| --- | --- | --- |
+| `react` and `react-dom` | 16.3 or newer | 18 or newer |
+| `styled-components` | 4 or newer | 5.1 or newer |
+
+Version 1.0 is built and tested for React 18 and 19, and its styles use transient props (`$prop`), which styled-components added in 5.1.
+
+If you can't upgrade React or styled-components yet, stay on 0.7.0. It has the same features and the maintenance fixes released before 1.0:
+
+```sh
+npm install react-simple-chatbot@0.7.0
+```
+
+### ChatBot is a function component
+
+`ChatBot` used to be a class component, so a `ref` gave you its instance and some apps called its internal methods. In 1.0 it is a function component: a `ref` doesn't give you anything, and React 18 warns about it. Remove the `ref` and control the chatbot with props instead.
+
+To open and close a floating chatbot from your code, pass `opened` together with `toggleFloating`. The chatbot then follows your state:
+
+```tsx title="Before (0.x)"
+const chatbot = useRef(null);
+
+<button onClick={() => chatbot.current.toggleChatBot(true)}>Open chat</button>
+<ChatBot ref={chatbot} floating steps={steps} />
+```
+
+```tsx title="After (1.0)"
+const [opened, setOpened] = useState(false);
+
+<button type="button" onClick={() => setOpened(true)}>Open chat</button>
+<ChatBot
+  floating
+  opened={opened}
+  toggleFloating={({ opened }) => setOpened(opened)}
+  steps={steps}
+/>
+```
+
+To restart the conversation, render the chatbot with a new `key`. React mounts a new instance, which starts from the first step:
+
+```tsx title="App.tsx"
+const [conversation, setConversation] = useState(0);
+
+<button type="button" onClick={() => setConversation(c => c + 1)}>Restart</button>
+<ChatBot key={conversation} steps={steps} />
+```
+
+If `cache` is enabled, also clear it with `localStorage.removeItem(cacheName)` before changing the key, or the new instance restores the old conversation. See the [floating guide](/react-simple-chatbot/guides/floating/) and the [cache guide](/react-simple-chatbot/guides/cache/).
+
+### Enter submits on keydown
+
+The input used to submit on `keypress`, an event that browsers deprecated. It now submits on `keydown`. While the user is composing characters with an input method editor (IME), for example when typing Japanese, Enter confirms the composition and no longer sends a half-written message.
+
+Most apps don't need to change anything. It matters if you pass keyboard handlers in `inputAttributes`, because they are spread on the input after the chatbot's own handler and replace it:
+
+- In 0.x, an `onKeyPress` handler replaced the submit handler. In 1.0 it runs next to it, and Enter submits the message.
+- In 1.0, an `onKeyDown` handler replaces the submit handler, so Enter no longer submits the message.
+
+<Aside type="caution">
+  Avoid `onKeyDown` in `inputAttributes` unless you want to take over the Enter key.
+</Aside>
+
+### handleEnd receives steps as an object
+
+The `steps` argument of `handleEnd` used to be an array with the step ids as string keys. It is now a plain object keyed by step id.
+
+Reading a step by id works the same. Array methods and `length` don't exist on the object. They only worked in 0.x when the ids were numbers, such as `'1'` and `'2'`; with ids like `'name'`, the array looked empty. Use `Object.values(steps)` to get a real array:
+
+```tsx title="Before (0.x)"
+handleEnd={({ steps }) => {
+  const name = steps[2].value;
+  const answers = steps.map(step => step.value);
+}}
+```
+
+```tsx title="After (1.0)"
+handleEnd={({ steps }) => {
+  const name = steps[2].value;
+  const answers = Object.values(steps).map(step => step.value);
+}}
+```
+
+`renderedSteps` (an array of the steps in order) and `values` (an array of the values) are unchanged.
+
+## Other changes worth knowing
+
+These changes don't require code changes, but they can affect your app:
+
+- **Written in TypeScript.** The type declarations are generated from the source, so they always match the code. The type names are the same as in 0.7.0, plus a new `ChatBotTheme` type. See [TypeScript](/react-simple-chatbot/getting-started/typescript/).
+- **ES module build.** Bundlers now get an ES module build, alongside the UMD build.
+- **No style props in the DOM.** The styled components use transient props, so React no longer warns about unknown attributes such as `floating` or `invalid`, with any supported styled-components version.
+- **Partial themes.** A theme that defines only some keys falls back to the default theme for the others, instead of leaving those styles empty. See [theming](/react-simple-chatbot/guides/theming/).
+- **extraControl on DOM elements.** When `extraControl` is a DOM element, such as a `button`, it only receives `disabled`. Components still receive `disabled`, `speaking` and `invalid`.
+- **Fewer dependencies.** `prop-types` and `random-id` were removed. The only runtime dependency left is `flatted`, used by the cache.
+
+The [changelog](/react-simple-chatbot/resources/changelog/) lists every change in each release.

@@ -1,0 +1,67 @@
+---
+title: React Simple Chatbot
+description: Build conversational chatbots in React with a list of steps. Written in TypeScript, works with React 18 and 19.
+template: splash
+editUrl: false
+hero:
+  title: Chatbots in React, <span class="hero-accent">one step at a time</span>
+  tagline: Describe the conversation as a list of steps, and React Simple Chatbot renders the messages, inputs, options and your own components.
+  actions:
+    - text: Get started
+      link: /react-simple-chatbot/getting-started/introduction/
+      icon: right-arrow
+    - text: Try the playground
+      link: /react-simple-chatbot/playground/
+      variant: minimal
+      icon: rocket
+---
+
+import { Card, CardGrid, LinkCard, Code } from '@astrojs/starlight/components';
+
+export const example = `import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}`;
+
+## Why React Simple Chatbot
+
+<CardGrid>
+  <Card title="Conversations as data" icon="list-format">
+    A conversation is a plain array of steps: bot messages, user inputs, options and custom components, connected by triggers.
+  </Card>
+  <Card title="TypeScript first" icon="seti:typescript">
+    Written in TypeScript with types for every step and prop, so your editor completes and checks your conversations.
+  </Card>
+  <Card title="Your components inside" icon="puzzle">
+    Render any React component as a step, read the previous answers, and decide when the conversation continues.
+  </Card>
+  <Card title="Themeable" icon="seti:css">
+    Change colors and fonts with a styled-components theme, or style any element with props and stable class names.
+  </Card>
+  <Card title="Voice ready" icon="comment-alt">
+    Speech recognition for user answers and speech synthesis for bot messages, with one prop each.
+  </Card>
+  <Card title="Production ready" icon="approve-check">
+    React 18 and 19, StrictMode, server-side rendering, conversation cache and accessible controls.
+  </Card>
+</CardGrid>
+
+## A chatbot in a few lines
+
+<Code code={example} lang="tsx" title="App.tsx" />
+
+## Start here
+
+<CardGrid>
+  <LinkCard title="Quick start" description="Install the package and build your first chatbot." href="/react-simple-chatbot/getting-started/quick-start/" />
+  <LinkCard title="Examples" description="Live chatbots with their code, ready to copy." href="/react-simple-chatbot/examples/previous-value/" />
+  <LinkCard title="API reference" description="Every prop, step attribute and type." href="/react-simple-chatbot/reference/chatbot/" />
+  <LinkCard title="Migrating to 1.0" description="What changed from 0.x and how to update." href="/react-simple-chatbot/getting-started/migration/" />
+</CardGrid>

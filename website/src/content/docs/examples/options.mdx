@@ -1,0 +1,15 @@
+---
+title: Options
+description: Let the user pick an option and branch the conversation on the choice.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+An options step shows a list of buttons for the user to choose from. Each option has a `label`, an optional `value` (the label by default) and its own `trigger`, so every choice can lead to a different step. See [Steps](/react-simple-chatbot/guides/steps/) for more.
+
+<Demo name="options" />
+
+## How it works
+
+- The wrong options trigger the `wrong` step, which triggers the `answer` step again, so the user can try another number.
+- The right option triggers the `right` step, which ends the conversation.

@@ -1,0 +1,113 @@
+---
+title: Floating chatbot
+description: Show the chatbot behind a button in the corner of the page, and control when it opens.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+
+Set `floating` to render a round button fixed in the corner of the page. Clicking it opens the chat above the page content, and the close button in the header closes it.
+
+<Demo name="floating" height={120} portal />
+
+<Aside>
+  The demo button appears at the bottom right of this page, not inside the preview box.
+</Aside>
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'hello', message: 'Hi! How can I help?', trigger: 'question' },
+  { id: 'question', user: true, trigger: 'answer' },
+  { id: 'answer', message: 'Thanks, an agent will reply soon.', end: true }
+];
+
+export default function App() {
+  return <ChatBot steps={steps} floating headerTitle="Support" />;
+}
+```
+
+The conversation starts the first time the user opens the chat, so the first messages do not play while nobody is looking. Closing the chat keeps the conversation; opening it again continues where the user left off.
+
+## Button icon
+
+`floatingIcon` sets the content of the button. Pass an image URL, or any React element. The default is a chat icon, drawn with the `headerFontColor` of the theme on the `headerBgColor` background.
+
+```tsx title="App.tsx"
+<ChatBot steps={steps} floating floatingIcon="/images/chat.svg" />
+```
+
+```tsx title="App.tsx"
+<ChatBot steps={steps} floating floatingIcon={<span aria-hidden="true">?</span>} />
+```
+
+## Position
+
+By default the button and the chat sit 32px from the bottom and right edges of the page, and the chat opens from its bottom right corner.
+
+`floatingStyle` is applied to the button, and its `top`, `right`, `bottom`, `left` and `transformOrigin` values also position the chat. To move both to the bottom left corner:
+
+```tsx title="App.tsx"
+<ChatBot
+  steps={steps}
+  floating
+  floatingStyle={{ left: '32px', right: 'initial', transformOrigin: 'bottom left' }}
+/>
+```
+
+To open the chat from the top right corner:
+
+```tsx title="App.tsx"
+<ChatBot
+  steps={steps}
+  floating
+  floatingStyle={{ top: '32px', bottom: 'initial', transformOrigin: 'top right' }}
+/>
+```
+
+The button and the chat use `z-index: 999`. Raise it with `floatingStyle` and `style` if other fixed elements on your page cover them.
+
+## Open it from your code
+
+To open or close the chat from your own UI, control it with two props:
+
+| Prop | Description |
+| --- | --- |
+| `opened` | Whether the chat is open. |
+| `toggleFloating` | Called with `{ opened }` when the user clicks the floating button or the close button. Update your state there. |
+
+```tsx title="App.tsx"
+import { useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'Hi! How can I help?', end: true }];
+
+export default function App() {
+  const [opened, setOpened] = useState(false);
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpened(true)}>
+        Talk to us
+      </button>
+      <ChatBot
+        steps={steps}
+        floating
+        opened={opened}
+        toggleFloating={({ opened }) => setOpened(opened)}
+      />
+    </>
+  );
+}
+```
+
+Pass both props. With only `toggleFloating`, the chatbot calls it but does not open or close by itself. With only `opened`, the value sets whether the chat starts open, and the chatbot manages its state after that.
+
+## Keyboard and screen readers
+
+The floating button and the close button are focusable, have an accessible label ("Open chat" and "Close chat"), and respond to Enter and Space. While the chat is open, the floating button is hidden from assistive technology and removed from the tab order.
+
+## Small screens
+
+Below 568px of screen width, the open chat takes the full screen, without rounded corners, whatever `width`, `height` and `floatingStyle` you set.

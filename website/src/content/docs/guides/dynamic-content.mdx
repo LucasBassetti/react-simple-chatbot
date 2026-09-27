@@ -1,0 +1,199 @@
+---
+title: Dynamic messages and branching
+description: Use previous answers in messages, branch the conversation and change the steps at runtime.
+---
+
+import { Aside, LinkCard } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+
+Static messages only go so far. This guide shows how to reuse what the user said, pick the next step from the answers, and attach your own data to steps.
+
+## Use the previous value
+
+Write `{previousValue}` in a string message to insert the value of the step right before it. For a user step, that is the text the user typed. For an options step, it is the value of the chosen option.
+
+<Demo name="previous-value" />
+
+Every `{previousValue}` in the message is replaced. If the previous step has no value, such as a bot message, it is replaced by an empty string.
+
+## Messages as functions
+
+When you need more than the previous value, pass a function as `message`. It runs when the conversation reaches the step and returns the text to show.
+
+The function receives:
+
+| Argument | Description |
+| --- | --- |
+| `previousValue` | The value of the previous step. `undefined` in the first step. |
+| `steps` | The steps rendered so far, by id. |
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-city' },
+  { id: 'ask-city', message: 'Where do you live?', trigger: 'city' },
+  { id: 'city', user: true, trigger: 'summary' },
+  {
+    id: 'summary',
+    message: ({ previousValue, steps }) =>
+      `${steps.name.value} from ${previousValue}, welcome aboard!`,
+    end: true
+  }
+];
+```
+
+## Branch with trigger functions
+
+`trigger` also accepts a function. It receives the value of the current step and the rendered steps, and returns the id of the next step.
+
+| Argument | Description |
+| --- | --- |
+| `value` | The value of the current step: the typed text, the chosen option's value, or the value a custom component passed to `triggerNextStep`. |
+| `steps` | The steps rendered so far, by id. |
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-plan', message: 'Which plan are you on?', trigger: 'plan' },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', value: 'free', trigger: 'ask-size' },
+      { label: 'Business', value: 'business', trigger: 'ask-size' }
+    ]
+  },
+  { id: 'ask-size', message: 'How many people are on your team?', trigger: 'size' },
+  {
+    id: 'size',
+    user: true,
+    inputAttributes: { type: 'number' },
+    trigger: ({ value, steps }) => {
+      if (steps.plan.value === 'free' && Number(value) > 5) {
+        return 'upgrade';
+      }
+      return 'thanks';
+    }
+  },
+  { id: 'upgrade', message: 'The Business plan fits bigger teams better.', end: true },
+  { id: 'thanks', message: 'Thanks, you are all set!', end: true }
+];
+```
+
+Option triggers can be functions too. They receive the value of the chosen option.
+
+<Aside>
+  The chatbot checks that string and number triggers point to existing steps when it builds the steps. The ids returned by trigger functions are not checked, so make sure every id they return exists.
+</Aside>
+
+## The steps object
+
+The `steps` argument of message and trigger functions holds every step rendered so far, keyed by id. Custom components receive the same object in the `steps` prop, and `handleEnd` receives it too.
+
+Each entry is a `RenderedStep`:
+
+| Key | Description |
+| --- | --- |
+| `id` | The id of the step. |
+| `message` | The text of the step. For user steps, the typed text. For options steps, the label of the chosen option. |
+| `value` | The value of the step. For user steps, the typed text. For options steps, the value of the chosen option. For custom steps, the value passed to `triggerNextStep`. Text steps have no value. |
+| `metadata` | The `metadata` of the step definition. |
+
+A step is only in the object after it is rendered, so check for missing keys when the conversation can take different paths. When an update step asks a step again, the entry holds the latest answer.
+
+```ts
+const city = steps.city?.value ?? 'somewhere';
+```
+
+## Attach data with metadata
+
+`metadata` lets you keep your own data on a step. It does not change how the step behaves (except `metadata.speak`, used by [speech synthesis](/react-simple-chatbot/guides/speech/)), and you can read it back from the `steps` object.
+
+For example, tag the answers that belong to a form, then collect them when the conversation ends:
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, metadata: { field: 'name' }, trigger: 'ask-email' },
+  { id: 'ask-email', message: 'And your email?', trigger: 'email' },
+  { id: 'email', user: true, metadata: { field: 'email' }, trigger: 'bye' },
+  { id: 'bye', message: 'Thanks, we will be in touch.', end: true }
+];
+
+export default function App() {
+  return (
+    <ChatBot
+      steps={steps}
+      handleEnd={({ steps }) => {
+        const form: Record<string, string> = {};
+        for (const step of Object.values(steps)) {
+          if (step.metadata?.field) {
+            form[step.metadata.field] = step.value;
+          }
+        }
+        console.log(form); // { name: '...', email: '...' }
+      }}
+    />
+  );
+}
+```
+
+## Change the steps after mount
+
+The chatbot reads these props every time it moves to the next step:
+
+- `steps`
+- `botAvatar` and `userAvatar`
+- `botDelay`, `userDelay` and `customDelay`
+- `botName`
+
+When one of them changes, the new values apply to the steps that were not rendered yet. The messages already in the chat stay as they are, and the conversation does not restart.
+
+This lets you build the steps from state, such as the language of the user:
+
+```tsx title="App.tsx"
+import { useMemo, useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const texts = {
+  en: { hello: 'Hello!', ask: 'How can I help you?' },
+  pt: { hello: 'Olá!', ask: 'Como posso ajudar?' }
+};
+
+export default function App() {
+  const [lang, setLang] = useState<'en' | 'pt'>('en');
+
+  const steps = useMemo<Step[]>(
+    () => [
+      { id: 'hello', message: texts[lang].hello, trigger: 'ask' },
+      { id: 'ask', message: texts[lang].ask, end: true }
+    ],
+    [lang]
+  );
+
+  return (
+    <>
+      <button type="button" onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}>
+        Switch language
+      </button>
+      <ChatBot steps={steps} />
+    </>
+  );
+}
+```
+
+A few things to keep in mind:
+
+- The props are compared by reference. Define static steps outside the component, or wrap them in `useMemo`, so they are not rebuilt on every step.
+- If the new steps are invalid (for example, a trigger points to a missing id), the chatbot logs the error and keeps using the last valid steps.
+- To start the conversation over, render the chatbot with a new `key`.
+
+<LinkCard
+  title="Custom components"
+  href="/react-simple-chatbot/guides/custom-components/"
+  description="Render your own components as steps and control when the conversation moves on."
+/>

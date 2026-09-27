@@ -1,0 +1,162 @@
+---
+title: FAQ
+description: Answers to common questions and fixes for common problems with React Simple Chatbot.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## How do I restart the conversation?
+
+Render the chatbot with a new `key`. React discards the old instance and mounts a new one, which starts again from the first step:
+
+```tsx title="App.tsx"
+import { useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}!', end: true }
+];
+
+export default function App() {
+  const [conversation, setConversation] = useState(0);
+
+  const restart = () => {
+    // only needed when the cache is enabled
+    localStorage.removeItem('rsc_cache');
+    setConversation(c => c + 1);
+  };
+
+  return (
+    <>
+      <button type="button" onClick={restart}>
+        Restart
+      </button>
+      <ChatBot key={conversation} cache steps={steps} />
+    </>
+  );
+}
+```
+
+With `cache` enabled, clear the cache too with `localStorage.removeItem(cacheName)`, or the new instance restores the old conversation. The default `cacheName` is `rsc_cache`. See the [cache guide](/react-simple-chatbot/guides/cache/).
+
+## How do I use it with Next.js or server rendering?
+
+The chatbot uses hooks and browser APIs, so it must be a client component. In the Next.js App Router, add `'use client'` at the top of the file that renders `ChatBot`:
+
+```tsx title="app/chat.tsx"
+'use client';
+
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello!', end: true }];
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+The component doesn't access `window` or `localStorage` while rendering, so it can be rendered on the server. See the [frameworks guide](/react-simple-chatbot/guides/frameworks/) for more setups.
+
+## How do I change the colors?
+
+Wrap the chatbot in a styled-components `ThemeProvider`. The theme can set only the keys you want to change; the others fall back to the default theme:
+
+```tsx title="App.tsx"
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+const theme: Partial<ChatBotTheme> = {
+  headerBgColor: '#0f766e',
+  botBubbleColor: '#0f766e'
+};
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+
+The [theming guide](/react-simple-chatbot/guides/theming/) lists every key, and the [themes example](/react-simple-chatbot/examples/themes/) shows a few complete themes.
+
+## How do I style a specific element?
+
+There are two ways, and you can combine them:
+
+- **Style props.** `style`, `contentStyle`, `footerStyle`, `inputStyle`, `submitButtonStyle`, `bubbleStyle`, `bubbleOptionStyle`, `avatarStyle`, `customStyle`, `controlStyle` and `floatingStyle` accept inline styles for each part of the chatbot.
+- **Class names.** Every element has a stable `rsc-*` class name that you can target with CSS, such as `.rsc-container`, `.rsc-header`, `.rsc-content`, `.rsc-ts-bubble` (message bubbles), `.rsc-os-option-element` (options), `.rsc-input` and `.rsc-submit-button`. Pass `className` to add your own class to the root element.
+
+```css title="chatbot.css"
+.support-bot .rsc-ts-bubble {
+  font-size: 15px;
+  line-height: 1.4;
+}
+```
+
+Every style prop is listed in the [ChatBot reference](/react-simple-chatbot/reference/chatbot/).
+
+## How do I send the answers to my API?
+
+Pass `handleEnd`. The chatbot calls it when the conversation reaches a step with `end: true`, with every answer:
+
+```tsx title="App.tsx"
+import ChatBot, { type HandleEndArgs } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+const handleEnd = ({ steps, values }: HandleEndArgs) => {
+  fetch('/api/answers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: steps.name?.value, values })
+  });
+};
+
+export default function App() {
+  return <ChatBot steps={steps} handleEnd={handleEnd} />;
+}
+```
+
+To call your API in the middle of the conversation, for example to save an answer or to show data from your server, use a custom component with `waitAction: true`. It calls your API and then `triggerNextStep` to continue. See [custom components](/react-simple-chatbot/guides/custom-components/) and the [end callback example](/react-simple-chatbot/examples/end-callback/).
+
+## Why doesn't speech recognition work in my browser?
+
+Speech recognition uses the browser's `webkitSpeechRecognition` API, which is available in Chromium-based browsers (Chrome, Edge, Opera and others) and in Safari. In other browsers, such as Firefox, the chatbot ignores `recognitionEnable` and shows the regular input without the microphone button.
+
+Browsers also usually only allow the microphone on secure pages (HTTPS or `localhost`), and the user must grant permission. See the [speech guide](/react-simple-chatbot/guides/speech/).
+
+## Can I change the steps after the chatbot is mounted?
+
+Yes. When `steps`, `botAvatar`, `userAvatar`, `botDelay`, `userDelay`, `customDelay` or `botName` change, the chatbot uses the new values for the steps that were not rendered yet. The messages already on the screen don't change.
+
+This lets you, for example, load the options of a later step from an API while the conversation runs. To start over with completely different steps, also change the `key`, as described in the first question of this page.
+
+## Why doesn't my custom component continue the conversation?
+
+A custom step with `waitAction: true` waits until the component calls `triggerNextStep`. Check that the component calls it, and that the step has a `trigger` or that you pass one in the call, for example `triggerNextStep({ trigger: 'next' })`. Without `waitAction`, the conversation continues on its own after the step's delay.
+
+A step triggers the next step only once: later calls to `triggerNextStep` from the same step are ignored. This also keeps the conversation from running twice under React StrictMode.
+
+## Can I use it with React Native?
+
+No. React Simple Chatbot renders DOM elements and uses styled-components for the web, so it only works in the browser. For React Native, look for a library built for it.
+
+## Does it work with older React versions?
+
+Version 1.0 needs React 18 or 19 and styled-components 5.1 or newer. For React 16.3 or 17, or styled-components 4, use version 0.7.0:
+
+```sh
+npm install react-simple-chatbot@0.7.0
+```
+
+<Aside type="note">
+  0.7.0 has the same steps and props as 1.0. When you upgrade React, follow the [migration guide](/react-simple-chatbot/getting-started/migration/) to move to 1.0.
+</Aside>
+
+## Where can I ask a question or report a bug?
+
+Open an issue on [GitHub](https://github.com/LucasBassetti/react-simple-chatbot/issues). For bugs, include the versions of React, styled-components and react-simple-chatbot, and the steps that reproduce the problem.

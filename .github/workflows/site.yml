@@ -1,0 +1,34 @@
+name: Site
+
+on:
+  pull_request:
+    branches: [gh-pages]
+  push:
+    branches: [gh-pages]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      # builds the site (the links are validated), then fails if the committed
+      # site in the branch root is not the build of the sources
+      - run: npm run publish-site
+      - name: Check the published site is up to date
+        run: |
+          git add -A ..
+          git diff --cached --stat --exit-code -- .. || {
+            echo "::error::The site in the branch root is outdated. Run 'npm run publish-site' in website/ and commit the result."
+            exit 1
+          }

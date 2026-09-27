@@ -1,0 +1,208 @@
+---
+title: Frameworks
+description: Use the chatbot with Vite, Next.js, React Router, Astro, Gatsby, or from a CDN.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The chatbot is a regular React component, so it works in any React 18 or 19 app. This page covers the setup details of the most common frameworks.
+
+## Server rendering in short
+
+Frameworks that render on the server can render the chatbot too:
+
+- It only uses browser APIs (`localStorage`, speech, focus) in effects and event handlers, never while rendering. You do not need to disable server rendering for it.
+- It becomes interactive after hydration, like any other component.
+- It is styled with styled-components. Without the styled-components server setup of your framework, the styles are injected in the browser, and the chatbot can show unstyled for a moment before hydration. That setup is optional; add it if the flash bothers you, or render the chatbot only on the client.
+
+<Aside type="caution">
+  With `recognitionEnable`, render the chatbot only on the client. The server cannot know whether the browser supports speech recognition, so the submit button icon would not match during hydration.
+</Aside>
+
+## Vite
+
+The chatbot works as-is with the React templates of Vite.
+
+```sh
+npm create vite@latest my-chatbot -- --template react-ts
+cd my-chatbot
+npm install react-simple-chatbot styled-components
+```
+
+```tsx title="src/App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello from Vite!', end: true }];
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+## Next.js App Router
+
+Components in the `app` directory are Server Components by default, and the chatbot needs state and effects. Add `'use client'` at the top of the file that renders `ChatBot`:
+
+```tsx title="app/components/Chat.tsx"
+'use client';
+
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  {
+    id: 'name',
+    user: true,
+    validator: value => (value.trim() ? true : 'Please type your name'),
+    trigger: 'hi'
+  },
+  { id: 'hi', message: 'Hi {previousValue}!', end: true }
+];
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+```tsx title="app/page.tsx"
+import Chat from './components/Chat';
+
+export default function Page() {
+  return (
+    <main>
+      <Chat />
+    </main>
+  );
+}
+```
+
+Keep the steps in the client file. Functions such as `trigger`, `validator` and `message` functions cannot be passed from a Server Component to a Client Component as props.
+
+You do not need `next/dynamic` with `ssr: false`, except with `recognitionEnable`. The styled-components registry described in the [Next.js CSS-in-JS guide](https://nextjs.org/docs/app/guides/css-in-js) is optional: it adds the chatbot styles to the server HTML.
+
+## Next.js Pages Router
+
+Import the chatbot in a page or component. No directive is needed.
+
+```tsx title="pages/support.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'How can we help?', end: true }];
+
+export default function SupportPage() {
+  return <ChatBot steps={steps} floating />;
+}
+```
+
+To include the styles in the server HTML, enable `compiler.styledComponents` in `next.config.js` and collect the styles in a custom `_document`, as described in the [styled-components server-side rendering docs](https://styled-components.com/docs/advanced#server-side-rendering). This is optional.
+
+## React Router and Remix
+
+Import the chatbot in a route module. It renders on the server and hydrates in the browser.
+
+```tsx title="app/routes/support.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'How can we help?', end: true }];
+
+export default function Support() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+To render it only in the browser, wait until the component mounts:
+
+```tsx title="app/components/ClientOnly.tsx"
+import { useEffect, useState, type ReactNode } from 'react';
+
+export function ClientOnly({ children }: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? children : null;
+}
+```
+
+```tsx title="app/routes/support.tsx"
+<ClientOnly>
+  <ChatBot steps={steps} recognitionEnable />
+</ClientOnly>
+```
+
+## Astro
+
+Add the React integration with `npx astro add react`, then put the chatbot in a React component:
+
+```tsx title="src/components/Chat.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello from Astro!', end: true }];
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+Render it with a client directive. Without one, Astro renders static HTML and the chatbot never runs.
+
+```astro title="src/pages/index.astro"
+---
+import Chat from '../components/Chat';
+---
+
+<Chat client:only="react" />
+```
+
+- `client:only="react"` renders the chatbot only in the browser. This is the simplest option, with no unstyled flash.
+- `client:load` renders it on the server and hydrates it on page load. The styles are injected when it hydrates.
+
+Define the steps inside the React component. Astro props must be serializable, so you cannot pass steps with functions or custom components from an `.astro` file.
+
+## Gatsby
+
+Import the chatbot in a page or component. Gatsby renders pages on the server during the build, which works because the chatbot does not use browser APIs while rendering.
+
+```tsx title="src/pages/index.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello from Gatsby!', end: true }];
+
+export default function IndexPage() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+To include the styles in the built HTML, add [gatsby-plugin-styled-components](https://www.gatsbyjs.com/plugins/gatsby-plugin-styled-components/). This is optional.
+
+## CDN
+
+You can use the chatbot without a bundler through its UMD build, which reads `React` and `styled` from global variables. Load React 18, styled-components 5 (with `react-is`, which it needs), then the chatbot. The component is available as `ReactSimpleChatbot.default`.
+
+```html title="index.html"
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/react-is@18/umd/react-is.production.min.js"></script>
+<script src="https://unpkg.com/styled-components@5/dist/styled-components.min.js"></script>
+<script src="https://unpkg.com/react-simple-chatbot@1/dist/react-simple-chatbot.js"></script>
+
+<script>
+  const ChatBot = ReactSimpleChatbot.default;
+
+  const steps = [
+    { id: 'ask', message: 'What is your name?', trigger: 'name' },
+    { id: 'name', user: true, trigger: 'hi' },
+    { id: 'hi', message: 'Hi {previousValue}!', end: true }
+  ];
+
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    React.createElement(ChatBot, { steps })
+  );
+</script>
+```
+
+Without JSX, create elements with `React.createElement`. For a theme, wrap the chatbot in `styled.ThemeProvider`.
+
+<Aside>
+  React 19 has no UMD build. To use React 19 without a bundler, load the ES module builds from a CDN that serves npm packages as modules, or use a bundler such as Vite.
+</Aside>

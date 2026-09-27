@@ -1,0 +1,36 @@
+---
+import { LinkButton } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+import HeroChat from './HeroChat';
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { title = data.title, tagline, actions = [] } = data.hero ?? {};
+---
+
+<div class="hero">
+  <div class="hero-copy">
+    <span class="hero-eyebrow">v1.0 · TypeScript · React 18 &amp; 19</span>
+    <h1 id="_top" data-page-title set:html={title} />
+    {tagline && <p class="hero-tagline" set:html={tagline} />}
+    {
+      actions.length > 0 && (
+        <div class="sl-flex hero-actions">
+          {actions.map(({ attrs: { class: className, ...attrs } = {}, icon, link: href, text, variant }) => (
+            <LinkButton {href} {variant} icon={icon?.name} class:list={[className]} {...attrs}>
+              {text}
+              {icon?.html && <Fragment set:html={icon.html} />}
+            </LinkButton>
+          ))}
+        </div>
+      )
+    }
+    <div class="hero-install">
+      <Code code="npm install react-simple-chatbot styled-components" lang="bash" frame="terminal" />
+    </div>
+  </div>
+  <div class="hero-demo">
+    <div class="hero-chat">
+      <HeroChat client:only="react" />
+    </div>
+  </div>
+</div>

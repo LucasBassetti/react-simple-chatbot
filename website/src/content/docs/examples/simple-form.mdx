@@ -1,0 +1,16 @@
+---
+title: Simple form
+description: Collect a few answers, review them and let the user update any of them.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+A small form built with user steps, an options step, a [validator](/react-simple-chatbot/examples/validator/) and a custom component rendered as a message with `asMessage`. Update steps let the user change an answer after the review. See [Steps](/react-simple-chatbot/guides/steps/) for more.
+
+<Demo name="simple-form" />
+
+## How it works
+
+- `Review` reads the answers from `steps` and renders them in a table. `asMessage: true` shows it inside a bot bubble.
+- An update step like `{ id: 'update-age', update: 'age', trigger: 'show-review' }` asks the `age` step again, then goes to its own `trigger` instead of the trigger of `age`.
+- `steps` always has the latest value of each step, so the next review shows the updated answer. `Review` keeps the answers of when it was rendered in `useState`, so the previous summaries do not change.

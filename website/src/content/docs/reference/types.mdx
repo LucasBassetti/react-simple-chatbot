@@ -1,0 +1,257 @@
+---
+title: Types
+description: The TypeScript types exported by react-simple-chatbot.
+---
+
+The library is written in TypeScript, and these types are exported from the package:
+
+```tsx
+import ChatBot, {
+  type ChatBotProps,
+  type ChatBotTheme,
+  type CustomComponentProps,
+  type Step
+} from 'react-simple-chatbot';
+```
+
+See [TypeScript](/react-simple-chatbot/getting-started/typescript/) for how to use them.
+
+## Steps
+
+### StepId
+
+```ts
+export type StepId = string | number;
+```
+
+### Trigger
+
+```ts
+export type Trigger = StepId | ((args: { value: any; steps: RenderedSteps }) => StepId);
+```
+
+### Message
+
+```ts
+export type Message = string | ((args: { previousValue: any; steps: RenderedSteps }) => string);
+```
+
+### BaseStep (internal, the base of the step types)
+
+```ts
+interface BaseStep {
+  id: StepId;
+  end?: boolean;
+  placeholder?: string;
+  inputAttributes?: InputHTMLAttributes<HTMLInputElement>;
+  metadata?: Record<string, any>;
+}
+```
+
+### TextStep
+
+```ts
+export interface TextStep extends BaseStep {
+  message: Message;
+  avatar?: string;
+  trigger?: Trigger;
+  delay?: number;
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+```
+
+### UserStep
+
+```ts
+export interface UserStep extends BaseStep {
+  user: true;
+  trigger?: Trigger;
+  hideExtraControl?: boolean;
+  /** Return true when the value is valid, or the error message to show */
+  validator?: (value: string) => boolean | string;
+}
+```
+
+### Option
+
+```ts
+export interface Option {
+  label: string;
+  /** Defaults to the label */
+  value?: any;
+  trigger: Trigger;
+}
+```
+
+### OptionsStep
+
+```ts
+export interface OptionsStep extends BaseStep {
+  options: Option[];
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+```
+
+### CustomStep
+
+```ts
+export interface CustomStep extends BaseStep {
+  component: ReactElement;
+  avatar?: string;
+  replace?: boolean;
+  waitAction?: boolean;
+  asMessage?: boolean;
+  trigger?: Trigger;
+  delay?: number;
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+```
+
+### UpdateStep
+
+```ts
+export interface UpdateStep extends BaseStep {
+  update: StepId;
+  trigger: Trigger;
+}
+```
+
+### Step
+
+```ts
+export type Step = TextStep | UserStep | OptionsStep | CustomStep | UpdateStep;
+```
+
+## Custom components
+
+### RenderedStep
+
+```ts
+export interface RenderedStep {
+  id: StepId;
+  message?: string;
+  value?: any;
+  metadata?: Record<string, any>;
+}
+```
+
+### RenderedSteps
+
+```ts
+export type RenderedSteps = Record<string, RenderedStep>;
+```
+
+### TriggerNextStepData
+
+```ts
+export interface TriggerNextStepData {
+  value?: any;
+  trigger?: Trigger;
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+
+/** Props injected in the components of custom steps */
+```
+
+### CustomComponentProps
+
+```ts
+export interface CustomComponentProps {
+  step?: Step & { value?: any };
+  steps?: RenderedSteps;
+  previousStep?: Step & { value?: any };
+  triggerNextStep?: (data?: TriggerNextStepData) => void;
+}
+```
+
+## ChatBot
+
+### ChatBotProps
+
+```ts
+export interface ChatBotProps {
+  steps: Step[];
+  avatarStyle?: CSSProperties;
+  botAvatar?: string;
+  botDelay?: number;
+  botName?: string;
+  bubbleOptionStyle?: CSSProperties;
+  bubbleStyle?: CSSProperties;
+  cache?: boolean;
+  cacheName?: string;
+  className?: string;
+  contentStyle?: CSSProperties;
+  controlStyle?: CSSProperties;
+  customDelay?: number;
+  customStyle?: CSSProperties;
+  enableMobileAutoFocus?: boolean;
+  enableSmoothScroll?: boolean;
+  extraControl?: ReactElement<any>;
+  floating?: boolean;
+  floatingIcon?: string | ReactElement;
+  floatingStyle?: CSSProperties;
+  footerStyle?: CSSProperties;
+  handleEnd?: (args: HandleEndArgs) => void;
+  headerComponent?: ReactElement;
+  headerTitle?: string;
+  height?: string;
+  hideBotAvatar?: boolean;
+  hideHeader?: boolean;
+  hideSubmitButton?: boolean;
+  hideUserAvatar?: boolean;
+  inputAttributes?: InputHTMLAttributes<HTMLInputElement>;
+  inputStyle?: CSSProperties;
+  opened?: boolean;
+  placeholder?: string;
+  recognitionEnable?: boolean;
+  recognitionLang?: string;
+  recognitionPlaceholder?: string;
+  speechSynthesis?: SpeechSynthesisOptions;
+  style?: CSSProperties;
+  submitButtonStyle?: CSSProperties;
+  toggleFloating?: (args: { opened: boolean }) => void;
+  userAvatar?: string;
+  userDelay?: number;
+  width?: string;
+}
+```
+
+### HandleEndArgs
+
+```ts
+export interface HandleEndArgs {
+  renderedSteps: RenderedStep[];
+  steps: RenderedSteps;
+  values: any[];
+}
+```
+
+### SpeechSynthesisOptions
+
+```ts
+export interface SpeechSynthesisOptions {
+  enable?: boolean;
+  lang?: string;
+  voice?: SpeechSynthesisVoice | null;
+}
+```
+
+### ChatBotTheme
+
+```ts
+export interface ChatBotTheme {
+  background: string;
+  fontFamily: string;
+  headerBgColor: string;
+  headerFontColor: string;
+  headerFontSize: string;
+  botBubbleColor: string;
+  botFontColor: string;
+  userBubbleColor: string;
+  userFontColor: string;
+}
+```

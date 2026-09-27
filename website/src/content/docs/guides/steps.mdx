@@ -1,0 +1,200 @@
+---
+title: Steps
+description: Build a conversation from a list of steps and learn each type of step.
+---
+
+import { Aside, LinkCard } from '@astrojs/starlight/components';
+
+A conversation is an array of steps. Each step has a unique `id` and does one thing: the bot says something, the user types an answer, the user picks an option, or a custom component renders.
+
+The conversation always starts from the first step in the array. From there, each step points to the next one with `trigger`, until a step with `end: true` finishes the conversation.
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'greet', message: 'Hello! What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'reply' },
+  { id: 'reply', message: 'Nice to meet you, {previousValue}!', end: true }
+];
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+A few rules:
+
+- `id` can be a string or a number, and must be unique.
+- `trigger` must point to an existing `id`. The chatbot throws an error on mount if a trigger points to a step that does not exist.
+- A step without `trigger` and without `end` stops the conversation there.
+- Unknown keys in a step are removed and logged to the console.
+
+## Types of steps
+
+The chatbot finds the type of a step from its keys, in this order: `user`, `message`, `options`, `component`, `update`.
+
+### Text step
+
+A bot message. Use `message` for the text and `trigger` for the next step.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'welcome', message: 'Welcome to our store!', trigger: 'help' },
+  { id: 'help', message: 'How can I help you today?', end: true }
+];
+```
+
+`message` can also be a function of the previous value and the rendered steps. See [Dynamic messages and branching](/react-simple-chatbot/guides/dynamic-content/).
+
+### User step
+
+Waits for the user to type a message and submit it. The typed text becomes the value of the step.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-email', message: 'What is your email?', trigger: 'email' },
+  {
+    id: 'email',
+    user: true,
+    placeholder: 'you@example.com',
+    validator: value => (value.includes('@') ? true : 'Enter a valid email'),
+    trigger: 'thanks'
+  },
+  { id: 'thanks', message: 'Thanks! We will write to {previousValue}.', end: true }
+];
+```
+
+Validation, placeholders and input attributes are covered in [User input](/react-simple-chatbot/guides/user-input/).
+
+### Options step
+
+Shows a list of buttons. Each option has a `label`, an optional `value` and its own `trigger`. When the user clicks an option, the buttons are replaced by a user message with the label, and the conversation follows the option's trigger.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Pick a plan', trigger: 'plan' },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', trigger: 'free' },
+      { label: 'Pro', value: 'pro-monthly', trigger: 'pro' }
+    ]
+  },
+  { id: 'free', message: 'The free plan is a great start.', end: true },
+  { id: 'pro', message: 'You picked {previousValue}.', end: true }
+];
+```
+
+`value` defaults to the label, so the value of the Free option is `'Free'`. Options steps have no `trigger` of their own.
+
+### Custom step
+
+Renders a React element with `component`. The chatbot injects props such as `steps` and `triggerNextStep` in your component.
+
+```tsx title="steps.tsx"
+import type { CustomComponentProps, Step } from 'react-simple-chatbot';
+
+function Summary({ steps }: CustomComponentProps) {
+  return <p>Your name is {steps?.name?.value}.</p>;
+}
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'summary' },
+  { id: 'summary', component: <Summary />, end: true }
+];
+```
+
+See [Custom components](/react-simple-chatbot/guides/custom-components/) for `asMessage`, `waitAction` and `replace`.
+
+### Update step
+
+Asks a previous step again, then continues with its own `trigger`. Use it to let the user fix an answer.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'confirm' },
+  { id: 'confirm', message: 'Is {previousValue} correct?', trigger: 'confirm-options' },
+  {
+    id: 'confirm-options',
+    options: [
+      { label: 'Yes', trigger: 'done' },
+      { label: 'No', trigger: 'fix-name' }
+    ]
+  },
+  { id: 'fix-name', update: 'name', trigger: 'confirm' },
+  { id: 'done', message: 'Great, thanks!', end: true }
+];
+```
+
+When the conversation reaches `fix-name`, the `name` step runs again. The new answer replaces the old value of `name`, and the conversation goes to `confirm`. If the updated step is an options step, every option goes to the update step's `trigger`.
+
+## Common attributes
+
+| Attribute | Steps | Description |
+| --- | --- | --- |
+| `delay` | text, custom | Milliseconds of the loading animation before the step shows. Defaults to `botDelay` for text steps and `customDelay` for custom steps (both `1000`). |
+| `placeholder` | all | Input placeholder while this step is the current step. Mostly useful on user steps. |
+| `hideInput` | text, options, custom | Hides the input, the submit button and the extra control while this step is the current step. |
+| `hideExtraControl` | text, user, options, custom | Hides only the `extraControl` element. |
+| `inputAttributes` | all | Attributes for the input element, such as `type` or `autoComplete`. They replace the global `inputAttributes`. |
+| `metadata` | all | Any data you want to attach to the step. It is available in the `steps` object. |
+| `avatar` | text, custom | Avatar image URL for this step, instead of `botAvatar`. |
+| `end` | text, user, options, custom | Ends the conversation after this step and calls `handleEnd`. |
+
+The full list of attributes of each step type is in the [steps reference](/react-simple-chatbot/reference/steps/).
+
+## Branching with trigger functions
+
+`trigger` can be a step id or a function. The function receives the value of the current step and the rendered steps, and returns the id of the next step.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-age', message: 'How old are you?', trigger: 'age' },
+  {
+    id: 'age',
+    user: true,
+    inputAttributes: { type: 'number' },
+    trigger: ({ value }) => (Number(value) >= 18 ? 'adult' : 'minor')
+  },
+  { id: 'adult', message: 'You can create an account.', end: true },
+  { id: 'minor', message: 'Ask a parent to create an account for you.', end: true }
+];
+```
+
+Option triggers can be functions too, with the chosen option's value as `value`.
+
+<Aside>
+  The chatbot checks that string and number triggers point to existing steps. It cannot check the ids returned by trigger functions, so make sure every returned id exists.
+</Aside>
+
+## Ending the conversation
+
+Add `end: true` to the last step. When that step is rendered, the chatbot calls the `handleEnd` prop with the rendered steps and their values.
+
+```tsx title="App.tsx"
+<ChatBot
+  steps={steps}
+  handleEnd={({ values }) => {
+    console.log('Answers:', values);
+  }}
+/>
+```
+
+<LinkCard
+  title="End callback example"
+  href="/react-simple-chatbot/examples/end-callback/"
+  description="Send the answers somewhere when the conversation ends."
+/>

@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime.s_hmvXF6.js";import{t}from"./react-simple-chatbot.CVjMMES1.js";var n=e(),r=[{id:`1`,message:`What is your name?`,trigger:`2`},{id:`2`,user:!0,trigger:`3`},{id:`3`,message:`Hi {previousValue}, nice to meet you!`,end:!0}];function i(){return(0,n.jsx)(t,{headerTitle:`Previous value`,steps:r})}export{i as default};

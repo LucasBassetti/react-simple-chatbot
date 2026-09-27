@@ -1,0 +1,188 @@
+---
+title: Theming and styling
+description: Change the colors, fonts, avatars, header and size of the chatbot.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+
+You can style the chatbot at three levels: a theme for the colors and font, style props for inline styles on each part, and stable class names for your own CSS.
+
+## Theme
+
+The chatbot is built with [styled-components](https://styled-components.com/). Wrap it in a `ThemeProvider` to change its colors and font.
+
+<Demo name="themes" />
+
+```tsx title="App.tsx"
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme, type Step } from 'react-simple-chatbot';
+
+const theme: ChatBotTheme = {
+  background: '#f5f8fb',
+  fontFamily: 'Helvetica Neue, sans-serif',
+  headerBgColor: '#ef6c00',
+  headerFontColor: '#fff',
+  headerFontSize: '15px',
+  botBubbleColor: '#ef6c00',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a'
+};
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello World', end: true }];
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+
+| Key | Default | Used for |
+| --- | --- | --- |
+| `background` | `'#f5f8fb'` | Background of the chat. |
+| `fontFamily` | `'monospace'` | Font of the whole chatbot. |
+| `headerBgColor` | `'#6e48aa'` | Header, floating button, and the microphone animation while listening. |
+| `headerFontColor` | `'#fff'` | Header text and icons, and the floating button icon. |
+| `headerFontSize` | `'16px'` | Header title. |
+| `botBubbleColor` | `'#6E48AA'` | Bot message bubbles and option buttons. |
+| `botFontColor` | `'#fff'` | Text of bot messages and option buttons. |
+| `userBubbleColor` | `'#fff'` | User message bubbles. |
+| `userFontColor` | `'#4a4a4a'` | Text of user messages. |
+
+### Partial themes
+
+Every key is optional in practice. The chatbot falls back to the default of each key the theme does not define, and to the full default theme when there is no `ThemeProvider`. Use `Partial<ChatBotTheme>` to change only a few colors:
+
+```tsx title="theme.ts"
+import type { ChatBotTheme } from 'react-simple-chatbot';
+
+export const theme: Partial<ChatBotTheme> = {
+  headerBgColor: '#0f766e',
+  botBubbleColor: '#0f766e',
+  fontFamily: 'system-ui, sans-serif'
+};
+```
+
+If your app already has a styled-components theme, add the chatbot keys to it, or wrap only the chatbot in its own `ThemeProvider`.
+
+## Style props
+
+Style props apply inline styles to each part of the chatbot. They take a React `CSSProperties` object.
+
+| Prop | Element |
+| --- | --- |
+| `style` | The chat container (`rsc-container`). |
+| `contentStyle` | The messages area (`rsc-content`). |
+| `footerStyle` | The footer with the input and the controls (`rsc-footer`). |
+| `inputStyle` | The input (`rsc-input`). |
+| `submitButtonStyle` | The submit button (`rsc-submit-button`). |
+| `bubbleStyle` | The bubbles of bot and user messages (`rsc-ts-bubble`). |
+| `bubbleOptionStyle` | The option buttons (`rsc-os-option-element`). |
+| `avatarStyle` | The avatar images (`rsc-ts-image`). |
+| `customStyle` | The container of custom steps (`rsc-cs`). |
+| `controlStyle` | The wrapper of the extra control and the submit button (`rsc-controls`). |
+| `floatingStyle` | The floating button, and the position of the floating chat. See [Floating chatbot](/react-simple-chatbot/guides/floating/). |
+
+```tsx title="App.tsx"
+<ChatBot
+  steps={steps}
+  style={{ borderRadius: 16 }}
+  bubbleStyle={{ fontSize: 16, maxWidth: '70%' }}
+  bubbleOptionStyle={{ background: '#fff', color: '#6e48aa', border: '1px solid #6e48aa' }}
+  inputStyle={{ fontFamily: 'inherit' }}
+/>
+```
+
+<Aside>
+  A style prop replaces its default instead of being merged with it. `controlStyle` defaults to `{ position: 'absolute', right: '0', top: '0' }`, so keep those values when you set it.
+</Aside>
+
+## Class names
+
+`className` is added to the root element of the chatbot, next to the `rsc` class. Every part also has a stable class name you can target from your CSS:
+
+| Class | Element |
+| --- | --- |
+| `rsc` | The root element. |
+| `rsc-container` | The chat container. |
+| `rsc-header` | The header. |
+| `rsc-header-title` | The header title. |
+| `rsc-header-close-button` | The close button of a floating chatbot. |
+| `rsc-content` | The messages area. |
+| `rsc-footer` | The footer. |
+| `rsc-input` | The input. |
+| `rsc-submit-button` | The submit button. |
+| `rsc-controls` | The wrapper of the extra control and the submit button. |
+| `rsc-float-button` | The floating button. |
+| `rsc-ts` | A text step (a message). |
+| `rsc-ts-user` | A user message. |
+| `rsc-ts-bot` | A bot message. |
+| `rsc-ts-bubble` | The bubble of a message. |
+| `rsc-ts-image` | The avatar of a message. |
+| `rsc-os` | An options step. |
+| `rsc-os-option-element` | An option button. |
+| `rsc-cs` | A custom step. |
+| `rsc-loading` | The loading dots. |
+
+Scope your rules with your `className` so they are more specific than the chatbot's own styles:
+
+```tsx title="App.tsx"
+import './chat.css';
+
+<ChatBot className="support-bot" steps={steps} />;
+```
+
+```css title="chat.css"
+.support-bot .rsc-ts-user .rsc-ts-bubble {
+  background: #e0f2fe;
+}
+
+.support-bot .rsc-os-option-element {
+  border-radius: 8px;
+}
+```
+
+## Avatars
+
+| Prop | Description |
+| --- | --- |
+| `botAvatar` | Image URL of the bot avatar. Data URIs work too. |
+| `userAvatar` | Image URL of the user avatar. |
+| `hideBotAvatar` | Hide the bot avatar. |
+| `hideUserAvatar` | Hide the user avatar. |
+| `botName` | Name of the bot, used in the alt text of its avatar. Defaults to `'The bot'`. |
+
+The avatar shows next to the first message of each group of consecutive messages from the same author. Set `avatar` on a text step, or on a custom step with `asMessage`, to use a different image for that message.
+
+```tsx title="App.tsx"
+<ChatBot
+  steps={steps}
+  botAvatar="/images/assistant.png"
+  hideUserAvatar
+  avatarStyle={{ borderRadius: 8 }}
+/>
+```
+
+## Header
+
+| Prop | Description |
+| --- | --- |
+| `headerTitle` | The title of the default header. Defaults to `'Chat'`. |
+| `hideHeader` | Hide the header. |
+| `headerComponent` | An element that replaces the whole header. |
+
+A `headerComponent` replaces the default header entirely, including the close button of a floating chatbot. If you use one with `floating`, add your own way to close the chat. See [Floating chatbot](/react-simple-chatbot/guides/floating/) for the controlled mode.
+
+## Size
+
+`width` and `height` take CSS values and default to `'350px'` and `'520px'`.
+
+```tsx title="App.tsx"
+<ChatBot steps={steps} width="100%" height="600px" />
+```
+
+Below 568px of screen width, the chatbot takes the full width of its parent, and a floating chatbot takes the full screen.

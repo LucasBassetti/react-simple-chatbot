@@ -1,0 +1,86 @@
+---
+title: Installation
+description: Install React Simple Chatbot and its peer dependencies.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Install the package
+
+React Simple Chatbot uses styled-components as a peer dependency, so install both packages:
+
+<Tabs syncKey="pkg">
+  <TabItem label="npm">
+
+```sh
+npm install react-simple-chatbot styled-components
+```
+
+  </TabItem>
+  <TabItem label="yarn">
+
+```sh
+yarn add react-simple-chatbot styled-components
+```
+
+  </TabItem>
+  <TabItem label="pnpm">
+
+```sh
+pnpm add react-simple-chatbot styled-components
+```
+
+  </TabItem>
+  <TabItem label="bun">
+
+```sh
+bun add react-simple-chatbot styled-components
+```
+
+  </TabItem>
+</Tabs>
+
+If your project already uses styled-components, you don't need to install it again. The chatbot uses the copy your app already has, so there is only one styled-components instance and your `ThemeProvider` reaches the chatbot.
+
+## Requirements
+
+| Package | Supported versions |
+| --- | --- |
+| `react` and `react-dom` | 18 or 19 |
+| `styled-components` | 5.1 or newer (including 6) |
+
+These are peer dependencies: your app provides them, and the package manager warns you when a version is out of range.
+
+<Aside type="note">
+  Stuck on React 16.3 or 17, or on styled-components 4? Install `react-simple-chatbot@0.7.0`, the last release that supports them. See [migrating from 0.x to 1.0](/react-simple-chatbot/getting-started/migration/) when you are ready to upgrade.
+</Aside>
+
+## What is included
+
+- **An ES module build** (`dist/react-simple-chatbot.mjs`), picked by bundlers such as Vite, webpack and Rollup, so unused code can be tree-shaken.
+- **A UMD build** (`dist/react-simple-chatbot.js`), used by CommonJS environments. In a page without a bundler, it exposes the `ReactSimpleChatbot` global (the component is `ReactSimpleChatbot.default`) and expects `React`, `ReactDOM` and `styled` globals.
+- **TypeScript types**, generated from the source. You don't need a separate `@types` package. See [TypeScript](/react-simple-chatbot/getting-started/typescript/).
+
+The only runtime dependency is [flatted](https://github.com/WebReflection/flatted), used to store the conversation when the cache is enabled.
+
+## Next.js and other frameworks
+
+The `ChatBot` component uses hooks and browser APIs, so it must render as a client component. In the Next.js App Router, add `'use client'` at the top of the file that renders it:
+
+```tsx title="app/chat.tsx"
+'use client';
+
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello!', end: true }];
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+You can then import `Chat` from a server component. The [frameworks guide](/react-simple-chatbot/guides/frameworks/) covers Next.js and other setups in more detail.
+
+## Next steps
+
+Build your first conversation in the [quick start](/react-simple-chatbot/getting-started/quick-start/).

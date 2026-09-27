@@ -1,0 +1,17 @@
+---
+title: Speech synthesis
+description: Make the chatbot read its messages out loud.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+With `speechSynthesis={{ enable: true, lang: 'en' }}`, the chatbot reads each bot message out loud with the speech synthesis of the browser. See [Speech](/react-simple-chatbot/guides/speech/) for more.
+
+<Demo name="speech-synthesis" />
+
+## How it works
+
+- By default, the chatbot says the text of the message.
+- Set `metadata.speak` on a step to say a different text. It also supports `{previousValue}`.
+- Custom components have no text to read, so `metadata.speak` is the only way to make them speak.
+- Browsers may block the speech until you interact with the page, like typing your name.

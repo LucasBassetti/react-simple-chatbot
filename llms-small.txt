@@ -1,0 +1,2564 @@
+<SYSTEM>This is the abridged developer documentation for React Simple Chatbot</SYSTEM>
+
+# Chatbots in React, <span class="hero-accent">one step at a time</span>
+
+> Describe the conversation as a list of steps, and React Simple Chatbot renders the messages, inputs, options and your own components.
+
+## Why React Simple Chatbot [Section titled “Why React Simple Chatbot”](#why-react-simple-chatbot) Conversations as data A conversation is a plain array of steps: bot messages, user inputs, options and custom components, connected by triggers. TypeScript first Written in TypeScript with types for every step and prop, so your editor completes and checks your conversations. Your components inside Render any React component as a step, read the previous answers, and decide when the conversation continues. Themeable Change colors and fonts with a styled-components theme, or style any element with props and stable class names. Voice ready Speech recognition for user answers and speech synthesis for bot messages, with one prop each. Production ready React 18 and 19, StrictMode, server-side rendering, conversation cache and accessible controls. ## A chatbot in a few lines [Section titled “A chatbot in a few lines”](#a-chatbot-in-a-few-lines) App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+ ## Start here [Section titled “Start here”](#start-here) [Quick start](/react-simple-chatbot/getting-started/quick-start/)Install the package and build your first chatbot. [Examples](/react-simple-chatbot/examples/previous-value/)Live chatbots with their code, ready to copy. [API reference](/react-simple-chatbot/reference/chatbot/)Every prop, step attribute and type. [Migrating to 1.0](/react-simple-chatbot/getting-started/migration/)What changed from 0.x and how to update.
+
+# BMI calculator
+
+> Ask for numbers with validators and compute a result in a custom component.
+
+The chatbot asks for the height and the weight, checks them with a `validator`, then a custom component computes the BMI (body mass index) and its category. See [Custom components](/react-simple-chatbot/guides/custom-components/) for more. bmi.tsx 
+```tsx
+import ChatBot, { type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+
+const numberBetween = (min: number, max: number) => (value: string) => {
+  const number = Number(value);
+
+
+  if (value.trim() === '' || Number.isNaN(number)) {
+    return 'Please type a number';
+  }
+  if (number < min || number > max) {
+    return `Type a number between ${min} and ${max}`;
+  }
+  return true;
+};
+
+
+const getCategory = (bmi: number) => {
+  if (bmi < 18.5) {
+    return 'underweight';
+  }
+  if (bmi < 25) {
+    return 'normal weight';
+  }
+  if (bmi < 30) {
+    return 'overweight';
+  }
+  return 'obesity';
+};
+
+
+function BMIResult({ steps }: CustomComponentProps) {
+  const height = Number(steps?.height?.value) / 100;
+  const weight = Number(steps?.weight?.value);
+  const bmi = Number((weight / (height * height)).toFixed(1));
+
+
+  return (
+    <span>
+      Your BMI is {bmi} ({getCategory(bmi)})
+    </span>
+  );
+}
+
+
+const steps: Step[] = [
+  { id: 'welcome', message: "Let's calculate your BMI (body mass index)", trigger: 'ask-height' },
+  { id: 'ask-height', message: 'What is your height in centimeters?', trigger: 'height' },
+  { id: 'height', user: true, validator: numberBetween(50, 250), trigger: 'ask-weight' },
+  { id: 'ask-weight', message: 'What is your weight in kilograms?', trigger: 'weight' },
+  { id: 'weight', user: true, validator: numberBetween(20, 300), trigger: 'result' },
+  { id: 'result', component: <BMIResult />, asMessage: true, end: true }
+];
+
+
+export default function BMI() {
+  return <ChatBot headerTitle="BMI calculator" steps={steps} />;
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * `numberBetween` creates a validator for each step, with its own range. * `BMIResult` reads the answers with `steps.height.value` and `steps.weight.value`. The values are strings, so they are converted with `Number`. * `asMessage: true` shows the result inside a bot bubble.
+
+# Custom component
+
+> Render your own React component as a step of the conversation.
+
+A step with a `component` renders any React element. The chatbot passes the `steps`, `step`, `previousStep` and `triggerNextStep` props to it, typed as [`CustomComponentProps`](/react-simple-chatbot/reference/custom-component/). See [Custom components](/react-simple-chatbot/guides/custom-components/) for more. custom-component.tsx 
+```tsx
+import ChatBot, { type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+
+function Summary({ steps }: CustomComponentProps) {
+  return (
+    <div style={{ width: '100%', lineHeight: 1.6 }}>
+      <strong>Your order</strong>
+      <div>Name: {steps?.name?.value}</div>
+      <div>Plan: {steps?.plan?.value}</div>
+    </div>
+  );
+}
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-plan' },
+  { id: 'ask-plan', message: 'Which plan do you want, {previousValue}?', trigger: 'plan' },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', trigger: 'summary' },
+      { label: 'Pro', trigger: 'summary' },
+      { label: 'Team', trigger: 'summary' }
+    ]
+  },
+  { id: 'summary', component: <Summary />, end: true }
+];
+
+
+export default function CustomComponent() {
+  return <ChatBot headerTitle="Custom component" steps={steps} />;
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * `steps` has the rendered steps by id, so `steps.name.value` is the name typed by the user and `steps.plan.value` is the chosen plan. * The props are optional in `CustomComponentProps`, so the component reads them with optional chaining. * DOM elements like `<div />` do not receive the props, use a component to read them.
+
+# End callback
+
+> Get the answers of the user when the conversation ends.
+
+The `handleEnd` prop is called when a step with `end: true` runs. It receives the `values` of the steps in order, the `steps` by id and the `renderedSteps`. See the [ChatBot reference](/react-simple-chatbot/reference/chatbot/) for more. end-callback.tsx 
+```tsx
+import { useState } from 'react';
+import ChatBot, { type HandleEndArgs, type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-number' },
+  { id: 'ask-number', message: 'Pick a number, {previousValue}', trigger: 'number' },
+  {
+    id: 'number',
+    options: [
+      { label: '1', trigger: 'end-message' },
+      { label: '2', trigger: 'end-message' },
+      { label: '3', trigger: 'end-message' },
+      { label: '4', trigger: 'end-message' },
+      { label: '5', trigger: 'end-message' }
+    ]
+  },
+  { id: 'end-message', message: 'Done! Check the values below the chatbot.', end: true }
+];
+
+
+export default function EndCallback() {
+  const [answers, setAnswers] = useState<string[]>([]);
+
+
+  const handleEnd = ({ values }: HandleEndArgs) => {
+    setAnswers(values);
+  };
+
+
+  return (
+    <div>
+      <ChatBot headerTitle="End callback" handleEnd={handleEnd} steps={steps} />
+      {answers.length > 0 && <p>Values: {answers.join(', ')}</p>}
+    </div>
+  );
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * `handleEnd` stores the `values` in the state of the component, which renders them below the chatbot. * Use `steps` instead of `values` to read an answer by the id of its step, like `steps.name.value`. * This is where you would send the answers to your server.
+
+# Floating chatbot
+
+> Show the chatbot as a button that opens a chat window.
+
+With `floating`, the chatbot starts as a button fixed to the page and opens when it is clicked. `floatingStyle` changes the button, and its position also moves the chat window. See [Floating](/react-simple-chatbot/guides/floating/) for more. The button of this example is at the bottom right corner of the page. Click it to open the chatbot. floating.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'Hi! What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Nice to meet you, {previousValue}!', end: true }
+];
+
+
+export default function Floating() {
+  return (
+    <ChatBot
+      floating
+      headerTitle="Need help?"
+      floatingStyle={{ bottom: '24px', right: '24px' }}
+      steps={steps}
+    />
+  );
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * The conversation starts when the chatbot opens for the first time. * `floatingStyle` sets `bottom` and `right` to move the button and the window closer to the corner. * The close button in the header turns the chatbot back into the floating button.
+
+# Options
+
+> Let the user pick an option and branch the conversation on the choice.
+
+An options step shows a list of buttons for the user to choose from. Each option has a `label`, an optional `value` (the label by default) and its own `trigger`, so every choice can lead to a different step. See [Steps](/react-simple-chatbot/guides/steps/) for more. options.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'question', message: 'What number am I thinking of?', trigger: 'answer' },
+  {
+    id: 'answer',
+    options: [
+      { label: 'Number 1', value: 1, trigger: 'wrong' },
+      { label: 'Number 2', value: 2, trigger: 'right' },
+      { label: 'Number 3', value: 3, trigger: 'wrong' }
+    ]
+  },
+  { id: 'wrong', message: 'Wrong answer, try again.', trigger: 'answer' },
+  { id: 'right', message: 'Awesome! You are a telepath!', end: true }
+];
+
+
+export default function Options() {
+  return <ChatBot headerTitle="Options" steps={steps} />;
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * The wrong options trigger the `wrong` step, which triggers the `answer` step again, so the user can try another number. * The right option triggers the `right` step, which ends the conversation.
+
+# Previous value
+
+> Use the answer of the previous step in a bot message.
+
+Write `{previousValue}` in a message to show the value of the previous step, like the text typed by the user. previous-value.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: '1', message: 'What is your name?', trigger: '2' },
+  { id: '2', user: true, trigger: '3' },
+  { id: '3', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+
+export default function PreviousValue() {
+  return <ChatBot headerTitle="Previous value" steps={steps} />;
+}
+```
+
+# Simple form
+
+> Collect a few answers, review them and let the user update any of them.
+
+A small form built with user steps, an options step, a [validator](/react-simple-chatbot/examples/validator/) and a custom component rendered as a message with `asMessage`. Update steps let the user change an answer after the review. See [Steps](/react-simple-chatbot/guides/steps/) for more. simple-form.tsx 
+```tsx
+import { useState } from 'react';
+import ChatBot, { type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+
+function Review({ steps }: CustomComponentProps) {
+  const [answers] = useState(() => [
+    { label: 'Name', value: steps?.name?.value },
+    { label: 'Gender', value: steps?.gender?.value },
+    { label: 'Age', value: steps?.age?.value }
+  ]);
+
+
+  return (
+    <div style={{ width: '100%' }}>
+      <strong>Summary</strong>
+      <table style={{ marginTop: 8 }}>
+        <tbody>
+          {answers.map(({ label, value }) => (
+            <tr key={label}>
+              <td style={{ paddingRight: 16 }}>{label}</td>
+              <td>{value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+
+const validateAge = (value: string) => {
+  const age = Number(value);
+
+
+  if (value.trim() === '' || Number.isNaN(age)) {
+    return 'Please type a number';
+  }
+  if (age <= 0) {
+    return 'Your age must be positive';
+  }
+  if (age >= 120) {
+    return `${value}? Come on!`;
+  }
+  return true;
+};
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-gender' },
+  { id: 'ask-gender', message: 'Hi {previousValue}! What is your gender?', trigger: 'gender' },
+  {
+    id: 'gender',
+    options: [
+      { label: 'Male', trigger: 'ask-age' },
+      { label: 'Female', trigger: 'ask-age' },
+      { label: 'Other', trigger: 'ask-age' }
+    ]
+  },
+  { id: 'ask-age', message: 'How old are you?', trigger: 'age' },
+  { id: 'age', user: true, validator: validateAge, trigger: 'show-review' },
+  { id: 'show-review', message: 'Great! Check out your summary', trigger: 'review' },
+  { id: 'review', component: <Review />, asMessage: true, trigger: 'ask-update' },
+  { id: 'ask-update', message: 'Would you like to update some field?', trigger: 'update' },
+  {
+    id: 'update',
+    options: [
+      { label: 'Yes', trigger: 'ask-field' },
+      { label: 'No', trigger: 'end-message' }
+    ]
+  },
+  { id: 'ask-field', message: 'What field would you like to update?', trigger: 'field' },
+  {
+    id: 'field',
+    options: [
+      { label: 'Name', trigger: 'update-name' },
+      { label: 'Gender', trigger: 'update-gender' },
+      { label: 'Age', trigger: 'update-age' }
+    ]
+  },
+  { id: 'update-name', update: 'name', trigger: 'show-review' },
+  { id: 'update-gender', update: 'gender', trigger: 'show-review' },
+  { id: 'update-age', update: 'age', trigger: 'show-review' },
+  { id: 'end-message', message: 'Thanks! Your data was submitted successfully!', end: true }
+];
+
+
+export default function SimpleForm() {
+  return <ChatBot headerTitle="Simple form" steps={steps} />;
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * `Review` reads the answers from `steps` and renders them in a table. `asMessage: true` shows it inside a bot bubble. * An update step like `{ id: 'update-age', update: 'age', trigger: 'show-review' }` asks the `age` step again, then goes to its own `trigger` instead of the trigger of `age`. * `steps` always has the latest value of each step, so the next review shows the updated answer. `Review` keeps the answers of when it was rendered in `useState`, so the previous summaries do not change.
+
+# Speech recognition
+
+> Let the user answer by voice.
+
+With `recognitionEnable`, the submit button shows a microphone while the input is empty. Click it and speak: the chatbot types what you say and sends it when you stop talking. See [Speech](/react-simple-chatbot/guides/speech/) for more. It needs a browser with `webkitSpeechRecognition`, like Chrome, Edge and other Chromium-based browsers, or Safari, and permission to use the microphone. In other browsers the chatbot works with the keyboard only. speech-recognition.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+
+export default function SpeechRecognition() {
+  return <ChatBot headerTitle="Speech recognition" recognitionEnable steps={steps} />;
+}
+```
+
+# Speech synthesis
+
+> Make the chatbot read its messages out loud.
+
+With `speechSynthesis={{ enable: true, lang: 'en' }}`, the chatbot reads each bot message out loud with the speech synthesis of the browser. See [Speech](/react-simple-chatbot/guides/speech/) for more. speech-synthesis.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  {
+    id: 'greet',
+    message: 'Hi {previousValue}, nice to meet you!',
+    metadata: {
+      speak: 'Hi {previousValue}. I am saying something different from the message text.'
+    },
+    trigger: 'card'
+  },
+  {
+    id: 'card',
+    component: <div>This is a custom component</div>,
+    metadata: { speak: 'I can also say something about a custom component.' },
+    end: true
+  }
+];
+
+
+export default function SpeechSynthesis() {
+  return (
+    <ChatBot
+      headerTitle="Speech synthesis"
+      speechSynthesis={{ enable: true, lang: 'en' }}
+      steps={steps}
+    />
+  );
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * By default, the chatbot says the text of the message. * Set `metadata.speak` on a step to say a different text. It also supports `{previousValue}`. * Custom components have no text to read, so `metadata.speak` is the only way to make them speak. * Browsers may block the speech until you interact with the page, like typing your name.
+
+# Themes
+
+> Change the colors and the font of the chatbot with a theme.
+
+Wrap the chatbot in the `ThemeProvider` of `styled-components` and pass a theme typed as `ChatBotTheme`. See [Theming](/react-simple-chatbot/guides/theming/) for more. themes.tsx 
+```tsx
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme, type Step } from 'react-simple-chatbot';
+
+
+const theme: ChatBotTheme = {
+  background: '#fff8f0',
+  fontFamily: 'Helvetica, Arial, sans-serif',
+  headerBgColor: '#ef6c00',
+  headerFontColor: '#fff',
+  headerFontSize: '16px',
+  botBubbleColor: '#ef6c00',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a'
+};
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}! This chatbot uses a custom theme.', end: true }
+];
+
+
+export default function Themes() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot headerTitle="Themes" steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * The chatbot reads its colors, font and header font size from the theme. * Typing the theme as `ChatBotTheme` makes TypeScript check that it has every key.
+
+# Validator
+
+> Validate the text typed by the user before moving to the next step.
+
+Add a `validator` to a user step to check the typed value. Return `true` to accept it, or an error message to show in the input. See [User input](/react-simple-chatbot/guides/user-input/) for more. validator.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const validateAge = (value: string) => {
+  const age = Number(value);
+
+
+  if (value.trim() === '' || Number.isNaN(age)) {
+    return 'Please type a number';
+  }
+  if (age <= 0) {
+    return 'Your age must be positive';
+  }
+  if (age >= 120) {
+    return `${value}? Come on!`;
+  }
+  return true;
+};
+
+
+const steps: Step[] = [
+  { id: 'question', message: 'How old are you?', trigger: 'age' },
+  { id: 'age', user: true, validator: validateAge, trigger: 'answer' },
+  { id: 'answer', message: 'Got it, you are {previousValue} years old.', end: true }
+];
+
+
+export default function Validator() {
+  return <ChatBot headerTitle="Validator" steps={steps} />;
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * `validateAge` receives the typed text as a string and returns an error message when it is empty, not a number, not positive or 120 or more. * The error message replaces the text in the input for a moment, then the typed text comes back so the user can fix it. * The next step only runs when the validator returns `true`.
+
+# Wikipedia search
+
+> Fetch data in a custom component and continue the conversation when it arrives.
+
+The user types a term and a custom component searches it with the [Wikipedia API](https://www.mediawiki.org/wiki/API:Opensearch). With `waitAction: true`, the conversation waits until the component calls `triggerNextStep`. See [Custom components](/react-simple-chatbot/guides/custom-components/) for more. wikipedia-search.tsx 
+```tsx
+import { useEffect, useState } from 'react';
+import ChatBot, { Loading, type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+
+interface Article {
+  title: string;
+  url: string;
+}
+
+
+type OpenSearchResponse = [string, string[], string[], string[]];
+
+
+async function searchWikipedia(term: string, signal: AbortSignal): Promise<Article | null> {
+  const params = new URLSearchParams({
+    action: 'opensearch',
+    format: 'json',
+    origin: '*',
+    search: term
+  });
+  const response = await fetch(`https://en.wikipedia.org/w/api.php?${params}`, { signal });
+  const [, titles, , urls]: OpenSearchResponse = await response.json();
+
+
+  return titles.length > 0 ? { title: titles[0], url: urls[0] } : null;
+}
+
+
+function WikipediaResult({ previousStep, triggerNextStep }: CustomComponentProps) {
+  const search: string = previousStep?.value;
+  const [loading, setLoading] = useState(true);
+  const [article, setArticle] = useState<Article | null>(null);
+
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+
+    searchWikipedia(search, controller.signal)
+      .then(setArticle)
+      .catch(() => setArticle(null))
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      });
+
+
+    return () => controller.abort();
+  }, [search]);
+
+
+  useEffect(() => {
+    if (!loading) {
+      triggerNextStep?.();
+    }
+  }, [loading, triggerNextStep]);
+
+
+  if (loading) {
+    return <Loading />;
+  }
+
+
+  if (!article) {
+    return <span>Nothing found for "{search}".</span>;
+  }
+
+
+  return (
+    <span>
+      Found on Wikipedia:{' '}
+      <a href={article.url} target="_blank" rel="noreferrer">
+        {article.title}
+      </a>
+    </span>
+  );
+}
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Type something to search on Wikipedia (e.g. Brazil)', trigger: 'search' },
+  { id: 'search', user: true, trigger: 'result' },
+  { id: 'result', component: <WikipediaResult />, waitAction: true, trigger: 'ask-again' },
+  { id: 'ask-again', message: 'Do you want to search again?', trigger: 'again' },
+  {
+    id: 'again',
+    options: [
+      { label: 'Yes', trigger: 'ask' },
+      { label: 'No', trigger: 'bye' }
+    ]
+  },
+  { id: 'bye', message: 'Thanks for searching!', end: true }
+];
+
+
+export default function WikipediaSearch() {
+  return <ChatBot headerTitle="Wikipedia search" steps={steps} />;
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * `WikipediaResult` reads the term from `previousStep.value`, the user step rendered right before it. * While the request runs, it renders the `Loading` component exported by `react-simple-chatbot`, the same dots the bot shows while typing. * When the request ends, it calls `triggerNextStep()` and the chatbot asks to search again. * The `origin=*` parameter makes the Wikipedia API accept requests from any site.
+
+# Installation
+
+> Install React Simple Chatbot and its peer dependencies.
+
+## Install the package [Section titled “Install the package”](#install-the-package) React Simple Chatbot uses styled-components as a peer dependency, so install both packages: * npm 
+  ```sh
+  npm install react-simple-chatbot styled-components
+  ```
+ * yarn 
+  ```sh
+  yarn add react-simple-chatbot styled-components
+  ```
+ * pnpm 
+  ```sh
+  pnpm add react-simple-chatbot styled-components
+  ```
+ * bun 
+  ```sh
+  bun add react-simple-chatbot styled-components
+  ```
+ If your project already uses styled-components, you don’t need to install it again. The chatbot uses the copy your app already has, so there is only one styled-components instance and your `ThemeProvider` reaches the chatbot. ## Requirements [Section titled “Requirements”](#requirements) | Package | Supported versions | | ----------------------- | -------------------------- | | `react` and `react-dom` | 18 or 19 | | `styled-components` | 5.1 or newer (including 6) | These are peer dependencies: your app provides them, and the package manager warns you when a version is out of range. ## What is included [Section titled “What is included”](#what-is-included) * **An ES module build** (`dist/react-simple-chatbot.mjs`), picked by bundlers such as Vite, webpack and Rollup, so unused code can be tree-shaken. * **A UMD build** (`dist/react-simple-chatbot.js`), used by CommonJS environments. In a page without a bundler, it exposes the `ReactSimpleChatbot` global (the component is `ReactSimpleChatbot.default`) and expects `React`, `ReactDOM` and `styled` globals. * **TypeScript types**, generated from the source. You don’t need a separate `@types` package. See [TypeScript](/react-simple-chatbot/getting-started/typescript/). The only runtime dependency is [flatted](https://github.com/WebReflection/flatted), used to store the conversation when the cache is enabled. ## Next.js and other frameworks [Section titled “Next.js and other frameworks”](#nextjs-and-other-frameworks) The `ChatBot` component uses hooks and browser APIs, so it must render as a client component. In the Next.js App Router, add `'use client'` at the top of the file that renders it: app/chat.tsx 
+```tsx
+'use client';
+
+
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello!', end: true }];
+
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+ You can then import `Chat` from a server component. The [frameworks guide](/react-simple-chatbot/guides/frameworks/) covers Next.js and other setups in more detail. ## Next steps [Section titled “Next steps”](#next-steps) Build your first conversation in the [quick start](/react-simple-chatbot/getting-started/quick-start/).
+
+# Introduction
+
+> What React Simple Chatbot is, how a conversation is described, and where to go next.
+
+React Simple Chatbot is a React component that renders a chat conversation. You describe the conversation as data, and the component takes care of the messages, the typing delays, the user input, the options and the scrolling. It is written in TypeScript, works with React 18 and 19, and uses [styled-components](https://styled-components.com) for its styles. ## The core idea [Section titled “The core idea”](#the-core-idea) A conversation is an array of **steps**. Each step has an `id`, and most steps have a `trigger`: the `id` of the step that comes next. The chatbot starts with the first step of the array and follows the triggers until it reaches a step with `end: true`. App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+ Because the conversation is plain data, you can branch it (a trigger can be a function that picks the next step from the user’s answer), build it from an API response, or reuse the same steps in several places. ## Kinds of steps [Section titled “Kinds of steps”](#kinds-of-steps) The attributes of a step decide what kind of step it is. | Kind | Identified by | What it does | | ---------------- | ------------- | ------------------------------------------------------------------------------------------------------ | | Text | `message` | Shows a message from the bot. The message can be a string or a function. | | User | `user: true` | Waits for the user to type an answer, optionally checked by a `validator`. | | Options | `options` | Shows a list of choices; each option has its own `trigger`. | | Custom component | `component` | Renders any React element, which can read previous answers and decide when the conversation continues. | | Update | `update` | Asks an earlier step again, so the user can change an answer. | The [steps guide](/react-simple-chatbot/guides/steps/) covers each kind in detail, and the [steps reference](/react-simple-chatbot/reference/steps/) lists every attribute. ## Features [Section titled “Features”](#features) * **Dynamic content**: messages and triggers can be functions that receive the previous value and the answers given so far. * **User input**: validation with custom error messages, per-step placeholders and input attributes. * **Custom components**: render your own components as steps, for summaries, forms, API calls or anything else. * **Theming**: change colors and fonts with a styled-components theme, or style elements with `*Style` props and stable `rsc-*` class names. * **Floating mode**: show the chatbot behind a floating button, opened and closed by the user or by your code. * **Cache**: keep the conversation in `localStorage` so it survives a page reload. * **Speech**: speech recognition for the user’s answers and speech synthesis for the bot’s messages. * **End callback**: receive every answer when the conversation ends with `handleEnd`. * **Modern React**: function components and hooks, StrictMode, server rendering and accessible controls. ## Next steps [Section titled “Next steps”](#next-steps) [Installation](/react-simple-chatbot/getting-started/installation/)Install the package and its peer dependencies. [Quick start](/react-simple-chatbot/getting-started/quick-start/)Build and render your first chatbot. [Guides](/react-simple-chatbot/guides/steps/)Learn how steps, user input, custom components and theming work. [Examples](/react-simple-chatbot/examples/previous-value/)Live chatbots with their code, ready to copy.
+
+# Migrating from 0.x to 1.0
+
+> The breaking changes in React Simple Chatbot 1.0 and how to update your code.
+
+Version 1.0 rewrites React Simple Chatbot in TypeScript with function components and hooks. The steps format and the props are the same as in 0.7.0, so most apps only need to update their dependencies. This page lists everything that can break and how to fix it. ## Update the packages [Section titled “Update the packages”](#update-the-packages) * npm 
+  ```sh
+  npm install react-simple-chatbot@^1.0.0 styled-components@latest
+  ```
+ * yarn 
+  ```sh
+  yarn add react-simple-chatbot@^1.0.0 styled-components@latest
+  ```
+ * pnpm 
+  ```sh
+  pnpm add react-simple-chatbot@^1.0.0 styled-components@latest
+  ```
+ * bun 
+  ```sh
+  bun add react-simple-chatbot@^1.0.0 styled-components@latest
+  ```
+ You only need to update styled-components if your version is older than 5.1. ## Breaking changes [Section titled “Breaking changes”](#breaking-changes) ### New peer dependency versions [Section titled “New peer dependency versions”](#new-peer-dependency-versions) | Package | 0.x | 1.0 | | ----------------------- | ------------- | ------------ | | `react` and `react-dom` | 16.3 or newer | 18 or newer | | `styled-components` | 4 or newer | 5.1 or newer | Version 1.0 is built and tested for React 18 and 19, and its styles use transient props (`$prop`), which styled-components added in 5.1. If you can’t upgrade React or styled-components yet, stay on 0.7.0. It has the same features and the maintenance fixes released before 1.0: 
+```sh
+npm install react-simple-chatbot@0.7.0
+```
+ ### ChatBot is a function component [Section titled “ChatBot is a function component”](#chatbot-is-a-function-component) `ChatBot` used to be a class component, so a `ref` gave you its instance and some apps called its internal methods. In 1.0 it is a function component: a `ref` doesn’t give you anything, and React 18 warns about it. Remove the `ref` and control the chatbot with props instead. To open and close a floating chatbot from your code, pass `opened` together with `toggleFloating`. The chatbot then follows your state: Before (0.x) 
+```tsx
+const chatbot = useRef(null);
+
+
+<button onClick={() => chatbot.current.toggleChatBot(true)}>Open chat</button>
+<ChatBot ref={chatbot} floating steps={steps} />
+```
+ After (1.0) 
+```tsx
+const [opened, setOpened] = useState(false);
+
+
+<button type="button" onClick={() => setOpened(true)}>Open chat</button>
+<ChatBot
+  floating
+  opened={opened}
+  toggleFloating={({ opened }) => setOpened(opened)}
+  steps={steps}
+/>
+```
+ To restart the conversation, render the chatbot with a new `key`. React mounts a new instance, which starts from the first step: App.tsx 
+```tsx
+const [conversation, setConversation] = useState(0);
+
+
+<button type="button" onClick={() => setConversation(c => c + 1)}>Restart</button>
+<ChatBot key={conversation} steps={steps} />
+```
+ If `cache` is enabled, also clear it with `localStorage.removeItem(cacheName)` before changing the key, or the new instance restores the old conversation. See the [floating guide](/react-simple-chatbot/guides/floating/) and the [cache guide](/react-simple-chatbot/guides/cache/). ### Enter submits on keydown [Section titled “Enter submits on keydown”](#enter-submits-on-keydown) The input used to submit on `keypress`, an event that browsers deprecated. It now submits on `keydown`. While the user is composing characters with an input method editor (IME), for example when typing Japanese, Enter confirms the composition and no longer sends a half-written message. Most apps don’t need to change anything. It matters if you pass keyboard handlers in `inputAttributes`, because they are spread on the input after the chatbot’s own handler and replace it: * In 0.x, an `onKeyPress` handler replaced the submit handler. In 1.0 it runs next to it, and Enter submits the message. * In 1.0, an `onKeyDown` handler replaces the submit handler, so Enter no longer submits the message. Caution Avoid `onKeyDown` in `inputAttributes` unless you want to take over the Enter key. ### handleEnd receives steps as an object [Section titled “handleEnd receives steps as an object”](#handleend-receives-steps-as-an-object) The `steps` argument of `handleEnd` used to be an array with the step ids as string keys. It is now a plain object keyed by step id. Reading a step by id works the same. Array methods and `length` don’t exist on the object. They only worked in 0.x when the ids were numbers, such as `'1'` and `'2'`; with ids like `'name'`, the array looked empty. Use `Object.values(steps)` to get a real array: Before (0.x) 
+```tsx
+handleEnd={({ steps }) => {
+  const name = steps[2].value;
+  const answers = steps.map(step => step.value);
+}}
+```
+ After (1.0) 
+```tsx
+handleEnd={({ steps }) => {
+  const name = steps[2].value;
+  const answers = Object.values(steps).map(step => step.value);
+}}
+```
+ `renderedSteps` (an array of the steps in order) and `values` (an array of the values) are unchanged. ## Other changes worth knowing [Section titled “Other changes worth knowing”](#other-changes-worth-knowing) These changes don’t require code changes, but they can affect your app: * **Written in TypeScript.** The type declarations are generated from the source, so they always match the code. The type names are the same as in 0.7.0, plus a new `ChatBotTheme` type. See [TypeScript](/react-simple-chatbot/getting-started/typescript/). * **ES module build.** Bundlers now get an ES module build, alongside the UMD build. * **No style props in the DOM.** The styled components use transient props, so React no longer warns about unknown attributes such as `floating` or `invalid`, with any supported styled-components version. * **Partial themes.** A theme that defines only some keys falls back to the default theme for the others, instead of leaving those styles empty. See [theming](/react-simple-chatbot/guides/theming/). * **extraControl on DOM elements.** When `extraControl` is a DOM element, such as a `button`, it only receives `disabled`. Components still receive `disabled`, `speaking` and `invalid`. * **Fewer dependencies.** `prop-types` and `random-id` were removed. The only runtime dependency left is `flatted`, used by the cache. The [changelog](/react-simple-chatbot/resources/changelog/) lists every change in each release.
+
+# Quick start
+
+> Build your first chatbot, a bot that asks for the user's name and greets them.
+
+In this page you build a chatbot that asks for the user’s name and greets them by name. It takes three steps. ## Build the chatbot [Section titled “Build the chatbot”](#build-the-chatbot) 1. Install React Simple Chatbot and styled-components, its peer dependency: 
+   ```sh
+   npm install react-simple-chatbot styled-components
+   ```
+ See [installation](/react-simple-chatbot/getting-started/installation/) for yarn, pnpm and bun, and for the supported versions. 2. Describe the conversation as an array of steps. Each step has a unique `id` and a `trigger` pointing to the next step: steps.ts 
+   ```tsx
+   import type { Step } from 'react-simple-chatbot';
+
+
+   export const steps: Step[] = [
+     { id: '1', message: 'What is your name?', trigger: '2' },
+     { id: '2', user: true, trigger: '3' },
+     { id: '3', message: 'Hi {previousValue}, nice to meet you!', end: true }
+   ];
+   ```
+ Step `1` is a bot message, step `2` waits for the user to type, and step `3` answers with what the user typed. 3. Render the `ChatBot` component with your steps: App.tsx 
+   ```tsx
+   import ChatBot from 'react-simple-chatbot';
+   import { steps } from './steps';
+
+
+   export default function App() {
+     return <ChatBot headerTitle="Previous value" steps={steps} />;
+   }
+   ```
+ ## The result [Section titled “The result”](#the-result) previous-value.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: '1', message: 'What is your name?', trigger: '2' },
+  { id: '2', user: true, trigger: '3' },
+  { id: '3', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+
+export default function PreviousValue() {
+  return <ChatBot headerTitle="Previous value" steps={steps} />;
+}
+```
+ ## How it works [Section titled “How it works”](#how-it-works) * **`trigger`** tells the chatbot which step comes next. The conversation starts with the first step of the array and follows the triggers. A trigger can also be a function that picks the next step from the user’s answer; see [dynamic content](/react-simple-chatbot/guides/dynamic-content/). * **`user: true`** makes a step wait for the user. The chatbot enables the input, and when the user submits, the typed text becomes the value of that step. * **`{previousValue}`** in a message is replaced with the value of the previous step, here the name the user typed. For more control, `message` can be a function that receives `previousValue` and the answers given so far. * **`end: true`** marks the last step. When it is reached, the conversation stops and the chatbot calls `handleEnd` if you passed one. ## Next steps [Section titled “Next steps”](#next-steps) [Steps](/react-simple-chatbot/guides/steps/)All kinds of steps: messages, user input, options, custom components and updates. [Examples](/react-simple-chatbot/examples/options/)Options, validation, forms, API calls and more. [Theming](/react-simple-chatbot/guides/theming/)Change the colors and fonts of the chatbot. [ChatBot props](/react-simple-chatbot/reference/chatbot/)Every prop of the ChatBot component and its default value.
+
+# TypeScript
+
+> Use the types shipped with React Simple Chatbot to type your steps, custom components, callbacks and theme.
+
+React Simple Chatbot is written in TypeScript, and its type declarations are generated from the source. They are included in the package, so there is nothing else to install and the types always match the version you use. ## Exported types [Section titled “Exported types”](#exported-types) Import the types with `import type`, or inline with the `type` keyword next to the default import: 
+```tsx
+import ChatBot, { type Step, type ChatBotProps } from 'react-simple-chatbot';
+```
+ | Type | Describes | | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | | `Step` | Any step: a union of `TextStep`, `UserStep`, `OptionsStep`, `CustomStep` and `UpdateStep`. | | `TextStep`, `UserStep`, `OptionsStep`, `CustomStep`, `UpdateStep` | One kind of step each. | | `Option` | An option of an options step: `label`, optional `value` and `trigger`. | | `StepId` | The id of a step, a `string` or a `number`. | | `Trigger` | A step id, or a function that returns the id of the next step. | | `Message` | A string, or a function that returns the message. | | `RenderedStep`, `RenderedSteps` | A step as received by your functions (`id`, `message`, `value`, `metadata`), and those steps keyed by id. | | `ChatBotProps` | The props of the `ChatBot` component. | | `CustomComponentProps` | The props injected in the component of a custom step. | | `TriggerNextStepData` | The argument of `triggerNextStep`. | | `HandleEndArgs` | The argument of `handleEnd`. | | `ChatBotTheme` | The theme keys read by the chatbot. | | `SpeechSynthesisOptions` | The value of the `speechSynthesis` prop. | Besides the default `ChatBot` export, the package exports the `Loading` component, the animated dots the chatbot shows while a step is loading. The [types reference](/react-simple-chatbot/reference/types/) documents every type in detail. ## Type the steps [Section titled “Type the steps”](#type-the-steps) Annotate the steps array with `Step[]`. Your editor then completes the attributes of each step, and TypeScript reports wrong value types: steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+export const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  {
+    id: 'name',
+    user: true,
+    validator: value => (value.trim() ? true : 'Please type your name'),
+    trigger: 'ask-plan'
+  },
+  {
+    id: 'ask-plan',
+    message: ({ previousValue }) => `Nice to meet you, ${previousValue}. Which plan do you use?`,
+    trigger: 'plan'
+  },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', value: 'free', trigger: 'done' },
+      { label: 'Pro', value: 'pro', trigger: 'done' }
+    ]
+  },
+  { id: 'done', message: 'Thanks!', end: true }
+];
+```
+ The function attributes are typed from the annotation, so you don’t need to annotate their parameters: `value` in `validator` is a `string`, and `message` functions receive `previousValue` and `steps`. A validator returns `true` when the value is valid, or the error message to show. ## Type a custom component [Section titled “Type a custom component”](#type-a-custom-component) The component of a custom step receives `step`, `steps`, `previousStep` and `triggerNextStep` from the chatbot. Type its props with `CustomComponentProps`: Review\.tsx 
+```tsx
+import type { CustomComponentProps } from 'react-simple-chatbot';
+
+
+export function Review({ steps, triggerNextStep }: CustomComponentProps) {
+  return (
+    <div>
+      <p>Name: {steps?.name?.value}</p>
+      <p>Plan: {steps?.plan?.value}</p>
+      <button type="button" onClick={() => triggerNextStep?.()}>
+        Confirm
+      </button>
+    </div>
+  );
+}
+```
+ steps.tsx 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+import { Review } from './Review';
+
+
+export const steps: Step[] = [
+  // ...the name and plan steps
+  { id: 'review', component: <Review />, waitAction: true, trigger: 'done' },
+  { id: 'done', message: 'Thanks!', end: true }
+];
+```
+ With `waitAction: true`, the conversation waits until the component calls `triggerNextStep`. All the injected props are optional. You create the element yourself (`<Review />`) without them, and the chatbot adds them when it renders the step, so TypeScript can’t know they are there. Use optional chaining, as above. To accept your own props too, extend `CustomComponentProps`: Greeting.tsx 
+```tsx
+import type { CustomComponentProps } from 'react-simple-chatbot';
+
+
+interface GreetingProps extends CustomComponentProps {
+  greeting: string;
+}
+
+
+export function Greeting({ greeting, previousStep }: GreetingProps) {
+  return (
+    <p>
+      {greeting}, {previousStep?.value}!
+    </p>
+  );
+}
+```
+ The chatbot keeps the props you pass (`<Greeting greeting="Welcome" />`) and adds the step props to them. See [custom components](/react-simple-chatbot/guides/custom-components/) for the full guide. ## Type the handleEnd callback [Section titled “Type the handleEnd callback”](#type-the-handleend-callback) `handleEnd` receives a `HandleEndArgs` object when the conversation reaches a step with `end: true`: App.tsx 
+```tsx
+import ChatBot, { type HandleEndArgs } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+
+const handleEnd = ({ steps, values }: HandleEndArgs) => {
+  // steps is keyed by step id, values has every value in order
+  console.log(steps.name?.value, values);
+};
+
+
+export default function App() {
+  return <ChatBot steps={steps} handleEnd={handleEnd} />;
+}
+```
+ When the callback is written inline in the JSX, its argument is typed from the prop and needs no annotation. ## Type a theme [Section titled “Type a theme”](#type-a-theme) The chatbot reads its colors and fonts from the styled-components theme. `ChatBotTheme` lists the keys it uses: App.tsx 
+```tsx
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+
+const theme: ChatBotTheme = {
+  background: '#f5f8fb',
+  fontFamily: 'Helvetica Neue, sans-serif',
+  headerBgColor: '#0f766e',
+  headerFontColor: '#fff',
+  headerFontSize: '15px',
+  botBubbleColor: '#0f766e',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a'
+};
+
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+ A theme doesn’t need every key: the missing ones fall back to the default theme. Use `Partial<ChatBotTheme>` for a theme that only changes a few colors. More in the [theming guide](/react-simple-chatbot/guides/theming/). ## Wrap the ChatBot component [Section titled “Wrap the ChatBot component”](#wrap-the-chatbot-component) Use `ChatBotProps` to type a component that wraps the chatbot: SupportBot.tsx 
+```tsx
+import ChatBot, { type ChatBotProps, type Step } from 'react-simple-chatbot';
+
+
+const supportSteps: Step[] = [{ id: 'hello', message: 'How can we help?', end: true }];
+
+
+export function SupportBot(props: Omit<ChatBotProps, 'steps'>) {
+  return <ChatBot headerTitle="Support" {...props} steps={supportSteps} />;
+}
+```
+
+# Cache the conversation
+
+> Save the conversation in localStorage so users can reload the page and continue where they left off.
+
+Set `cache` to save the conversation in the browser. When the user reloads the page, the chatbot restores the messages and continues from the step where the user stopped. App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-email' },
+  { id: 'ask-email', message: 'Hi {previousValue}! What is your email?', trigger: 'email' },
+  { id: 'email', user: true, trigger: 'bye' },
+  { id: 'bye', message: 'Thanks, we will be in touch.', end: true }
+];
+
+
+export default function App() {
+  return <ChatBot steps={steps} cache cacheName="signup_chat" />;
+}
+```
+ | Prop | Default | Description | | ----------- | ------------- | --------------------------------------------------------------- | | `cache` | `false` | Save the conversation in `localStorage` and restore it on load. | | `cacheName` | `'rsc_cache'` | The `localStorage` key. | ## How it works [Section titled “How it works”](#how-it-works) * After each step, the chatbot saves the rendered steps under the `cacheName` key. * On load, it restores those steps without delays or loading animations. Restored steps do not trigger their next step again, and speech synthesis does not read them again. * If the conversation was waiting for the user, the input is enabled again. * Custom components are not saved. They are rendered again from the `component` of the step with the same id in your `steps`. * When the saved conversation had reached an `end` step, the chatbot removes the cache and starts a new conversation. Give each chatbot on the same site its own `cacheName`, so their conversations do not overwrite each other. ## Restart the conversation [Section titled “Restart the conversation”](#restart-the-conversation) To start over, remove the cache and mount the chatbot again with a new `key`: App.tsx 
+```tsx
+import { useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const CACHE_NAME = 'signup_chat';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'bye' },
+  { id: 'bye', message: 'Nice to meet you, {previousValue}!', end: true }
+];
+
+
+export default function App() {
+  const [chatKey, setChatKey] = useState(0);
+
+
+  const restart = () => {
+    localStorage.removeItem(CACHE_NAME);
+    setChatKey(key => key + 1);
+  };
+
+
+  return (
+    <>
+      <button type="button" onClick={restart}>
+        Start over
+      </button>
+      <ChatBot key={chatKey} steps={steps} cache cacheName={CACHE_NAME} />
+    </>
+  );
+}
+```
+ Remove the cache before you change the `key`. The new chatbot reads the cache when it mounts, so it would restore the old conversation otherwise. ## Storage errors [Section titled “Storage errors”](#storage-errors) Some browsers block `localStorage`, for example in private mode or when the user disables site data, and the storage can be full. The chatbot ignores these errors: the conversation keeps working, it just is not saved. If a saved conversation cannot be read, for example because it was created by an older version of the library, the chatbot logs a message to the console and starts a new conversation. ## Server rendering [Section titled “Server rendering”](#server-rendering) `localStorage` only exists in the browser. The chatbot reads it in an effect after the first render, so `cache` works with frameworks that render on the server. See [Frameworks](/react-simple-chatbot/guides/frameworks/).
+
+# Custom components
+
+> Render your own React components as steps and control when the conversation continues.
+
+A custom step renders any React element with `component`. Use it for summaries, cards, forms, charts, or results fetched from an API. custom-component.tsx 
+```tsx
+import ChatBot, { type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+
+function Summary({ steps }: CustomComponentProps) {
+  return (
+    <div style={{ width: '100%', lineHeight: 1.6 }}>
+      <strong>Your order</strong>
+      <div>Name: {steps?.name?.value}</div>
+      <div>Plan: {steps?.plan?.value}</div>
+    </div>
+  );
+}
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-plan' },
+  { id: 'ask-plan', message: 'Which plan do you want, {previousValue}?', trigger: 'plan' },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', trigger: 'summary' },
+      { label: 'Pro', trigger: 'summary' },
+      { label: 'Team', trigger: 'summary' }
+    ]
+  },
+  { id: 'summary', component: <Summary />, end: true }
+];
+
+
+export default function CustomComponent() {
+  return <ChatBot headerTitle="Custom component" steps={steps} />;
+}
+```
+ ## Injected props [Section titled “Injected props”](#injected-props) The chatbot clones your element and passes it these props: | Prop | Description | | ----------------- | -------------------------------------------------------------------------------------------------------- | | `step` | The current step, with its settings and its `value`. | | `steps` | The steps rendered so far, by id. See [the steps object](/react-simple-chatbot/guides/dynamic-content/). | | `previousStep` | The step rendered right before this one, with its `value`. | | `triggerNextStep` | Moves the conversation to the next step. | Type your component props with `CustomComponentProps`. The props are optional because you create the element without them (`<Summary />`), and the chatbot adds them when it renders the step. App.tsx 
+```tsx
+import ChatBot, { type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+
+function Summary({ steps }: CustomComponentProps) {
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <td>Name</td>
+          <td>{steps?.name?.value}</td>
+        </tr>
+        <tr>
+          <td>Age</td>
+          <td>{steps?.age?.value}</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+}
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-age' },
+  { id: 'ask-age', message: 'How old are you?', trigger: 'age' },
+  { id: 'age', user: true, trigger: 'summary' },
+  { id: 'summary', component: <Summary />, end: true }
+];
+
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+ ## How a custom step runs [Section titled “How a custom step runs”](#how-a-custom-step-runs) 1. The chatbot shows a loading animation for `delay` milliseconds. The default is the `customDelay` prop (`1000`). 2. Your component renders. 3. The conversation moves to `trigger` right away, unless the step has `waitAction: true`. By default the component renders in its own full-width container, outside the message bubbles. Style that container with the `customStyle` prop. ## Render as a message [Section titled “Render as a message”](#render-as-a-message) Set `asMessage: true` to render the component inside a bot bubble, with the bot avatar, like a text step. In that case the step uses the bot defaults: `delay` defaults to `botDelay`, and `avatar` to `botAvatar`. steps.tsx 
+```tsx
+import type { CustomComponentProps, Step } from 'react-simple-chatbot';
+
+
+function Price({ previousStep }: CustomComponentProps) {
+  return <strong>{previousStep?.value === 'pro' ? '$20/month' : 'Free'}</strong>;
+}
+
+
+const steps: Step[] = [
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', value: 'free', trigger: 'price' },
+      { label: 'Pro', value: 'pro', trigger: 'price' }
+    ]
+  },
+  { id: 'price', component: <Price />, asMessage: true, end: true }
+];
+```
+ ## Wait for the component [Section titled “Wait for the component”](#wait-for-the-component) With `waitAction: true`, the conversation stops at the custom step until your component calls `triggerNextStep`. Use it when the user has to interact with the component, or when the component loads data first. Rating.tsx 
+```tsx
+import { useState } from 'react';
+import type { CustomComponentProps, Step } from 'react-simple-chatbot';
+
+
+function Rating({ triggerNextStep }: CustomComponentProps) {
+  const [rating, setRating] = useState<number>();
+
+
+  const rate = (value: number) => {
+    setRating(value);
+    triggerNextStep?.({ value, trigger: value >= 4 ? 'happy' : 'sorry' });
+  };
+
+
+  return (
+    <div>
+      {[1, 2, 3, 4, 5].map(value => (
+        <button
+          key={value}
+          type="button"
+          disabled={rating !== undefined}
+          aria-pressed={rating === value}
+          onClick={() => rate(value)}
+        >
+          {value}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'How would you rate us?', trigger: 'rating' },
+  { id: 'rating', component: <Rating />, waitAction: true, hideInput: true },
+  { id: 'happy', message: 'Thank you!', end: true },
+  { id: 'sorry', message: 'Sorry to hear that. We will do better.', end: true }
+];
+```
+ `triggerNextStep` accepts an optional object: | Key | Description | | ------------------ | ------------------------------------------------------------------------------------------------------------------ | | `value` | The value of the step. The next step gets it as `{previousValue}`, and it is saved in `steps[id].value`. | | `trigger` | The next step, as an id or a function. It overrides the `trigger` of the step, so the component can pick the path. | | `hideInput` | Sets `hideInput` on the step. | | `hideExtraControl` | Sets `hideExtraControl` on the step. | A step can only trigger the next step once. Later calls are ignored, even if React mounts the component twice in development with `StrictMode`. Disable your buttons after the first click so users know their choice was taken. Caution Falsy values such as `0`, `''` and `false` are not saved as the step value. Pass a string such as `'0'`, or an object, when the value can be falsy. ## Load data before moving on [Section titled “Load data before moving on”](#load-data-before-moving-on) A common pattern is to fetch data in the component, show it, then call `triggerNextStep`. The `Loading` component exported by the library shows the same dots the chatbot uses while a step loads. Weather.tsx 
+```tsx
+import { useEffect, useState } from 'react';
+import { Loading, type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+
+function Weather({ steps, triggerNextStep }: CustomComponentProps) {
+  const city = String(steps?.city?.value ?? '');
+  const [text, setText] = useState<string>();
+
+
+  useEffect(() => {
+    let ignore = false;
+
+
+    fetch(`https://api.example.com/weather?city=${encodeURIComponent(city)}`)
+      .then(response => response.json())
+      .then(data => {
+        if (ignore) return;
+        setText(`It is ${data.temperature}°C in ${city}.`);
+        triggerNextStep?.({ value: String(data.temperature) });
+      })
+      .catch(() => {
+        if (ignore) return;
+        setText('Sorry, I could not load the weather.');
+        triggerNextStep?.({ trigger: 'error' });
+      });
+
+
+    return () => {
+      ignore = true;
+    };
+  }, [city, triggerNextStep]);
+
+
+  return <div>{text ?? <Loading />}</div>;
+}
+
+
+const steps: Step[] = [
+  { id: 'ask-city', message: 'Which city?', trigger: 'city' },
+  { id: 'city', user: true, trigger: 'weather' },
+  { id: 'weather', component: <Weather />, waitAction: true, trigger: 'more' },
+  { id: 'more', message: 'Want to check another city?', trigger: 'ask-city' },
+  { id: 'error', message: 'Please try again later.', end: true }
+];
+```
+ [Wikipedia search example](/react-simple-chatbot/examples/wikipedia-search/)A custom step that searches Wikipedia and shows the result. ## Replace the component [Section titled “Replace the component”](#replace-the-component) Set `replace: true` to remove the component from the chat when the next step starts. This is useful for temporary UI, such as a form that turns into a summary message. The value of the step stays in the `steps` object. steps.tsx 
+```tsx
+// DatePicker is your component: it calls triggerNextStep({ value: date }) when the user picks a date
+const steps: Step[] = [
+  { id: 'picker', component: <DatePicker />, waitAction: true, replace: true, trigger: 'confirm' },
+  { id: 'confirm', message: 'See you on {previousValue}!', end: true }
+];
+```
+ ## DOM elements [Section titled “DOM elements”](#dom-elements) If `component` is a DOM element, such as `<div />` or `<hr />`, the chatbot renders it as it is, without the injected props. Wrap the markup in your own component when you need the props. steps.tsx 
+```tsx
+const steps: Step[] = [
+  { id: 'banner', component: <div className="promo">Free shipping this week</div>, trigger: 'next' }
+  // ...
+];
+```
+ ## Step attributes [Section titled “Step attributes”](#step-attributes) | Attribute | Description | | ------------ | ---------------------------------------------------------------------------------------------------- | | `component` | The element to render. | | `asMessage` | Render the component inside a bot bubble. | | `waitAction` | Wait for the component to call `triggerNextStep`. | | `replace` | Remove the component when the next step starts. | | `delay` | Milliseconds of the loading animation. Defaults to `customDelay`, or to `botDelay` with `asMessage`. | | `avatar` | Avatar image URL, used with `asMessage`. | | `trigger` | The next step. | | `end` | End the conversation after this step. | Custom steps also accept the common attributes: `hideInput`, `hideExtraControl`, `placeholder`, `inputAttributes` and `metadata`. See the [custom component reference](/react-simple-chatbot/reference/custom-component/) for the full API.
+
+# Dynamic messages and branching
+
+> Use previous answers in messages, branch the conversation and change the steps at runtime.
+
+Static messages only go so far. This guide shows how to reuse what the user said, pick the next step from the answers, and attach your own data to steps. ## Use the previous value [Section titled “Use the previous value”](#use-the-previous-value) Write `{previousValue}` in a string message to insert the value of the step right before it. For a user step, that is the text the user typed. For an options step, it is the value of the chosen option. previous-value.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: '1', message: 'What is your name?', trigger: '2' },
+  { id: '2', user: true, trigger: '3' },
+  { id: '3', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+
+export default function PreviousValue() {
+  return <ChatBot headerTitle="Previous value" steps={steps} />;
+}
+```
+ Every `{previousValue}` in the message is replaced. If the previous step has no value, such as a bot message, it is replaced by an empty string. ## Messages as functions [Section titled “Messages as functions”](#messages-as-functions) When you need more than the previous value, pass a function as `message`. It runs when the conversation reaches the step and returns the text to show. The function receives: | Argument | Description | | --------------- | -------------------------------------------------------------- | | `previousValue` | The value of the previous step. `undefined` in the first step. | | `steps` | The steps rendered so far, by id. | steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-city' },
+  { id: 'ask-city', message: 'Where do you live?', trigger: 'city' },
+  { id: 'city', user: true, trigger: 'summary' },
+  {
+    id: 'summary',
+    message: ({ previousValue, steps }) =>
+      `${steps.name.value} from ${previousValue}, welcome aboard!`,
+    end: true
+  }
+];
+```
+ ## Branch with trigger functions [Section titled “Branch with trigger functions”](#branch-with-trigger-functions) `trigger` also accepts a function. It receives the value of the current step and the rendered steps, and returns the id of the next step. | Argument | Description | | -------- | -------------------------------------------------------------------------------------------------------------------------------------- | | `value` | The value of the current step: the typed text, the chosen option’s value, or the value a custom component passed to `triggerNextStep`. | | `steps` | The steps rendered so far, by id. | steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-plan', message: 'Which plan are you on?', trigger: 'plan' },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', value: 'free', trigger: 'ask-size' },
+      { label: 'Business', value: 'business', trigger: 'ask-size' }
+    ]
+  },
+  { id: 'ask-size', message: 'How many people are on your team?', trigger: 'size' },
+  {
+    id: 'size',
+    user: true,
+    inputAttributes: { type: 'number' },
+    trigger: ({ value, steps }) => {
+      if (steps.plan.value === 'free' && Number(value) > 5) {
+        return 'upgrade';
+      }
+      return 'thanks';
+    }
+  },
+  { id: 'upgrade', message: 'The Business plan fits bigger teams better.', end: true },
+  { id: 'thanks', message: 'Thanks, you are all set!', end: true }
+];
+```
+ Option triggers can be functions too. They receive the value of the chosen option. ## The steps object [Section titled “The steps object”](#the-steps-object) The `steps` argument of message and trigger functions holds every step rendered so far, keyed by id. Custom components receive the same object in the `steps` prop, and `handleEnd` receives it too. Each entry is a `RenderedStep`: | Key | Description | | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | | `id` | The id of the step. | | `message` | The text of the step. For user steps, the typed text. For options steps, the label of the chosen option. | | `value` | The value of the step. For user steps, the typed text. For options steps, the value of the chosen option. For custom steps, the value passed to `triggerNextStep`. Text steps have no value. | | `metadata` | The `metadata` of the step definition. | A step is only in the object after it is rendered, so check for missing keys when the conversation can take different paths. When an update step asks a step again, the entry holds the latest answer. 
+```ts
+const city = steps.city?.value ?? 'somewhere';
+```
+ ## Attach data with metadata [Section titled “Attach data with metadata”](#attach-data-with-metadata) `metadata` lets you keep your own data on a step. It does not change how the step behaves (except `metadata.speak`, used by [speech synthesis](/react-simple-chatbot/guides/speech/)), and you can read it back from the `steps` object. For example, tag the answers that belong to a form, then collect them when the conversation ends: App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, metadata: { field: 'name' }, trigger: 'ask-email' },
+  { id: 'ask-email', message: 'And your email?', trigger: 'email' },
+  { id: 'email', user: true, metadata: { field: 'email' }, trigger: 'bye' },
+  { id: 'bye', message: 'Thanks, we will be in touch.', end: true }
+];
+
+
+export default function App() {
+  return (
+    <ChatBot
+      steps={steps}
+      handleEnd={({ steps }) => {
+        const form: Record<string, string> = {};
+        for (const step of Object.values(steps)) {
+          if (step.metadata?.field) {
+            form[step.metadata.field] = step.value;
+          }
+        }
+        console.log(form); // { name: '...', email: '...' }
+      }}
+    />
+  );
+}
+```
+ ## Change the steps after mount [Section titled “Change the steps after mount”](#change-the-steps-after-mount) The chatbot reads these props every time it moves to the next step: * `steps` * `botAvatar` and `userAvatar` * `botDelay`, `userDelay` and `customDelay` * `botName` When one of them changes, the new values apply to the steps that were not rendered yet. The messages already in the chat stay as they are, and the conversation does not restart. This lets you build the steps from state, such as the language of the user: App.tsx 
+```tsx
+import { useMemo, useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const texts = {
+  en: { hello: 'Hello!', ask: 'How can I help you?' },
+  pt: { hello: 'Olá!', ask: 'Como posso ajudar?' }
+};
+
+
+export default function App() {
+  const [lang, setLang] = useState<'en' | 'pt'>('en');
+
+
+  const steps = useMemo<Step[]>(
+    () => [
+      { id: 'hello', message: texts[lang].hello, trigger: 'ask' },
+      { id: 'ask', message: texts[lang].ask, end: true }
+    ],
+    [lang]
+  );
+
+
+  return (
+    <>
+      <button type="button" onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}>
+        Switch language
+      </button>
+      <ChatBot steps={steps} />
+    </>
+  );
+}
+```
+ A few things to keep in mind: * The props are compared by reference. Define static steps outside the component, or wrap them in `useMemo`, so they are not rebuilt on every step. * If the new steps are invalid (for example, a trigger points to a missing id), the chatbot logs the error and keeps using the last valid steps. * To start the conversation over, render the chatbot with a new `key`. [Custom components](/react-simple-chatbot/guides/custom-components/)Render your own components as steps and control when the conversation moves on.
+
+# Floating chatbot
+
+> Show the chatbot behind a button in the corner of the page, and control when it opens.
+
+Set `floating` to render a round button fixed in the corner of the page. Clicking it opens the chat above the page content, and the close button in the header closes it. floating.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'Hi! What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Nice to meet you, {previousValue}!', end: true }
+];
+
+
+export default function Floating() {
+  return (
+    <ChatBot
+      floating
+      headerTitle="Need help?"
+      floatingStyle={{ bottom: '24px', right: '24px' }}
+      steps={steps}
+    />
+  );
+}
+```
+ App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'hello', message: 'Hi! How can I help?', trigger: 'question' },
+  { id: 'question', user: true, trigger: 'answer' },
+  { id: 'answer', message: 'Thanks, an agent will reply soon.', end: true }
+];
+
+
+export default function App() {
+  return <ChatBot steps={steps} floating headerTitle="Support" />;
+}
+```
+ The conversation starts the first time the user opens the chat, so the first messages do not play while nobody is looking. Closing the chat keeps the conversation; opening it again continues where the user left off. ## Button icon [Section titled “Button icon”](#button-icon) `floatingIcon` sets the content of the button. Pass an image URL, or any React element. The default is a chat icon, drawn with the `headerFontColor` of the theme on the `headerBgColor` background. App.tsx 
+```tsx
+<ChatBot steps={steps} floating floatingIcon="/images/chat.svg" />
+```
+ App.tsx 
+```tsx
+<ChatBot steps={steps} floating floatingIcon={<span aria-hidden="true">?</span>} />
+```
+ ## Position [Section titled “Position”](#position) By default the button and the chat sit 32px from the bottom and right edges of the page, and the chat opens from its bottom right corner. `floatingStyle` is applied to the button, and its `top`, `right`, `bottom`, `left` and `transformOrigin` values also position the chat. To move both to the bottom left corner: App.tsx 
+```tsx
+<ChatBot
+  steps={steps}
+  floating
+  floatingStyle={{ left: '32px', right: 'initial', transformOrigin: 'bottom left' }}
+/>
+```
+ To open the chat from the top right corner: App.tsx 
+```tsx
+<ChatBot
+  steps={steps}
+  floating
+  floatingStyle={{ top: '32px', bottom: 'initial', transformOrigin: 'top right' }}
+/>
+```
+ The button and the chat use `z-index: 999`. Raise it with `floatingStyle` and `style` if other fixed elements on your page cover them. ## Open it from your code [Section titled “Open it from your code”](#open-it-from-your-code) To open or close the chat from your own UI, control it with two props: | Prop | Description | | ---------------- | --------------------------------------------------------------------------------------------------------------- | | `opened` | Whether the chat is open. | | `toggleFloating` | Called with `{ opened }` when the user clicks the floating button or the close button. Update your state there. | App.tsx 
+```tsx
+import { useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hi! How can I help?', end: true }];
+
+
+export default function App() {
+  const [opened, setOpened] = useState(false);
+
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpened(true)}>
+        Talk to us
+      </button>
+      <ChatBot
+        steps={steps}
+        floating
+        opened={opened}
+        toggleFloating={({ opened }) => setOpened(opened)}
+      />
+    </>
+  );
+}
+```
+ Pass both props. With only `toggleFloating`, the chatbot calls it but does not open or close by itself. With only `opened`, the value sets whether the chat starts open, and the chatbot manages its state after that. ## Keyboard and screen readers [Section titled “Keyboard and screen readers”](#keyboard-and-screen-readers) The floating button and the close button are focusable, have an accessible label (“Open chat” and “Close chat”), and respond to Enter and Space. While the chat is open, the floating button is hidden from assistive technology and removed from the tab order. ## Small screens [Section titled “Small screens”](#small-screens) Below 568px of screen width, the open chat takes the full screen, without rounded corners, whatever `width`, `height` and `floatingStyle` you set.
+
+# Frameworks
+
+> Use the chatbot with Vite, Next.js, React Router, Astro, Gatsby, or from a CDN.
+
+The chatbot is a regular React component, so it works in any React 18 or 19 app. This page covers the setup details of the most common frameworks. ## Server rendering in short [Section titled “Server rendering in short”](#server-rendering-in-short) Frameworks that render on the server can render the chatbot too: * It only uses browser APIs (`localStorage`, speech, focus) in effects and event handlers, never while rendering. You do not need to disable server rendering for it. * It becomes interactive after hydration, like any other component. * It is styled with styled-components. Without the styled-components server setup of your framework, the styles are injected in the browser, and the chatbot can show unstyled for a moment before hydration. That setup is optional; add it if the flash bothers you, or render the chatbot only on the client. Caution With `recognitionEnable`, render the chatbot only on the client. The server cannot know whether the browser supports speech recognition, so the submit button icon would not match during hydration. ## Vite [Section titled “Vite”](#vite) The chatbot works as-is with the React templates of Vite. 
+```sh
+npm create vite@latest my-chatbot -- --template react-ts
+cd my-chatbot
+npm install react-simple-chatbot styled-components
+```
+ src/App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello from Vite!', end: true }];
+
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+ ## Next.js App Router [Section titled “Next.js App Router”](#nextjs-app-router) Components in the `app` directory are Server Components by default, and the chatbot needs state and effects. Add `'use client'` at the top of the file that renders `ChatBot`: app/components/Chat.tsx 
+```tsx
+'use client';
+
+
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  {
+    id: 'name',
+    user: true,
+    validator: value => (value.trim() ? true : 'Please type your name'),
+    trigger: 'hi'
+  },
+  { id: 'hi', message: 'Hi {previousValue}!', end: true }
+];
+
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+ app/page.tsx 
+```tsx
+import Chat from './components/Chat';
+
+
+export default function Page() {
+  return (
+    <main>
+      <Chat />
+    </main>
+  );
+}
+```
+ Keep the steps in the client file. Functions such as `trigger`, `validator` and `message` functions cannot be passed from a Server Component to a Client Component as props. You do not need `next/dynamic` with `ssr: false`, except with `recognitionEnable`. The styled-components registry described in the [Next.js CSS-in-JS guide](https://nextjs.org/docs/app/guides/css-in-js) is optional: it adds the chatbot styles to the server HTML. ## Next.js Pages Router [Section titled “Next.js Pages Router”](#nextjs-pages-router) Import the chatbot in a page or component. No directive is needed. pages/support.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'How can we help?', end: true }];
+
+
+export default function SupportPage() {
+  return <ChatBot steps={steps} floating />;
+}
+```
+ To include the styles in the server HTML, enable `compiler.styledComponents` in `next.config.js` and collect the styles in a custom `_document`, as described in the [styled-components server-side rendering docs](https://styled-components.com/docs/advanced#server-side-rendering). This is optional. ## React Router and Remix [Section titled “React Router and Remix”](#react-router-and-remix) Import the chatbot in a route module. It renders on the server and hydrates in the browser. app/routes/support.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'How can we help?', end: true }];
+
+
+export default function Support() {
+  return <ChatBot steps={steps} />;
+}
+```
+ To render it only in the browser, wait until the component mounts: app/components/ClientOnly.tsx 
+```tsx
+import { useEffect, useState, type ReactNode } from 'react';
+
+
+export function ClientOnly({ children }: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? children : null;
+}
+```
+ app/routes/support.tsx 
+```tsx
+<ClientOnly>
+  <ChatBot steps={steps} recognitionEnable />
+</ClientOnly>
+```
+ ## Astro [Section titled “Astro”](#astro) Add the React integration with `npx astro add react`, then put the chatbot in a React component: src/components/Chat.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello from Astro!', end: true }];
+
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+ Render it with a client directive. Without one, Astro renders static HTML and the chatbot never runs. src/pages/index.astro 
+```astro
+---
+import Chat from '../components/Chat';
+---
+
+
+<Chat client:only="react" />
+```
+ * `client:only="react"` renders the chatbot only in the browser. This is the simplest option, with no unstyled flash. * `client:load` renders it on the server and hydrates it on page load. The styles are injected when it hydrates. Define the steps inside the React component. Astro props must be serializable, so you cannot pass steps with functions or custom components from an `.astro` file. ## Gatsby [Section titled “Gatsby”](#gatsby) Import the chatbot in a page or component. Gatsby renders pages on the server during the build, which works because the chatbot does not use browser APIs while rendering. src/pages/index.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello from Gatsby!', end: true }];
+
+
+export default function IndexPage() {
+  return <ChatBot steps={steps} />;
+}
+```
+ To include the styles in the built HTML, add [gatsby-plugin-styled-components](https://www.gatsbyjs.com/plugins/gatsby-plugin-styled-components/). This is optional. ## CDN [Section titled “CDN”](#cdn) You can use the chatbot without a bundler through its UMD build, which reads `React` and `styled` from global variables. Load React 18, styled-components 5 (with `react-is`, which it needs), then the chatbot. The component is available as `ReactSimpleChatbot.default`. index.html 
+```html
+<div id="root"></div>
+
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/react-is@18/umd/react-is.production.min.js"></script>
+<script src="https://unpkg.com/styled-components@5/dist/styled-components.min.js"></script>
+<script src="https://unpkg.com/react-simple-chatbot@1/dist/react-simple-chatbot.js"></script>
+
+
+<script>
+  const ChatBot = ReactSimpleChatbot.default;
+
+
+  const steps = [
+    { id: 'ask', message: 'What is your name?', trigger: 'name' },
+    { id: 'name', user: true, trigger: 'hi' },
+    { id: 'hi', message: 'Hi {previousValue}!', end: true }
+  ];
+
+
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    React.createElement(ChatBot, { steps })
+  );
+</script>
+```
+ Without JSX, create elements with `React.createElement`. For a theme, wrap the chatbot in `styled.ThemeProvider`.
+
+# Speech
+
+> Let users answer with their voice and have the bot read its messages aloud.
+
+The chatbot supports two browser speech APIs: speech recognition, so users can dictate their answers, and speech synthesis, so the bot reads its messages aloud. Both are off by default. ## Speech recognition [Section titled “Speech recognition”](#speech-recognition) Set `recognitionEnable` to add voice input. App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Say something!', trigger: 'answer' },
+  { id: 'answer', user: true, trigger: 'echo' },
+  { id: 'echo', message: 'You said: {previousValue}', trigger: 'ask' }
+];
+
+
+export default function App() {
+  return <ChatBot steps={steps} recognitionEnable recognitionLang="en-US" />;
+}
+```
+ | Prop | Default | Description | | ------------------------ | ----------------- | ---------------------------------------------------------------------- | | `recognitionEnable` | `false` | Enable voice input. | | `recognitionLang` | `'en'` | Language to recognize, as a BCP 47 tag such as `'en-US'` or `'pt-BR'`. | | `recognitionPlaceholder` | `'Listening ...'` | Input placeholder while the chatbot is listening. | How it works: 1. While the input is empty, the submit button becomes a microphone button. 2. When the user clicks it, the browser asks for microphone permission (the first time) and starts listening. The button pulses and the input shows `recognitionPlaceholder`. 3. The text appears in the input as the user speaks. 4. When recognition ends, the recognized text is submitted as the user’s answer. Clicking the microphone again while listening stops it without submitting, and the text stays in the input so the user can edit it. As soon as the user types, the button goes back to a regular submit button. ### Browser support [Section titled “Browser support”](#browser-support) Recognition uses the `webkitSpeechRecognition` API, available in Chromium-based browsers (such as Chrome and Edge) and in Safari. In browsers without it, such as Firefox, `recognitionEnable` is ignored and the chatbot shows the regular submit button. Microphone access also requires a secure context: HTTPS, or `localhost` during development. `recognitionEnable` and `recognitionLang` are read when the chatbot mounts. To change them later, mount the chatbot again with a new `key`. [Speech recognition example](/react-simple-chatbot/examples/speech-recognition/)Try voice input in a live chatbot. ## Speech synthesis [Section titled “Speech synthesis”](#speech-synthesis) Pass `speechSynthesis` to have the bot read its messages aloud. speech-synthesis.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  {
+    id: 'greet',
+    message: 'Hi {previousValue}, nice to meet you!',
+    metadata: {
+      speak: 'Hi {previousValue}. I am saying something different from the message text.'
+    },
+    trigger: 'card'
+  },
+  {
+    id: 'card',
+    component: <div>This is a custom component</div>,
+    metadata: { speak: 'I can also say something about a custom component.' },
+    end: true
+  }
+];
+
+
+export default function SpeechSynthesis() {
+  return (
+    <ChatBot
+      headerTitle="Speech synthesis"
+      speechSynthesis={{ enable: true, lang: 'en' }}
+      steps={steps}
+    />
+  );
+}
+```
+ App.tsx 
+```tsx
+<ChatBot steps={steps} speechSynthesis={{ enable: true, lang: 'en-US' }} />
+```
+ | Key | Default | Description | | -------- | ------- | ------------------------------------------------------------------------------------------ | | `enable` | `false` | Read the bot messages aloud. | | `lang` | `'en'` | Language of the speech, as a BCP 47 tag. | | `voice` | `null` | A `SpeechSynthesisVoice` to use. `null` uses the browser’s default voice for the language. | The object replaces the default one, so pass `lang` along with `enable`. What gets read: * Bot text messages are read when they appear, after their delay. A `message` function is read as the text it returns. * `{previousValue}` is replaced with the previous value, as in the chat. * User messages are not read. * Custom steps are only read when they have a `metadata.speak` text. ### Change the spoken text [Section titled “Change the spoken text”](#change-the-spoken-text) Set `metadata.speak` on a step to read a different text than the one shown. This helps with emojis, abbreviations and custom components. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  {
+    id: 'hours',
+    message: 'Open Mon-Fri, 9am-5pm',
+    metadata: { speak: 'We are open Monday to Friday, from 9 AM to 5 PM.' },
+    trigger: 'next'
+  }
+  // ...
+];
+```
+ ### Pick a voice [Section titled “Pick a voice”](#pick-a-voice) The browser loads its voices asynchronously, so read them after the `voiceschanged` event: App.tsx 
+```tsx
+import { useEffect, useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello! Nice to hear you.', end: true }];
+
+
+export default function App() {
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+
+
+  useEffect(() => {
+    const pickVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      setVoice(voices.find(v => v.lang === 'en-GB') ?? null);
+    };
+    pickVoice();
+    window.speechSynthesis.addEventListener('voiceschanged', pickVoice);
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', pickVoice);
+  }, []);
+
+
+  return <ChatBot steps={steps} speechSynthesis={{ enable: true, lang: 'en-GB', voice }} />;
+}
+```
+ In browsers without speech synthesis, the chatbot skips it silently.
+
+# Steps
+
+> Build a conversation from a list of steps and learn each type of step.
+
+A conversation is an array of steps. Each step has a unique `id` and does one thing: the bot says something, the user types an answer, the user picks an option, or a custom component renders. The conversation always starts from the first step in the array. From there, each step points to the next one with `trigger`, until a step with `end: true` finishes the conversation. App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'greet', message: 'Hello! What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'reply' },
+  { id: 'reply', message: 'Nice to meet you, {previousValue}!', end: true }
+];
+
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+ A few rules: * `id` can be a string or a number, and must be unique. * `trigger` must point to an existing `id`. The chatbot throws an error on mount if a trigger points to a step that does not exist. * A step without `trigger` and without `end` stops the conversation there. * Unknown keys in a step are removed and logged to the console. ## Types of steps [Section titled “Types of steps”](#types-of-steps) The chatbot finds the type of a step from its keys, in this order: `user`, `message`, `options`, `component`, `update`. ### Text step [Section titled “Text step”](#text-step) A bot message. Use `message` for the text and `trigger` for the next step. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'welcome', message: 'Welcome to our store!', trigger: 'help' },
+  { id: 'help', message: 'How can I help you today?', end: true }
+];
+```
+ `message` can also be a function of the previous value and the rendered steps. See [Dynamic messages and branching](/react-simple-chatbot/guides/dynamic-content/). ### User step [Section titled “User step”](#user-step) Waits for the user to type a message and submit it. The typed text becomes the value of the step. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-email', message: 'What is your email?', trigger: 'email' },
+  {
+    id: 'email',
+    user: true,
+    placeholder: 'you@example.com',
+    validator: value => (value.includes('@') ? true : 'Enter a valid email'),
+    trigger: 'thanks'
+  },
+  { id: 'thanks', message: 'Thanks! We will write to {previousValue}.', end: true }
+];
+```
+ Validation, placeholders and input attributes are covered in [User input](/react-simple-chatbot/guides/user-input/). ### Options step [Section titled “Options step”](#options-step) Shows a list of buttons. Each option has a `label`, an optional `value` and its own `trigger`. When the user clicks an option, the buttons are replaced by a user message with the label, and the conversation follows the option’s trigger. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Pick a plan', trigger: 'plan' },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', trigger: 'free' },
+      { label: 'Pro', value: 'pro-monthly', trigger: 'pro' }
+    ]
+  },
+  { id: 'free', message: 'The free plan is a great start.', end: true },
+  { id: 'pro', message: 'You picked {previousValue}.', end: true }
+];
+```
+ `value` defaults to the label, so the value of the Free option is `'Free'`. Options steps have no `trigger` of their own. ### Custom step [Section titled “Custom step”](#custom-step) Renders a React element with `component`. The chatbot injects props such as `steps` and `triggerNextStep` in your component. steps.tsx 
+```tsx
+import type { CustomComponentProps, Step } from 'react-simple-chatbot';
+
+
+function Summary({ steps }: CustomComponentProps) {
+  return <p>Your name is {steps?.name?.value}.</p>;
+}
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'summary' },
+  { id: 'summary', component: <Summary />, end: true }
+];
+```
+ See [Custom components](/react-simple-chatbot/guides/custom-components/) for `asMessage`, `waitAction` and `replace`. ### Update step [Section titled “Update step”](#update-step) Asks a previous step again, then continues with its own `trigger`. Use it to let the user fix an answer. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'confirm' },
+  { id: 'confirm', message: 'Is {previousValue} correct?', trigger: 'confirm-options' },
+  {
+    id: 'confirm-options',
+    options: [
+      { label: 'Yes', trigger: 'done' },
+      { label: 'No', trigger: 'fix-name' }
+    ]
+  },
+  { id: 'fix-name', update: 'name', trigger: 'confirm' },
+  { id: 'done', message: 'Great, thanks!', end: true }
+];
+```
+ When the conversation reaches `fix-name`, the `name` step runs again. The new answer replaces the old value of `name`, and the conversation goes to `confirm`. If the updated step is an options step, every option goes to the update step’s `trigger`. ## Common attributes [Section titled “Common attributes”](#common-attributes) | Attribute | Steps | Description | | ------------------ | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | | `delay` | text, custom | Milliseconds of the loading animation before the step shows. Defaults to `botDelay` for text steps and `customDelay` for custom steps (both `1000`). | | `placeholder` | all | Input placeholder while this step is the current step. Mostly useful on user steps. | | `hideInput` | text, options, custom | Hides the input, the submit button and the extra control while this step is the current step. | | `hideExtraControl` | text, user, options, custom | Hides only the `extraControl` element. | | `inputAttributes` | all | Attributes for the input element, such as `type` or `autoComplete`. They replace the global `inputAttributes`. | | `metadata` | all | Any data you want to attach to the step. It is available in the `steps` object. | | `avatar` | text, custom | Avatar image URL for this step, instead of `botAvatar`. | | `end` | text, user, options, custom | Ends the conversation after this step and calls `handleEnd`. | The full list of attributes of each step type is in the [steps reference](/react-simple-chatbot/reference/steps/). ## Branching with trigger functions [Section titled “Branching with trigger functions”](#branching-with-trigger-functions) `trigger` can be a step id or a function. The function receives the value of the current step and the rendered steps, and returns the id of the next step. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-age', message: 'How old are you?', trigger: 'age' },
+  {
+    id: 'age',
+    user: true,
+    inputAttributes: { type: 'number' },
+    trigger: ({ value }) => (Number(value) >= 18 ? 'adult' : 'minor')
+  },
+  { id: 'adult', message: 'You can create an account.', end: true },
+  { id: 'minor', message: 'Ask a parent to create an account for you.', end: true }
+];
+```
+ Option triggers can be functions too, with the chosen option’s value as `value`. ## Ending the conversation [Section titled “Ending the conversation”](#ending-the-conversation) Add `end: true` to the last step. When that step is rendered, the chatbot calls the `handleEnd` prop with the rendered steps and their values. App.tsx 
+```tsx
+<ChatBot
+  steps={steps}
+  handleEnd={({ values }) => {
+    console.log('Answers:', values);
+  }}
+/>
+```
+ [End callback example](/react-simple-chatbot/examples/end-callback/)Send the answers somewhere when the conversation ends.
+
+# Theming and styling
+
+> Change the colors, fonts, avatars, header and size of the chatbot.
+
+You can style the chatbot at three levels: a theme for the colors and font, style props for inline styles on each part, and stable class names for your own CSS. ## Theme [Section titled “Theme”](#theme) The chatbot is built with [styled-components](https://styled-components.com/). Wrap it in a `ThemeProvider` to change its colors and font. themes.tsx 
+```tsx
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme, type Step } from 'react-simple-chatbot';
+
+
+const theme: ChatBotTheme = {
+  background: '#fff8f0',
+  fontFamily: 'Helvetica, Arial, sans-serif',
+  headerBgColor: '#ef6c00',
+  headerFontColor: '#fff',
+  headerFontSize: '16px',
+  botBubbleColor: '#ef6c00',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a'
+};
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}! This chatbot uses a custom theme.', end: true }
+];
+
+
+export default function Themes() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot headerTitle="Themes" steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+ App.tsx 
+```tsx
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme, type Step } from 'react-simple-chatbot';
+
+
+const theme: ChatBotTheme = {
+  background: '#f5f8fb',
+  fontFamily: 'Helvetica Neue, sans-serif',
+  headerBgColor: '#ef6c00',
+  headerFontColor: '#fff',
+  headerFontSize: '15px',
+  botBubbleColor: '#ef6c00',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a'
+};
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello World', end: true }];
+
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+ | Key | Default | Used for | | ----------------- | ------------- | ---------------------------------------------------------------------- | | `background` | `'#f5f8fb'` | Background of the chat. | | `fontFamily` | `'monospace'` | Font of the whole chatbot. | | `headerBgColor` | `'#6e48aa'` | Header, floating button, and the microphone animation while listening. | | `headerFontColor` | `'#fff'` | Header text and icons, and the floating button icon. | | `headerFontSize` | `'16px'` | Header title. | | `botBubbleColor` | `'#6E48AA'` | Bot message bubbles and option buttons. | | `botFontColor` | `'#fff'` | Text of bot messages and option buttons. | | `userBubbleColor` | `'#fff'` | User message bubbles. | | `userFontColor` | `'#4a4a4a'` | Text of user messages. | ### Partial themes [Section titled “Partial themes”](#partial-themes) Every key is optional in practice. The chatbot falls back to the default of each key the theme does not define, and to the full default theme when there is no `ThemeProvider`. Use `Partial<ChatBotTheme>` to change only a few colors: theme.ts 
+```tsx
+import type { ChatBotTheme } from 'react-simple-chatbot';
+
+
+export const theme: Partial<ChatBotTheme> = {
+  headerBgColor: '#0f766e',
+  botBubbleColor: '#0f766e',
+  fontFamily: 'system-ui, sans-serif'
+};
+```
+ If your app already has a styled-components theme, add the chatbot keys to it, or wrap only the chatbot in its own `ThemeProvider`. ## Style props [Section titled “Style props”](#style-props) Style props apply inline styles to each part of the chatbot. They take a React `CSSProperties` object. | Prop | Element | | ------------------- | --------------------------------------------------------------------------------------------------------------------------- | | `style` | The chat container (`rsc-container`). | | `contentStyle` | The messages area (`rsc-content`). | | `footerStyle` | The footer with the input and the controls (`rsc-footer`). | | `inputStyle` | The input (`rsc-input`). | | `submitButtonStyle` | The submit button (`rsc-submit-button`). | | `bubbleStyle` | The bubbles of bot and user messages (`rsc-ts-bubble`). | | `bubbleOptionStyle` | The option buttons (`rsc-os-option-element`). | | `avatarStyle` | The avatar images (`rsc-ts-image`). | | `customStyle` | The container of custom steps (`rsc-cs`). | | `controlStyle` | The wrapper of the extra control and the submit button (`rsc-controls`). | | `floatingStyle` | The floating button, and the position of the floating chat. See [Floating chatbot](/react-simple-chatbot/guides/floating/). | App.tsx 
+```tsx
+<ChatBot
+  steps={steps}
+  style={{ borderRadius: 16 }}
+  bubbleStyle={{ fontSize: 16, maxWidth: '70%' }}
+  bubbleOptionStyle={{ background: '#fff', color: '#6e48aa', border: '1px solid #6e48aa' }}
+  inputStyle={{ fontFamily: 'inherit' }}
+/>
+```
+ ## Class names [Section titled “Class names”](#class-names) `className` is added to the root element of the chatbot, next to the `rsc` class. Every part also has a stable class name you can target from your CSS: | Class | Element | | ------------------------- | ------------------------------------------------------- | | `rsc` | The root element. | | `rsc-container` | The chat container. | | `rsc-header` | The header. | | `rsc-header-title` | The header title. | | `rsc-header-close-button` | The close button of a floating chatbot. | | `rsc-content` | The messages area. | | `rsc-footer` | The footer. | | `rsc-input` | The input. | | `rsc-submit-button` | The submit button. | | `rsc-controls` | The wrapper of the extra control and the submit button. | | `rsc-float-button` | The floating button. | | `rsc-ts` | A text step (a message). | | `rsc-ts-user` | A user message. | | `rsc-ts-bot` | A bot message. | | `rsc-ts-bubble` | The bubble of a message. | | `rsc-ts-image` | The avatar of a message. | | `rsc-os` | An options step. | | `rsc-os-option-element` | An option button. | | `rsc-cs` | A custom step. | | `rsc-loading` | The loading dots. | Scope your rules with your `className` so they are more specific than the chatbot’s own styles: App.tsx 
+```tsx
+import './chat.css';
+
+
+<ChatBot className="support-bot" steps={steps} />;
+```
+ chat.css 
+```css
+.support-bot .rsc-ts-user .rsc-ts-bubble {
+  background: #e0f2fe;
+}
+
+
+.support-bot .rsc-os-option-element {
+  border-radius: 8px;
+}
+```
+ ## Avatars [Section titled “Avatars”](#avatars) | Prop | Description | | ---------------- | ----------------------------------------------------------------------------- | | `botAvatar` | Image URL of the bot avatar. Data URIs work too. | | `userAvatar` | Image URL of the user avatar. | | `hideBotAvatar` | Hide the bot avatar. | | `hideUserAvatar` | Hide the user avatar. | | `botName` | Name of the bot, used in the alt text of its avatar. Defaults to `'The bot'`. | The avatar shows next to the first message of each group of consecutive messages from the same author. Set `avatar` on a text step, or on a custom step with `asMessage`, to use a different image for that message. App.tsx 
+```tsx
+<ChatBot
+  steps={steps}
+  botAvatar="/images/assistant.png"
+  hideUserAvatar
+  avatarStyle={{ borderRadius: 8 }}
+/>
+```
+ ## Header [Section titled “Header”](#header) | Prop | Description | | ----------------- | ------------------------------------------------------ | | `headerTitle` | The title of the default header. Defaults to `'Chat'`. | | `hideHeader` | Hide the header. | | `headerComponent` | An element that replaces the whole header. | A `headerComponent` replaces the default header entirely, including the close button of a floating chatbot. If you use one with `floating`, add your own way to close the chat. See [Floating chatbot](/react-simple-chatbot/guides/floating/) for the controlled mode. ## Size [Section titled “Size”](#size) `width` and `height` take CSS values and default to `'350px'` and `'520px'`. App.tsx 
+```tsx
+<ChatBot steps={steps} width="100%" height="600px" />
+```
+ Below 568px of screen width, the chatbot takes the full width of its parent, and a floating chatbot takes the full screen.
+
+# User input
+
+> Validate answers, configure the input and add your own controls next to the submit button.
+
+A user step enables the input and waits for the user to submit a message. The input stays disabled during the other steps. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}!', end: true }
+];
+```
+ The user submits by pressing Enter or clicking the submit button. The typed text becomes the value of the step, which the next steps can read as `{previousValue}` or from the `steps` object. ## Validate the answer [Section titled “Validate the answer”](#validate-the-answer) Add a `validator` to a user step. It receives the typed text and returns `true` when the value is valid, or the error message to show. validator.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const validateAge = (value: string) => {
+  const age = Number(value);
+
+
+  if (value.trim() === '' || Number.isNaN(age)) {
+    return 'Please type a number';
+  }
+  if (age <= 0) {
+    return 'Your age must be positive';
+  }
+  if (age >= 120) {
+    return `${value}? Come on!`;
+  }
+  return true;
+};
+
+
+const steps: Step[] = [
+  { id: 'question', message: 'How old are you?', trigger: 'age' },
+  { id: 'age', user: true, validator: validateAge, trigger: 'answer' },
+  { id: 'answer', message: 'Got it, you are {previousValue} years old.', end: true }
+];
+
+
+export default function Validator() {
+  return <ChatBot headerTitle="Validator" steps={steps} />;
+}
+```
+ steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-age', message: 'How old are you?', trigger: 'age' },
+  {
+    id: 'age',
+    user: true,
+    validator: value => {
+      const age = Number(value);
+      if (!value.trim() || Number.isNaN(age)) {
+        return 'Please type a number';
+      }
+      if (age < 0 || age > 120) {
+        return 'Please type a valid age';
+      }
+      return true;
+    },
+    trigger: 'thanks'
+  },
+  { id: 'thanks', message: 'Thanks!', end: true }
+];
+```
+ When the validator returns an error message: 1. The message shows in the input, in red, and the input is disabled. 2. After 2 seconds, the typed value comes back and the input is enabled again so the user can fix it. Return a string for errors. Any value other than `true` is shown as the error message, so returning `false` would show the text “false”. ## Placeholder [Section titled “Placeholder”](#placeholder) The `placeholder` prop sets the input placeholder for the whole conversation. The default is `'Type the message ...'`. Set `placeholder` on a step to override it while that step is the current step. App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-email', message: 'What is your email?', trigger: 'email' },
+  { id: 'email', user: true, placeholder: 'you@example.com', trigger: 'bye' },
+  { id: 'bye', message: 'Thanks!', end: true }
+];
+
+
+export default function App() {
+  return <ChatBot placeholder="Write here..." steps={steps} />;
+}
+```
+ While speech recognition is listening, the input shows `recognitionPlaceholder` instead. See [Speech](/react-simple-chatbot/guides/speech/). ## Input attributes [Section titled “Input attributes”](#input-attributes) `inputAttributes` passes attributes to the input element. Use it to pick the right keyboard on mobile, turn on autocomplete, or limit the length of the answer. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask-email', message: 'What is your email?', trigger: 'email' },
+  {
+    id: 'email',
+    user: true,
+    inputAttributes: { type: 'email', autoComplete: 'email' },
+    trigger: 'ask-zip'
+  },
+  { id: 'ask-zip', message: 'And your ZIP code?', trigger: 'zip' },
+  {
+    id: 'zip',
+    user: true,
+    inputAttributes: { inputMode: 'numeric', autoComplete: 'postal-code', maxLength: 5 },
+    trigger: 'done'
+  },
+  { id: 'done', message: 'All set!', end: true }
+];
+```
+ Set `inputAttributes` on the `ChatBot` to apply attributes to every step. The attributes of the current step replace the global ones; they are not merged. App.tsx 
+```tsx
+<ChatBot steps={steps} inputAttributes={{ autoComplete: 'off', spellCheck: false }} />
+```
+ Input attributes do not validate the value. Browsers do not run form validation on the chat input, so use a `validator` for that. ## Hide the input [Section titled “Hide the input”](#hide-the-input) Set `hideInput: true` on a text, options or custom step to hide the input, the submit button and the extra control while that step is the current step. The messages area grows to fill the space. This is common on options steps, where the user answers by clicking a button. steps.ts 
+```tsx
+import type { Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Do you like pizza?', trigger: 'answer' },
+  {
+    id: 'answer',
+    hideInput: true,
+    options: [
+      { label: 'Yes', trigger: 'yes' },
+      { label: 'No', trigger: 'no' }
+    ]
+  },
+  { id: 'yes', message: 'Me too!', end: true },
+  { id: 'no', message: 'More for me, then.', end: true }
+];
+```
+ To remove only the submit button for the whole conversation, use the `hideSubmitButton` prop. The user can still submit with Enter. ## Extra control [Section titled “Extra control”](#extra-control) `extraControl` renders an element next to the submit button, for example a button that opens a help dialog or an emoji picker. App.tsx 
+```tsx
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Ask me anything.', trigger: 'question' },
+  { id: 'question', user: true, trigger: 'ask' }
+];
+
+
+interface HelpButtonProps {
+  disabled?: boolean;
+  speaking?: boolean;
+  invalid?: boolean;
+}
+
+
+function HelpButton({ disabled }: HelpButtonProps) {
+  return (
+    <button type="button" disabled={disabled} onClick={() => window.open('/help')}>
+      ?
+    </button>
+  );
+}
+
+
+export default function App() {
+  return (
+    <ChatBot
+      steps={steps}
+      extraControl={<HelpButton />}
+      inputStyle={{ paddingRight: '88px' }}
+    />
+  );
+}
+```
+ The chatbot passes these props to the control: | Prop | Description | | ---------- | ----------------------------------------------------------------------------------------------- | | `disabled` | `true` while the input is disabled, that is, when the current step is not waiting for the user. | | `speaking` | `true` while speech recognition is listening. | | `invalid` | `true` while a validation error is shown. | Components receive the three props. Plain DOM elements, such as `<button />`, only receive `disabled`, so React does not warn about unknown attributes. The controls are absolutely positioned at the right of the footer (see the `controlStyle` prop). Add right padding to the input with `inputStyle` so long text does not go under the control. To hide the control on specific steps, set `hideExtraControl: true` on a text, user, options or custom step. It is also hidden when the step hides the input. ## Keyboard [Section titled “Keyboard”](#keyboard) Enter submits the message on key down. While the user is composing characters with an input method editor (IME), such as Japanese or Chinese input, Enter confirms the composition and does not submit the message. ## Focus on mobile [Section titled “Focus on mobile”](#focus-on-mobile) When a user step starts, the chatbot focuses the input so the user can type right away. On mobile devices it skips the focus by default, because focusing the input opens the on-screen keyboard and can scroll the page. Set `enableMobileAutoFocus` to focus the input on mobile too. App.tsx 
+```tsx
+<ChatBot steps={steps} enableMobileAutoFocus />
+```
+
+# Playground
+
+> Edit a chatbot and see it live, then share it with a link.
+
+Edit the code and the chatbot updates as you type. Pick a template to start, and use **Share** to copy a link to your chatbot.
+
+# ChatBot
+
+> Every prop of the ChatBot component, with its type and default value.
+
+```tsx
+import ChatBot, { type ChatBotProps } from 'react-simple-chatbot';
+```
+ `ChatBot` is the only component you need. `steps` is required, every other prop is optional. The props type is exported as `ChatBotProps`. ## Conversation [Section titled “Conversation”](#conversation) | Prop | Type | Default | Description | | ------------- | ------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | | `steps` | `Step[]` | required | The steps of the conversation. See [steps](/react-simple-chatbot/reference/steps/). Updates after mount are used by the steps that were not rendered yet. | | `botDelay` | `number` | `1000` | Delay in milliseconds before a bot message appears. | | `userDelay` | `number` | `1000` | Delay in milliseconds before a user message appears. | | `customDelay` | `number` | `1000` | Delay in milliseconds before a custom component appears. Components with `asMessage` use `botDelay`. | | `botName` | `string` | `'The bot'` | Name of the bot, used in the alt text of its avatar. | | `handleEnd` | `(args: HandleEndArgs) => void` | | Called when the conversation reaches an `end` step, with `{ renderedSteps, steps, values }`. | | `cache` | `boolean` | `false` | Save the conversation in `localStorage` and restore it on reload. See [cache](/react-simple-chatbot/guides/cache/). | | `cacheName` | `string` | `'rsc_cache'` | The `localStorage` key of the cache. | ## Input [Section titled “Input”](#input) | Prop | Type | Default | Description | | ----------------------- | --------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | | `placeholder` | `string` | `'Type the message ...'` | Placeholder of the input. A step `placeholder` overrides it. | | `inputAttributes` | `InputHTMLAttributes` | `{}` | Attributes of the input, like `type` or `autoComplete`. A step `inputAttributes` overrides it. | | `hideSubmitButton` | `boolean` | `false` | Hide the submit button. Users submit with Enter. | | `extraControl` | `ReactElement` | | An element rendered next to the submit button. Components receive `disabled`, `speaking` and `invalid`, DOM elements only receive `disabled`. | | `enableMobileAutoFocus` | `boolean` | `false` | Focus the input on mobile devices when a user step starts. It is always focused on other devices. | ## Appearance [Section titled “Appearance”](#appearance) | Prop | Type | Default | Description | | -------------------- | -------------- | ------------ | ------------------------------------------------------------------------------------------------------------- | | `width` | `string` | `'350px'` | Width of the chatbot. On screens below 568px it takes the full width, and a floating chatbot the full screen. | | `height` | `string` | `'520px'` | Height of the chatbot. | | `className` | `string` | `''` | Class name added to the root element (`rsc`). | | `headerTitle` | `string` | `'Chat'` | Title of the header. | | `hideHeader` | `boolean` | `false` | Hide the header. | | `headerComponent` | `ReactElement` | | Replace the default header. | | `botAvatar` | `string` | robot image | Image URL of the bot avatar. | | `userAvatar` | `string` | person image | Image URL of the user avatar. | | `hideBotAvatar` | `boolean` | `false` | Hide the avatar of the bot messages. | | `hideUserAvatar` | `boolean` | `false` | Hide the avatar of the user messages. | | `enableSmoothScroll` | `boolean` | `false` | Scroll to new messages with a smooth animation. | Colors and fonts come from the styled-components theme. See [theming](/react-simple-chatbot/guides/theming/). ## Styles [Section titled “Styles”](#styles) Each prop is a `CSSProperties` object applied to one element, so you can override its inline style. | Prop | Default | Element | | ------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | | `style` | `{}` | The chatbot container (`rsc-container`). | | `contentStyle` | `{}` | The scrollable list of messages (`rsc-content`). | | `footerStyle` | `{}` | The footer with the input (`rsc-footer`). | | `inputStyle` | `{}` | The input (`rsc-input`). | | `submitButtonStyle` | `{}` | The submit button (`rsc-submit-button`). | | `controlStyle` | `{ position: 'absolute', right: '0', top: '0' }` | The wrapper of the submit button and the extra control (`rsc-controls`). | | `bubbleStyle` | `{}` | The bubbles of text messages (`rsc-ts-bubble`). | | `bubbleOptionStyle` | `{}` | The option buttons (`rsc-os-option-element`). | | `avatarStyle` | `{}` | The avatars (`rsc-ts-image`). | | `customStyle` | `{}` | The container of custom components (`rsc-cs`). | | `floatingStyle` | `{}` | The floating button. Its `left`, `right`, `top`, `bottom` and `transformOrigin` also position the floating chatbot. | ## Floating [Section titled “Floating”](#floating) | Prop | Type | Default | Description | | ---------------- | ------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------ | | `floating` | `boolean` | `false` | Render a button in the corner of the page that opens the chatbot. The conversation starts when it is first opened. | | `floatingIcon` | `string \| ReactElement` | chat icon | Icon of the floating button, as an image URL or an element. | | `opened` | `boolean` | | Control whether the floating chatbot is opened. Use it with `toggleFloating`. | | `toggleFloating` | `({ opened }) => void` | | Called when the user opens or closes the chatbot. Update `opened` in it. | See [floating chatbot](/react-simple-chatbot/guides/floating/). ## Speech [Section titled “Speech”](#speech) | Prop | Type | Default | Description | | ------------------------ | --------------------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------- | | `recognitionEnable` | `boolean` | `false` | Let users answer with their voice. Ignored in browsers without speech recognition. | | `recognitionLang` | `string` | `'en'` | Language of the speech recognition. | | `recognitionPlaceholder` | `string` | `'Listening ...'` | Placeholder of the input while listening. | | `speechSynthesis` | `{ enable?: boolean; lang?: string; voice?: SpeechSynthesisVoice \| null }` | `{ enable: false, lang: 'en', voice: null }` | Read the bot messages aloud. | See [speech](/react-simple-chatbot/guides/speech/).
+
+# Custom component
+
+> The props received by the components of custom steps.
+
+```tsx
+import { type CustomComponentProps } from 'react-simple-chatbot';
+```
+ The component of a [custom step](/react-simple-chatbot/reference/steps/) is cloned with these props. They are optional in `CustomComponentProps`, because you create the element (`<Review />`) without them. | Prop | Type | Description | | ----------------- | -------------------------------------- | ---------------------------------------------------------------------------- | | `step` | `Step & { value?: any }` | The current step, with its value. | | `steps` | `RenderedSteps` | The rendered steps by id, each with `id`, `message`, `value` and `metadata`. | | `previousStep` | `Step & { value?: any }` | The step rendered before this one. | | `triggerNextStep` | `(data?: TriggerNextStepData) => void` | Goes to the next step. Only the first call of each step has an effect. | ## triggerNextStep [Section titled “triggerNextStep”](#triggernextstep) Call it from a step with `waitAction` to continue the conversation. Every field of the data is optional. | Field | Type | Description | | ------------------ | --------- | ------------------------------------------------------------------------------------------ | | `value` | `any` | The value of this step, available in `steps` and as `{previousValue}` in the next message. | | `trigger` | `Trigger` | The next step, instead of the `trigger` of the step. | | `hideInput` | `boolean` | Hide the input for this step. | | `hideExtraControl` | `boolean` | Hide the `extraControl` for this step. | Confirm.tsx 
+```tsx
+import { type CustomComponentProps } from 'react-simple-chatbot';
+
+
+export default function Confirm({ steps, triggerNextStep }: CustomComponentProps) {
+  return (
+    <div>
+      <p>Send the order to {steps?.email.value}?</p>
+      <button type="button" onClick={() => triggerNextStep?.({ value: true, trigger: 'sent' })}>
+        Send
+      </button>
+      <button type="button" onClick={() => triggerNextStep?.({ value: false, trigger: 'cancel' })}>
+        Cancel
+      </button>
+    </div>
+  );
+}
+```
+ DOM elements like `<div />` used as components don’t receive these props. See the [custom components guide](/react-simple-chatbot/guides/custom-components/).
+
+# Steps
+
+> The attributes of each type of step.
+
+```tsx
+import { type Step } from 'react-simple-chatbot';
+```
+ A step is an object in the `steps` array. Its type depends on its attributes, checked in this order: `user` makes a user step, `message` a text step, `options` an options step, `component` a custom step and `update` an update step. Caution Each step is validated when the chatbot starts. A missing required attribute, a wrong type or a `trigger` to an unknown id throws an error, and unknown attributes are removed with a console error. ## Common attributes [Section titled “Common attributes”](#common-attributes) | Attribute | Type | Description | | ----------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | | `id` | `string \| number` | **Required.** Unique id of the step, used by `trigger`, `update` and the `steps` object. | | `trigger` | `StepId \| (({ value, steps }) => StepId)` | The step that comes next. A function receives the value of this step and the rendered steps, and returns the id. | | `end` | `boolean` | Ends the conversation after this step and calls `handleEnd`. | | `placeholder` | `string` | Placeholder of the input while this step is the current one. | | `inputAttributes` | `InputHTMLAttributes` | Attributes of the input while this step is the current one, e.g. `{ type: 'email' }`. | | `metadata` | `Record<string, any>` | Your own data. It is available in `steps` and `previousStep`, and `metadata.speak` changes the text read by speech synthesis. | ## Text step [Section titled “Text step”](#text-step) A message from the bot. 
+```tsx
+{ id: 'greet', message: 'Hi {previousValue}!', trigger: 'next' }
+```
+ | Attribute | Type | Description | | ------------------ | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | | `message` | `string \| (({ previousValue, steps }) => string)` | **Required.** The text. `{previousValue}` is replaced with the value of the previous step. A function receives the previous value and the rendered steps. | | `avatar` | `string` | Avatar of this message, instead of `botAvatar`. | | `delay` | `number` | Delay in milliseconds before the message appears, instead of `botDelay`. | | `hideInput` | `boolean` | Hide the input while this step is the current one. | | `hideExtraControl` | `boolean` | Hide the `extraControl` while this step is the current one. | ## User step [Section titled “User step”](#user-step) Waits for the user to type an answer. The answer is the `value` of the step. 
+```tsx
+{ id: 'name', user: true, trigger: 'greet' }
+```
+ | Attribute | Type | Description | | ------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------ | | `user` | `true` | **Required.** Marks a user step. | | `validator` | `(value: string) => boolean \| string` | Validates the answer. Return `true` when it is valid, or the error message to show in the input. | | `hideExtraControl` | `boolean` | Hide the `extraControl` while waiting for this answer. | ## Options step [Section titled “Options step”](#options-step) Shows buttons. The chosen option becomes a user message, and its `value` is the value of the step. 
+```tsx
+{
+  id: 'fruit',
+  options: [
+    { label: 'Apple', trigger: 'apple' },
+    { value: 2, label: 'Banana', trigger: 'banana' }
+  ]
+}
+```
+ | Attribute | Type | Description | | ------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | | `options` | `Option[]` | **Required.** The options, each with `label` (the text), `trigger` (the next step) and `value` (defaults to the `label`). | | `hideInput` | `boolean` | Hide the input while the options are shown. | | `hideExtraControl` | `boolean` | Hide the `extraControl` while the options are shown. | ## Custom step [Section titled “Custom step”](#custom-step) Renders your component, with the [custom component props](/react-simple-chatbot/reference/custom-component/). 
+```tsx
+{ id: 'review', component: <Review />, asMessage: true, trigger: 'end' }
+```
+ | Attribute | Type | Description | | ------------------ | -------------- | -------------------------------------------------------------------------------------------------------------- | | `component` | `ReactElement` | **Required.** The element to render. DOM elements like `<div />` are rendered without the step props. | | `asMessage` | `boolean` | Render the component inside a message bubble, like a text step. | | `waitAction` | `boolean` | Wait for the component to call `triggerNextStep` instead of going to the next step after the delay. | | `replace` | `boolean` | Remove the component when the next step starts. | | `avatar` | `string` | Avatar of this step, with `asMessage`. Defaults to `botAvatar`. | | `delay` | `number` | Delay in milliseconds before the component appears, instead of `customDelay` (or `botDelay` with `asMessage`). | | `hideInput` | `boolean` | Hide the input while this step is the current one. | | `hideExtraControl` | `boolean` | Hide the `extraControl` while this step is the current one. | ## Update step [Section titled “Update step”](#update-step) Asks a previous user or options step again, for example to correct an answer. The updated step then goes to the `trigger` of the update step. 
+```tsx
+{ id: 'update-name', update: 'name', trigger: 'review' }
+```
+ | Attribute | Type | Description | | --------- | ------------------------------------------ | ---------------------------------------------- | | `update` | `StepId` | **Required.** The id of the step to ask again. | | `trigger` | `StepId \| (({ value, steps }) => StepId)` | **Required.** The step after the updated one. |
+
+# Types
+
+> The TypeScript types exported by react-simple-chatbot.
+
+The library is written in TypeScript, and these types are exported from the package: 
+```tsx
+import ChatBot, {
+  type ChatBotProps,
+  type ChatBotTheme,
+  type CustomComponentProps,
+  type Step
+} from 'react-simple-chatbot';
+```
+ See [TypeScript](/react-simple-chatbot/getting-started/typescript/) for how to use them. ## Steps [Section titled “Steps”](#steps) ### StepId [Section titled “StepId”](#stepid) 
+```ts
+export type StepId = string | number;
+```
+ ### Trigger [Section titled “Trigger”](#trigger) 
+```ts
+export type Trigger = StepId | ((args: { value: any; steps: RenderedSteps }) => StepId);
+```
+ ### Message [Section titled “Message”](#message) 
+```ts
+export type Message = string | ((args: { previousValue: any; steps: RenderedSteps }) => string);
+```
+ ### BaseStep (internal, the base of the step types) [Section titled “BaseStep (internal, the base of the step types)”](#basestep-internal-the-base-of-the-step-types) 
+```ts
+interface BaseStep {
+  id: StepId;
+  end?: boolean;
+  placeholder?: string;
+  inputAttributes?: InputHTMLAttributes<HTMLInputElement>;
+  metadata?: Record<string, any>;
+}
+```
+ ### TextStep [Section titled “TextStep”](#textstep) 
+```ts
+export interface TextStep extends BaseStep {
+  message: Message;
+  avatar?: string;
+  trigger?: Trigger;
+  delay?: number;
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+```
+ ### UserStep [Section titled “UserStep”](#userstep) 
+```ts
+export interface UserStep extends BaseStep {
+  user: true;
+  trigger?: Trigger;
+  hideExtraControl?: boolean;
+  /** Return true when the value is valid, or the error message to show */
+  validator?: (value: string) => boolean | string;
+}
+```
+ ### Option [Section titled “Option”](#option) 
+```ts
+export interface Option {
+  label: string;
+  /** Defaults to the label */
+  value?: any;
+  trigger: Trigger;
+}
+```
+ ### OptionsStep [Section titled “OptionsStep”](#optionsstep) 
+```ts
+export interface OptionsStep extends BaseStep {
+  options: Option[];
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+```
+ ### CustomStep [Section titled “CustomStep”](#customstep) 
+```ts
+export interface CustomStep extends BaseStep {
+  component: ReactElement;
+  avatar?: string;
+  replace?: boolean;
+  waitAction?: boolean;
+  asMessage?: boolean;
+  trigger?: Trigger;
+  delay?: number;
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+```
+ ### UpdateStep [Section titled “UpdateStep”](#updatestep) 
+```ts
+export interface UpdateStep extends BaseStep {
+  update: StepId;
+  trigger: Trigger;
+}
+```
+ ### Step [Section titled “Step”](#step) 
+```ts
+export type Step = TextStep | UserStep | OptionsStep | CustomStep | UpdateStep;
+```
+ ## Custom components [Section titled “Custom components”](#custom-components) ### RenderedStep [Section titled “RenderedStep”](#renderedstep) 
+```ts
+export interface RenderedStep {
+  id: StepId;
+  message?: string;
+  value?: any;
+  metadata?: Record<string, any>;
+}
+```
+ ### RenderedSteps [Section titled “RenderedSteps”](#renderedsteps) 
+```ts
+export type RenderedSteps = Record<string, RenderedStep>;
+```
+ ### TriggerNextStepData [Section titled “TriggerNextStepData”](#triggernextstepdata) 
+```ts
+export interface TriggerNextStepData {
+  value?: any;
+  trigger?: Trigger;
+  hideInput?: boolean;
+  hideExtraControl?: boolean;
+}
+
+
+/** Props injected in the components of custom steps */
+```
+ ### CustomComponentProps [Section titled “CustomComponentProps”](#customcomponentprops) 
+```ts
+export interface CustomComponentProps {
+  step?: Step & { value?: any };
+  steps?: RenderedSteps;
+  previousStep?: Step & { value?: any };
+  triggerNextStep?: (data?: TriggerNextStepData) => void;
+}
+```
+ ## ChatBot [Section titled “ChatBot”](#chatbot) ### ChatBotProps [Section titled “ChatBotProps”](#chatbotprops) 
+```ts
+export interface ChatBotProps {
+  steps: Step[];
+  avatarStyle?: CSSProperties;
+  botAvatar?: string;
+  botDelay?: number;
+  botName?: string;
+  bubbleOptionStyle?: CSSProperties;
+  bubbleStyle?: CSSProperties;
+  cache?: boolean;
+  cacheName?: string;
+  className?: string;
+  contentStyle?: CSSProperties;
+  controlStyle?: CSSProperties;
+  customDelay?: number;
+  customStyle?: CSSProperties;
+  enableMobileAutoFocus?: boolean;
+  enableSmoothScroll?: boolean;
+  extraControl?: ReactElement<any>;
+  floating?: boolean;
+  floatingIcon?: string | ReactElement;
+  floatingStyle?: CSSProperties;
+  footerStyle?: CSSProperties;
+  handleEnd?: (args: HandleEndArgs) => void;
+  headerComponent?: ReactElement;
+  headerTitle?: string;
+  height?: string;
+  hideBotAvatar?: boolean;
+  hideHeader?: boolean;
+  hideSubmitButton?: boolean;
+  hideUserAvatar?: boolean;
+  inputAttributes?: InputHTMLAttributes<HTMLInputElement>;
+  inputStyle?: CSSProperties;
+  opened?: boolean;
+  placeholder?: string;
+  recognitionEnable?: boolean;
+  recognitionLang?: string;
+  recognitionPlaceholder?: string;
+  speechSynthesis?: SpeechSynthesisOptions;
+  style?: CSSProperties;
+  submitButtonStyle?: CSSProperties;
+  toggleFloating?: (args: { opened: boolean }) => void;
+  userAvatar?: string;
+  userDelay?: number;
+  width?: string;
+}
+```
+ ### HandleEndArgs [Section titled “HandleEndArgs”](#handleendargs) 
+```ts
+export interface HandleEndArgs {
+  renderedSteps: RenderedStep[];
+  steps: RenderedSteps;
+  values: any[];
+}
+```
+ ### SpeechSynthesisOptions [Section titled “SpeechSynthesisOptions”](#speechsynthesisoptions) 
+```ts
+export interface SpeechSynthesisOptions {
+  enable?: boolean;
+  lang?: string;
+  voice?: SpeechSynthesisVoice | null;
+}
+```
+ ### ChatBotTheme [Section titled “ChatBotTheme”](#chatbottheme) 
+```ts
+export interface ChatBotTheme {
+  background: string;
+  fontFamily: string;
+  headerBgColor: string;
+  headerFontColor: string;
+  headerFontSize: string;
+  botBubbleColor: string;
+  botFontColor: string;
+  userBubbleColor: string;
+  userFontColor: string;
+}
+```
+
+# Changelog
+
+> The main changes in each release of React Simple Chatbot.
+
+This page summarizes the recent releases. The [GitHub releases](https://github.com/LucasBassetti/react-simple-chatbot/releases) have the full notes for every version. ## 1.0.0 [Section titled “1.0.0”](#100) Latest Released on 2026-09-27. React Simple Chatbot is rewritten in TypeScript with React function components and hooks. The steps and the props are the same as in 0.7.0. ### Breaking changes [Section titled “Breaking changes”](#breaking-changes) * Requires React 18 or 19 and styled-components 5.1 or newer. * `ChatBot` is a function component, so a `ref` no longer gives you a component instance. Control the chatbot with props instead: `opened` with `toggleFloating`, or a new `key` to restart the conversation. * Enter submits the message on `keydown` instead of the deprecated `keypress`, and is ignored while the user is composing IME characters. * The `steps` argument of `handleEnd` is an object keyed by step id instead of an array with string keys. The [migration guide](/react-simple-chatbot/getting-started/migration/) explains each change and how to update your code. ### Improvements [Section titled “Improvements”](#improvements) * Written in TypeScript. The type declarations are generated from the source, and a new `ChatBotTheme` type describes the theme. * New ES module build, next to the UMD build. * Style props no longer reach the DOM, with any supported styled-components version. * A theme that defines only some keys falls back to the default theme for the others. * A DOM element used as `extraControl` only receives `disabled`. * Removed the `prop-types` and `random-id` dependencies. ### Security [Section titled “Security”](#security) * Resolved the security alerts reported for the development dependencies. The build now uses Vite, and the tests use Vitest and Testing Library. ## 0.7.0 [Section titled “0.7.0”](#070) Released on 2026-09-26. A maintenance release that brings the 0.x line up to date with modern React. ### Fixes [Section titled “Fixes”](#fixes) * Messages are no longer duplicated under React 18 StrictMode, when a custom component calls `triggerNextStep` more than once, or when an option is clicked twice. * Autoscroll works again in Chrome 127 and newer. * Server rendering no longer fails with `window is not defined`. * The cache is only read when `cache` is enabled, and a blocked `localStorage` no longer breaks the chatbot. * Options without a `value` are selected by their label. * A first step with `user: true` waits for the user’s input. * A closed floating chatbot starts the conversation when it is opened. ### Improvements [Section titled “Improvements”](#improvements-1) * TypeScript declarations for the props, every kind of step, `handleEnd` and custom components. * Accessibility: labels for the input and the buttons, and keyboard support for the floating open and close buttons. * Supports React 16.3 and newer, and styled-components 4, 5 and 6. ## Older releases [Section titled “Older releases”](#older-releases) See the [GitHub releases](https://github.com/LucasBassetti/react-simple-chatbot/releases) for versions before 0.7.0.
+
+# Contributing
+
+> How to report issues, contribute code to React Simple Chatbot, and improve this documentation.
+
+React Simple Chatbot is open source, and contributions are welcome: bug reports, feature ideas, code and documentation. The code lives at [github.com/LucasBassetti/react-simple-chatbot](https://github.com/LucasBassetti/react-simple-chatbot). Please follow the [code of conduct](https://github.com/LucasBassetti/react-simple-chatbot/blob/master/CODE_OF_CONDUCT.md) in every interaction. ## Open an issue [Section titled “Open an issue”](#open-an-issue) [Open an issue](https://github.com/LucasBassetti/react-simple-chatbot/issues) to report a bug or propose a feature. * **Bugs**: describe the steps to reproduce the problem, what happened and what you expected. Include the versions of react-simple-chatbot, React, styled-components and your browser. * **Features**: explain what the feature does, why it is useful and how you would use it. Parts you are unsure about are fine to leave open for discussion. ## Contribute code [Section titled “Contribute code”](#contribute-code) The library is written in TypeScript with React function components and hooks. For big changes, open an issue first so the approach can be discussed before you spend time on it. 1. Fork the repository on GitHub, clone your fork and create a branch for your change. Avoid working on `master` directly. 
+   ```sh
+   git clone https://github.com/YOUR_USERNAME/react-simple-chatbot.git
+   cd react-simple-chatbot
+   git checkout -b fix/my-change
+   ```
+ 2. Install the dependencies: 
+   ```sh
+   npm install
+   ```
+ 3. Run the example app while you work. `npm start` serves the app in `example/` with Vite at `http://localhost:5173`: 
+   ```sh
+   npm start
+   ```
+ 4. Make your change and add tests that cover it. Before pushing, check that everything passes: 
+   ```sh
+   npm test
+   npm run lint
+   npm run typecheck
+   npm run build
+   ```
+ 5. Push your branch to your fork and open a pull request against the `master` branch of the main repository. ### Commands [Section titled “Commands”](#commands) | Command | What it does | | ----------------------- | ----------------------------------------------------------------------- | | `npm start` | Runs the example app (`example/`) with Vite. | | `npm test` | Runs the tests with Vitest and Testing Library. | | `npm run test:watch` | Runs the tests in watch mode. | | `npm run test:coverage` | Runs the tests with a coverage report. | | `npm run lint` | Checks the code with ESLint and Prettier. | | `npm run typecheck` | Checks the types with TypeScript. | | `npm run build` | Builds `dist/`: the ES module and UMD builds and the type declarations. | ### Pull request title [Section titled “Pull request title”](#pull-request-title) The pull request title must follow [Conventional Commits](https://www.conventionalcommits.org): 
+```txt
+<type>(<optional scope>)!: <short summary in the imperative mood>
+```
+ The type is one of: | Type | Use it for | | ---------- | --------------------------------------------------------- | | `feat` | A new feature | | `fix` | A bug fix | | `docs` | Documentation only | | `style` | Formatting, no code change | | `refactor` | A code change that neither fixes a bug nor adds a feature | | `perf` | A performance improvement | | `test` | Adding or fixing tests | | `build` | The build system or dependencies | | `ci` | The CI configuration | | `chore` | Other changes that don’t modify the source or the tests | | `revert` | Reverting a previous commit | Add `!` after the type or scope for a breaking change. For example: 
+```txt
+feat: add a typing indicator to custom steps
+fix(cache): restore options without value
+feat!: drop React 17 support
+```
+ ### Pull request description [Section titled “Pull request description”](#pull-request-description) Fill in the pull request template. It asks for: * a description of what the change does and why, * the related issue, if there is one, * the type of change, * how you tested it (tests, browsers, React versions, the example app), * for breaking changes, what breaks and how to migrate. ## Contribute to these docs [Section titled “Contribute to these docs”](#contribute-to-these-docs) Every page has an **Edit page** link at the bottom that opens its source on GitHub. For small fixes, that is the fastest way to propose a change. The site is built with [Astro Starlight](https://starlight.astro.build) and lives in the `website/` folder of the `gh-pages` branch. The pages are MDX files in `website/src/content/docs/`, and the live examples are in `website/src/examples/`. 1. Check out the `gh-pages` branch of your fork and start the development server: 
+   ```sh
+   git checkout gh-pages
+   cd website
+   npm install
+   npm run dev
+   ```
+ 2. Edit the pages and check them in the browser. 3. Rebuild the published site. `npm run publish-site` builds the site and copies it to the root of the `gh-pages` branch, which GitHub Pages serves: 
+   ```sh
+   npm run publish-site
+   ```
+ 4. Commit both the changes in `website/` and the rebuilt files at the root of the branch, and open a pull request against `gh-pages`.
+
+# FAQ
+
+> Answers to common questions and fixes for common problems with React Simple Chatbot.
+
+## How do I restart the conversation? [Section titled “How do I restart the conversation?”](#how-do-i-restart-the-conversation) Render the chatbot with a new `key`. React discards the old instance and mounts a new one, which starts again from the first step: App.tsx 
+```tsx
+import { useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}!', end: true }
+];
+
+
+export default function App() {
+  const [conversation, setConversation] = useState(0);
+
+
+  const restart = () => {
+    // only needed when the cache is enabled
+    localStorage.removeItem('rsc_cache');
+    setConversation(c => c + 1);
+  };
+
+
+  return (
+    <>
+      <button type="button" onClick={restart}>
+        Restart
+      </button>
+      <ChatBot key={conversation} cache steps={steps} />
+    </>
+  );
+}
+```
+ With `cache` enabled, clear the cache too with `localStorage.removeItem(cacheName)`, or the new instance restores the old conversation. The default `cacheName` is `rsc_cache`. See the [cache guide](/react-simple-chatbot/guides/cache/). ## How do I use it with Next.js or server rendering? [Section titled “How do I use it with Next.js or server rendering?”](#how-do-i-use-it-with-nextjs-or-server-rendering) The chatbot uses hooks and browser APIs, so it must be a client component. In the Next.js App Router, add `'use client'` at the top of the file that renders `ChatBot`: app/chat.tsx 
+```tsx
+'use client';
+
+
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello!', end: true }];
+
+
+export default function Chat() {
+  return <ChatBot steps={steps} />;
+}
+```
+ The component doesn’t access `window` or `localStorage` while rendering, so it can be rendered on the server. See the [frameworks guide](/react-simple-chatbot/guides/frameworks/) for more setups. ## How do I change the colors? [Section titled “How do I change the colors?”](#how-do-i-change-the-colors) Wrap the chatbot in a styled-components `ThemeProvider`. The theme can set only the keys you want to change; the others fall back to the default theme: App.tsx 
+```tsx
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+
+const theme: Partial<ChatBotTheme> = {
+  headerBgColor: '#0f766e',
+  botBubbleColor: '#0f766e'
+};
+
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+ The [theming guide](/react-simple-chatbot/guides/theming/) lists every key, and the [themes example](/react-simple-chatbot/examples/themes/) shows a few complete themes. ## How do I style a specific element? [Section titled “How do I style a specific element?”](#how-do-i-style-a-specific-element) There are two ways, and you can combine them: * **Style props.** `style`, `contentStyle`, `footerStyle`, `inputStyle`, `submitButtonStyle`, `bubbleStyle`, `bubbleOptionStyle`, `avatarStyle`, `customStyle`, `controlStyle` and `floatingStyle` accept inline styles for each part of the chatbot. * **Class names.** Every element has a stable `rsc-*` class name that you can target with CSS, such as `.rsc-container`, `.rsc-header`, `.rsc-content`, `.rsc-ts-bubble` (message bubbles), `.rsc-os-option-element` (options), `.rsc-input` and `.rsc-submit-button`. Pass `className` to add your own class to the root element. chatbot.css 
+```css
+.support-bot .rsc-ts-bubble {
+  font-size: 15px;
+  line-height: 1.4;
+}
+```
+ Every style prop is listed in the [ChatBot reference](/react-simple-chatbot/reference/chatbot/). ## How do I send the answers to my API? [Section titled “How do I send the answers to my API?”](#how-do-i-send-the-answers-to-my-api) Pass `handleEnd`. The chatbot calls it when the conversation reaches a step with `end: true`, with every answer: App.tsx 
+```tsx
+import ChatBot, { type HandleEndArgs } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+
+const handleEnd = ({ steps, values }: HandleEndArgs) => {
+  fetch('/api/answers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: steps.name?.value, values })
+  });
+};
+
+
+export default function App() {
+  return <ChatBot steps={steps} handleEnd={handleEnd} />;
+}
+```
+ To call your API in the middle of the conversation, for example to save an answer or to show data from your server, use a custom component with `waitAction: true`. It calls your API and then `triggerNextStep` to continue. See [custom components](/react-simple-chatbot/guides/custom-components/) and the [end callback example](/react-simple-chatbot/examples/end-callback/). ## Why doesn’t speech recognition work in my browser? [Section titled “Why doesn’t speech recognition work in my browser?”](#why-doesnt-speech-recognition-work-in-my-browser) Speech recognition uses the browser’s `webkitSpeechRecognition` API, which is available in Chromium-based browsers (Chrome, Edge, Opera and others) and in Safari. In other browsers, such as Firefox, the chatbot ignores `recognitionEnable` and shows the regular input without the microphone button. Browsers also usually only allow the microphone on secure pages (HTTPS or `localhost`), and the user must grant permission. See the [speech guide](/react-simple-chatbot/guides/speech/). ## Can I change the steps after the chatbot is mounted? [Section titled “Can I change the steps after the chatbot is mounted?”](#can-i-change-the-steps-after-the-chatbot-is-mounted) Yes. When `steps`, `botAvatar`, `userAvatar`, `botDelay`, `userDelay`, `customDelay` or `botName` change, the chatbot uses the new values for the steps that were not rendered yet. The messages already on the screen don’t change. This lets you, for example, load the options of a later step from an API while the conversation runs. To start over with completely different steps, also change the `key`, as described in the first question of this page. ## Why doesn’t my custom component continue the conversation? [Section titled “Why doesn’t my custom component continue the conversation?”](#why-doesnt-my-custom-component-continue-the-conversation) A custom step with `waitAction: true` waits until the component calls `triggerNextStep`. Check that the component calls it, and that the step has a `trigger` or that you pass one in the call, for example `triggerNextStep({ trigger: 'next' })`. Without `waitAction`, the conversation continues on its own after the step’s delay. A step triggers the next step only once: later calls to `triggerNextStep` from the same step are ignored. This also keeps the conversation from running twice under React StrictMode. ## Can I use it with React Native? [Section titled “Can I use it with React Native?”](#can-i-use-it-with-react-native) No. React Simple Chatbot renders DOM elements and uses styled-components for the web, so it only works in the browser. For React Native, look for a library built for it. ## Does it work with older React versions? [Section titled “Does it work with older React versions?”](#does-it-work-with-older-react-versions) Version 1.0 needs React 18 or 19 and styled-components 5.1 or newer. For React 16.3 or 17, or styled-components 4, use version 0.7.0: 
+```sh
+npm install react-simple-chatbot@0.7.0
+```
+ ## Where can I ask a question or report a bug? [Section titled “Where can I ask a question or report a bug?”](#where-can-i-ask-a-question-or-report-a-bug) Open an issue on [GitHub](https://github.com/LucasBassetti/react-simple-chatbot/issues). For bugs, include the versions of React, styled-components and react-simple-chatbot, and the steps that reproduce the problem.

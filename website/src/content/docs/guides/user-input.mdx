@@ -1,0 +1,203 @@
+---
+title: User input
+description: Validate answers, configure the input and add your own controls next to the submit button.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+
+A user step enables the input and waits for the user to submit a message. The input stays disabled during the other steps.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}!', end: true }
+];
+```
+
+The user submits by pressing Enter or clicking the submit button. The typed text becomes the value of the step, which the next steps can read as `{previousValue}` or from the `steps` object.
+
+## Validate the answer
+
+Add a `validator` to a user step. It receives the typed text and returns `true` when the value is valid, or the error message to show.
+
+<Demo name="validator" />
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-age', message: 'How old are you?', trigger: 'age' },
+  {
+    id: 'age',
+    user: true,
+    validator: value => {
+      const age = Number(value);
+      if (!value.trim() || Number.isNaN(age)) {
+        return 'Please type a number';
+      }
+      if (age < 0 || age > 120) {
+        return 'Please type a valid age';
+      }
+      return true;
+    },
+    trigger: 'thanks'
+  },
+  { id: 'thanks', message: 'Thanks!', end: true }
+];
+```
+
+When the validator returns an error message:
+
+1. The message shows in the input, in red, and the input is disabled.
+2. After 2 seconds, the typed value comes back and the input is enabled again so the user can fix it.
+
+Return a string for errors. Any value other than `true` is shown as the error message, so returning `false` would show the text "false".
+
+<Aside type="tip">
+  Without a validator, the user can submit an empty message. Return an error for blank values if the answer is required: `value.trim() ? true : 'Please type an answer'`.
+</Aside>
+
+## Placeholder
+
+The `placeholder` prop sets the input placeholder for the whole conversation. The default is `'Type the message ...'`. Set `placeholder` on a step to override it while that step is the current step.
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-email', message: 'What is your email?', trigger: 'email' },
+  { id: 'email', user: true, placeholder: 'you@example.com', trigger: 'bye' },
+  { id: 'bye', message: 'Thanks!', end: true }
+];
+
+export default function App() {
+  return <ChatBot placeholder="Write here..." steps={steps} />;
+}
+```
+
+While speech recognition is listening, the input shows `recognitionPlaceholder` instead. See [Speech](/react-simple-chatbot/guides/speech/).
+
+## Input attributes
+
+`inputAttributes` passes attributes to the input element. Use it to pick the right keyboard on mobile, turn on autocomplete, or limit the length of the answer.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-email', message: 'What is your email?', trigger: 'email' },
+  {
+    id: 'email',
+    user: true,
+    inputAttributes: { type: 'email', autoComplete: 'email' },
+    trigger: 'ask-zip'
+  },
+  { id: 'ask-zip', message: 'And your ZIP code?', trigger: 'zip' },
+  {
+    id: 'zip',
+    user: true,
+    inputAttributes: { inputMode: 'numeric', autoComplete: 'postal-code', maxLength: 5 },
+    trigger: 'done'
+  },
+  { id: 'done', message: 'All set!', end: true }
+];
+```
+
+Set `inputAttributes` on the `ChatBot` to apply attributes to every step. The attributes of the current step replace the global ones; they are not merged.
+
+```tsx title="App.tsx"
+<ChatBot steps={steps} inputAttributes={{ autoComplete: 'off', spellCheck: false }} />
+```
+
+Input attributes do not validate the value. Browsers do not run form validation on the chat input, so use a `validator` for that.
+
+## Hide the input
+
+Set `hideInput: true` on a text, options or custom step to hide the input, the submit button and the extra control while that step is the current step. The messages area grows to fill the space. This is common on options steps, where the user answers by clicking a button.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Do you like pizza?', trigger: 'answer' },
+  {
+    id: 'answer',
+    hideInput: true,
+    options: [
+      { label: 'Yes', trigger: 'yes' },
+      { label: 'No', trigger: 'no' }
+    ]
+  },
+  { id: 'yes', message: 'Me too!', end: true },
+  { id: 'no', message: 'More for me, then.', end: true }
+];
+```
+
+To remove only the submit button for the whole conversation, use the `hideSubmitButton` prop. The user can still submit with Enter.
+
+## Extra control
+
+`extraControl` renders an element next to the submit button, for example a button that opens a help dialog or an emoji picker.
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Ask me anything.', trigger: 'question' },
+  { id: 'question', user: true, trigger: 'ask' }
+];
+
+interface HelpButtonProps {
+  disabled?: boolean;
+  speaking?: boolean;
+  invalid?: boolean;
+}
+
+function HelpButton({ disabled }: HelpButtonProps) {
+  return (
+    <button type="button" disabled={disabled} onClick={() => window.open('/help')}>
+      ?
+    </button>
+  );
+}
+
+export default function App() {
+  return (
+    <ChatBot
+      steps={steps}
+      extraControl={<HelpButton />}
+      inputStyle={{ paddingRight: '88px' }}
+    />
+  );
+}
+```
+
+The chatbot passes these props to the control:
+
+| Prop | Description |
+| --- | --- |
+| `disabled` | `true` while the input is disabled, that is, when the current step is not waiting for the user. |
+| `speaking` | `true` while speech recognition is listening. |
+| `invalid` | `true` while a validation error is shown. |
+
+Components receive the three props. Plain DOM elements, such as `<button />`, only receive `disabled`, so React does not warn about unknown attributes.
+
+The controls are absolutely positioned at the right of the footer (see the `controlStyle` prop). Add right padding to the input with `inputStyle` so long text does not go under the control.
+
+To hide the control on specific steps, set `hideExtraControl: true` on a text, user, options or custom step. It is also hidden when the step hides the input.
+
+## Keyboard
+
+Enter submits the message on key down. While the user is composing characters with an input method editor (IME), such as Japanese or Chinese input, Enter confirms the composition and does not submit the message.
+
+## Focus on mobile
+
+When a user step starts, the chatbot focuses the input so the user can type right away. On mobile devices it skips the focus by default, because focusing the input opens the on-screen keyboard and can scroll the page. Set `enableMobileAutoFocus` to focus the input on mobile too.
+
+```tsx title="App.tsx"
+<ChatBot steps={steps} enableMobileAutoFocus />
+```

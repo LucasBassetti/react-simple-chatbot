@@ -1,0 +1,85 @@
+---
+title: Introduction
+description: What React Simple Chatbot is, how a conversation is described, and where to go next.
+---
+
+import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+React Simple Chatbot is a React component that renders a chat conversation. You describe the conversation as data, and the component takes care of the messages, the typing delays, the user input, the options and the scrolling.
+
+It is written in TypeScript, works with React 18 and 19, and uses [styled-components](https://styled-components.com) for its styles.
+
+## The core idea
+
+A conversation is an array of **steps**. Each step has an `id`, and most steps have a `trigger`: the `id` of the step that comes next. The chatbot starts with the first step of the array and follows the triggers until it reaches a step with `end: true`.
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'greet' },
+  { id: 'greet', message: 'Hi {previousValue}, nice to meet you!', end: true }
+];
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+Because the conversation is plain data, you can branch it (a trigger can be a function that picks the next step from the user's answer), build it from an API response, or reuse the same steps in several places.
+
+## Kinds of steps
+
+The attributes of a step decide what kind of step it is.
+
+| Kind | Identified by | What it does |
+| --- | --- | --- |
+| Text | `message` | Shows a message from the bot. The message can be a string or a function. |
+| User | `user: true` | Waits for the user to type an answer, optionally checked by a `validator`. |
+| Options | `options` | Shows a list of choices; each option has its own `trigger`. |
+| Custom component | `component` | Renders any React element, which can read previous answers and decide when the conversation continues. |
+| Update | `update` | Asks an earlier step again, so the user can change an answer. |
+
+The [steps guide](/react-simple-chatbot/guides/steps/) covers each kind in detail, and the [steps reference](/react-simple-chatbot/reference/steps/) lists every attribute.
+
+## Features
+
+- **Dynamic content**: messages and triggers can be functions that receive the previous value and the answers given so far.
+- **User input**: validation with custom error messages, per-step placeholders and input attributes.
+- **Custom components**: render your own components as steps, for summaries, forms, API calls or anything else.
+- **Theming**: change colors and fonts with a styled-components theme, or style elements with `*Style` props and stable `rsc-*` class names.
+- **Floating mode**: show the chatbot behind a floating button, opened and closed by the user or by your code.
+- **Cache**: keep the conversation in `localStorage` so it survives a page reload.
+- **Speech**: speech recognition for the user's answers and speech synthesis for the bot's messages.
+- **End callback**: receive every answer when the conversation ends with `handleEnd`.
+- **Modern React**: function components and hooks, StrictMode, server rendering and accessible controls.
+
+<Aside type="tip">
+  Want to try it before installing anything? The [playground](/react-simple-chatbot/playground/) lets you edit a chatbot and see the result live.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Installation"
+    description="Install the package and its peer dependencies."
+    href="/react-simple-chatbot/getting-started/installation/"
+  />
+  <LinkCard
+    title="Quick start"
+    description="Build and render your first chatbot."
+    href="/react-simple-chatbot/getting-started/quick-start/"
+  />
+  <LinkCard
+    title="Guides"
+    description="Learn how steps, user input, custom components and theming work."
+    href="/react-simple-chatbot/guides/steps/"
+  />
+  <LinkCard
+    title="Examples"
+    description="Live chatbots with their code, ready to copy."
+    href="/react-simple-chatbot/examples/previous-value/"
+  />
+</CardGrid>

@@ -1,0 +1,16 @@
+---
+title: Validator
+description: Validate the text typed by the user before moving to the next step.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+Add a `validator` to a user step to check the typed value. Return `true` to accept it, or an error message to show in the input. See [User input](/react-simple-chatbot/guides/user-input/) for more.
+
+<Demo name="validator" />
+
+## How it works
+
+- `validateAge` receives the typed text as a string and returns an error message when it is empty, not a number, not positive or 120 or more.
+- The error message replaces the text in the input for a moment, then the typed text comes back so the user can fix it.
+- The next step only runs when the validator returns `true`.

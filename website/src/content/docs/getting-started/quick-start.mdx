@@ -1,0 +1,88 @@
+---
+title: Quick start
+description: Build your first chatbot, a bot that asks for the user's name and greets them.
+---
+
+import { Aside, LinkCard, CardGrid, Steps } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+
+In this page you build a chatbot that asks for the user's name and greets them by name. It takes three steps.
+
+## Build the chatbot
+
+<Steps>
+
+1. Install React Simple Chatbot and styled-components, its peer dependency:
+
+   ```sh
+   npm install react-simple-chatbot styled-components
+   ```
+
+   See [installation](/react-simple-chatbot/getting-started/installation/) for yarn, pnpm and bun, and for the supported versions.
+
+2. Describe the conversation as an array of steps. Each step has a unique `id` and a `trigger` pointing to the next step:
+
+   ```tsx title="steps.ts"
+   import type { Step } from 'react-simple-chatbot';
+
+   export const steps: Step[] = [
+     { id: '1', message: 'What is your name?', trigger: '2' },
+     { id: '2', user: true, trigger: '3' },
+     { id: '3', message: 'Hi {previousValue}, nice to meet you!', end: true }
+   ];
+   ```
+
+   Step `1` is a bot message, step `2` waits for the user to type, and step `3` answers with what the user typed.
+
+3. Render the `ChatBot` component with your steps:
+
+   ```tsx title="App.tsx"
+   import ChatBot from 'react-simple-chatbot';
+   import { steps } from './steps';
+
+   export default function App() {
+     return <ChatBot headerTitle="Previous value" steps={steps} />;
+   }
+   ```
+
+</Steps>
+
+## The result
+
+<Demo name="previous-value" />
+
+## How it works
+
+- **`trigger`** tells the chatbot which step comes next. The conversation starts with the first step of the array and follows the triggers. A trigger can also be a function that picks the next step from the user's answer; see [dynamic content](/react-simple-chatbot/guides/dynamic-content/).
+- **`user: true`** makes a step wait for the user. The chatbot enables the input, and when the user submits, the typed text becomes the value of that step.
+- **`{previousValue}`** in a message is replaced with the value of the previous step, here the name the user typed. For more control, `message` can be a function that receives `previousValue` and the answers given so far.
+- **`end: true`** marks the last step. When it is reached, the conversation stops and the chatbot calls `handleEnd` if you passed one.
+
+<Aside type="tip">
+  Keep every step `id` unique: a step with a repeated `id` replaces the earlier one. A `trigger` must point to an existing `id`; the chatbot checks this when it starts and throws an error that names the step with the invalid trigger.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Steps"
+    description="All kinds of steps: messages, user input, options, custom components and updates."
+    href="/react-simple-chatbot/guides/steps/"
+  />
+  <LinkCard
+    title="Examples"
+    description="Options, validation, forms, API calls and more."
+    href="/react-simple-chatbot/examples/options/"
+  />
+  <LinkCard
+    title="Theming"
+    description="Change the colors and fonts of the chatbot."
+    href="/react-simple-chatbot/guides/theming/"
+  />
+  <LinkCard
+    title="ChatBot props"
+    description="Every prop of the ChatBot component and its default value."
+    href="/react-simple-chatbot/reference/chatbot/"
+  />
+</CardGrid>

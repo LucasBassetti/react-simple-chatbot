@@ -1,0 +1,109 @@
+---
+title: Steps
+description: The attributes of each type of step.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+```tsx
+import { type Step } from 'react-simple-chatbot';
+```
+
+A step is an object in the `steps` array. Its type depends on its attributes, checked in this order: `user` makes a user step, `message` a text step, `options` an options step, `component` a custom step and `update` an update step.
+
+<Aside type="caution">
+  Each step is validated when the chatbot starts. A missing required attribute, a wrong type or a `trigger` to an unknown id throws an error, and unknown attributes are removed with a console error.
+</Aside>
+
+## Common attributes
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `id` | `string \| number` | **Required.** Unique id of the step, used by `trigger`, `update` and the `steps` object. |
+| `trigger` | `StepId \| (({ value, steps }) => StepId)` | The step that comes next. A function receives the value of this step and the rendered steps, and returns the id. |
+| `end` | `boolean` | Ends the conversation after this step and calls `handleEnd`. |
+| `placeholder` | `string` | Placeholder of the input while this step is the current one. |
+| `inputAttributes` | `InputHTMLAttributes` | Attributes of the input while this step is the current one, e.g. `{ type: 'email' }`. |
+| `metadata` | `Record<string, any>` | Your own data. It is available in `steps` and `previousStep`, and `metadata.speak` changes the text read by speech synthesis. |
+
+## Text step
+
+A message from the bot.
+
+```tsx
+{ id: 'greet', message: 'Hi {previousValue}!', trigger: 'next' }
+```
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `message` | `string \| (({ previousValue, steps }) => string)` | **Required.** The text. `{previousValue}` is replaced with the value of the previous step. A function receives the previous value and the rendered steps. |
+| `avatar` | `string` | Avatar of this message, instead of `botAvatar`. |
+| `delay` | `number` | Delay in milliseconds before the message appears, instead of `botDelay`. |
+| `hideInput` | `boolean` | Hide the input while this step is the current one. |
+| `hideExtraControl` | `boolean` | Hide the `extraControl` while this step is the current one. |
+
+## User step
+
+Waits for the user to type an answer. The answer is the `value` of the step.
+
+```tsx
+{ id: 'name', user: true, trigger: 'greet' }
+```
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `user` | `true` | **Required.** Marks a user step. |
+| `validator` | `(value: string) => boolean \| string` | Validates the answer. Return `true` when it is valid, or the error message to show in the input. |
+| `hideExtraControl` | `boolean` | Hide the `extraControl` while waiting for this answer. |
+
+## Options step
+
+Shows buttons. The chosen option becomes a user message, and its `value` is the value of the step.
+
+```tsx
+{
+  id: 'fruit',
+  options: [
+    { label: 'Apple', trigger: 'apple' },
+    { value: 2, label: 'Banana', trigger: 'banana' }
+  ]
+}
+```
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `options` | `Option[]` | **Required.** The options, each with `label` (the text), `trigger` (the next step) and `value` (defaults to the `label`). |
+| `hideInput` | `boolean` | Hide the input while the options are shown. |
+| `hideExtraControl` | `boolean` | Hide the `extraControl` while the options are shown. |
+
+## Custom step
+
+Renders your component, with the [custom component props](/react-simple-chatbot/reference/custom-component/).
+
+```tsx
+{ id: 'review', component: <Review />, asMessage: true, trigger: 'end' }
+```
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `component` | `ReactElement` | **Required.** The element to render. DOM elements like `<div />` are rendered without the step props. |
+| `asMessage` | `boolean` | Render the component inside a message bubble, like a text step. |
+| `waitAction` | `boolean` | Wait for the component to call `triggerNextStep` instead of going to the next step after the delay. |
+| `replace` | `boolean` | Remove the component when the next step starts. |
+| `avatar` | `string` | Avatar of this step, with `asMessage`. Defaults to `botAvatar`. |
+| `delay` | `number` | Delay in milliseconds before the component appears, instead of `customDelay` (or `botDelay` with `asMessage`). |
+| `hideInput` | `boolean` | Hide the input while this step is the current one. |
+| `hideExtraControl` | `boolean` | Hide the `extraControl` while this step is the current one. |
+
+## Update step
+
+Asks a previous user or options step again, for example to correct an answer. The updated step then goes to the `trigger` of the update step.
+
+```tsx
+{ id: 'update-name', update: 'name', trigger: 'review' }
+```
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `update` | `StepId` | **Required.** The id of the step to ask again. |
+| `trigger` | `StepId \| (({ value, steps }) => StepId)` | **Required.** The step after the updated one. |

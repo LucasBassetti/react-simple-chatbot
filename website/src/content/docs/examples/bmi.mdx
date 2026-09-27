@@ -1,0 +1,16 @@
+---
+title: BMI calculator
+description: Ask for numbers with validators and compute a result in a custom component.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+The chatbot asks for the height and the weight, checks them with a `validator`, then a custom component computes the BMI (body mass index) and its category. See [Custom components](/react-simple-chatbot/guides/custom-components/) for more.
+
+<Demo name="bmi" />
+
+## How it works
+
+- `numberBetween` creates a validator for each step, with its own range.
+- `BMIResult` reads the answers with `steps.height.value` and `steps.weight.value`. The values are strings, so they are converted with `Number`.
+- `asMessage: true` shows the result inside a bot bubble.

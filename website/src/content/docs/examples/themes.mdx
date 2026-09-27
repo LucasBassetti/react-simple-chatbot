@@ -1,0 +1,15 @@
+---
+title: Themes
+description: Change the colors and the font of the chatbot with a theme.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+Wrap the chatbot in the `ThemeProvider` of `styled-components` and pass a theme typed as `ChatBotTheme`. See [Theming](/react-simple-chatbot/guides/theming/) for more.
+
+<Demo name="themes" />
+
+## How it works
+
+- The chatbot reads its colors, font and header font size from the theme.
+- Typing the theme as `ChatBotTheme` makes TypeScript check that it has every key.

@@ -1,0 +1,141 @@
+---
+title: Contributing
+description: How to report issues, contribute code to React Simple Chatbot, and improve this documentation.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+React Simple Chatbot is open source, and contributions are welcome: bug reports, feature ideas, code and documentation. The code lives at [github.com/LucasBassetti/react-simple-chatbot](https://github.com/LucasBassetti/react-simple-chatbot). Please follow the [code of conduct](https://github.com/LucasBassetti/react-simple-chatbot/blob/master/CODE_OF_CONDUCT.md) in every interaction.
+
+## Open an issue
+
+[Open an issue](https://github.com/LucasBassetti/react-simple-chatbot/issues) to report a bug or propose a feature.
+
+- **Bugs**: describe the steps to reproduce the problem, what happened and what you expected. Include the versions of react-simple-chatbot, React, styled-components and your browser.
+- **Features**: explain what the feature does, why it is useful and how you would use it. Parts you are unsure about are fine to leave open for discussion.
+
+## Contribute code
+
+The library is written in TypeScript with React function components and hooks. For big changes, open an issue first so the approach can be discussed before you spend time on it.
+
+<Steps>
+
+1. Fork the repository on GitHub, clone your fork and create a branch for your change. Avoid working on `master` directly.
+
+   ```sh
+   git clone https://github.com/YOUR_USERNAME/react-simple-chatbot.git
+   cd react-simple-chatbot
+   git checkout -b fix/my-change
+   ```
+
+2. Install the dependencies:
+
+   ```sh
+   npm install
+   ```
+
+3. Run the example app while you work. `npm start` serves the app in `example/` with Vite at `http://localhost:5173`:
+
+   ```sh
+   npm start
+   ```
+
+4. Make your change and add tests that cover it. Before pushing, check that everything passes:
+
+   ```sh
+   npm test
+   npm run lint
+   npm run typecheck
+   npm run build
+   ```
+
+5. Push your branch to your fork and open a pull request against the `master` branch of the main repository.
+
+</Steps>
+
+### Commands
+
+| Command | What it does |
+| --- | --- |
+| `npm start` | Runs the example app (`example/`) with Vite. |
+| `npm test` | Runs the tests with Vitest and Testing Library. |
+| `npm run test:watch` | Runs the tests in watch mode. |
+| `npm run test:coverage` | Runs the tests with a coverage report. |
+| `npm run lint` | Checks the code with ESLint and Prettier. |
+| `npm run typecheck` | Checks the types with TypeScript. |
+| `npm run build` | Builds `dist/`: the ES module and UMD builds and the type declarations. |
+
+### Pull request title
+
+The pull request title must follow [Conventional Commits](https://www.conventionalcommits.org):
+
+```txt
+<type>(<optional scope>)!: <short summary in the imperative mood>
+```
+
+The type is one of:
+
+| Type | Use it for |
+| --- | --- |
+| `feat` | A new feature |
+| `fix` | A bug fix |
+| `docs` | Documentation only |
+| `style` | Formatting, no code change |
+| `refactor` | A code change that neither fixes a bug nor adds a feature |
+| `perf` | A performance improvement |
+| `test` | Adding or fixing tests |
+| `build` | The build system or dependencies |
+| `ci` | The CI configuration |
+| `chore` | Other changes that don't modify the source or the tests |
+| `revert` | Reverting a previous commit |
+
+Add `!` after the type or scope for a breaking change. For example:
+
+```txt
+feat: add a typing indicator to custom steps
+fix(cache): restore options without value
+feat!: drop React 17 support
+```
+
+### Pull request description
+
+Fill in the pull request template. It asks for:
+
+- a description of what the change does and why,
+- the related issue, if there is one,
+- the type of change,
+- how you tested it (tests, browsers, React versions, the example app),
+- for breaking changes, what breaks and how to migrate.
+
+<Aside type="tip">
+  If your change affects the public API, update the README and these docs too.
+</Aside>
+
+## Contribute to these docs
+
+Every page has an **Edit page** link at the bottom that opens its source on GitHub. For small fixes, that is the fastest way to propose a change.
+
+The site is built with [Astro Starlight](https://starlight.astro.build) and lives in the `website/` folder of the `gh-pages` branch. The pages are MDX files in `website/src/content/docs/`, and the live examples are in `website/src/examples/`.
+
+<Steps>
+
+1. Check out the `gh-pages` branch of your fork and start the development server:
+
+   ```sh
+   git checkout gh-pages
+   cd website
+   npm install
+   npm run dev
+   ```
+
+2. Edit the pages and check them in the browser.
+
+3. Rebuild the published site. `npm run publish-site` builds the site and copies it to the root of the `gh-pages` branch, which GitHub Pages serves:
+
+   ```sh
+   npm run publish-site
+   ```
+
+4. Commit both the changes in `website/` and the rebuilt files at the root of the branch, and open a pull request against `gh-pages`.
+
+</Steps>

@@ -1,0 +1,18 @@
+---
+title: Floating chatbot
+description: Show the chatbot as a button that opens a chat window.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+With `floating`, the chatbot starts as a button fixed to the page and opens when it is clicked. `floatingStyle` changes the button, and its position also moves the chat window. See [Floating](/react-simple-chatbot/guides/floating/) for more.
+
+The button of this example is at the bottom right corner of the page. Click it to open the chatbot.
+
+<Demo name="floating" height={120} portal />
+
+## How it works
+
+- The conversation starts when the chatbot opens for the first time.
+- `floatingStyle` sets `bottom` and `right` to move the button and the window closer to the corner.
+- The close button in the header turns the chatbot back into the floating button.
