@@ -7,9 +7,32 @@ import { Badge } from '@astrojs/starlight/components';
 
 This page summarizes the recent releases. The [GitHub releases](https://github.com/LucasBassetti/react-simple-chatbot/releases) have the full notes for every version.
 
-## 1.0.0
+## 1.0.1
 
 <Badge text="Latest" variant="tip" /> Released on 2026-09-27.
+
+A refreshed look for the chatbot, with fixes for the message alignment, auto-scroll, voice input and cached conversations. The props, the theme keys and the `rsc-*` class names are unchanged.
+
+### New look
+
+- The messages of a group stay aligned on any page, including pages with a CSS reset.
+- The default font is the system font instead of `monospace`, and the input uses it too. Set `fontFamily: 'monospace'` in a theme to keep the old font.
+- Bubbles with grouped corners, better spacing, long words that wrap, and a subtle entrance animation (off with reduced motion).
+- Outlined options and custom components aligned with the bot messages.
+- Animated typing dots, a round send button in the accent color, and focus rings for keyboard users.
+
+Apps with custom CSS that depends on the old spacing may need small adjustments.
+
+### Bug fixes
+
+- The chatbot keeps following new messages when they grow, and when many messages arrive during a smooth scroll.
+- `triggerNextStep` keeps `0`, `false` and `''` as the step value.
+- Voice input submits the final transcript, and keeps submitting automatically after the user stopped a recognition.
+- A restored cached conversation keeps the `validator` of the step waiting for the user.
+
+## 1.0.0
+
+Released on 2026-09-27.
 
 React Simple Chatbot is rewritten in TypeScript with React function components and hooks. The steps and the props are the same as in 0.7.0.
 

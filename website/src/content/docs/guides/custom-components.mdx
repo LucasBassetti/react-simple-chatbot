@@ -139,8 +139,8 @@ const steps: Step[] = [
 
 A step can only trigger the next step once. Later calls are ignored, even if React mounts the component twice in development with `StrictMode`. Disable your buttons after the first click so users know their choice was taken.
 
-<Aside type="caution">
-  Falsy values such as `0`, `''` and `false` are not saved as the step value. Pass a string such as `'0'`, or an object, when the value can be falsy.
+<Aside>
+  Any value except `undefined` is saved, including `0`, `''` and `false`. Before 1.0.1 these falsy values were dropped.
 </Aside>
 
 ## Load data before moving on
