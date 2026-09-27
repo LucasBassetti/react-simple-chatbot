@@ -1,0 +1,16 @@
+---
+title: Custom component
+description: Render your own React component as a step of the conversation.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+A step with a `component` renders any React element. The chatbot passes the `steps`, `step`, `previousStep` and `triggerNextStep` props to it, typed as [`CustomComponentProps`](/react-simple-chatbot/reference/custom-component/). See [Custom components](/react-simple-chatbot/guides/custom-components/) for more.
+
+<Demo name="custom-component" />
+
+## How it works
+
+- `steps` has the rendered steps by id, so `steps.name.value` is the name typed by the user and `steps.plan.value` is the chosen plan.
+- The props are optional in `CustomComponentProps`, so the component reads them with optional chaining.
+- DOM elements like `<div />` do not receive the props, use a component to read them.

@@ -1,0 +1,13 @@
+# React Simple Chatbot
+
+> Build conversational chatbots in React with a list of steps. Written in TypeScript, works with React 18 and 19.
+
+## Documentation Sets
+
+- [Abridged documentation](https://lucasbassetti.github.io/react-simple-chatbot/llms-small.txt): a compact version of the documentation for React Simple Chatbot, with non-essential content removed
+- [Complete documentation](https://lucasbassetti.github.io/react-simple-chatbot/llms-full.txt): the full documentation for React Simple Chatbot
+
+## Notes
+
+- The complete documentation includes all content from the official documentation
+- The content is automatically generated from the same source as the official documentation

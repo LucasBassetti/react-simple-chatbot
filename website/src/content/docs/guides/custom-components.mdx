@@ -1,0 +1,233 @@
+---
+title: Custom components
+description: Render your own React components as steps and control when the conversation continues.
+---
+
+import { Aside, LinkCard } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+
+A custom step renders any React element with `component`. Use it for summaries, cards, forms, charts, or results fetched from an API.
+
+<Demo name="custom-component" />
+
+## Injected props
+
+The chatbot clones your element and passes it these props:
+
+| Prop | Description |
+| --- | --- |
+| `step` | The current step, with its settings and its `value`. |
+| `steps` | The steps rendered so far, by id. See [the steps object](/react-simple-chatbot/guides/dynamic-content/). |
+| `previousStep` | The step rendered right before this one, with its `value`. |
+| `triggerNextStep` | Moves the conversation to the next step. |
+
+Type your component props with `CustomComponentProps`. The props are optional because you create the element without them (`<Summary />`), and the chatbot adds them when it renders the step.
+
+```tsx title="App.tsx"
+import ChatBot, { type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+function Summary({ steps }: CustomComponentProps) {
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <td>Name</td>
+          <td>{steps?.name?.value}</td>
+        </tr>
+        <tr>
+          <td>Age</td>
+          <td>{steps?.age?.value}</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+}
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-age' },
+  { id: 'ask-age', message: 'How old are you?', trigger: 'age' },
+  { id: 'age', user: true, trigger: 'summary' },
+  { id: 'summary', component: <Summary />, end: true }
+];
+
+export default function App() {
+  return <ChatBot steps={steps} />;
+}
+```
+
+## How a custom step runs
+
+1. The chatbot shows a loading animation for `delay` milliseconds. The default is the `customDelay` prop (`1000`).
+2. Your component renders.
+3. The conversation moves to `trigger` right away, unless the step has `waitAction: true`.
+
+By default the component renders in its own full-width container, outside the message bubbles. Style that container with the `customStyle` prop.
+
+## Render as a message
+
+Set `asMessage: true` to render the component inside a bot bubble, with the bot avatar, like a text step. In that case the step uses the bot defaults: `delay` defaults to `botDelay`, and `avatar` to `botAvatar`.
+
+```tsx title="steps.tsx"
+import type { CustomComponentProps, Step } from 'react-simple-chatbot';
+
+function Price({ previousStep }: CustomComponentProps) {
+  return <strong>{previousStep?.value === 'pro' ? '$20/month' : 'Free'}</strong>;
+}
+
+const steps: Step[] = [
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', value: 'free', trigger: 'price' },
+      { label: 'Pro', value: 'pro', trigger: 'price' }
+    ]
+  },
+  { id: 'price', component: <Price />, asMessage: true, end: true }
+];
+```
+
+## Wait for the component
+
+With `waitAction: true`, the conversation stops at the custom step until your component calls `triggerNextStep`. Use it when the user has to interact with the component, or when the component loads data first.
+
+```tsx title="Rating.tsx"
+import { useState } from 'react';
+import type { CustomComponentProps, Step } from 'react-simple-chatbot';
+
+function Rating({ triggerNextStep }: CustomComponentProps) {
+  const [rating, setRating] = useState<number>();
+
+  const rate = (value: number) => {
+    setRating(value);
+    triggerNextStep?.({ value, trigger: value >= 4 ? 'happy' : 'sorry' });
+  };
+
+  return (
+    <div>
+      {[1, 2, 3, 4, 5].map(value => (
+        <button
+          key={value}
+          type="button"
+          disabled={rating !== undefined}
+          aria-pressed={rating === value}
+          onClick={() => rate(value)}
+        >
+          {value}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+const steps: Step[] = [
+  { id: 'ask', message: 'How would you rate us?', trigger: 'rating' },
+  { id: 'rating', component: <Rating />, waitAction: true, hideInput: true },
+  { id: 'happy', message: 'Thank you!', end: true },
+  { id: 'sorry', message: 'Sorry to hear that. We will do better.', end: true }
+];
+```
+
+`triggerNextStep` accepts an optional object:
+
+| Key | Description |
+| --- | --- |
+| `value` | The value of the step. The next step gets it as `{previousValue}`, and it is saved in `steps[id].value`. |
+| `trigger` | The next step, as an id or a function. It overrides the `trigger` of the step, so the component can pick the path. |
+| `hideInput` | Sets `hideInput` on the step. |
+| `hideExtraControl` | Sets `hideExtraControl` on the step. |
+
+A step can only trigger the next step once. Later calls are ignored, even if React mounts the component twice in development with `StrictMode`. Disable your buttons after the first click so users know their choice was taken.
+
+<Aside type="caution">
+  Falsy values such as `0`, `''` and `false` are not saved as the step value. Pass a string such as `'0'`, or an object, when the value can be falsy.
+</Aside>
+
+## Load data before moving on
+
+A common pattern is to fetch data in the component, show it, then call `triggerNextStep`. The `Loading` component exported by the library shows the same dots the chatbot uses while a step loads.
+
+```tsx title="Weather.tsx"
+import { useEffect, useState } from 'react';
+import { Loading, type CustomComponentProps, type Step } from 'react-simple-chatbot';
+
+function Weather({ steps, triggerNextStep }: CustomComponentProps) {
+  const city = String(steps?.city?.value ?? '');
+  const [text, setText] = useState<string>();
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch(`https://api.example.com/weather?city=${encodeURIComponent(city)}`)
+      .then(response => response.json())
+      .then(data => {
+        if (ignore) return;
+        setText(`It is ${data.temperature}°C in ${city}.`);
+        triggerNextStep?.({ value: String(data.temperature) });
+      })
+      .catch(() => {
+        if (ignore) return;
+        setText('Sorry, I could not load the weather.');
+        triggerNextStep?.({ trigger: 'error' });
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [city, triggerNextStep]);
+
+  return <div>{text ?? <Loading />}</div>;
+}
+
+const steps: Step[] = [
+  { id: 'ask-city', message: 'Which city?', trigger: 'city' },
+  { id: 'city', user: true, trigger: 'weather' },
+  { id: 'weather', component: <Weather />, waitAction: true, trigger: 'more' },
+  { id: 'more', message: 'Want to check another city?', trigger: 'ask-city' },
+  { id: 'error', message: 'Please try again later.', end: true }
+];
+```
+
+<LinkCard
+  title="Wikipedia search example"
+  href="/react-simple-chatbot/examples/wikipedia-search/"
+  description="A custom step that searches Wikipedia and shows the result."
+/>
+
+## Replace the component
+
+Set `replace: true` to remove the component from the chat when the next step starts. This is useful for temporary UI, such as a form that turns into a summary message. The value of the step stays in the `steps` object.
+
+```tsx title="steps.tsx"
+// DatePicker is your component: it calls triggerNextStep({ value: date }) when the user picks a date
+const steps: Step[] = [
+  { id: 'picker', component: <DatePicker />, waitAction: true, replace: true, trigger: 'confirm' },
+  { id: 'confirm', message: 'See you on {previousValue}!', end: true }
+];
+```
+
+## DOM elements
+
+If `component` is a DOM element, such as `<div />` or `<hr />`, the chatbot renders it as it is, without the injected props. Wrap the markup in your own component when you need the props.
+
+```tsx title="steps.tsx"
+const steps: Step[] = [
+  { id: 'banner', component: <div className="promo">Free shipping this week</div>, trigger: 'next' }
+  // ...
+];
+```
+
+## Step attributes
+
+| Attribute | Description |
+| --- | --- |
+| `component` | The element to render. |
+| `asMessage` | Render the component inside a bot bubble. |
+| `waitAction` | Wait for the component to call `triggerNextStep`. |
+| `replace` | Remove the component when the next step starts. |
+| `delay` | Milliseconds of the loading animation. Defaults to `customDelay`, or to `botDelay` with `asMessage`. |
+| `avatar` | Avatar image URL, used with `asMessage`. |
+| `trigger` | The next step. |
+| `end` | End the conversation after this step. |
+
+Custom steps also accept the common attributes: `hideInput`, `hideExtraControl`, `placeholder`, `inputAttributes` and `metadata`. See the [custom component reference](/react-simple-chatbot/reference/custom-component/) for the full API.

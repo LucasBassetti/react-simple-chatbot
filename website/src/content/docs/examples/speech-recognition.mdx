@@ -1,0 +1,12 @@
+---
+title: Speech recognition
+description: Let the user answer by voice.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+With `recognitionEnable`, the submit button shows a microphone while the input is empty. Click it and speak: the chatbot types what you say and sends it when you stop talking. See [Speech](/react-simple-chatbot/guides/speech/) for more.
+
+It needs a browser with `webkitSpeechRecognition`, like Chrome, Edge and other Chromium-based browsers, or Safari, and permission to use the microphone. In other browsers the chatbot works with the keyboard only.
+
+<Demo name="speech-recognition" />

@@ -1,0 +1,97 @@
+---
+title: ChatBot
+description: Every prop of the ChatBot component, with its type and default value.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+```tsx
+import ChatBot, { type ChatBotProps } from 'react-simple-chatbot';
+```
+
+`ChatBot` is the only component you need. `steps` is required, every other prop is optional. The props type is exported as `ChatBotProps`.
+
+## Conversation
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `steps` | `Step[]` | required | The steps of the conversation. See [steps](/react-simple-chatbot/reference/steps/). Updates after mount are used by the steps that were not rendered yet. |
+| `botDelay` | `number` | `1000` | Delay in milliseconds before a bot message appears. |
+| `userDelay` | `number` | `1000` | Delay in milliseconds before a user message appears. |
+| `customDelay` | `number` | `1000` | Delay in milliseconds before a custom component appears. Components with `asMessage` use `botDelay`. |
+| `botName` | `string` | `'The bot'` | Name of the bot, used in the alt text of its avatar. |
+| `handleEnd` | `(args: HandleEndArgs) => void` | | Called when the conversation reaches an `end` step, with `{ renderedSteps, steps, values }`. |
+| `cache` | `boolean` | `false` | Save the conversation in `localStorage` and restore it on reload. See [cache](/react-simple-chatbot/guides/cache/). |
+| `cacheName` | `string` | `'rsc_cache'` | The `localStorage` key of the cache. |
+
+## Input
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` | `'Type the message ...'` | Placeholder of the input. A step `placeholder` overrides it. |
+| `inputAttributes` | `InputHTMLAttributes` | `{}` | Attributes of the input, like `type` or `autoComplete`. A step `inputAttributes` overrides it. |
+| `hideSubmitButton` | `boolean` | `false` | Hide the submit button. Users submit with Enter. |
+| `extraControl` | `ReactElement` | | An element rendered next to the submit button. Components receive `disabled`, `speaking` and `invalid`, DOM elements only receive `disabled`. |
+| `enableMobileAutoFocus` | `boolean` | `false` | Focus the input on mobile devices when a user step starts. It is always focused on other devices. |
+
+## Appearance
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `width` | `string` | `'350px'` | Width of the chatbot. On screens below 568px it takes the full width, and a floating chatbot the full screen. |
+| `height` | `string` | `'520px'` | Height of the chatbot. |
+| `className` | `string` | `''` | Class name added to the root element (`rsc`). |
+| `headerTitle` | `string` | `'Chat'` | Title of the header. |
+| `hideHeader` | `boolean` | `false` | Hide the header. |
+| `headerComponent` | `ReactElement` | | Replace the default header. |
+| `botAvatar` | `string` | robot image | Image URL of the bot avatar. |
+| `userAvatar` | `string` | person image | Image URL of the user avatar. |
+| `hideBotAvatar` | `boolean` | `false` | Hide the avatar of the bot messages. |
+| `hideUserAvatar` | `boolean` | `false` | Hide the avatar of the user messages. |
+| `enableSmoothScroll` | `boolean` | `false` | Scroll to new messages with a smooth animation. |
+
+Colors and fonts come from the styled-components theme. See [theming](/react-simple-chatbot/guides/theming/).
+
+## Styles
+
+Each prop is a `CSSProperties` object applied to one element, so you can override its inline style.
+
+| Prop | Default | Element |
+| --- | --- | --- |
+| `style` | `{}` | The chatbot container (`rsc-container`). |
+| `contentStyle` | `{}` | The scrollable list of messages (`rsc-content`). |
+| `footerStyle` | `{}` | The footer with the input (`rsc-footer`). |
+| `inputStyle` | `{}` | The input (`rsc-input`). |
+| `submitButtonStyle` | `{}` | The submit button (`rsc-submit-button`). |
+| `controlStyle` | `{ position: 'absolute', right: '0', top: '0' }` | The wrapper of the submit button and the extra control (`rsc-controls`). |
+| `bubbleStyle` | `{}` | The bubbles of text messages (`rsc-ts-bubble`). |
+| `bubbleOptionStyle` | `{}` | The option buttons (`rsc-os-option-element`). |
+| `avatarStyle` | `{}` | The avatars (`rsc-ts-image`). |
+| `customStyle` | `{}` | The container of custom components (`rsc-cs`). |
+| `floatingStyle` | `{}` | The floating button. Its `left`, `right`, `top`, `bottom` and `transformOrigin` also position the floating chatbot. |
+
+## Floating
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `floating` | `boolean` | `false` | Render a button in the corner of the page that opens the chatbot. The conversation starts when it is first opened. |
+| `floatingIcon` | `string \| ReactElement` | chat icon | Icon of the floating button, as an image URL or an element. |
+| `opened` | `boolean` | | Control whether the floating chatbot is opened. Use it with `toggleFloating`. |
+| `toggleFloating` | `({ opened }) => void` | | Called when the user opens or closes the chatbot. Update `opened` in it. |
+
+See [floating chatbot](/react-simple-chatbot/guides/floating/).
+
+## Speech
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `recognitionEnable` | `boolean` | `false` | Let users answer with their voice. Ignored in browsers without speech recognition. |
+| `recognitionLang` | `string` | `'en'` | Language of the speech recognition. |
+| `recognitionPlaceholder` | `string` | `'Listening ...'` | Placeholder of the input while listening. |
+| `speechSynthesis` | `{ enable?: boolean; lang?: string; voice?: SpeechSynthesisVoice \| null }` | `{ enable: false, lang: 'en', voice: null }` | Read the bot messages aloud. |
+
+See [speech](/react-simple-chatbot/guides/speech/).
+
+<Aside type="note">
+  Like `defaultProps`, a default is used when the prop is `undefined`. Passing `null` or another value replaces it.
+</Aside>

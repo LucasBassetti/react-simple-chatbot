@@ -1,0 +1,130 @@
+---
+title: Speech
+description: Let users answer with their voice and have the bot read its messages aloud.
+---
+
+import { Aside, LinkCard } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+
+The chatbot supports two browser speech APIs: speech recognition, so users can dictate their answers, and speech synthesis, so the bot reads its messages aloud. Both are off by default.
+
+## Speech recognition
+
+Set `recognitionEnable` to add voice input.
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask', message: 'Say something!', trigger: 'answer' },
+  { id: 'answer', user: true, trigger: 'echo' },
+  { id: 'echo', message: 'You said: {previousValue}', trigger: 'ask' }
+];
+
+export default function App() {
+  return <ChatBot steps={steps} recognitionEnable recognitionLang="en-US" />;
+}
+```
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `recognitionEnable` | `false` | Enable voice input. |
+| `recognitionLang` | `'en'` | Language to recognize, as a BCP 47 tag such as `'en-US'` or `'pt-BR'`. |
+| `recognitionPlaceholder` | `'Listening ...'` | Input placeholder while the chatbot is listening. |
+
+How it works:
+
+1. While the input is empty, the submit button becomes a microphone button.
+2. When the user clicks it, the browser asks for microphone permission (the first time) and starts listening. The button pulses and the input shows `recognitionPlaceholder`.
+3. The text appears in the input as the user speaks.
+4. When recognition ends, the recognized text is submitted as the user's answer.
+
+Clicking the microphone again while listening stops it without submitting, and the text stays in the input so the user can edit it. As soon as the user types, the button goes back to a regular submit button.
+
+### Browser support
+
+Recognition uses the `webkitSpeechRecognition` API, available in Chromium-based browsers (such as Chrome and Edge) and in Safari. In browsers without it, such as Firefox, `recognitionEnable` is ignored and the chatbot shows the regular submit button. Microphone access also requires a secure context: HTTPS, or `localhost` during development.
+
+`recognitionEnable` and `recognitionLang` are read when the chatbot mounts. To change them later, mount the chatbot again with a new `key`.
+
+<LinkCard
+  title="Speech recognition example"
+  href="/react-simple-chatbot/examples/speech-recognition/"
+  description="Try voice input in a live chatbot."
+/>
+
+## Speech synthesis
+
+Pass `speechSynthesis` to have the bot read its messages aloud.
+
+<Demo name="speech-synthesis" />
+
+```tsx title="App.tsx"
+<ChatBot steps={steps} speechSynthesis={{ enable: true, lang: 'en-US' }} />
+```
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `enable` | `false` | Read the bot messages aloud. |
+| `lang` | `'en'` | Language of the speech, as a BCP 47 tag. |
+| `voice` | `null` | A `SpeechSynthesisVoice` to use. `null` uses the browser's default voice for the language. |
+
+The object replaces the default one, so pass `lang` along with `enable`.
+
+What gets read:
+
+- Bot text messages are read when they appear, after their delay. A `message` function is read as the text it returns.
+- `{previousValue}` is replaced with the previous value, as in the chat.
+- User messages are not read.
+- Custom steps are only read when they have a `metadata.speak` text.
+
+### Change the spoken text
+
+Set `metadata.speak` on a step to read a different text than the one shown. This helps with emojis, abbreviations and custom components.
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  {
+    id: 'hours',
+    message: 'Open Mon-Fri, 9am-5pm',
+    metadata: { speak: 'We are open Monday to Friday, from 9 AM to 5 PM.' },
+    trigger: 'next'
+  }
+  // ...
+];
+```
+
+### Pick a voice
+
+The browser loads its voices asynchronously, so read them after the `voiceschanged` event:
+
+```tsx title="App.tsx"
+import { useEffect, useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [{ id: 'hello', message: 'Hello! Nice to hear you.', end: true }];
+
+export default function App() {
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+
+  useEffect(() => {
+    const pickVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      setVoice(voices.find(v => v.lang === 'en-GB') ?? null);
+    };
+    pickVoice();
+    window.speechSynthesis.addEventListener('voiceschanged', pickVoice);
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', pickVoice);
+  }, []);
+
+  return <ChatBot steps={steps} speechSynthesis={{ enable: true, lang: 'en-GB', voice }} />;
+}
+```
+
+<Aside>
+  Some browsers only allow speech after the user interacts with the page, so the first message can be silent if the chatbot starts on page load. A [floating chatbot](/react-simple-chatbot/guides/floating/) starts when the user opens it, which counts as an interaction.
+</Aside>
+
+In browsers without speech synthesis, the chatbot skips it silently.

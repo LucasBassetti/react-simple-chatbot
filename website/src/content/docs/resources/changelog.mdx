@@ -1,0 +1,62 @@
+---
+title: Changelog
+description: The main changes in each release of React Simple Chatbot.
+---
+
+import { Badge } from '@astrojs/starlight/components';
+
+This page summarizes the recent releases. The [GitHub releases](https://github.com/LucasBassetti/react-simple-chatbot/releases) have the full notes for every version.
+
+## 1.0.0
+
+<Badge text="Latest" variant="tip" /> Released on 2026-09-27.
+
+React Simple Chatbot is rewritten in TypeScript with React function components and hooks. The steps and the props are the same as in 0.7.0.
+
+### Breaking changes
+
+- Requires React 18 or 19 and styled-components 5.1 or newer.
+- `ChatBot` is a function component, so a `ref` no longer gives you a component instance. Control the chatbot with props instead: `opened` with `toggleFloating`, or a new `key` to restart the conversation.
+- Enter submits the message on `keydown` instead of the deprecated `keypress`, and is ignored while the user is composing IME characters.
+- The `steps` argument of `handleEnd` is an object keyed by step id instead of an array with string keys.
+
+The [migration guide](/react-simple-chatbot/getting-started/migration/) explains each change and how to update your code.
+
+### Improvements
+
+- Written in TypeScript. The type declarations are generated from the source, and a new `ChatBotTheme` type describes the theme.
+- New ES module build, next to the UMD build.
+- Style props no longer reach the DOM, with any supported styled-components version.
+- A theme that defines only some keys falls back to the default theme for the others.
+- A DOM element used as `extraControl` only receives `disabled`.
+- Removed the `prop-types` and `random-id` dependencies.
+
+### Security
+
+- Resolved the security alerts reported for the development dependencies. The build now uses Vite, and the tests use Vitest and Testing Library.
+
+## 0.7.0
+
+Released on 2026-09-26.
+
+A maintenance release that brings the 0.x line up to date with modern React.
+
+### Fixes
+
+- Messages are no longer duplicated under React 18 StrictMode, when a custom component calls `triggerNextStep` more than once, or when an option is clicked twice.
+- Autoscroll works again in Chrome 127 and newer.
+- Server rendering no longer fails with `window is not defined`.
+- The cache is only read when `cache` is enabled, and a blocked `localStorage` no longer breaks the chatbot.
+- Options without a `value` are selected by their label.
+- A first step with `user: true` waits for the user's input.
+- A closed floating chatbot starts the conversation when it is opened.
+
+### Improvements
+
+- TypeScript declarations for the props, every kind of step, `handleEnd` and custom components.
+- Accessibility: labels for the input and the buttons, and keyboard support for the floating open and close buttons.
+- Supports React 16.3 and newer, and styled-components 4, 5 and 6.
+
+## Older releases
+
+See the [GitHub releases](https://github.com/LucasBassetti/react-simple-chatbot/releases) for versions before 0.7.0.

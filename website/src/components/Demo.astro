@@ -1,0 +1,55 @@
+---
+import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
+import ExampleRenderer from './ExampleRenderer';
+
+interface Props {
+  /** file name in src/examples, without extension */
+  name: string;
+  /** minimum height of the preview */
+  height?: number;
+  /** render the example in document.body, for fixed elements like the floating chatbot */
+  portal?: boolean;
+}
+
+const { name, height = 560, portal = false } = Astro.props;
+
+const sources = import.meta.glob<string>('../examples/*.tsx', {
+  query: '?raw',
+  import: 'default',
+  eager: true
+});
+const code = sources[`../examples/${name}.tsx`];
+
+if (code === undefined) {
+  throw new Error(`Demo: example "${name}" not found in src/examples`);
+}
+
+// the llms.txt files render the pages without the React renderer, they only get the code
+let isPage = true;
+try {
+  isPage = Boolean(Astro.locals.starlightRoute);
+} catch {
+  isPage = false;
+}
+---
+
+{
+  !isPage && <Code code={code.trim()} lang="tsx" title={`${name}.tsx`} />
+}
+{
+  isPage && (
+
+<div class="demo not-content">
+  <Tabs syncKey="demo">
+    <TabItem label="Preview" icon="seti:react">
+      <div class="demo-preview" style={`min-height: ${height}px`}>
+        <ExampleRenderer client:only="react" name={name} portal={portal} />
+      </div>
+    </TabItem>
+    <TabItem label="Code" icon="seti:typescript">
+      <Code code={code.trim()} lang="tsx" title={`${name}.tsx`} />
+    </TabItem>
+  </Tabs>
+</div>
+  )
+}

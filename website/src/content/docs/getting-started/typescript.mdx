@@ -1,0 +1,192 @@
+---
+title: TypeScript
+description: Use the types shipped with React Simple Chatbot to type your steps, custom components, callbacks and theme.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+React Simple Chatbot is written in TypeScript, and its type declarations are generated from the source. They are included in the package, so there is nothing else to install and the types always match the version you use.
+
+## Exported types
+
+Import the types with `import type`, or inline with the `type` keyword next to the default import:
+
+```tsx
+import ChatBot, { type Step, type ChatBotProps } from 'react-simple-chatbot';
+```
+
+| Type | Describes |
+| --- | --- |
+| `Step` | Any step: a union of `TextStep`, `UserStep`, `OptionsStep`, `CustomStep` and `UpdateStep`. |
+| `TextStep`, `UserStep`, `OptionsStep`, `CustomStep`, `UpdateStep` | One kind of step each. |
+| `Option` | An option of an options step: `label`, optional `value` and `trigger`. |
+| `StepId` | The id of a step, a `string` or a `number`. |
+| `Trigger` | A step id, or a function that returns the id of the next step. |
+| `Message` | A string, or a function that returns the message. |
+| `RenderedStep`, `RenderedSteps` | A step as received by your functions (`id`, `message`, `value`, `metadata`), and those steps keyed by id. |
+| `ChatBotProps` | The props of the `ChatBot` component. |
+| `CustomComponentProps` | The props injected in the component of a custom step. |
+| `TriggerNextStepData` | The argument of `triggerNextStep`. |
+| `HandleEndArgs` | The argument of `handleEnd`. |
+| `ChatBotTheme` | The theme keys read by the chatbot. |
+| `SpeechSynthesisOptions` | The value of the `speechSynthesis` prop. |
+
+Besides the default `ChatBot` export, the package exports the `Loading` component, the animated dots the chatbot shows while a step is loading. The [types reference](/react-simple-chatbot/reference/types/) documents every type in detail.
+
+## Type the steps
+
+Annotate the steps array with `Step[]`. Your editor then completes the attributes of each step, and TypeScript reports wrong value types:
+
+```tsx title="steps.ts"
+import type { Step } from 'react-simple-chatbot';
+
+export const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  {
+    id: 'name',
+    user: true,
+    validator: value => (value.trim() ? true : 'Please type your name'),
+    trigger: 'ask-plan'
+  },
+  {
+    id: 'ask-plan',
+    message: ({ previousValue }) => `Nice to meet you, ${previousValue}. Which plan do you use?`,
+    trigger: 'plan'
+  },
+  {
+    id: 'plan',
+    options: [
+      { label: 'Free', value: 'free', trigger: 'done' },
+      { label: 'Pro', value: 'pro', trigger: 'done' }
+    ]
+  },
+  { id: 'done', message: 'Thanks!', end: true }
+];
+```
+
+The function attributes are typed from the annotation, so you don't need to annotate their parameters: `value` in `validator` is a `string`, and `message` functions receive `previousValue` and `steps`. A validator returns `true` when the value is valid, or the error message to show.
+
+<Aside type="note">
+  Values are typed as `any`, because a step's value can be the text the user typed, the `value` of an option, or anything a custom component passes to `triggerNextStep`. Narrow them where you read them.
+</Aside>
+
+## Type a custom component
+
+The component of a custom step receives `step`, `steps`, `previousStep` and `triggerNextStep` from the chatbot. Type its props with `CustomComponentProps`:
+
+```tsx title="Review.tsx"
+import type { CustomComponentProps } from 'react-simple-chatbot';
+
+export function Review({ steps, triggerNextStep }: CustomComponentProps) {
+  return (
+    <div>
+      <p>Name: {steps?.name?.value}</p>
+      <p>Plan: {steps?.plan?.value}</p>
+      <button type="button" onClick={() => triggerNextStep?.()}>
+        Confirm
+      </button>
+    </div>
+  );
+}
+```
+
+```tsx title="steps.tsx"
+import type { Step } from 'react-simple-chatbot';
+import { Review } from './Review';
+
+export const steps: Step[] = [
+  // ...the name and plan steps
+  { id: 'review', component: <Review />, waitAction: true, trigger: 'done' },
+  { id: 'done', message: 'Thanks!', end: true }
+];
+```
+
+With `waitAction: true`, the conversation waits until the component calls `triggerNextStep`.
+
+All the injected props are optional. You create the element yourself (`<Review />`) without them, and the chatbot adds them when it renders the step, so TypeScript can't know they are there. Use optional chaining, as above.
+
+To accept your own props too, extend `CustomComponentProps`:
+
+```tsx title="Greeting.tsx"
+import type { CustomComponentProps } from 'react-simple-chatbot';
+
+interface GreetingProps extends CustomComponentProps {
+  greeting: string;
+}
+
+export function Greeting({ greeting, previousStep }: GreetingProps) {
+  return (
+    <p>
+      {greeting}, {previousStep?.value}!
+    </p>
+  );
+}
+```
+
+The chatbot keeps the props you pass (`<Greeting greeting="Welcome" />`) and adds the step props to them. See [custom components](/react-simple-chatbot/guides/custom-components/) for the full guide.
+
+## Type the handleEnd callback
+
+`handleEnd` receives a `HandleEndArgs` object when the conversation reaches a step with `end: true`:
+
+```tsx title="App.tsx"
+import ChatBot, { type HandleEndArgs } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+const handleEnd = ({ steps, values }: HandleEndArgs) => {
+  // steps is keyed by step id, values has every value in order
+  console.log(steps.name?.value, values);
+};
+
+export default function App() {
+  return <ChatBot steps={steps} handleEnd={handleEnd} />;
+}
+```
+
+When the callback is written inline in the JSX, its argument is typed from the prop and needs no annotation.
+
+## Type a theme
+
+The chatbot reads its colors and fonts from the styled-components theme. `ChatBotTheme` lists the keys it uses:
+
+```tsx title="App.tsx"
+import { ThemeProvider } from 'styled-components';
+import ChatBot, { type ChatBotTheme } from 'react-simple-chatbot';
+import { steps } from './steps';
+
+const theme: ChatBotTheme = {
+  background: '#f5f8fb',
+  fontFamily: 'Helvetica Neue, sans-serif',
+  headerBgColor: '#0f766e',
+  headerFontColor: '#fff',
+  headerFontSize: '15px',
+  botBubbleColor: '#0f766e',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a'
+};
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatBot steps={steps} />
+    </ThemeProvider>
+  );
+}
+```
+
+A theme doesn't need every key: the missing ones fall back to the default theme. Use `Partial<ChatBotTheme>` for a theme that only changes a few colors. More in the [theming guide](/react-simple-chatbot/guides/theming/).
+
+## Wrap the ChatBot component
+
+Use `ChatBotProps` to type a component that wraps the chatbot:
+
+```tsx title="SupportBot.tsx"
+import ChatBot, { type ChatBotProps, type Step } from 'react-simple-chatbot';
+
+const supportSteps: Step[] = [{ id: 'hello', message: 'How can we help?', end: true }];
+
+export function SupportBot(props: Omit<ChatBotProps, 'steps'>) {
+  return <ChatBot headerTitle="Support" {...props} steps={supportSteps} />;
+}
+```

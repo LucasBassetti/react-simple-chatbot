@@ -1,0 +1,16 @@
+---
+title: End callback
+description: Get the answers of the user when the conversation ends.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+The `handleEnd` prop is called when a step with `end: true` runs. It receives the `values` of the steps in order, the `steps` by id and the `renderedSteps`. See the [ChatBot reference](/react-simple-chatbot/reference/chatbot/) for more.
+
+<Demo name="end-callback" height={620} />
+
+## How it works
+
+- `handleEnd` stores the `values` in the state of the component, which renders them below the chatbot.
+- Use `steps` instead of `values` to read an answer by the id of its step, like `steps.name.value`.
+- This is where you would send the answers to your server.

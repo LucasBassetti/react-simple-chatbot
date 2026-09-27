@@ -1,0 +1,17 @@
+---
+title: Wikipedia search
+description: Fetch data in a custom component and continue the conversation when it arrives.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+The user types a term and a custom component searches it with the [Wikipedia API](https://www.mediawiki.org/wiki/API:Opensearch). With `waitAction: true`, the conversation waits until the component calls `triggerNextStep`. See [Custom components](/react-simple-chatbot/guides/custom-components/) for more.
+
+<Demo name="wikipedia-search" />
+
+## How it works
+
+- `WikipediaResult` reads the term from `previousStep.value`, the user step rendered right before it.
+- While the request runs, it renders the `Loading` component exported by `react-simple-chatbot`, the same dots the bot shows while typing.
+- When the request ends, it calls `triggerNextStep()` and the chatbot asks to search again.
+- The `origin=*` parameter makes the Wikipedia API accept requests from any site.

@@ -1,0 +1,88 @@
+---
+title: Cache the conversation
+description: Save the conversation in localStorage so users can reload the page and continue where they left off.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Set `cache` to save the conversation in the browser. When the user reloads the page, the chatbot restores the messages and continues from the step where the user stopped.
+
+```tsx title="App.tsx"
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'ask-email' },
+  { id: 'ask-email', message: 'Hi {previousValue}! What is your email?', trigger: 'email' },
+  { id: 'email', user: true, trigger: 'bye' },
+  { id: 'bye', message: 'Thanks, we will be in touch.', end: true }
+];
+
+export default function App() {
+  return <ChatBot steps={steps} cache cacheName="signup_chat" />;
+}
+```
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `cache` | `false` | Save the conversation in `localStorage` and restore it on load. |
+| `cacheName` | `'rsc_cache'` | The `localStorage` key. |
+
+## How it works
+
+- After each step, the chatbot saves the rendered steps under the `cacheName` key.
+- On load, it restores those steps without delays or loading animations. Restored steps do not trigger their next step again, and speech synthesis does not read them again.
+- If the conversation was waiting for the user, the input is enabled again.
+- Custom components are not saved. They are rendered again from the `component` of the step with the same id in your `steps`.
+- When the saved conversation had reached an `end` step, the chatbot removes the cache and starts a new conversation.
+
+Give each chatbot on the same site its own `cacheName`, so their conversations do not overwrite each other.
+
+<Aside>
+  Function messages are saved as the text they produced. If you change the steps in a way that old conversations can no longer follow (for example, you remove or rename step ids), change `cacheName` too, so users start fresh.
+</Aside>
+
+## Restart the conversation
+
+To start over, remove the cache and mount the chatbot again with a new `key`:
+
+```tsx title="App.tsx"
+import { useState } from 'react';
+import ChatBot, { type Step } from 'react-simple-chatbot';
+
+const CACHE_NAME = 'signup_chat';
+
+const steps: Step[] = [
+  { id: 'ask-name', message: 'What is your name?', trigger: 'name' },
+  { id: 'name', user: true, trigger: 'bye' },
+  { id: 'bye', message: 'Nice to meet you, {previousValue}!', end: true }
+];
+
+export default function App() {
+  const [chatKey, setChatKey] = useState(0);
+
+  const restart = () => {
+    localStorage.removeItem(CACHE_NAME);
+    setChatKey(key => key + 1);
+  };
+
+  return (
+    <>
+      <button type="button" onClick={restart}>
+        Start over
+      </button>
+      <ChatBot key={chatKey} steps={steps} cache cacheName={CACHE_NAME} />
+    </>
+  );
+}
+```
+
+Remove the cache before you change the `key`. The new chatbot reads the cache when it mounts, so it would restore the old conversation otherwise.
+
+## Storage errors
+
+Some browsers block `localStorage`, for example in private mode or when the user disables site data, and the storage can be full. The chatbot ignores these errors: the conversation keeps working, it just is not saved. If a saved conversation cannot be read, for example because it was created by an older version of the library, the chatbot logs a message to the console and starts a new conversation.
+
+## Server rendering
+
+`localStorage` only exists in the browser. The chatbot reads it in an effect after the first render, so `cache` works with frameworks that render on the server. See [Frameworks](/react-simple-chatbot/guides/frameworks/).

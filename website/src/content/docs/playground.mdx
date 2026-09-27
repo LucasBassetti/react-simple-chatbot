@@ -1,0 +1,16 @@
+---
+title: Playground
+description: Edit a chatbot and see it live, then share it with a link.
+tableOfContents: false
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import PlaygroundIsland from '../../components/PlaygroundIsland.astro';
+
+Edit the code and the chatbot updates as you type. Pick a template to start, and use **Share** to copy a link to your chatbot.
+
+<PlaygroundIsland />
+
+<Aside type="tip">
+  `ChatBot`, `Loading`, `ThemeProvider` and `useState` are available without imports, and TypeScript annotations like `Step[]` are allowed. Call `render(...)` with the element to show.
+</Aside>

@@ -1,0 +1,48 @@
+---
+title: Custom component
+description: The props received by the components of custom steps.
+---
+
+```tsx
+import { type CustomComponentProps } from 'react-simple-chatbot';
+```
+
+The component of a [custom step](/react-simple-chatbot/reference/steps/) is cloned with these props. They are optional in `CustomComponentProps`, because you create the element (`<Review />`) without them.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `step` | `Step & { value?: any }` | The current step, with its value. |
+| `steps` | `RenderedSteps` | The rendered steps by id, each with `id`, `message`, `value` and `metadata`. |
+| `previousStep` | `Step & { value?: any }` | The step rendered before this one. |
+| `triggerNextStep` | `(data?: TriggerNextStepData) => void` | Goes to the next step. Only the first call of each step has an effect. |
+
+## triggerNextStep
+
+Call it from a step with `waitAction` to continue the conversation. Every field of the data is optional.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `value` | `any` | The value of this step, available in `steps` and as `{previousValue}` in the next message. |
+| `trigger` | `Trigger` | The next step, instead of the `trigger` of the step. |
+| `hideInput` | `boolean` | Hide the input for this step. |
+| `hideExtraControl` | `boolean` | Hide the `extraControl` for this step. |
+
+```tsx title="Confirm.tsx"
+import { type CustomComponentProps } from 'react-simple-chatbot';
+
+export default function Confirm({ steps, triggerNextStep }: CustomComponentProps) {
+  return (
+    <div>
+      <p>Send the order to {steps?.email.value}?</p>
+      <button type="button" onClick={() => triggerNextStep?.({ value: true, trigger: 'sent' })}>
+        Send
+      </button>
+      <button type="button" onClick={() => triggerNextStep?.({ value: false, trigger: 'cancel' })}>
+        Cancel
+      </button>
+    </div>
+  );
+}
+```
+
+DOM elements like `<div />` used as components don't receive these props. See the [custom components guide](/react-simple-chatbot/guides/custom-components/).
