@@ -490,6 +490,7 @@ const ChatBot = (rawProps: ChatBotProps) => {
           step={step}
           steps={stepsById}
           style={customStyle}
+          hideBotAvatar={hideBotAvatar}
           previousStep={previousStep}
           previousValue={previousStep.value}
           triggerNextStep={triggerNextStep}
@@ -504,6 +505,7 @@ const ChatBot = (rawProps: ChatBotProps) => {
           step={step}
           triggerNextStep={triggerNextStep}
           bubbleOptionStyle={bubbleOptionStyle}
+          hideBotAvatar={hideBotAvatar}
         />
       );
     }

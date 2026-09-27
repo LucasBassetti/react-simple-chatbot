@@ -1,9 +1,17 @@
 import styled from 'styled-components';
 
-const TextStepContainer = styled.div<{ $user?: boolean }>`
-  align-items: flex-end;
+interface TextStepContainerProps {
+  $user?: boolean;
+  $isLast: boolean;
+}
+
+const TextStepContainer = styled.div<TextStepContainerProps>`
+  align-items: flex-start;
+  box-sizing: border-box;
   display: flex;
-  justify-content: ${({ $user }) => ($user ? 'flex-end' : 'flex-start')};
+  flex-direction: ${({ $user }) => ($user ? 'row-reverse' : 'row')};
+  gap: 8px;
+  margin-bottom: ${({ $isLast }) => ($isLast ? '12px' : '2px')};
 `;
 
 export default TextStepContainer;

@@ -69,23 +69,22 @@ const TextStep = ({
   const imageAltText = user ? 'Your avatar' : `${botName}'s avatar`;
 
   return (
-    <TextStepContainer className={`rsc-ts ${user ? 'rsc-ts-user' : 'rsc-ts-bot'}`} $user={user}>
-      <ImageContainer className="rsc-ts-image-container" $user={user}>
-        {isFirst && showAvatar && (
-          <Image
-            className="rsc-ts-image"
-            style={avatarStyle}
-            $user={user}
-            src={avatar}
-            alt={imageAltText}
-          />
-        )}
-      </ImageContainer>
+    <TextStepContainer
+      className={`rsc-ts ${user ? 'rsc-ts-user' : 'rsc-ts-bot'}`}
+      $user={user}
+      $isLast={isLast}
+    >
+      {showAvatar && (
+        <ImageContainer className="rsc-ts-image-container">
+          {isFirst && (
+            <Image className="rsc-ts-image" style={avatarStyle} src={avatar} alt={imageAltText} />
+          )}
+        </ImageContainer>
+      )}
       <Bubble
         className="rsc-ts-bubble"
         style={bubbleStyle}
         $user={user}
-        $showAvatar={showAvatar}
         $isFirst={isFirst}
         $isLast={isLast}
       >

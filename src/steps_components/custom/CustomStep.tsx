@@ -13,6 +13,8 @@ export interface CustomStepProps {
   previousValue?: unknown;
   speak?: SpeakFn;
   style: CSSProperties;
+  /** aligns the component with the messages of the bot, next to its avatar */
+  hideBotAvatar?: boolean;
   triggerNextStep: (data?: TriggerNextStepData) => void;
 }
 
@@ -25,6 +27,7 @@ const CustomStep = ({
   previousValue = '',
   speak = noop,
   style,
+  hideBotAvatar = false,
   triggerNextStep
 }: CustomStepProps) => {
   const { loading, triggerNextStep: triggerNextStepOnce } = useStep({
@@ -36,7 +39,7 @@ const CustomStep = ({
   });
 
   return (
-    <CustomStepContainer className="rsc-cs" style={style}>
+    <CustomStepContainer className="rsc-cs" style={style} $offset={hideBotAvatar ? 0 : 40}>
       {loading || !step.component ? (
         <Loading />
       ) : (

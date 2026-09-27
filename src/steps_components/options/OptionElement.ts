@@ -1,21 +1,36 @@
 import styled from 'styled-components';
 import { themed } from '../../theme';
+import rgba from '../../common/rgba';
+
+const botBubbleColor = themed('botBubbleColor');
 
 const OptionElement = styled.button`
-  background: ${themed('botBubbleColor')};
-  border: 0;
-  border-radius: 22px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
-  color: ${themed('botFontColor')};
+  background: #fff;
+  border: 1px solid ${botBubbleColor};
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  color: ${botBubbleColor};
+  cursor: pointer;
   display: inline-block;
+  font: inherit;
   font-size: 14px;
-  padding: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0;
+  padding: 7px 14px;
+  text-align: center;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
-    opacity: 0.7;
+    background: ${botBubbleColor};
+    color: ${themed('botFontColor')};
   }
-  &:active,
-  &:hover:focus {
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px ${props => rgba(botBubbleColor(props), 0.3)};
     outline: none;
   }
 `;

@@ -1,19 +1,19 @@
-import { keyframes } from 'styled-components';
+import { css, keyframes } from 'styled-components';
 import rgba from './rgba';
 
-const loading = keyframes`
-  0% { opacity: .2; }
-  20% { opacity: 1; }
-  100% { opacity: .2; }
+const typing = keyframes`
+  0%, 60%, 100% { opacity: .35; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
 `;
 
-const scale = keyframes`
-  100% { transform: scale(1); }
+const enter = keyframes`
+  from { opacity: 0; transform: translateY(6px) scale(.98); }
+  to { opacity: 1; transform: none; }
 `;
 
 const invalidInput = keyframes`
-  25% { transform: rotate(-1deg); }
-  100% { transform: rotate(1deg); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
 `;
 
 const pulse = (color: string) => keyframes`
@@ -22,4 +22,13 @@ const pulse = (color: string) => keyframes`
   100% { box-shadow: 0 0 0 0 ${rgba(color, 0)}; }
 `;
 
-export { loading, scale, invalidInput, pulse };
+/** Entrance of the messages, disabled for users who prefer reduced motion */
+const enterAnimation = css`
+  animation: ${enter} 0.25s ease-out both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`;
+
+export { typing, enter, enterAnimation, invalidInput, pulse };
